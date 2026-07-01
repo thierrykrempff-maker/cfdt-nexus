@@ -1,42 +1,122 @@
-# Cockpit CFDT Nexus V1
+# Cockpit CFDT Nexus V2
 
 ## Objectif
 
-Le Cockpit CFDT Nexus V1 est une première interface privée de pilotage pour Thierry Krempff, délégué syndical CFDT Chimie Énergie sur le site INEOS Sarralbe.
+Le Cockpit CFDT Nexus V2 transforme la V1 en véritable espace de travail privé pour Thierry Krempff, délégué syndical CFDT Chimie Énergie INEOS Sarralbe.
 
-Cette version est volontairement statique, sans backend et sans connexion réelle. Elle sert à valider l'organisation fonctionnelle avant de connecter progressivement n8n, GitHub, Google Analytics, Search Console, Hostinger et un assistant GPT.
+L'objectif est de donner l'impression d'ouvrir un bureau numérique syndical : dossiers, assistant IA, bibliothèque, communication, veille, statistiques et paramètres au même endroit.
+
+Cette version reste volontairement statique, sans backend et sans connexion réelle.
 
 ## Structure des fichiers
 
-- `index.html` : structure de l'interface et sections du tableau de bord.
-- `styles.css` : design responsive inspiré des tableaux de bord modernes.
-- `app.js` : interactions locales et données de démonstration.
+- `index.html` : structure de l'interface, sections et zones fonctionnelles.
+- `styles.css` : design responsive, sobre et professionnel.
+- `app.js` : données fictives, rendu des composants et interactions locales.
 - `README.md` : documentation du cockpit.
 
-## Fonctionnalités V1
+## Fonctionnalités V2
 
-- Accueil avec résumé du jour et actions rapides.
-- Suivi de dossiers salariés avec création locale de démonstration.
-- Espace Défense syndicale avec checklist et pièces à demander.
-- Bibliothèque documentaire structurée.
-- Espace Communication pour article, tract et flash info.
-- Assistant IA simulé avec zone de chat et actions rapides.
-- Statistiques fictives.
-- Paramètres de connexion à venir : GitHub, Hostinger, Google Analytics, Search Console.
+### Accueil
 
-## Données
+- Bonjour Thierry.
+- Date du jour.
+- Résumé de la journée.
+- Statistiques synthétiques fictives.
+- Actions prioritaires.
+- Dernières activités.
+- Zone actualités prévue.
+- Barre d'action rapide.
 
-La V1 utilise uniquement des données de démonstration.
+### Dossiers salariés
+
+- Création locale d'un dossier.
+- Modification d'un dossier.
+- Archivage / restauration.
+- Recherche.
+- Filtres par statut et priorité.
+- Structure compatible avec une future base de données.
+
+Chaque dossier contient :
+
+- numéro ;
+- titre ;
+- type ;
+- statut ;
+- priorité ;
+- date ;
+- notes ;
+- documents.
+
+### Assistant IA
+
+- Interface proche d'un chat.
+- Historique visuel.
+- Réponses simulées en V2.
+- Boutons rapides : sanction, CSE, NAO, article, tract, courrier, prompt Codex.
+- Préparation à une future connexion au GPT CFDT Nexus.
+
+### Bibliothèque
+
+- Interface de recherche.
+- Catégories : Convention Chimie, Accords INEOS, Règlement intérieur, Modèles, Jurisprudence, Documentation CFDT.
+- Métadonnées : titre, description, catégorie, mots-clés, date, version, niveau documentaire.
+
+### Communication
+
+- Modèles pour article, tract, flash info, courrier et publication web.
+- Génération locale simulée d'une trame.
+- Validation humaine prévue avant diffusion.
+
+### Veille
+
+- Zone prévue pour futures sources CFDT, FCE-CFDT, droit social, INEOS et sécurité.
+- Préparation d'une future connexion n8n.
+
+### Statistiques
+
+- Cartes prêtes à recevoir Google Analytics, Search Console, GitHub et n8n.
+- Données fictives uniquement.
+
+### Paramètres
+
+- Version.
+- GitHub.
+- Hostinger.
+- Google Analytics.
+- Google Search Console.
+- Automatisations.
+- Configuration IA.
+- Niveaux documentaires : public, privé, confidentiel.
+
+## Sécurité
+
+La V2 prévoit trois niveaux documentaires :
+
+- `PUBLIC` : contenu diffusable ou utilisable par un futur chatbot public.
+- `PRIVÉ` : contenu réservé à l'assistant privé.
+- `CONFIDENTIEL` : documents qui ne devront jamais être chargés automatiquement.
 
 Aucune donnée réelle n'est connectée, stockée ou envoyée à un service externe.
 
+## Architecture future
+
+Le cockpit est préparé pour connecter progressivement :
+
+- GPT CFDT Nexus ;
+- n8n ;
+- GitHub ;
+- Google Analytics ;
+- Google Search Console ;
+- Hostinger ;
+- une future base de données sécurisée.
+
 ## Prochaines évolutions
 
-- Connecter les dossiers salariés à une base sécurisée.
-- Ajouter une authentification privée.
-- Connecter l'assistant IA au Core Prompt et au Routeur d'Intelligence.
-- Brancher les workflows n8n.
-- Récupérer les statistiques Google Analytics et Search Console.
-- Afficher l'état de déploiement Hostinger.
-- Connecter les issues, commits et automatisations GitHub.
-- Ajouter des tests d'accessibilité, responsive et sécurité.
+- Ajouter une authentification.
+- Connecter les dossiers à une base sécurisée.
+- Ajouter des tests d'accessibilité et responsive.
+- Brancher le Routeur d'Intelligence et les agents spécialisés.
+- Créer les premiers workflows n8n.
+- Connecter les statistiques réelles.
+- Ajouter un mode brouillon / validation avant publication.

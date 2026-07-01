@@ -3,38 +3,45 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cockpit CFDT Nexus V1</title>
+    <title>Cockpit CFDT Nexus V2</title>
     <meta
       name="description"
-      content="Cockpit privé CFDT Nexus V1 pour piloter les dossiers, la défense syndicale, la communication, la bibliothèque et l'assistant IA."
+      content="Cockpit privé CFDT Nexus V2 : bureau numérique syndical statique pour piloter les dossiers, l'assistant IA, la bibliothèque, la communication, la veille et les paramètres."
     >
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Navigation principale">
-        <a class="brand" href="#accueil" data-target="accueil" aria-label="Accueil du Cockpit CFDT Nexus">
+        <a class="brand" href="#accueil" data-nav-target="accueil" aria-label="Accueil CFDT Nexus">
           <span class="brand__mark">Cfdt.</span>
-          <span>
+          <span class="brand__text">
             <strong>CFDT Nexus</strong>
-            <small>Cockpit privé V1</small>
+            <small>Bureau numérique syndical</small>
           </span>
         </a>
 
-        <nav class="sidebar__nav">
-          <button class="nav-item nav-item--active" type="button" data-target="accueil">Accueil</button>
-          <button class="nav-item" type="button" data-target="dossiers">Dossiers salariés</button>
-          <button class="nav-item" type="button" data-target="defense">Défense syndicale</button>
-          <button class="nav-item" type="button" data-target="bibliotheque">Bibliothèque</button>
-          <button class="nav-item" type="button" data-target="communication">Communication</button>
-          <button class="nav-item" type="button" data-target="assistant">Assistant IA</button>
-          <button class="nav-item" type="button" data-target="statistiques">Statistiques</button>
-          <button class="nav-item" type="button" data-target="parametres">Paramètres</button>
+        <nav class="sidebar__nav" aria-label="Modules du cockpit">
+          <button class="nav-item nav-item--active" type="button" data-nav-target="accueil">Accueil</button>
+          <button class="nav-item" type="button" data-nav-target="dossiers">Dossiers salariés</button>
+          <button class="nav-item" type="button" data-nav-target="assistant">Assistant IA</button>
+          <button class="nav-item" type="button" data-nav-target="bibliotheque">Bibliothèque</button>
+          <button class="nav-item" type="button" data-nav-target="communication">Communication</button>
+          <button class="nav-item" type="button" data-nav-target="veille">Veille</button>
+          <button class="nav-item" type="button" data-nav-target="statistiques">Statistiques</button>
+          <button class="nav-item" type="button" data-nav-target="parametres">Paramètres</button>
         </nav>
 
+        <div class="security-levels" aria-label="Niveaux documentaires prévus">
+          <p>Niveaux documentaires</p>
+          <span>Public</span>
+          <span>Privé</span>
+          <span>Confidentiel</span>
+        </div>
+
         <div class="sidebar__footer">
-          <p>Mode démonstration</p>
-          <span>Aucune donnée réelle connectée.</span>
+          <strong>V2 statique</strong>
+          <span>Aucune donnée réelle connectée. Aucun document confidentiel chargé automatiquement.</span>
         </div>
       </aside>
 
@@ -45,231 +52,204 @@
             <span></span>
             <span></span>
           </button>
-          <div>
+          <div class="topbar__title">
             <p class="eyebrow">Cockpit privé</p>
             <h1>Bonjour Thierry</h1>
+            <span id="today-label">Date du jour</span>
           </div>
-          <div class="topbar__status" aria-label="État global du projet">
+          <div class="global-search">
+            <label class="sr-only" for="global-search">Recherche globale</label>
+            <input id="global-search" type="search" placeholder="Rechercher un dossier, document, modèle...">
+          </div>
+          <div class="project-pill" aria-label="État du projet">
             <span class="status-dot"></span>
-            Projet V1 statique
+            CFDT Nexus V2
           </div>
         </header>
 
         <section class="view view--active" id="accueil" aria-labelledby="accueil-title">
           <div class="section-heading">
-            <p class="eyebrow">Synthèse</p>
-            <h2 id="accueil-title">Résumé du jour</h2>
-            <p>Vue de démonstration pour piloter les priorités syndicales, la communication et les prochains dossiers.</p>
+            <p class="eyebrow">Bureau du jour</p>
+            <h2 id="accueil-title">Tableau de bord</h2>
+            <p>Vue synthétique pour ouvrir CFDT Nexus comme un bureau numérique quotidien.</p>
           </div>
 
-          <div class="dashboard-grid">
+          <div class="quick-bar" aria-label="Barre d'action rapide">
+            <button type="button" data-nav-target="dossiers" data-focus-action="new-case">Nouveau dossier</button>
+            <button type="button" data-nav-target="communication">Nouvel article</button>
+            <button type="button" data-nav-target="assistant" data-preset="Analyser une sanction disciplinaire en distinguant faits, preuves, textes et stratégie.">Nouvelle défense</button>
+            <button type="button" data-nav-target="assistant">Poser une question</button>
+          </div>
+
+          <div class="home-layout">
             <article class="hero-card">
-              <span class="card-kicker">Priorité du jour</span>
-              <h3>Préparer les dossiers sensibles et sécuriser les prochaines actions.</h3>
-              <p>Les données affichées sont fictives. La structure est prête pour une future connexion à n8n, GitHub, Google Analytics et au GPT.</p>
-              <div class="hero-card__actions">
-                <button class="button button--primary" type="button" data-target="assistant">Analyser une situation</button>
-                <button class="button button--ghost" type="button" data-target="dossiers">Voir les dossiers</button>
+              <span class="card-label">Résumé de la journée</span>
+              <h3>Prioriser, documenter, agir.</h3>
+              <p>
+                Les éléments affichés sont fictifs. La V2 prépare le cockpit à devenir le point d'entrée unique :
+                dossiers, IA, bibliothèque, communication, veille et automatisations.
+              </p>
+              <div class="hero-card__grid">
+                <span><strong>2</strong> urgences</span>
+                <span><strong>4</strong> dossiers actifs</span>
+                <span><strong>6</strong> tâches ouvertes</span>
               </div>
             </article>
 
-            <article class="summary-card">
-              <strong>4</strong>
-              <span>Dossiers en cours</span>
-            </article>
-            <article class="summary-card">
-              <strong>2</strong>
-              <span>Actions urgentes</span>
-            </article>
-            <article class="summary-card">
-              <strong>7</strong>
-              <span>Documents utiles</span>
-            </article>
+            <div class="metric-grid" id="home-metrics"></div>
           </div>
 
-          <div class="panel">
-            <div class="panel__header">
-              <h3>Actions rapides</h3>
-              <span>V1</span>
-            </div>
-            <div class="quick-actions">
-              <button type="button" data-target="dossiers">Créer un dossier salarié</button>
-              <button type="button" data-target="defense">Préparer une défense</button>
-              <button type="button" data-target="communication">Rédiger un flash info</button>
-              <button type="button" data-target="bibliotheque">Chercher un document</button>
-            </div>
+          <div class="dashboard-columns">
+            <section class="panel">
+              <div class="panel__header">
+                <h3>Actions prioritaires</h3>
+                <span>Aujourd'hui</span>
+              </div>
+              <div class="task-list" id="priority-actions"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel__header">
+                <h3>Dernières activités</h3>
+                <span>Démo</span>
+              </div>
+              <div class="activity-list" id="activity-list"></div>
+            </section>
+
+            <section class="panel news-panel">
+              <div class="panel__header">
+                <h3>Actualités</h3>
+                <span>Zone prévue</span>
+              </div>
+              <p>Cette zone pourra recevoir une veille automatique : CFDT, branche Chimie, INEOS, droit social et sécurité.</p>
+            </section>
           </div>
         </section>
 
         <section class="view" id="dossiers" aria-labelledby="dossiers-title">
           <div class="section-heading">
-            <p class="eyebrow">Suivi terrain</p>
+            <p class="eyebrow">Gestion des dossiers</p>
             <h2 id="dossiers-title">Dossiers salariés</h2>
-            <p>Créer et suivre des dossiers de démonstration sans donnée réelle.</p>
+            <p>Première vraie fonctionnalité du cockpit : création, modification, archivage, recherche et filtres locaux.</p>
           </div>
 
-          <div class="split-layout">
+          <div class="case-workspace">
             <form class="panel form-card" id="case-form">
               <div class="panel__header">
-                <h3>Créer un dossier</h3>
-                <span>Démo locale</span>
+                <h3 id="case-form-title">Créer un dossier</h3>
+                <span>Compatible future base</span>
               </div>
+
+              <input type="hidden" name="caseId">
+
               <label>
-                Nom du dossier
-                <input name="caseTitle" type="text" placeholder="Ex. Entretien disciplinaire - salarié A" required>
+                Titre
+                <input name="title" type="text" placeholder="Ex. Entretien disciplinaire - salarié A" required>
               </label>
+
+              <div class="form-grid">
+                <label>
+                  Type
+                  <select name="type">
+                    <option>Discipline</option>
+                    <option>Paie</option>
+                    <option>Santé / Sécurité</option>
+                    <option>Temps de travail</option>
+                    <option>Communication</option>
+                  </select>
+                </label>
+
+                <label>
+                  Statut
+                  <select name="status">
+                    <option>À traiter</option>
+                    <option>En cours</option>
+                    <option>Terminé</option>
+                  </select>
+                </label>
+
+                <label>
+                  Priorité
+                  <select name="priority">
+                    <option>Haute</option>
+                    <option>Moyenne</option>
+                    <option>Basse</option>
+                  </select>
+                </label>
+
+                <label>
+                  Date
+                  <input name="date" type="date" required>
+                </label>
+              </div>
+
               <label>
-                Catégorie
-                <select name="caseCategory">
-                  <option>Discipline</option>
-                  <option>Paie</option>
-                  <option>Santé / Sécurité</option>
-                  <option>Temps de travail</option>
-                  <option>Communication</option>
-                </select>
+                Notes
+                <textarea name="notes" rows="4" placeholder="Résumé factuel, points à vérifier, stratégie prudente..."></textarea>
               </label>
+
               <label>
-                Statut
-                <select name="caseStatus">
-                  <option>À traiter</option>
-                  <option>En cours</option>
-                  <option>Terminé</option>
-                </select>
+                Documents
+                <input name="documents" type="text" placeholder="Convocation, règlement intérieur, attestation témoin...">
               </label>
-              <button class="button button--primary" type="submit">Ajouter le dossier</button>
+
+              <div class="form-actions">
+                <button class="button button--primary" type="submit">Enregistrer</button>
+                <button class="button button--ghost" type="button" id="case-reset">Réinitialiser</button>
+              </div>
             </form>
 
-            <div class="panel">
-              <div class="panel__header">
-                <h3>Dossiers en cours</h3>
-                <span id="case-count">0 dossier</span>
+            <div class="panel case-list-panel">
+              <div class="panel__header panel__header--stack">
+                <div>
+                  <h3>Dossiers</h3>
+                  <span id="case-count">0 dossier</span>
+                </div>
+                <div class="case-tools">
+                  <label class="sr-only" for="case-search">Recherche dossier</label>
+                  <input id="case-search" type="search" placeholder="Rechercher...">
+                  <select id="case-status-filter" aria-label="Filtrer par statut">
+                    <option value="Tous">Tous les statuts</option>
+                    <option>À traiter</option>
+                    <option>En cours</option>
+                    <option>Terminé</option>
+                    <option>Archivé</option>
+                  </select>
+                  <select id="case-priority-filter" aria-label="Filtrer par priorité">
+                    <option value="Toutes">Toutes priorités</option>
+                    <option>Haute</option>
+                    <option>Moyenne</option>
+                    <option>Basse</option>
+                  </select>
+                </div>
               </div>
               <div class="case-list" id="case-list" aria-live="polite"></div>
             </div>
           </div>
         </section>
 
-        <section class="view" id="defense" aria-labelledby="defense-title">
-          <div class="section-heading">
-            <p class="eyebrow">Défense syndicale</p>
-            <h2 id="defense-title">Préparer une défense</h2>
-            <p>Cadre de travail inspiré du module Défenseur Syndical V1.</p>
-          </div>
-
-          <div class="three-columns">
-            <article class="panel">
-              <div class="panel__header">
-                <h3>Checklist entretien disciplinaire</h3>
-                <span>Avant entretien</span>
-              </div>
-              <ul class="checklist">
-                <li><label><input type="checkbox"> Relire la convocation</label></li>
-                <li><label><input type="checkbox"> Identifier les délais</label></li>
-                <li><label><input type="checkbox"> Lister les faits contestés</label></li>
-                <li><label><input type="checkbox"> Recueillir les témoins</label></li>
-                <li><label><input type="checkbox"> Préparer une version simple</label></li>
-              </ul>
-            </article>
-
-            <article class="panel">
-              <div class="panel__header">
-                <h3>Documents à demander</h3>
-                <span>Pièces</span>
-              </div>
-              <ul class="plain-list">
-                <li>Convocation complète</li>
-                <li>Règlement intérieur</li>
-                <li>Planning et badgeages</li>
-                <li>Rapports de poste</li>
-                <li>Attestations de témoins</li>
-              </ul>
-            </article>
-
-            <article class="panel action-panel">
-              <div class="panel__header">
-                <h3>Assistant défense</h3>
-                <span>Simulation</span>
-              </div>
-              <p>Préparer une trame prudente : faits, preuves, textes, arguments, stratégie.</p>
-              <button class="button button--primary" type="button" data-target="assistant">Préparer avec l'IA</button>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="bibliotheque" aria-labelledby="bibliotheque-title">
-          <div class="section-heading">
-            <p class="eyebrow">Base documentaire</p>
-            <h2 id="bibliotheque-title">Bibliothèque</h2>
-            <p>Répertoire de démonstration pour structurer les sources avant connexion à la base documentaire.</p>
-          </div>
-
-          <div class="resource-grid">
-            <article class="resource-card">
-              <span>Convention</span>
-              <h3>Convention Chimie</h3>
-              <p>Textes conventionnels, classifications, minima, temps de travail.</p>
-            </article>
-            <article class="resource-card">
-              <span>Entreprise</span>
-              <h3>Accords INEOS</h3>
-              <p>Accords internes disponibles et validés pour usage privé.</p>
-            </article>
-            <article class="resource-card">
-              <span>Règles</span>
-              <h3>Règlement intérieur</h3>
-              <p>Discipline, sécurité, procédure et règles applicables.</p>
-            </article>
-            <article class="resource-card">
-              <span>Modèles</span>
-              <h3>Modèles de courrier</h3>
-              <p>Courriers prudents, demandes d'explication, contestations.</p>
-            </article>
-            <article class="resource-card">
-              <span>Droit</span>
-              <h3>Jurisprudence</h3>
-              <p>Décisions à vérifier, classer et citer avec prudence.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="communication" aria-labelledby="communication-title">
-          <div class="section-heading">
-            <p class="eyebrow">Communication CFDT</p>
-            <h2 id="communication-title">Préparer une communication</h2>
-            <p>Créer une première trame avant validation humaine et publication.</p>
-          </div>
-
-          <div class="three-columns">
-            <article class="panel communication-card">
-              <h3>Préparer un article</h3>
-              <p>Article pédagogique pour le site CFDT INEOS Sarralbe.</p>
-              <button type="button" data-target="assistant">Rédiger une trame</button>
-            </article>
-            <article class="panel communication-card">
-              <h3>Préparer un tract</h3>
-              <p>Message court, clair, vérifié, orienté terrain.</p>
-              <button type="button" data-target="assistant">Créer un plan</button>
-            </article>
-            <article class="panel communication-card">
-              <h3>Préparer un flash info</h3>
-              <p>Synthèse rapide pour informer sans jargon inutile.</p>
-              <button type="button" data-target="assistant">Générer le flash</button>
-            </article>
-          </div>
-        </section>
-
         <section class="view" id="assistant" aria-labelledby="assistant-title">
           <div class="section-heading">
             <p class="eyebrow">Assistant IA</p>
-            <h2 id="assistant-title">Zone de travail simulée</h2>
-            <p>La V1 ne contacte aucun modèle réel. Les réponses ci-dessous sont simulées côté navigateur.</p>
+            <h2 id="assistant-title">Conversation simulée</h2>
+            <p>Interface proche ChatGPT, prête pour une future connexion au GPT CFDT Nexus. La V2 reste locale.</p>
           </div>
 
-          <div class="assistant-layout">
+          <div class="assistant-workspace">
+            <aside class="panel conversation-history">
+              <div class="panel__header">
+                <h3>Historique</h3>
+                <span>Démo</span>
+              </div>
+              <button type="button" class="history-item history-item--active">Défense disciplinaire</button>
+              <button type="button" class="history-item">Préparer CSE</button>
+              <button type="button" class="history-item">Article site CFDT</button>
+            </aside>
+
             <div class="chat-panel">
               <div class="chat-log" id="chat-log" aria-live="polite">
                 <div class="message message--assistant">
-                  Bonjour Thierry. Décris une situation, un article à préparer ou une modification de site.
+                  Bonjour Thierry. Décris la situation ou choisis une action rapide. Je répondrai en distinguant faits, preuves, textes, analyse et stratégie.
                 </div>
               </div>
               <form class="chat-form" id="chat-form">
@@ -281,76 +261,148 @@
 
             <aside class="panel prompt-actions">
               <div class="panel__header">
-                <h3>Actions IA</h3>
+                <h3>Boutons rapides</h3>
+                <span>V2</span>
+              </div>
+              <button type="button" data-preset="Analyser une sanction disciplinaire et préparer les questions avant entretien.">Analyser une sanction</button>
+              <button type="button" data-preset="Préparer une réunion CSE avec questions, pièces à demander et points à vérifier.">Préparer un CSE</button>
+              <button type="button" data-preset="Préparer une NAO avec priorités, arguments et points de vigilance.">Préparer une NAO</button>
+              <button type="button" data-preset="Créer un article CFDT clair et pédagogique pour les salariés.">Créer un article</button>
+              <button type="button" data-preset="Créer un tract CFDT court, concret et relu avant diffusion.">Créer un tract</button>
+              <button type="button" data-preset="Créer un courrier prudent, factuel et sans accusation non prouvée.">Créer un courrier</button>
+              <button type="button" data-preset="Créer un prompt Codex précis pour modifier le site via GitHub et Hostinger.">Créer un prompt Codex</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="bibliotheque" aria-labelledby="bibliotheque-title">
+          <div class="section-heading">
+            <p class="eyebrow">Base documentaire</p>
+            <h2 id="bibliotheque-title">Bibliothèque</h2>
+            <p>Recherche locale fictive avec catégories, mots-clés, dates, versions et niveaux documentaires.</p>
+          </div>
+
+          <div class="library-tools">
+            <input id="library-search" type="search" placeholder="Rechercher dans la bibliothèque...">
+            <select id="library-category-filter" aria-label="Filtrer les documents">
+              <option value="Toutes">Toutes catégories</option>
+              <option>Convention Chimie</option>
+              <option>Accords INEOS</option>
+              <option>Règlement intérieur</option>
+              <option>Modèles</option>
+              <option>Jurisprudence</option>
+              <option>Documentation CFDT</option>
+            </select>
+          </div>
+
+          <div class="resource-grid" id="resource-grid"></div>
+        </section>
+
+        <section class="view" id="communication" aria-labelledby="communication-title">
+          <div class="section-heading">
+            <p class="eyebrow">Production de contenus</p>
+            <h2 id="communication-title">Communication</h2>
+            <p>Préparer rapidement articles, tracts, flash infos, courriers et publications web avec modèles.</p>
+          </div>
+
+          <div class="communication-workspace">
+            <div class="template-grid" id="template-grid"></div>
+            <form class="panel content-form" id="content-form">
+              <div class="panel__header">
+                <h3>Générateur de trame</h3>
                 <span>Simulation</span>
               </div>
-              <button type="button" data-demo-prompt="Analyse une situation de travail en distinguant faits, preuves, textes et stratégie.">Analyser une situation</button>
-              <button type="button" data-demo-prompt="Prépare un article CFDT clair, pédagogique et vérifié pour les salariés.">Préparer un article</button>
-              <button type="button" data-demo-prompt="Crée un prompt Codex précis pour modifier le site via GitHub et Hostinger.">Créer un prompt Codex</button>
-            </aside>
+              <label>
+                Type de contenu
+                <select name="contentType">
+                  <option>Article</option>
+                  <option>Tract</option>
+                  <option>Flash Info</option>
+                  <option>Courrier</option>
+                  <option>Publication Web</option>
+                </select>
+              </label>
+              <label>
+                Sujet
+                <input name="topic" type="text" placeholder="Ex. Santé au travail, NAO, canicule...">
+              </label>
+              <label>
+                Public cible
+                <input name="audience" type="text" placeholder="Ex. salariés postés, agents de maîtrise...">
+              </label>
+              <button class="button button--primary" type="submit">Créer une trame</button>
+              <output class="generated-output" id="generated-output">La trame générée apparaîtra ici.</output>
+            </form>
+          </div>
+        </section>
+
+        <section class="view" id="veille" aria-labelledby="veille-title">
+          <div class="section-heading">
+            <p class="eyebrow">Veille automatique</p>
+            <h2 id="veille-title">Veille</h2>
+            <p>Zone prévue pour connecter plus tard sources CFDT, droit social, branche Chimie, INEOS et sécurité.</p>
+          </div>
+
+          <div class="watch-grid">
+            <article class="panel watch-card">
+              <h3>Sources prévues</h3>
+              <ul class="plain-list">
+                <li>CFDT nationale</li>
+                <li>FCE-CFDT</li>
+                <li>Légifrance et sources officielles</li>
+                <li>Actualité INEOS</li>
+              </ul>
+            </article>
+            <article class="panel watch-card">
+              <h3>Automatisation future</h3>
+              <p>n8n pourra collecter, filtrer et proposer des synthèses. Rien ne sera publié sans validation.</p>
+            </article>
+            <article class="panel watch-card">
+              <h3>Validation humaine</h3>
+              <p>Les contenus sensibles devront rester en brouillon jusqu'à validation explicite.</p>
+            </article>
           </div>
         </section>
 
         <section class="view" id="statistiques" aria-labelledby="statistiques-title">
           <div class="section-heading">
-            <p class="eyebrow">Indicateurs</p>
+            <p class="eyebrow">Pilotage</p>
             <h2 id="statistiques-title">Statistiques</h2>
-            <p>Données fictives. Cette zone pourra plus tard recevoir Google Analytics, Search Console ou n8n.</p>
+            <p>Cartes terminées visuellement, prêtes à recevoir Google Analytics, Search Console, GitHub et n8n.</p>
           </div>
 
-          <div class="stats-grid">
-            <article class="stat-card">
-              <span>Visiteurs du site</span>
-              <strong>1 248</strong>
-              <div class="progress"><span style="width: 78%"></span></div>
-            </article>
-            <article class="stat-card">
-              <span>Articles lus</span>
-              <strong>632</strong>
-              <div class="progress"><span style="width: 62%"></span></div>
-            </article>
-            <article class="stat-card">
-              <span>Documents téléchargés</span>
-              <strong>84</strong>
-              <div class="progress"><span style="width: 38%"></span></div>
-            </article>
-            <article class="stat-card">
-              <span>Questions fréquentes</span>
-              <strong>19</strong>
-              <div class="progress"><span style="width: 52%"></span></div>
-            </article>
-          </div>
+          <div class="integration-grid" id="integration-grid"></div>
         </section>
 
         <section class="view" id="parametres" aria-labelledby="parametres-title">
           <div class="section-heading">
             <p class="eyebrow">Configuration</p>
             <h2 id="parametres-title">Paramètres</h2>
-            <p>État de démonstration des futures connexions.</p>
+            <p>Vue consolidée des connexions futures et des niveaux de sécurité documentaire.</p>
           </div>
 
-          <div class="settings-list">
-            <article class="settings-row">
-              <div><strong>État du projet</strong><span>V1 statique, sans backend</span></div>
-              <span class="badge badge--ready">Actif</span>
-            </article>
-            <article class="settings-row">
-              <div><strong>GitHub</strong><span>Prévu pour suivi commits, issues et automatisations</span></div>
-              <span class="badge">À connecter</span>
-            </article>
-            <article class="settings-row">
-              <div><strong>Hostinger</strong><span>Prévu pour statut de déploiement</span></div>
-              <span class="badge">À connecter</span>
-            </article>
-            <article class="settings-row">
-              <div><strong>Google Analytics</strong><span>Prévu pour statistiques du site</span></div>
-              <span class="badge">À connecter</span>
-            </article>
-            <article class="settings-row">
-              <div><strong>Search Console</strong><span>Prévu pour SEO et indexation</span></div>
-              <span class="badge">À connecter</span>
-            </article>
-          </div>
+          <div class="settings-list" id="settings-list"></div>
+
+          <section class="panel security-panel">
+            <div class="panel__header">
+              <h3>Sécurité documentaire</h3>
+              <span>Architecture prévue</span>
+            </div>
+            <div class="security-grid">
+              <article>
+                <strong>Public</strong>
+                <p>Contenus utilisables par le futur chatbot salarié.</p>
+              </article>
+              <article>
+                <strong>Privé</strong>
+                <p>Contenus réservés à l'assistant privé de Thierry.</p>
+              </article>
+              <article>
+                <strong>Confidentiel</strong>
+                <p>Documents jamais chargés automatiquement. Validation obligatoire.</p>
+              </article>
+            </div>
+          </section>
         </section>
       </main>
     </div>
