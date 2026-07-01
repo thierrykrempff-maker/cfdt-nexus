@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cockpit CFDT Nexus V1</title>
+    <meta
+      name="description"
+      content="Cockpit privé CFDT Nexus V1 pour piloter les dossiers, la défense syndicale, la communication, la bibliothèque et l'assistant IA."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navigation principale">
+        <a class="brand" href="#accueil" data-target="accueil" aria-label="Accueil du Cockpit CFDT Nexus">
+          <span class="brand__mark">Cfdt.</span>
+          <span>
+            <strong>CFDT Nexus</strong>
+            <small>Cockpit privé V1</small>
+          </span>
+        </a>
+
+        <nav class="sidebar__nav">
+          <button class="nav-item nav-item--active" type="button" data-target="accueil">Accueil</button>
+          <button class="nav-item" type="button" data-target="dossiers">Dossiers salariés</button>
+          <button class="nav-item" type="button" data-target="defense">Défense syndicale</button>
+          <button class="nav-item" type="button" data-target="bibliotheque">Bibliothèque</button>
+          <button class="nav-item" type="button" data-target="communication">Communication</button>
+          <button class="nav-item" type="button" data-target="assistant">Assistant IA</button>
+          <button class="nav-item" type="button" data-target="statistiques">Statistiques</button>
+          <button class="nav-item" type="button" data-target="parametres">Paramètres</button>
+        </nav>
+
+        <div class="sidebar__footer">
+          <p>Mode démonstration</p>
+          <span>Aucune donnée réelle connectée.</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button class="menu-toggle" type="button" aria-label="Ouvrir la navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div>
+            <p class="eyebrow">Cockpit privé</p>
+            <h1>Bonjour Thierry</h1>
+          </div>
+          <div class="topbar__status" aria-label="État global du projet">
+            <span class="status-dot"></span>
+            Projet V1 statique
+          </div>
+        </header>
+
+        <section class="view view--active" id="accueil" aria-labelledby="accueil-title">
+          <div class="section-heading">
+            <p class="eyebrow">Synthèse</p>
+            <h2 id="accueil-title">Résumé du jour</h2>
+            <p>Vue de démonstration pour piloter les priorités syndicales, la communication et les prochains dossiers.</p>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="hero-card">
+              <span class="card-kicker">Priorité du jour</span>
+              <h3>Préparer les dossiers sensibles et sécuriser les prochaines actions.</h3>
+              <p>Les données affichées sont fictives. La structure est prête pour une future connexion à n8n, GitHub, Google Analytics et au GPT.</p>
+              <div class="hero-card__actions">
+                <button class="button button--primary" type="button" data-target="assistant">Analyser une situation</button>
+                <button class="button button--ghost" type="button" data-target="dossiers">Voir les dossiers</button>
+              </div>
+            </article>
+
+            <article class="summary-card">
+              <strong>4</strong>
+              <span>Dossiers en cours</span>
+            </article>
+            <article class="summary-card">
+              <strong>2</strong>
+              <span>Actions urgentes</span>
+            </article>
+            <article class="summary-card">
+              <strong>7</strong>
+              <span>Documents utiles</span>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel__header">
+              <h3>Actions rapides</h3>
+              <span>V1</span>
+            </div>
+            <div class="quick-actions">
+              <button type="button" data-target="dossiers">Créer un dossier salarié</button>
+              <button type="button" data-target="defense">Préparer une défense</button>
+              <button type="button" data-target="communication">Rédiger un flash info</button>
+              <button type="button" data-target="bibliotheque">Chercher un document</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="dossiers" aria-labelledby="dossiers-title">
+          <div class="section-heading">
+            <p class="eyebrow">Suivi terrain</p>
+            <h2 id="dossiers-title">Dossiers salariés</h2>
+            <p>Créer et suivre des dossiers de démonstration sans donnée réelle.</p>
+          </div>
+
+          <div class="split-layout">
+            <form class="panel form-card" id="case-form">
+              <div class="panel__header">
+                <h3>Créer un dossier</h3>
+                <span>Démo locale</span>
+              </div>
+              <label>
+                Nom du dossier
+                <input name="caseTitle" type="text" placeholder="Ex. Entretien disciplinaire - salarié A" required>
+              </label>
+              <label>
+                Catégorie
+                <select name="caseCategory">
+                  <option>Discipline</option>
+                  <option>Paie</option>
+                  <option>Santé / Sécurité</option>
+                  <option>Temps de travail</option>
+                  <option>Communication</option>
+                </select>
+              </label>
+              <label>
+                Statut
+                <select name="caseStatus">
+                  <option>À traiter</option>
+                  <option>En cours</option>
+                  <option>Terminé</option>
+                </select>
+              </label>
+              <button class="button button--primary" type="submit">Ajouter le dossier</button>
+            </form>
+
+            <div class="panel">
+              <div class="panel__header">
+                <h3>Dossiers en cours</h3>
+                <span id="case-count">0 dossier</span>
+              </div>
+              <div class="case-list" id="case-list" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="defense" aria-labelledby="defense-title">
+          <div class="section-heading">
+            <p class="eyebrow">Défense syndicale</p>
+            <h2 id="defense-title">Préparer une défense</h2>
+            <p>Cadre de travail inspiré du module Défenseur Syndical V1.</p>
+          </div>
+
+          <div class="three-columns">
+            <article class="panel">
+              <div class="panel__header">
+                <h3>Checklist entretien disciplinaire</h3>
+                <span>Avant entretien</span>
+              </div>
+              <ul class="checklist">
+                <li><label><input type="checkbox"> Relire la convocation</label></li>
+                <li><label><input type="checkbox"> Identifier les délais</label></li>
+                <li><label><input type="checkbox"> Lister les faits contestés</label></li>
+                <li><label><input type="checkbox"> Recueillir les témoins</label></li>
+                <li><label><input type="checkbox"> Préparer une version simple</label></li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <div class="panel__header">
+                <h3>Documents à demander</h3>
+                <span>Pièces</span>
+              </div>
+              <ul class="plain-list">
+                <li>Convocation complète</li>
+                <li>Règlement intérieur</li>
+                <li>Planning et badgeages</li>
+                <li>Rapports de poste</li>
+                <li>Attestations de témoins</li>
+              </ul>
+            </article>
+
+            <article class="panel action-panel">
+              <div class="panel__header">
+                <h3>Assistant défense</h3>
+                <span>Simulation</span>
+              </div>
+              <p>Préparer une trame prudente : faits, preuves, textes, arguments, stratégie.</p>
+              <button class="button button--primary" type="button" data-target="assistant">Préparer avec l'IA</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="bibliotheque" aria-labelledby="bibliotheque-title">
+          <div class="section-heading">
+            <p class="eyebrow">Base documentaire</p>
+            <h2 id="bibliotheque-title">Bibliothèque</h2>
+            <p>Répertoire de démonstration pour structurer les sources avant connexion à la base documentaire.</p>
+          </div>
+
+          <div class="resource-grid">
+            <article class="resource-card">
+              <span>Convention</span>
+              <h3>Convention Chimie</h3>
+              <p>Textes conventionnels, classifications, minima, temps de travail.</p>
+            </article>
+            <article class="resource-card">
+              <span>Entreprise</span>
+              <h3>Accords INEOS</h3>
+              <p>Accords internes disponibles et validés pour usage privé.</p>
+            </article>
+            <article class="resource-card">
+              <span>Règles</span>
+              <h3>Règlement intérieur</h3>
+              <p>Discipline, sécurité, procédure et règles applicables.</p>
+            </article>
+            <article class="resource-card">
+              <span>Modèles</span>
+              <h3>Modèles de courrier</h3>
+              <p>Courriers prudents, demandes d'explication, contestations.</p>
+            </article>
+            <article class="resource-card">
+              <span>Droit</span>
+              <h3>Jurisprudence</h3>
+              <p>Décisions à vérifier, classer et citer avec prudence.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="communication" aria-labelledby="communication-title">
+          <div class="section-heading">
+            <p class="eyebrow">Communication CFDT</p>
+            <h2 id="communication-title">Préparer une communication</h2>
+            <p>Créer une première trame avant validation humaine et publication.</p>
+          </div>
+
+          <div class="three-columns">
+            <article class="panel communication-card">
+              <h3>Préparer un article</h3>
+              <p>Article pédagogique pour le site CFDT INEOS Sarralbe.</p>
+              <button type="button" data-target="assistant">Rédiger une trame</button>
+            </article>
+            <article class="panel communication-card">
+              <h3>Préparer un tract</h3>
+              <p>Message court, clair, vérifié, orienté terrain.</p>
+              <button type="button" data-target="assistant">Créer un plan</button>
+            </article>
+            <article class="panel communication-card">
+              <h3>Préparer un flash info</h3>
+              <p>Synthèse rapide pour informer sans jargon inutile.</p>
+              <button type="button" data-target="assistant">Générer le flash</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="assistant" aria-labelledby="assistant-title">
+          <div class="section-heading">
+            <p class="eyebrow">Assistant IA</p>
+            <h2 id="assistant-title">Zone de travail simulée</h2>
+            <p>La V1 ne contacte aucun modèle réel. Les réponses ci-dessous sont simulées côté navigateur.</p>
+          </div>
+
+          <div class="assistant-layout">
+            <div class="chat-panel">
+              <div class="chat-log" id="chat-log" aria-live="polite">
+                <div class="message message--assistant">
+                  Bonjour Thierry. Décris une situation, un article à préparer ou une modification de site.
+                </div>
+              </div>
+              <form class="chat-form" id="chat-form">
+                <label class="sr-only" for="chat-input">Message pour l'assistant IA</label>
+                <textarea id="chat-input" rows="4" placeholder="Ex. Salarié convoqué à un entretien préalable, il conteste les faits..."></textarea>
+                <button class="button button--primary" type="submit">Envoyer</button>
+              </form>
+            </div>
+
+            <aside class="panel prompt-actions">
+              <div class="panel__header">
+                <h3>Actions IA</h3>
+                <span>Simulation</span>
+              </div>
+              <button type="button" data-demo-prompt="Analyse une situation de travail en distinguant faits, preuves, textes et stratégie.">Analyser une situation</button>
+              <button type="button" data-demo-prompt="Prépare un article CFDT clair, pédagogique et vérifié pour les salariés.">Préparer un article</button>
+              <button type="button" data-demo-prompt="Crée un prompt Codex précis pour modifier le site via GitHub et Hostinger.">Créer un prompt Codex</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="statistiques" aria-labelledby="statistiques-title">
+          <div class="section-heading">
+            <p class="eyebrow">Indicateurs</p>
+            <h2 id="statistiques-title">Statistiques</h2>
+            <p>Données fictives. Cette zone pourra plus tard recevoir Google Analytics, Search Console ou n8n.</p>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span>Visiteurs du site</span>
+              <strong>1 248</strong>
+              <div class="progress"><span style="width: 78%"></span></div>
+            </article>
+            <article class="stat-card">
+              <span>Articles lus</span>
+              <strong>632</strong>
+              <div class="progress"><span style="width: 62%"></span></div>
+            </article>
+            <article class="stat-card">
+              <span>Documents téléchargés</span>
+              <strong>84</strong>
+              <div class="progress"><span style="width: 38%"></span></div>
+            </article>
+            <article class="stat-card">
+              <span>Questions fréquentes</span>
+              <strong>19</strong>
+              <div class="progress"><span style="width: 52%"></span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="parametres" aria-labelledby="parametres-title">
+          <div class="section-heading">
+            <p class="eyebrow">Configuration</p>
+            <h2 id="parametres-title">Paramètres</h2>
+            <p>État de démonstration des futures connexions.</p>
+          </div>
+
+          <div class="settings-list">
+            <article class="settings-row">
+              <div><strong>État du projet</strong><span>V1 statique, sans backend</span></div>
+              <span class="badge badge--ready">Actif</span>
+            </article>
+            <article class="settings-row">
+              <div><strong>GitHub</strong><span>Prévu pour suivi commits, issues et automatisations</span></div>
+              <span class="badge">À connecter</span>
+            </article>
+            <article class="settings-row">
+              <div><strong>Hostinger</strong><span>Prévu pour statut de déploiement</span></div>
+              <span class="badge">À connecter</span>
+            </article>
+            <article class="settings-row">
+              <div><strong>Google Analytics</strong><span>Prévu pour statistiques du site</span></div>
+              <span class="badge">À connecter</span>
+            </article>
+            <article class="settings-row">
+              <div><strong>Search Console</strong><span>Prévu pour SEO et indexation</span></div>
+              <span class="badge">À connecter</span>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
