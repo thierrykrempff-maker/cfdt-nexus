@@ -1,9 +1,12 @@
 # TODO
 
-- Décrire la vision détaillée du projet dans `docs/vision/`.
-- Rédiger l'architecture fonctionnelle dans `docs/architecture/`.
-- Définir les workflows prioritaires dans `docs/workflows/`.
+- Compléter `docs/vision/` avec la vision produit.
+- Compléter `docs/security/` avec les règles de confidentialité.
+- Compléter `docs/data-governance/` avec les règles de classement documentaire.
 - Documenter le rôle de chaque agent spécialisé.
-- Préparer les prompts Codex et ChatGPT.
-- Définir les règles de confidentialité et de validation humaine.
+- Créer les premiers tests agents dans `tests/agents/`.
+- Préparer les premiers prompts Codex et ChatGPT.
 - Identifier les premiers scénarios n8n à créer.
+- Définir les règles d'accès entre assistant privé et chatbot public.
+- Préparer un schéma de base documentaire.
+- Préparer une stratégie de veille automatique.

@@ -1,0 +1,27 @@
+name: Décision d'architecture
+description: Proposer ou discuter une décision structurante pour CFDT Nexus.
+title: "[Architecture] "
+labels:
+  - architecture
+body:
+  - type: textarea
+    id: contexte
+    attributes:
+      label: Contexte
+      description: Quel problème cherche-t-on à résoudre ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposition
+    attributes:
+      label: Proposition
+      description: Quelle solution est proposée ?
+    validations:
+      required: true
+  - type: textarea
+    id: impacts
+    attributes:
+      label: Impacts
+      description: Quels impacts sur agents, données, workflows, site ou sécurité ?
+    validations:
+      required: false

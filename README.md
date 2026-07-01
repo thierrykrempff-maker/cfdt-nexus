@@ -2,28 +2,24 @@
 
 CFDT Nexus est une plateforme IA destinée à assister les représentants du personnel et à améliorer le service rendu aux salariés.
 
-Le projet vise à structurer un environnement de travail capable d'aider les équipes syndicales à préparer leurs analyses, organiser leurs connaissances, suivre les sujets sociaux et produire des réponses plus claires, plus rapides et mieux documentées.
+Le projet vise à structurer un environnement professionnel capable d'aider les équipes syndicales à préparer leurs analyses, organiser leurs connaissances, suivre les sujets sociaux et produire des réponses plus claires, plus rapides et mieux documentées.
 
 L'intelligence artificielle y est conçue comme un appui au travail humain : elle aide à rechercher, résumer, comparer, préparer et formaliser, mais les décisions, validations et positions syndicales restent sous responsabilité des représentants.
 
-## Objectifs
+## Ambition
 
-- centraliser les connaissances utiles aux représentants du personnel ;
-- préparer des assistants spécialisés par domaine ;
-- faciliter la veille sociale, juridique, conventionnelle et industrielle ;
-- améliorer la qualité des réponses apportées aux salariés ;
-- documenter les workflows afin de rendre le projet maintenable et contrôlable.
+CFDT Nexus doit pouvoir évoluer vers :
 
-## Architecture
-
-- `docs/` : documentation générale du projet ;
-- `docs/vision/` : vision, principes et objectifs ;
-- `docs/architecture/` : organisation technique et fonctionnelle ;
-- `docs/workflows/` : procédures et modes opératoires ;
-- `agents/` : assistants IA spécialisés ;
-- `prompts/` : prompts destinés à Codex et ChatGPT ;
-- `workflows/n8n/` : automatisations et scénarios n8n ;
-- `site/` : éléments destinés à l'interface ou au site du projet.
+- un assistant privé pour Thierry ;
+- un chatbot public pour les salariés ;
+- une base documentaire structurée ;
+- des agents spécialisés ;
+- des workflows n8n ;
+- un site web ;
+- une veille automatique ;
+- des automatisations GitHub ;
+- des tests ;
+- une documentation technique durable.
 
 ## Principes
 
@@ -31,4 +27,29 @@ L'intelligence artificielle y est conçue comme un appui au travail humain : ell
 - validation humaine obligatoire ;
 - traçabilité des sources et des décisions ;
 - protection des données personnelles ;
-- sobriété technique et documentation continue.
+- séparation stricte entre informations publiques et internes ;
+- architecture lisible et maintenable ;
+- amélioration continue par versions.
+
+## Architecture
+
+- `.github/` : automatisations GitHub, modèles d'issues et de pull requests ;
+- `docs/` : documentation produit, technique, sécurité et exploitation ;
+- `agents/` : agents IA spécialisés et prompts système associés ;
+- `prompts/` : prompts réutilisables pour Codex, ChatGPT et systèmes ;
+- `knowledge-base/` : base documentaire organisée par nature de source ;
+- `apps/` : futurs assistants et interfaces applicatives ;
+- `site/` : futur site ou interface web du projet ;
+- `workflows/` : workflows n8n, GitHub et veille ;
+- `automation/` : scripts, jobs et traitements automatisés ;
+- `tests/` : tests agents, prompts, workflows et site ;
+- `config/` : configuration, environnements et schémas.
+
+## Documentation clé
+
+- `docs/architecture/ARCHITECTURE_GLOBALE_V1.md`
+- `docs/decisions/ADR-0001-architecture-initiale.md`
+- `agents/README.md`
+- `knowledge-base/README.md`
+- `workflows/README.md`
+- `tests/README.md`
