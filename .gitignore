@@ -1,0 +1,12 @@
+# Private and local-only corpora
+private/
+knowledge-private/
+data-private/
+corpus-private/
+local-index/
+
+# Private inventories and local extracts
+*.private.json
+*.private.csv
+*.private.ndjson
+*.private.log
