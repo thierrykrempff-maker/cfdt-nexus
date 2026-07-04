@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/documents.schema.json",
+  "title": "CFDT Nexus Document Metadata V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "titre",
+    "categorie",
+    "confidentialite",
+    "cheminLocalPrive",
+    "motsCles",
+    "resume",
+    "agentsAutorises",
+    "dateAjout",
+    "derniereVerification"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,80}$",
+      "description": "Identifiant stable du document dans l'index."
+    },
+    "titre": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 220
+    },
+    "categorie": {
+      "type": "string",
+      "enum": [
+        "convention collective",
+        "accord entreprise",
+        "règlement intérieur",
+        "PV CSE",
+        "jurisprudence",
+        "modèle courrier",
+        "veille juridique",
+        "note personnelle",
+        "document CSSCT",
+        "document paie"
+      ]
+    },
+    "sousCategorie": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "entreprise": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "site": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date du document lorsque disponible."
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "confidentialite": {
+      "type": "string",
+      "enum": [
+        "public",
+        "interne",
+        "confidentiel"
+      ]
+    },
+    "cheminLocalPrive": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Chemin local ou cloud privé hors GitHub. Ne doit pas pointer vers un fichier réel dans le dépôt."
+    },
+    "motsCles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "resume": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Résumé expurgé, sans donnée nominative ni information confidentielle non validée."
+    },
+    "agentsAutorises": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "document-intelligence-center",
+          "cycle-cse",
+          "defenseur-syndical",
+          "paie",
+          "cssct",
+          "convention-chimie",
+          "veille-juridique",
+          "communication",
+          "routeur-core"
+        ]
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "dateAjout": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "derniereVerification": {
+      "type": "string",
+      "format": "date"
+    },
+    "sourceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,80}$"
+    },
+    "statutVerification": {
+      "type": "string",
+      "enum": [
+        "a vérifier",
+        "vérifié",
+        "obsolète",
+        "à retirer"
+      ],
+      "default": "a vérifier"
+    },
+    "publicationAutorisee": {
+      "type": "boolean",
+      "default": false,
+      "description": "Toujours false par défaut. Toute publication publique nécessite validation humaine."
+    }
+  }
+}

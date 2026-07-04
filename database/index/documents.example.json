@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "documents-index-v1",
+  "notice": "Exemple fictif. Ne contient aucun document réel, aucun accord réel, aucun PV CSE réel et aucune donnée nominative.",
+  "documents": [
+    {
+      "id": "exemple-convention-chimie",
+      "titre": "Exemple fictif de référence convention collective",
+      "categorie": "convention collective",
+      "sousCategorie": "classification",
+      "entreprise": "Exemple",
+      "site": "Exemple",
+      "date": "2026-01-01",
+      "version": "exemple-v1",
+      "confidentialite": "public",
+      "cheminLocalPrive": "knowledge-private.example/convention-chimie/aucun-document-reel.md",
+      "motsCles": [
+        "convention",
+        "classification",
+        "exemple"
+      ],
+      "resume": "Exemple de métadonnée publique fictive pour préparer l'indexation future.",
+      "agentsAutorises": [
+        "document-intelligence-center",
+        "convention-chimie",
+        "routeur-core"
+      ],
+      "dateAjout": "2026-07-04T00:00:00+02:00",
+      "derniereVerification": "2026-07-04",
+      "sourceId": "source-exemple-convention",
+      "statutVerification": "a vérifier",
+      "publicationAutorisee": false
+    },
+    {
+      "id": "exemple-pv-cse-fictif",
+      "titre": "Exemple fictif de métadonnée PV CSE",
+      "categorie": "PV CSE",
+      "sousCategorie": "réunion ordinaire",
+      "entreprise": "Entreprise fictive",
+      "site": "Site fictif",
+      "date": "2026-01-15",
+      "version": "exemple-v1",
+      "confidentialite": "confidentiel",
+      "cheminLocalPrive": "knowledge-private.example/pv-cse/aucun-pv-reel.md",
+      "motsCles": [
+        "cse",
+        "pv",
+        "exemple"
+      ],
+      "resume": "Exemple de métadonnée expurgée. Aucun contenu de PV réel ne doit être stocké dans GitHub.",
+      "agentsAutorises": [
+        "document-intelligence-center",
+        "cycle-cse",
+        "routeur-core"
+      ],
+      "dateAjout": "2026-07-04T00:00:00+02:00",
+      "derniereVerification": "2026-07-04",
+      "sourceId": "source-exemple-cse",
+      "statutVerification": "a vérifier",
+      "publicationAutorisee": false
+    },
+    {
+      "id": "exemple-modele-courrier",
+      "titre": "Exemple fictif de modèle de courrier",
+      "categorie": "modèle courrier",
+      "sousCategorie": "demande de document",
+      "entreprise": "Exemple",
+      "site": "Exemple",
+      "date": "2026-01-20",
+      "version": "exemple-v1",
+      "confidentialite": "interne",
+      "cheminLocalPrive": "knowledge-private.example/modeles/aucun-modele-reel.md",
+      "motsCles": [
+        "courrier",
+        "modèle",
+        "demande"
+      ],
+      "resume": "Exemple de fiche d'index pour un futur modèle de courrier interne.",
+      "agentsAutorises": [
+        "document-intelligence-center",
+        "defenseur-syndical",
+        "cssct",
+        "paie",
+        "routeur-core"
+      ],
+      "dateAjout": "2026-07-04T00:00:00+02:00",
+      "derniereVerification": "2026-07-04",
+      "sourceId": "source-exemple-modeles",
+      "statutVerification": "a vérifier",
+      "publicationAutorisee": false
+    }
+  ]
+}

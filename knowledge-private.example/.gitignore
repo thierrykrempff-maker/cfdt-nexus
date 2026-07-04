@@ -1,0 +1,6 @@
+# Prevent accidental commit of real private documents in this example tree.
+*
+!README.md
+!.gitignore
+!*/
+!*/.gitkeep

@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/cse.schema.json",
+  "title": "CFDT Nexus CSE Meeting Index V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "titre",
+    "type",
+    "date",
+    "confidentialite",
+    "site",
+    "documentsAssocies",
+    "pointsOrdreDuJour",
+    "validationHumaine"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,80}$"
+    },
+    "titre": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 180
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "CSE ordinaire",
+        "CSE extraordinaire",
+        "CSSCT",
+        "information-consultation",
+        "réunion préparatoire",
+        "autre"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "confidentialite": {
+      "type": "string",
+      "enum": [
+        "interne",
+        "confidentiel"
+      ]
+    },
+    "entreprise": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "site": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "documentsAssocies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]{2,80}$"
+      },
+      "uniqueItems": true,
+      "description": "Références vers l'index documentaire, jamais vers un PV réel stocké dans GitHub."
+    },
+    "pointsOrdreDuJour": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "titre",
+          "categorie",
+          "statut"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{2,80}$"
+          },
+          "titre": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 220
+          },
+          "categorie": {
+            "type": "string",
+            "enum": [
+              "information",
+              "consultation",
+              "CSSCT",
+              "économique",
+              "paie",
+              "emploi",
+              "organisation",
+              "autre"
+            ]
+          },
+          "statut": {
+            "type": "string",
+            "enum": [
+              "à préparer",
+              "en séance",
+              "réponse partielle",
+              "réponse complète",
+              "à relancer",
+              "clos"
+            ]
+          },
+          "documentsDemandes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "questionsPreparees": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "engagements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "relances": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    },
+    "validationHumaine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requise",
+        "publicationAutorisee"
+      ],
+      "properties": {
+        "requise": {
+          "type": "boolean",
+          "const": true
+        },
+        "publicationAutorisee": {
+          "type": "boolean",
+          "const": false
+        },
+        "validePar": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "dateValidation": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
