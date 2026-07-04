@@ -1,0 +1,132 @@
+{
+  "version": "1.0",
+  "created_at": "2026-07-04",
+  "project": "CFDT Nexus",
+  "scope": "Connecteurs réels de veille V1",
+  "security": {
+    "private_data": false,
+    "ineos_agreements": false,
+    "cse_minutes": false,
+    "bdese": false,
+    "api_keys": false,
+    "tokens": false,
+    "public_site_changes": false
+  },
+  "output_policy": {
+    "default_output_directory": "local-index/watch-connectors",
+    "commit_results": false,
+    "reason": "Les résultats de veille sont temporaires et ne doivent pas être versionnés."
+  },
+  "sources": [
+    {
+      "id": "cfdt-officielle",
+      "name": "CFDT officielle",
+      "official_url": "https://www.cfdt.fr/",
+      "watch_url": "https://www.cfdt.fr/",
+      "access_type": "manuel",
+      "status": "non automatisable V1",
+      "enabled": false,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "hebdomadaire",
+      "known_limits": [
+        "Accès automatique instable ou protégé lors des vérifications.",
+        "Aucun flux RSS ou endpoint simple n'a été confirmé.",
+        "À consulter manuellement avant intégration."
+      ],
+      "method": "Consultation humaine du site officiel et reprise uniquement de liens publics vérifiés.",
+      "business_uses": ["idée d'article", "veille CFDT", "communication syndicale"]
+    },
+    {
+      "id": "fce-cfdt",
+      "name": "FCE-CFDT",
+      "official_url": "https://fce.cfdt.fr/",
+      "watch_url": "https://fce.cfdt.fr/actualites-de-la-federation/",
+      "access_type": "page publique",
+      "status": "à vérifier",
+      "enabled": false,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "hebdomadaire",
+      "known_limits": [
+        "Aucun flux RSS n'a été confirmé.",
+        "Le test réel du connecteur local a renvoyé HTTP 403.",
+        "Extraction limitée aux titres et liens visibles sur la page publique.",
+        "Les contenus doivent être relus avant toute réutilisation."
+      ],
+      "method": "Consultation manuelle ou vérification technique ultérieure de la page publique des actualités de la fédération.",
+      "business_uses": ["alerte CSE", "veille branche Chimie", "idée d'article", "communication CFDT"]
+    },
+    {
+      "id": "cour-cassation",
+      "name": "Cour de cassation",
+      "official_url": "https://www.courdecassation.fr/",
+      "watch_url": "https://www.courdecassation.fr/toutes-les-actualites",
+      "access_type": "manuel",
+      "status": "non automatisable V1",
+      "enabled": false,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "hebdomadaire",
+      "known_limits": [
+        "La page actualités testée exige JavaScript et cookies.",
+        "Aucun flux RSS simple n'a été confirmé pour cette V1.",
+        "Ne pas utiliser d'API jurisprudentielle sans cadrage séparé."
+      ],
+      "method": "Consultation manuelle des actualités ou recherche officielle ciblée quand une jurisprudence est nécessaire.",
+      "business_uses": ["veille juridique", "défense syndicale", "point à vérifier"]
+    },
+    {
+      "id": "inrs",
+      "name": "INRS",
+      "official_url": "https://www.inrs.fr/",
+      "watch_url": "https://www.inrs.fr/actualites.html",
+      "access_type": "page publique",
+      "status": "actif",
+      "enabled": true,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "hebdomadaire",
+      "known_limits": [
+        "Aucun flux RSS n'a été confirmé.",
+        "Extraction limitée aux titres, dates et liens de la page actualités.",
+        "Les fiches prévention doivent être relues avant usage CSSCT."
+      ],
+      "method": "Lecture ponctuelle de la page publique Actualités INRS et extraction des entrées visibles.",
+      "business_uses": ["question CSSCT", "alerte santé sécurité", "idée d'article", "veille prévention"]
+    },
+    {
+      "id": "anact",
+      "name": "ANACT",
+      "official_url": "https://www.anact.fr/",
+      "watch_url": "https://www.anact.fr/actualites",
+      "access_type": "à vérifier",
+      "status": "non automatisable V1",
+      "enabled": false,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "mensuelle",
+      "known_limits": [
+        "Accès automatisé bloqué par protection anti-robot ERR-BOT-403.",
+        "Aucun flux RSS simple n'a été confirmé.",
+        "Consultation humaine nécessaire."
+      ],
+      "method": "Consultation manuelle du site ANACT, sans contournement de protection.",
+      "business_uses": ["question CSSCT", "veille conditions de travail", "idée d'article"]
+    },
+    {
+      "id": "france-chimie",
+      "name": "France Chimie",
+      "official_url": "https://www.francechimie.fr/",
+      "watch_url": "https://www.francechimie.fr/",
+      "access_type": "page publique",
+      "status": "actif",
+      "enabled": true,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "hebdomadaire",
+      "known_limits": [
+        "Aucun flux RSS n'a été confirmé.",
+        "La page complète Actualités peut être limitée ou nécessiter JavaScript.",
+        "La V1 utilise uniquement les éléments publics visibles sur l'accueil / À la une.",
+        "Source patronale/branche : toujours distinguer de la position CFDT."
+      ],
+      "method": "Lecture ponctuelle de la page publique d'accueil et extraction prudente des titres visibles.",
+      "business_uses": ["alerte CSE", "veille industrie chimique", "point à vérifier", "idée d'article"]
+    }
+  ]
+}
