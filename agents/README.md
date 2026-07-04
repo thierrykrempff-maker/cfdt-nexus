@@ -19,7 +19,7 @@ Ils ne doivent pas stocker directement les sources documentaires. Les sources vi
 - `communication/` : communication syndicale ;
 - `redacteur-cfdt/` : articles, tracts, synthèses ;
 - `site-web-codex/` : modifications du site via Codex, GitHub et Hostinger ;
-- `veille/` : veille sociale, juridique et industrielle.
+- `veille/` : veille sociale, juridique, CFDT, branche Chimie, santé-sécurité et industrielle.
 
 ## Règles
 

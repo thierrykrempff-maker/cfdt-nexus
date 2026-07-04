@@ -8,6 +8,18 @@ Ce dossier regroupe les workflows du projet.
 - `github/` : automatisations GitHub ;
 - `veille/` : veille automatique.
 
+## Veille V1
+
+Le dossier `veille/` contient le premier socle du moteur de veille :
+
+- canaux de veille ;
+- règles de validation ;
+- liens avec les agents ;
+- schémas de fiches ;
+- exemples fictifs.
+
+La veille reste en brouillon tant qu'une validation humaine n'a pas autorisé l'usage ou la diffusion.
+
 ## Règles
 
 - Documenter un workflow avant automatisation.

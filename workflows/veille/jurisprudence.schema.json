@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/jurisprudence.schema.json",
+  "title": "CFDT Nexus - Fiche jurisprudence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "court",
+    "chamber",
+    "decision_date",
+    "case_number",
+    "source_url",
+    "legal_issue",
+    "facts_summary",
+    "decision_summary",
+    "useful_for",
+    "limits",
+    "points_to_verify",
+    "agents",
+    "confidence",
+    "status"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "court": { "type": "string" },
+    "chamber": { "type": ["string", "null"] },
+    "decision_date": { "type": ["string", "null"], "format": "date" },
+    "case_number": { "type": ["string", "null"] },
+    "source_url": { "type": "string", "format": "uri" },
+    "legal_issue": { "type": "string" },
+    "facts_summary": { "type": "string" },
+    "decision_summary": { "type": "string" },
+    "useful_for": { "type": "array", "items": { "type": "string" } },
+    "limits": { "type": "array", "items": { "type": "string" } },
+    "points_to_verify": { "type": "array", "items": { "type": "string" } },
+    "agents": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "string", "enum": ["fort", "moyen", "faible"] },
+    "status": {
+      "type": "string",
+      "enum": ["a_verifier", "analyse_preparee", "pret_pour_relecture", "valide", "archive"]
+    }
+  }
+}
+

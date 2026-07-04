@@ -1,0 +1,37 @@
+{
+  "id": "veille-demo-20260704-001",
+  "title": "Exemple fictif - Nouvelle fiche prévention à vérifier",
+  "channel_id": "sante-securite",
+  "source_id": "inrs",
+  "source_url": "https://www.inrs.fr/",
+  "publication_date": null,
+  "detected_at": "2026-07-04T08:00:00Z",
+  "status": "a_verifier",
+  "trust_level": "B",
+  "confidence": "moyen",
+  "summary": "Exemple fictif montrant comment une veille prévention serait structurée avant validation.",
+  "facts": [
+    "Source détectée dans un canal santé sécurité.",
+    "Aucun document interne n'est associé à cette fiche."
+  ],
+  "sources": [
+    "Source publique INRS à consulter manuellement."
+  ],
+  "analysis": [
+    "Le sujet pourrait intéresser la CSSCT si le thème concerne un risque présent sur le site."
+  ],
+  "points_to_verify": [
+    "Date réelle de publication.",
+    "Champ d'application.",
+    "Lien avec les conditions de travail locales."
+  ],
+  "possible_actions": [
+    "Préparer une question CSSCT.",
+    "Rédiger une note prévention après validation."
+  ],
+  "agents": ["cssct", "communication"],
+  "public_reusable": false,
+  "validated_by": null,
+  "validated_at": null
+}
+

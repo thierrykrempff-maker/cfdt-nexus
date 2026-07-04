@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/source-registry.schema.json",
+  "title": "CFDT Nexus - Source Registry Entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "organization",
+    "url",
+    "source_category",
+    "source_type",
+    "topics",
+    "geographical_scope",
+    "sector_scope",
+    "trust_level",
+    "legal_proof_level",
+    "detection_value",
+    "analysis_value",
+    "update_frequency",
+    "monitoring_frequency",
+    "access_type",
+    "rss_url",
+    "api_available",
+    "api_documentation",
+    "social_platform",
+    "official_verified",
+    "last_verified_at",
+    "active",
+    "notes",
+    "verification_rule"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string" },
+    "organization": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "source_category": {
+      "type": "string",
+      "enum": [
+        "institutionnelle",
+        "jurisprudence",
+        "droit-travail",
+        "paie-social",
+        "sante-securite",
+        "statistique",
+        "branche-chimie",
+        "cfdt",
+        "reseau-social-officiel",
+        "veille-specialisee"
+      ]
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["texte", "moteur-recherche", "publication", "site", "social", "newsletter", "base-documentaire"]
+    },
+    "topics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "geographical_scope": { "type": "string" },
+    "sector_scope": { "type": "string" },
+    "trust_level": { "type": "string", "enum": ["A", "B", "C", "D"] },
+    "legal_proof_level": {
+      "type": "string",
+      "enum": ["opposable", "reference-officielle", "analyse-experte", "signal-faible", "a-verifier"]
+    },
+    "detection_value": { "type": "string", "enum": ["forte", "moyenne", "faible"] },
+    "analysis_value": { "type": "string", "enum": ["forte", "moyenne", "faible"] },
+    "update_frequency": { "type": "string" },
+    "monitoring_frequency": { "type": "string" },
+    "access_type": {
+      "type": "string",
+      "enum": ["public", "public-protection-robot", "partiel-ou-abonnement", "a-verifier"]
+    },
+    "rss_url": { "type": ["string", "null"], "format": "uri" },
+    "api_available": { "type": ["boolean", "null"] },
+    "api_documentation": { "type": ["string", "null"], "format": "uri" },
+    "social_platform": { "type": ["string", "null"] },
+    "official_verified": { "type": "boolean" },
+    "last_verified_at": { "type": ["string", "null"], "format": "date" },
+    "active": { "type": "boolean" },
+    "notes": { "type": "string" },
+    "verification_rule": { "type": "string" }
+  }
+}
+

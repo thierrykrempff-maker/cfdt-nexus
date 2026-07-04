@@ -48,6 +48,7 @@ CFDT Nexus doit pouvoir évoluer vers :
 ## Documentation clé
 
 - `docs/architecture/ARCHITECTURE_GLOBALE_V1.md`
+- `docs/architecture/VEILLE_SOURCES_V1.md`
 - `docs/decisions/ADR-0001-architecture-initiale.md`
 - `agents/README.md`
 - `knowledge-base/README.md`

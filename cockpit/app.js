@@ -68,6 +68,48 @@ const activities = [
   { title: "Défenseur Syndical V1 ajouté", detail: "Méthode prudente pour dossiers sensibles." },
 ];
 
+const watchTodayItems = [
+  {
+    title: "Santé sécurité",
+    detail: "Exemple fictif de veille prévention à relire avant exploitation CSSCT.",
+    source: "INRS",
+    confidence: "Moyen",
+  },
+  {
+    title: "Jurisprudence sociale",
+    detail: "Signal fictif : rechercher la décision primaire avant toute analyse.",
+    source: "Cour de cassation",
+    confidence: "Faible",
+  },
+  {
+    title: "Branche Chimie",
+    detail: "Surveiller les évolutions IDCC 44 sur Légifrance et croiser avec les accords locaux.",
+    source: "Légifrance",
+    confidence: "Fort",
+  },
+];
+
+const watchSources = [
+  { name: "Légifrance", kind: "Source A", detail: "Textes, conventions collectives et jurisprudence." },
+  { name: "FCE-CFDT", kind: "Source B", detail: "Positions fédérales Chimie Énergie." },
+  { name: "INRS", kind: "Source B", detail: "Prévention, risques chimiques et santé sécurité." },
+  { name: "France Chimie", kind: "Source B", detail: "Contexte branche et industrie chimique." },
+  { name: "Sources spécialisées", kind: "Source C", detail: "Détection uniquement, source primaire obligatoire." },
+];
+
+const watchReviewItems = [
+  { title: "BOSS", detail: "URL à vérifier manuellement avant activation du canal paie." },
+  { title: "URSSAF", detail: "Accès automatique instable : ne pas activer sans contrôle humain." },
+  { title: "Réseaux sociaux FCE-CFDT", detail: "Capturer les liens exacts depuis le site officiel avant registre." },
+  { title: "Village de la Justice", detail: "Source proposée mais à valider avant surveillance." },
+];
+
+const watchValidatedItems = [
+  { title: "Registre sources V1", detail: "Sources classées par niveau de confiance A / B / C / D." },
+  { title: "Canaux de veille V1", detail: "13 canaux prévus : droit, CSE, CSSCT, paie, Chimie, CFDT et industrie." },
+  { title: "Règles validation V1", detail: "Publication automatique interdite ; validation Thierry obligatoire." },
+];
+
 const libraryDocuments = [
   {
     title: "Convention Chimie - classifications",
@@ -180,6 +222,12 @@ const selectors = {
   integrationGrid: document.querySelector("#integration-grid"),
   settingsList: document.querySelector("#settings-list"),
   globalSearch: document.querySelector("#global-search"),
+  watchSourceCount: document.querySelector("#watch-source-count"),
+  watchReviewCount: document.querySelector("#watch-review-count"),
+  watchTodayList: document.querySelector("#watch-today-list"),
+  watchSourcesList: document.querySelector("#watch-sources-list"),
+  watchReviewList: document.querySelector("#watch-review-list"),
+  watchValidatedList: document.querySelector("#watch-validated-list"),
 };
 
 const formatDate = (value) =>
@@ -382,6 +430,60 @@ const renderLibrary = () => {
     .join("");
 };
 
+const renderWatch = () => {
+  selectors.watchSourceCount.textContent = String(watchSources.length);
+  selectors.watchReviewCount.textContent = String(watchReviewItems.length);
+
+  selectors.watchTodayList.innerHTML = watchTodayItems
+    .map(
+      (item) => `
+        <article class="watch-item">
+          <span class="badge">${item.source}</span>
+          <h4>${item.title}</h4>
+          <p>${item.detail}</p>
+          <small>Confiance : ${item.confidence}</small>
+        </article>
+      `
+    )
+    .join("");
+
+  selectors.watchSourcesList.innerHTML = watchSources
+    .map(
+      (item) => `
+        <article class="watch-item">
+          <span class="badge">${item.kind}</span>
+          <h4>${item.name}</h4>
+          <p>${item.detail}</p>
+        </article>
+      `
+    )
+    .join("");
+
+  selectors.watchReviewList.innerHTML = watchReviewItems
+    .map(
+      (item) => `
+        <article class="watch-item watch-item--warning">
+          <span class="badge">À vérifier</span>
+          <h4>${item.title}</h4>
+          <p>${item.detail}</p>
+        </article>
+      `
+    )
+    .join("");
+
+  selectors.watchValidatedList.innerHTML = watchValidatedItems
+    .map(
+      (item) => `
+        <article class="watch-item watch-item--valid">
+          <span class="badge">Validé</span>
+          <h4>${item.title}</h4>
+          <p>${item.detail}</p>
+        </article>
+      `
+    )
+    .join("");
+};
+
 const renderTemplates = () => {
   selectors.templateGrid.innerHTML = templates
     .map(
@@ -537,6 +639,7 @@ const init = () => {
   renderHome();
   renderCases();
   renderLibrary();
+  renderWatch();
   renderTemplates();
   renderIntegrations();
   renderSettings();

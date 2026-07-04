@@ -338,30 +338,74 @@
 
         <section class="view" id="veille" aria-labelledby="veille-title">
           <div class="section-heading">
-            <p class="eyebrow">Veille automatique</p>
-            <h2 id="veille-title">Veille</h2>
-            <p>Zone prévue pour connecter plus tard sources CFDT, droit social, branche Chimie, INEOS et sécurité.</p>
+            <p class="eyebrow">Veille & sources</p>
+            <h2 id="veille-title">Veille juridique, CFDT et Chimie</h2>
+            <p>Vue V1 du futur moteur de veille : sources vérifiées, signaux à relire, fiches validées et liens vers les agents.</p>
           </div>
 
-          <div class="watch-grid">
-            <article class="panel watch-card">
-              <h3>Sources prévues</h3>
-              <ul class="plain-list">
-                <li>CFDT nationale</li>
-                <li>FCE-CFDT</li>
-                <li>Légifrance et sources officielles</li>
-                <li>Actualité INEOS</li>
-              </ul>
+          <div class="watch-summary" aria-label="Résumé de la veille">
+            <article class="watch-stat">
+              <span>Sources suivies</span>
+              <strong id="watch-source-count">0</strong>
             </article>
-            <article class="panel watch-card">
-              <h3>Automatisation future</h3>
-              <p>n8n pourra collecter, filtrer et proposer des synthèses. Rien ne sera publié sans validation.</p>
+            <article class="watch-stat">
+              <span>Canaux actifs</span>
+              <strong>13</strong>
             </article>
-            <article class="panel watch-card">
-              <h3>Validation humaine</h3>
-              <p>Les contenus sensibles devront rester en brouillon jusqu'à validation explicite.</p>
+            <article class="watch-stat">
+              <span>À vérifier</span>
+              <strong id="watch-review-count">0</strong>
+            </article>
+            <article class="watch-stat">
+              <span>Publication auto</span>
+              <strong>Non</strong>
             </article>
           </div>
+
+          <div class="watch-board">
+            <section class="panel watch-lane" aria-labelledby="watch-today-title">
+              <div class="panel__header">
+                <h3 id="watch-today-title">Aujourd'hui</h3>
+                <span>Brouillons</span>
+              </div>
+              <div class="watch-list" id="watch-today-list"></div>
+            </section>
+
+            <section class="panel watch-lane" aria-labelledby="watch-sources-title">
+              <div class="panel__header">
+                <h3 id="watch-sources-title">Mes sources</h3>
+                <span>Registre V1</span>
+              </div>
+              <div class="watch-list" id="watch-sources-list"></div>
+            </section>
+
+            <section class="panel watch-lane" aria-labelledby="watch-review-title">
+              <div class="panel__header">
+                <h3 id="watch-review-title">À vérifier</h3>
+                <span>Avant activation</span>
+              </div>
+              <div class="watch-list" id="watch-review-list"></div>
+            </section>
+
+            <section class="panel watch-lane" aria-labelledby="watch-validated-title">
+              <div class="panel__header">
+                <h3 id="watch-validated-title">Veilles validées</h3>
+                <span>Diffusion contrôlée</span>
+              </div>
+              <div class="watch-list" id="watch-validated-list"></div>
+            </section>
+          </div>
+
+          <section class="panel watch-rules">
+            <div class="panel__header">
+              <h3>Règle de sécurité</h3>
+              <span>V1</span>
+            </div>
+            <p>
+              Les réseaux sociaux et sources spécialisées servent à détecter. Une réponse juridique ou une publication doit
+              toujours être recoupée avec une source officielle, la convention Chimie ou les accords privés validés.
+            </p>
+          </section>
         </section>
 
         <section class="view" id="statistiques" aria-labelledby="statistiques-title">

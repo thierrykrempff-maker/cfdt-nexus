@@ -1,0 +1,31 @@
+{
+  "id": "jurisprudence-demo-20260704-001",
+  "title": "Exemple fictif - Sanction disciplinaire et preuve",
+  "court": "Cour de cassation",
+  "chamber": "Chambre sociale",
+  "decision_date": null,
+  "case_number": null,
+  "source_url": "https://www.courdecassation.fr/",
+  "legal_issue": "Exemple de question à qualifier : quels éléments de preuve peuvent être discutés dans une sanction disciplinaire ?",
+  "facts_summary": "Exemple volontairement fictif. Aucun salarié réel, aucune entreprise réelle et aucune décision précise ne sont décrits.",
+  "decision_summary": "À compléter uniquement après lecture de la décision officielle.",
+  "useful_for": [
+    "Préparer un entretien préalable.",
+    "Identifier les preuves à demander.",
+    "Distinguer fait reproché, preuve et argument."
+  ],
+  "limits": [
+    "Ne pas utiliser sans numéro de pourvoi.",
+    "Ne pas généraliser hors contexte factuel comparable."
+  ],
+  "points_to_verify": [
+    "Date de décision.",
+    "Numéro de pourvoi.",
+    "Portée exacte de l'arrêt.",
+    "Existence d'une publication ou d'un commentaire officiel."
+  ],
+  "agents": ["defenseur", "juriste"],
+  "confidence": "faible",
+  "status": "a_verifier"
+}
+

@@ -68,10 +68,12 @@ Chaque dossier contient :
 - Génération locale simulée d'une trame.
 - Validation humaine prévue avant diffusion.
 
-### Veille
+### Veille & Sources
 
-- Zone prévue pour futures sources CFDT, FCE-CFDT, droit social, INEOS et sécurité.
-- Préparation d'une future connexion n8n.
+- Vue statique du socle sources et veille V1.
+- Blocs : Aujourd'hui, Mes sources, À vérifier, Veilles validées.
+- Rappel permanent : aucune publication automatique.
+- Préparation d'une future connexion n8n, GitHub, agents CFDT Nexus et Document Intelligence Center.
 
 ### Statistiques
 

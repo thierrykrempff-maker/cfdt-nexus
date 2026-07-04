@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "created_at": "2026-07-04",
+  "description": "Relations prévues entre le moteur de veille CFDT Nexus et les autres briques du projet.",
+  "relations": [
+    {
+      "from": "veille",
+      "to": "cycle-cse-intelligent",
+      "trigger": "veille classée CSE, emploi, restructuration, santé sécurité ou industrie",
+      "data_sent": ["titre", "resume", "source_url", "niveau_confiance", "questions_possibles", "documents_a_demander"],
+      "guardrail": "Aucun document confidentiel n'est envoyé ; seules les métadonnées et synthèses validées circulent."
+    },
+    {
+      "from": "veille",
+      "to": "bible-accords-sarralbe",
+      "trigger": "veille susceptible d'impacter un accord local, une prime, un rythme ou un droit collectif",
+      "data_sent": ["theme", "mots_cles", "texte_source", "point_a_comparer"],
+      "guardrail": "La comparaison avec les accords locaux reste privée et doit être validée par Thierry."
+    },
+    {
+      "from": "veille",
+      "to": "document-intelligence-center",
+      "trigger": "source primaire ou fiche validée à indexer",
+      "data_sent": ["fiche_id", "source_id", "resume", "mots_cles", "date_verification"],
+      "guardrail": "Pas d'embeddings ni d'envoi externe tant que la politique documentaire privée n'est pas validée."
+    },
+    {
+      "from": "veille",
+      "to": "agent-defenseur-syndical",
+      "trigger": "jurisprudence ou règle liée à discipline, entretien préalable, preuve, sanction ou harcèlement",
+      "data_sent": ["points_utiles", "risques", "delais", "sources_verifiees"],
+      "guardrail": "L'agent ne promet jamais une issue favorable et demande les pièces du dossier."
+    },
+    {
+      "from": "veille",
+      "to": "agent-paie",
+      "trigger": "veille BOSS, URSSAF, salaires, primes, avantages ou rémunération collective",
+      "data_sent": ["theme", "source", "date_effet", "points_a_verifier"],
+      "guardrail": "Pas de traitement de bulletin nominatif dans le dépôt GitHub."
+    },
+    {
+      "from": "veille",
+      "to": "agent-cssct",
+      "trigger": "veille santé sécurité, risques chimiques, canicule, travail posté ou conditions de travail",
+      "data_sent": ["risque", "source_prevention", "mesures_possibles", "questions_cssct"],
+      "guardrail": "Les situations réelles de salariés restent anonymisées."
+    },
+    {
+      "from": "veille",
+      "to": "agent-convention-chimie",
+      "trigger": "veille IDCC 44, classification, salaires minima ou branche Chimie",
+      "data_sent": ["theme_conventionnel", "lien_legifrance", "date_verification", "point_a_comparer"],
+      "guardrail": "Toujours vérifier si un accord d'entreprise plus précis existe."
+    },
+    {
+      "from": "veille",
+      "to": "communication",
+      "trigger": "veille validée utile aux salariés",
+      "data_sent": ["angle_pedagogique", "resume_simple", "source_publique", "appel_a_validation"],
+      "guardrail": "Aucune publication sur le site public sans validation humaine explicite."
+    }
+  ]
+}
+

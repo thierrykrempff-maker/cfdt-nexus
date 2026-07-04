@@ -1,5 +1,15 @@
 # Changelog
 
+## Socle sources juridiques CFDT et veille V1
+
+- Ajout du registre des sources juridiques, institutionnelles, CFDT, branche Chimie et veille spécialisée.
+- Ajout de la hiérarchie de confiance des sources A / B / C / D.
+- Ajout des 13 canaux de veille V1.
+- Ajout des schémas de fiche de veille, fiche jurisprudence et bulletin.
+- Ajout de l'agent Veille Juridique et Sociale V1.
+- Extension du cockpit avec la vue statique `Veille & Sources`.
+- Aucune donnée confidentielle, aucun accord réel et aucun document privé n'ont été ajoutés.
+
 ## Cycle CSE Intelligent et Analyse Financiere Sarralbe V1
 
 - Ajout des methodologies Cycle CSE Intelligent V1 et Analyse Financiere Sarralbe V1.

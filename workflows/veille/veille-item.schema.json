@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/veille-item.schema.json",
+  "title": "CFDT Nexus - Fiche de veille",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "channel_id",
+    "source_id",
+    "source_url",
+    "publication_date",
+    "detected_at",
+    "status",
+    "trust_level",
+    "confidence",
+    "summary",
+    "facts",
+    "sources",
+    "analysis",
+    "points_to_verify",
+    "possible_actions",
+    "agents",
+    "public_reusable",
+    "validated_by",
+    "validated_at"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "channel_id": { "type": "string" },
+    "source_id": { "type": "string" },
+    "source_url": { "type": "string", "format": "uri" },
+    "publication_date": { "type": ["string", "null"], "format": "date" },
+    "detected_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "detecte",
+        "a_verifier",
+        "source_primaire_recherchee",
+        "analyse_preparee",
+        "pret_pour_relecture",
+        "valide",
+        "rejete",
+        "archive"
+      ]
+    },
+    "trust_level": { "type": "string", "enum": ["A", "B", "C", "D"] },
+    "confidence": { "type": "string", "enum": ["fort", "moyen", "faible"] },
+    "summary": { "type": "string" },
+    "facts": { "type": "array", "items": { "type": "string" } },
+    "sources": { "type": "array", "items": { "type": "string" } },
+    "analysis": { "type": "array", "items": { "type": "string" } },
+    "points_to_verify": { "type": "array", "items": { "type": "string" } },
+    "possible_actions": { "type": "array", "items": { "type": "string" } },
+    "agents": { "type": "array", "items": { "type": "string" } },
+    "public_reusable": { "type": "boolean" },
+    "validated_by": { "type": ["string", "null"] },
+    "validated_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}
+

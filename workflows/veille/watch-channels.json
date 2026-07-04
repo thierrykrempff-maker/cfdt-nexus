@@ -1,0 +1,125 @@
+{
+  "version": "1.0",
+  "created_at": "2026-07-04",
+  "description": "Canaux de veille V1 pour CFDT Nexus. Aucun scraping agressif, aucune publication automatique.",
+  "channels": [
+    {
+      "id": "droit-du-travail",
+      "name": "Droit du travail",
+      "priority": "haute",
+      "topics": ["contrat", "discipline", "licenciement", "temps de travail", "conges"],
+      "preferred_sources": ["legifrance", "code-travail-numerique", "ministere-travail", "service-public"],
+      "agents": ["juriste", "defenseur", "core"],
+      "output": ["fiche-veille", "question-salarie", "courrier-prudent"]
+    },
+    {
+      "id": "jurisprudence-sociale",
+      "name": "Jurisprudence sociale",
+      "priority": "haute",
+      "topics": ["chambre sociale", "prudhommes", "preuve", "sanction", "harcelement"],
+      "preferred_sources": ["cour-de-cassation", "legifrance", "dalloz-actualite", "actuel-rh"],
+      "agents": ["juriste", "defenseur"],
+      "output": ["fiche-jurisprudence", "argumentaire", "alerte-dossier"]
+    },
+    {
+      "id": "cse",
+      "name": "CSE",
+      "priority": "haute",
+      "topics": ["information consultation", "ordre du jour", "expertise", "avis", "budget"],
+      "preferred_sources": ["legifrance", "ministere-travail", "actuel-rh", "editions-tissot"],
+      "agents": ["cse", "juriste", "communication"],
+      "output": ["preparation-cse", "questions-cse", "note-thierry"]
+    },
+    {
+      "id": "cssct",
+      "name": "CSSCT",
+      "priority": "haute",
+      "topics": ["sante securite", "risques chimiques", "conditions de travail", "accidents", "prevention"],
+      "preferred_sources": ["inrs", "anact", "ameli-entreprise-sante-travail", "ministere-travail"],
+      "agents": ["cssct", "cse", "communication"],
+      "output": ["alerte-prevention", "question-cssct", "fiche-terrain"]
+    },
+    {
+      "id": "paie-remuneration-collective",
+      "name": "Paie et rémunération collective",
+      "priority": "haute",
+      "topics": ["salaires", "primes", "cotisations", "avantages", "pouvoir d'achat"],
+      "preferred_sources": ["boss", "urssaf", "legifrance", "insee"],
+      "agents": ["paie", "juriste", "communication"],
+      "output": ["fiche-paie", "question-a-verifier", "article-pedagogique"]
+    },
+    {
+      "id": "branche-chimie",
+      "name": "Branche Chimie",
+      "priority": "haute",
+      "topics": ["idcc 44", "classification", "salaires minima", "convention collective", "branche"],
+      "preferred_sources": ["legifrance-convention-chimie-idcc44", "fce-cfdt", "france-chimie"],
+      "agents": ["convention-chimie", "juriste", "communication"],
+      "output": ["fiche-branche", "alerte-convention", "note-comparative"]
+    },
+    {
+      "id": "cfdt-nationale",
+      "name": "CFDT nationale",
+      "priority": "moyenne",
+      "topics": ["positions cfdt", "actualite sociale", "congres", "dialogue social"],
+      "preferred_sources": ["cfdt", "cfdt-linkedin", "cfdt-bluesky", "cfdt-facebook"],
+      "agents": ["communication", "redacteur-cfdt"],
+      "output": ["flash-info", "article-site", "note-syndicale"]
+    },
+    {
+      "id": "fce-cfdt",
+      "name": "FCE-CFDT",
+      "priority": "haute",
+      "topics": ["chimie energie", "branche", "positions federales", "sante au travail"],
+      "preferred_sources": ["fce-cfdt"],
+      "agents": ["communication", "convention-chimie", "cssct"],
+      "output": ["flash-info-fce", "article-site", "note-federale"]
+    },
+    {
+      "id": "industrie-chimique",
+      "name": "Industrie chimique",
+      "priority": "moyenne",
+      "topics": ["industrie", "emploi", "investissements", "risques", "transition"],
+      "preferred_sources": ["france-chimie", "fce-cfdt", "insee", "dares"],
+      "agents": ["communication", "analyse-financiere", "cse"],
+      "output": ["note-contexte", "question-cse", "veille-industrie"]
+    },
+    {
+      "id": "emploi-restructurations",
+      "name": "Emploi et restructurations",
+      "priority": "haute",
+      "topics": ["pse", "emploi", "restructuration", "competences", "formation"],
+      "preferred_sources": ["fce-cfdt", "ministere-travail", "dares", "actuel-rh"],
+      "agents": ["cse", "analyse-financiere", "communication"],
+      "output": ["alerte-cse", "questions-direction", "note-emploi"]
+    },
+    {
+      "id": "sante-securite",
+      "name": "Santé et sécurité",
+      "priority": "haute",
+      "topics": ["risques professionnels", "risques chimiques", "canicule", "pfas", "prevention"],
+      "preferred_sources": ["inrs", "ameli-entreprise-sante-travail", "anact", "fce-cfdt"],
+      "agents": ["cssct", "communication", "cse"],
+      "output": ["alerte-prevention", "flash-securite", "fiche-cssct"]
+    },
+    {
+      "id": "travail-poste-5x8",
+      "name": "Travail posté et 5x8",
+      "priority": "haute",
+      "topics": ["travail posté", "repos", "nuit", "fatigue", "rythmes"],
+      "preferred_sources": ["inrs", "legifrance", "code-travail-numerique", "anact"],
+      "agents": ["cssct", "juriste", "defenseur", "accords-ineos"],
+      "output": ["analyse-rythme", "question-cssct", "alerte-sante"]
+    },
+    {
+      "id": "transition-industrie-energie",
+      "name": "Transition industrie et énergie",
+      "priority": "moyenne",
+      "topics": ["transition ecologique", "energie", "industrie", "emploi", "competences"],
+      "preferred_sources": ["fce-cfdt", "france-chimie", "dares", "insee"],
+      "agents": ["communication", "analyse-financiere", "cse"],
+      "output": ["note-transition", "article-pedagogique", "questions-cse"]
+    }
+  ]
+}
+

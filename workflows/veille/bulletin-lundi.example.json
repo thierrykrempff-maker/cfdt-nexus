@@ -1,0 +1,34 @@
+{
+  "id": "bulletin-demo-lundi-20260706",
+  "edition_date": "2026-07-06",
+  "edition_type": "lundi",
+  "title": "Bulletin de veille CFDT Nexus - Exemple fictif",
+  "editorial_note": "Exemple de structure pour un bulletin interne. Aucune publication n'est autorisée sans validation.",
+  "items": [
+    {
+      "veille_item_id": "veille-demo-20260704-001",
+      "heading": "Santé sécurité",
+      "summary": "Sujet prévention détecté, à relire et à qualifier avant toute diffusion.",
+      "source_label": "Source publique à vérifier",
+      "confidence": "moyen",
+      "action": "Préparer une question CSSCT si le sujet concerne le terrain."
+    },
+    {
+      "veille_item_id": "jurisprudence-demo-20260704-001",
+      "heading": "Jurisprudence sociale",
+      "summary": "Exemple de veille disciplinaire non exploitable tant que la décision officielle n'est pas identifiée.",
+      "source_label": "Cour de cassation à vérifier",
+      "confidence": "faible",
+      "action": "Rechercher la décision primaire avant analyse."
+    }
+  ],
+  "items_to_verify": [
+    "Dates et liens sources.",
+    "Existence d'une source primaire.",
+    "Possibilité de reprise publique."
+  ],
+  "validated_by": null,
+  "validated_at": null,
+  "publication_allowed": false
+}
+
