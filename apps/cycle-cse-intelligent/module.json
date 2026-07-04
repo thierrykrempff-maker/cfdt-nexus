@@ -1,0 +1,42 @@
+{
+  "id": "cfdt-nexus-cycle-cse",
+  "name": "Cycle CSE intelligent",
+  "version": "1.0.0",
+  "sprint": "Cycle CSE Intelligent et Analyse Financiere Sarralbe V1",
+  "entry": "index.html",
+  "storage": {
+    "mode": "localStorage",
+    "key": "cfdt-nexus-cycle-cse-v1",
+    "schemaVersion": "cycle-cse-v1"
+  },
+  "scope": [
+    "cycle-cse",
+    "preparation-odj",
+    "questions-terrain",
+    "assistant-seance",
+    "analyse-reponses",
+    "compte-rendu-adherents",
+    "memoire-interne",
+    "suivi-engagements",
+    "analyse-financiere-sarralbe"
+  ],
+  "financialDemo": {
+    "site": "Sarralbe",
+    "activities": ["HDPE fictif", "PP fictif"],
+    "usesOnlyFictiveData": true
+  },
+  "futureIntegrations": {
+    "documentIntelligenceCenter": true,
+    "documentLibrary": true,
+    "semanticPvSearch": true,
+    "secureBackend": true,
+    "transcription": true,
+    "n8n": true
+  },
+  "security": {
+    "realCseMinutesAllowed": false,
+    "realBdeseAllowed": false,
+    "realRecordingsAllowed": false,
+    "personalDataAllowedInDemo": false
+  }
+}

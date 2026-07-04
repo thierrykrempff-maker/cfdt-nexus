@@ -9,6 +9,8 @@ Ils ne doivent pas stocker directement les sources documentaires. Les sources vi
 - `core/` : routeur et prompt central ;
 - `conseiller-salarie/` : première orientation salarié ;
 - `defenseur/` : défense disciplinaire et dossiers sensibles ;
+- `cse/` : préparation, suivi et exploitation des réunions CSE ;
+- `analyse-financiere/` : lecture prudente des données économiques utiles au CSE ;
 - `juriste/` : analyse juridique ;
 - `convention-chimie/` : convention collective Chimie ;
 - `accords-ineos/` : accords INEOS disponibles ;

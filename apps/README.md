@@ -4,6 +4,7 @@ Ce dossier accueillera les interfaces applicatives de CFDT Nexus.
 
 ## Applications prévues
 
+- `cycle-cse-intelligent/` : prototype privé V1 pour préparer et exploiter les réunions CSE avec analyse financière Sarralbe fictive ;
 - `private-assistant/` : assistant privé pour Thierry ;
 - `public-chatbot/` : chatbot public pour les salariés ;
 - `admin/` : outils d'administration, validation et supervision.

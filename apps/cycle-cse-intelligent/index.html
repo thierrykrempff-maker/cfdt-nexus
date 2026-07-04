@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CFDT Nexus - Cycle CSE intelligent</title>
+    <meta
+      name="description"
+      content="Module prive CFDT Nexus pour preparer, suivre et exploiter les reunions CSE avec analyse financiere Sarralbe fictive."
+    >
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    >
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#cycleWorkspace">Aller au contenu</a>
+
+    <header class="app-header">
+      <div class="brand-block" aria-label="CFDT Nexus">
+        <span class="brand-mark">Cfdt.</span>
+        <span class="brand-copy">
+          <strong>CFDT Nexus</strong>
+          <span>Cycle CSE intelligent</span>
+        </span>
+      </div>
+
+      <nav class="module-nav" aria-label="Modules CFDT Nexus">
+        <a href="../../cockpit/index.html">Cockpit</a>
+        <a href="../../docs/methodology/CYCLE_CSE_INTELLIGENT_V1.md">Methode CSE</a>
+        <a href="../../docs/methodology/ANALYSE_FINANCIERE_SARRALBE_V1.md">Finance Sarralbe</a>
+        <a class="module-nav__active" href="index.html" aria-current="page">Cycle CSE</a>
+      </nav>
+
+      <div class="header-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        V1 demo privee
+      </div>
+
+      <div class="header-actions">
+        <button class="button button--ghost" type="button" id="exportCycleButton">Export JSON</button>
+        <button class="button button--primary" type="button" id="openMeetingPanel">Preparer une reunion CSE</button>
+      </div>
+    </header>
+
+    <section class="principle-strip" aria-label="Principe de fonctionnement">
+      <strong>Donnees fictives.</strong>
+      <span>La V1 structure le travail CSE sans IA reelle, sans backend et sans document confidentiel dans le depot.</span>
+    </section>
+
+    <main class="cycle-shell" id="cycleWorkspace">
+      <section class="meeting-panel" id="meetingPanel" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Creation rapide</p>
+            <h1>Nouvelle reunion CSE</h1>
+            <p>Les champs sensibles restent hors depot. Cette V1 enregistre uniquement une demonstration locale.</p>
+          </div>
+          <button class="icon-button" type="button" id="closeMeetingPanel" aria-label="Fermer">
+            <span aria-hidden="true">x</span>
+          </button>
+        </div>
+
+        <form class="meeting-form" id="meetingForm">
+          <label>
+            <span>Titre</span>
+            <input name="title" type="text" required placeholder="ex. CSE ordinaire - juillet">
+          </label>
+          <label>
+            <span>Date</span>
+            <input name="date" type="date" required>
+          </label>
+          <label>
+            <span>Type de reunion</span>
+            <select name="type" required>
+              <option value="Ordinaire">Ordinaire</option>
+              <option value="Extraordinaire">Extraordinaire</option>
+              <option value="Information-consultation">Information-consultation</option>
+              <option value="CSSCT">CSSCT</option>
+            </select>
+          </label>
+          <label>
+            <span>Referent CFDT</span>
+            <input name="referent" type="text" placeholder="Nom de l'elu referent">
+          </label>
+          <label class="field-wide">
+            <span>Points de l'ordre du jour direction</span>
+            <textarea name="agenda" rows="4" required placeholder="Un point par ligne"></textarea>
+          </label>
+          <label class="field-wide">
+            <span>Questions CFDT deja connues</span>
+            <textarea name="cfdtQuestions" rows="3" placeholder="Une question par ligne"></textarea>
+          </label>
+          <label class="field-wide">
+            <span>Questions des autres membres ou organisations</span>
+            <textarea name="otherQuestions" rows="3" placeholder="Une question par ligne"></textarea>
+          </label>
+          <label class="field-wide">
+            <span>Notes personnelles</span>
+            <textarea name="notes" rows="3" placeholder="Elements a garder en memoire avant la preparation"></textarea>
+          </label>
+          <div class="form-actions field-wide">
+            <button class="button button--primary" type="submit">Creer la reunion</button>
+            <button class="button button--ghost" type="button" id="cancelMeetingPanel">Annuler</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="cycle-sidebar" aria-label="Pilotage du cycle CSE">
+        <section class="panel panel--compact">
+          <div class="meeting-selector">
+            <label>
+              <span>Reunion active</span>
+              <select id="meetingSelect"></select>
+            </label>
+          </div>
+        </section>
+
+        <section class="panel panel--compact">
+          <div class="metric-grid" id="metricGrid"></div>
+        </section>
+
+        <section class="panel panel--compact">
+          <div class="panel-heading">
+            <h2>Cycle metier</h2>
+          </div>
+          <div class="cycle-chain" id="cycleChain"></div>
+        </section>
+
+        <section class="panel panel--compact">
+          <div class="panel-heading">
+            <h2>Navigation</h2>
+          </div>
+          <div class="view-nav" id="viewNav"></div>
+        </section>
+      </aside>
+
+      <section class="cycle-main" aria-live="polite">
+        <section class="view-panel" id="dashboardView"></section>
+        <section class="view-panel" id="preparationView" hidden></section>
+        <section class="view-panel" id="fieldQuestionsView" hidden></section>
+        <section class="view-panel" id="questionAnalysisView" hidden></section>
+        <section class="view-panel" id="consultationView" hidden></section>
+        <section class="view-panel" id="meetingAssistantView" hidden></section>
+        <section class="view-panel" id="afterMeetingView" hidden></section>
+        <section class="view-panel" id="financeView" hidden></section>
+        <section class="view-panel" id="documentationView" hidden></section>
+      </section>
+
+      <aside class="cycle-right" id="contextPanel" aria-label="Contexte et alertes"></aside>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
