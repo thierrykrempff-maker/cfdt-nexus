@@ -80,6 +80,7 @@ Le module prepare les connexions futures avec :
 
 - Document Intelligence Center ;
 - Bibliotheque documentaire ;
+- Bible Accords Sarralbe pour rechercher les accords locaux liés à un point CSE ;
 - recherche semantique dans les PV ;
 - transcription et analyse de reponses ;
 - backend documentaire prive ;

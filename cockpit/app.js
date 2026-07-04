@@ -161,6 +161,15 @@ const libraryDocuments = [
     level: "Confidentiel",
   },
   {
+    title: "Bible Accords Sarralbe",
+    description: "Recherche locale privée dans les accords, avec citations et validation humaine obligatoire.",
+    category: "Bible Accords Sarralbe",
+    keywords: ["accords", "sarralbe", "citations", "recherche locale"],
+    date: "2026-07-04",
+    version: "V1 locale",
+    level: "Confidentiel",
+  },
+  {
     title: "Règlement intérieur",
     description: "Règles disciplinaires, sécurité et procédure interne.",
     category: "Règlement intérieur",

@@ -37,6 +37,11 @@ GitHub ne doit jamais contenir :
 ```text
 database/
   README.md
+  agreements/
+    README.md
+    agreements-index.schema.json
+    search-result.schema.json
+    INTEGRATION_CONTRACTS.md
   schema/
     documents.schema.json
     sources.schema.json

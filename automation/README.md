@@ -2,6 +2,21 @@
 
 Ce dossier accueillera les scripts, jobs et traitements automatisés.
 
+## Bible Accords Sarralbe
+
+Le script `scripts/agreements_bible.py` pilote le pipeline local privé :
+
+- inventaire incrémental ;
+- extraction texte ;
+- détection OCR ;
+- chunking juridique ;
+- index lexical ;
+- recherche sourcée ;
+- tests métier ;
+- aide "Que me manque-t-il ?".
+
+Les sorties réelles restent dans `local-index/agreements/` et ne doivent jamais être committées.
+
 ## Zones
 
 - `scripts/` : scripts réutilisables ;

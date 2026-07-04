@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/agreements-search-result.schema.json",
+  "title": "Bible Accords Sarralbe - Search Result V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "question",
+    "provisional_answer",
+    "confidence_level",
+    "sources_used",
+    "points_to_verify",
+    "possible_conflicts",
+    "potentially_linked_newer_document",
+    "recommended_human_action"
+  ],
+  "properties": {
+    "question": { "type": "string" },
+    "provisional_answer": { "type": "string" },
+    "confidence_level": { "type": "string", "enum": ["fort", "moyen", "faible"] },
+    "sources_used": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["document", "page", "article_or_section", "excerpt", "match_score"],
+        "properties": {
+          "document": { "type": "string" },
+          "page": { "type": ["integer", "null"] },
+          "article_or_section": { "type": ["string", "null"] },
+          "excerpt": { "type": "string" },
+          "match_score": { "type": "number" }
+        }
+      }
+    },
+    "points_to_verify": { "type": "array", "items": { "type": "string" } },
+    "possible_conflicts": { "type": "array", "items": { "type": "string" } },
+    "potentially_linked_newer_document": { "type": "array", "items": { "type": "string" } },
+    "recommended_human_action": { "type": "string" }
+  }
+}
+

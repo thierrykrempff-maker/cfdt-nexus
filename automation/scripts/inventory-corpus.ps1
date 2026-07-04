@@ -15,7 +15,7 @@
   Local output directory. Defaults to ./local-index.
 
 .EXAMPLE
-  .\automation\scripts\inventory-corpus.ps1 -SourcePath "D:\private-corpus"
+  .\automation\scripts\inventory-corpus.ps1 -SourcePath "C:\chemin\vers\corpus-prive"
 #>
 
 [CmdletBinding()]

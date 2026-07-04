@@ -1,5 +1,13 @@
 # Changelog
 
+## Bible Accords Sarralbe V1
+
+- Ajout du pipeline local sécurisé d'inventaire, extraction, indexation et recherche des accords Sarralbe.
+- Ajout des schémas d'index et de résultat de recherche sourcé.
+- Ajout des contrats d'intégration avec DIC, Cycle CSE et agents CFDT Nexus.
+- Extension légère du cockpit dans la bibliothèque avec l'entrée `Bible Accords Sarralbe`.
+- Les documents réels, textes extraits, inventaires, résultats et chemins privés restent dans `local-index/` et ne sont pas versionnés.
+
 ## Socle sources juridiques CFDT et veille V1
 
 - Ajout du registre des sources juridiques, institutionnelles, CFDT, branche Chimie et veille spécialisée.
