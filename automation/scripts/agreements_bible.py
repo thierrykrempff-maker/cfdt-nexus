@@ -347,6 +347,7 @@ def build_quality_summary(documents: list[dict[str, Any]]) -> dict[str, Any]:
         "extraction_to_verify": count_extraction(documents, "EXTRACTION_A_VERIFIER"),
         "ocr_required": sum(1 for d in documents if d.get("ocr_required")),
         "errors": count_extraction(documents, "ERROR"),
+        "unsupported": count_extraction(documents, "UNSUPPORTED"),
         "classified": sum(1 for d in documents if d.get("document_type") not in {"à classer"}),
         "to_classify_manually": sum(1 for d in documents if d.get("document_type") == "à classer"),
         "by_extension": Counter(d.get("extension") for d in documents if d.get("change_status") != "MISSING"),
@@ -419,34 +420,47 @@ def extract_txt(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
 def extraction_diagnostics(pages: list[dict[str, Any]], errors: list[str], ocr_possible: bool) -> dict[str, Any]:
     text = "\n".join(page.get("text", "") for page in pages)
     chars = len(text.strip())
+    page_count = len(pages)
     empty_pages = sum(1 for page in pages if len(page.get("text", "").strip()) < MIN_PAGE_TEXT_CHARS)
     weird = len(re.findall(r"[�□■]", text))
     weird_ratio = weird / max(chars, 1)
+    error_message = " | ".join(errors) if errors else None
 
-    if errors and not chars:
+    if ocr_possible and page_count > 0 and chars == 0:
+        status = "OCR_REQUIRED"
+        ocr_required = True
+        note = "PDF avec pages détectées mais aucun texte exploitable extrait. OCR local requis."
+    elif errors and page_count == 0:
         status = "ERROR"
         ocr_required = False
+        note = "Erreur technique : aucun parseur PDF n'a pu lire le document ou détecter ses pages."
     elif chars < MIN_TEXT_CHARS and ocr_possible:
         status = "OCR_REQUIRED"
         ocr_required = True
+        note = "PDF avec texte extrait insuffisant. OCR ou contrôle manuel requis."
     elif chars < MIN_TEXT_CHARS:
         status = "EXTRACTION_A_VERIFIER"
         ocr_required = False
+        note = "Texte extrait faible. Vérification humaine recommandée."
     elif weird_ratio > 0.02 or empty_pages > max(2, len(pages) // 2):
         status = "EXTRACTION_A_VERIFIER"
         ocr_required = False
+        note = "Extraction partielle ou caractères inhabituels détectés. Vérification humaine recommandée."
     else:
         status = "EXTRACTION_OK"
         ocr_required = False
+        note = "Extraction texte exploitable."
 
     return {
         "status": status,
         "ocr_required": ocr_required,
         "char_count": chars,
-        "page_count": len(pages),
+        "page_count": page_count,
         "empty_or_low_text_pages": empty_pages,
         "weird_char_ratio": weird_ratio,
         "errors": errors,
+        "error_message": error_message,
+        "extraction_note": note,
     }
 
 
@@ -465,6 +479,20 @@ def extract_documents(args: argparse.Namespace) -> dict[str, Any]:
             continue
         if doc.get("extension") not in {".pdf", ".docx", ".txt"}:
             doc["extraction_status"] = "UNSUPPORTED"
+            doc["ocr_required"] = False
+            doc["error_message"] = None
+            doc["extraction_note"] = "Format non supporté par la V1."
+            doc["extraction_diagnostics"] = {
+                "status": "UNSUPPORTED",
+                "ocr_required": False,
+                "char_count": 0,
+                "page_count": 0,
+                "empty_or_low_text_pages": 0,
+                "weird_char_ratio": 0,
+                "errors": [],
+                "error_message": None,
+                "extraction_note": "Format non supporté par la V1.",
+            }
             report_rows.append(report_doc(doc, "UNSUPPORTED", 0, 0))
             continue
 
@@ -489,6 +517,8 @@ def extract_documents(args: argparse.Namespace) -> dict[str, Any]:
         doc.update(classification)
         doc["extraction_status"] = diagnostics["status"]
         doc["ocr_required"] = diagnostics["ocr_required"]
+        doc["extraction_note"] = diagnostics.get("extraction_note")
+        doc["error_message"] = diagnostics.get("error_message")
         doc["last_extracted_at"] = now_iso()
         doc["extraction_diagnostics"] = diagnostics
 
@@ -527,6 +557,7 @@ def text_output_path(document_id: str) -> Path:
 
 
 def report_doc(doc: dict[str, Any], status: str, chars: int | None, pages: int | None) -> dict[str, Any]:
+    diagnostics = doc.get("extraction_diagnostics", {})
     return {
         "document_id": doc.get("document_id"),
         "extension": doc.get("extension"),
@@ -537,6 +568,8 @@ def report_doc(doc: dict[str, Any], status: str, chars: int | None, pages: int |
         "page_count": pages,
         "document_type": doc.get("document_type"),
         "primary_topic": doc.get("primary_topic"),
+        "error_message": diagnostics.get("error_message"),
+        "extraction_note": diagnostics.get("extraction_note"),
     }
 
 
@@ -863,6 +896,80 @@ def run_missing(args: argparse.Namespace) -> dict[str, Any]:
     return response
 
 
+def diagnose_extractions(args: argparse.Namespace) -> dict[str, Any]:
+    ensure_dirs()
+    inventory_path, _ = inventory_paths()
+    inventory = load_json(inventory_path, None)
+    if inventory is None:
+        raise SystemExit("Aucun inventaire local. Lancer update ou extract avant diagnose.")
+
+    documents = [doc for doc in inventory.get("documents", []) if doc.get("change_status") != "MISSING"]
+    categories = {
+        "EXTRACTION_OK": [],
+        "OCR_REQUIRED": [],
+        "ERROR": [],
+        "UNSUPPORTED": [],
+        "EXTRACTION_A_VERIFIER": [],
+        "PENDING": [],
+    }
+    for doc in documents:
+        status = doc.get("extraction_status") or "PENDING"
+        if doc.get("ocr_required"):
+            status = "OCR_REQUIRED"
+        categories.setdefault(status, []).append(doc)
+
+    summary = {
+        "generated_at": now_iso(),
+        "total_documents": len(documents),
+        "extraction_ok": len(categories.get("EXTRACTION_OK", [])),
+        "ocr_required": len(categories.get("OCR_REQUIRED", [])),
+        "technical_errors": len(categories.get("ERROR", [])),
+        "unsupported_formats": len(categories.get("UNSUPPORTED", [])),
+        "to_verify": len(categories.get("EXTRACTION_A_VERIFIER", [])),
+        "pending": len(categories.get("PENDING", [])),
+        "by_extension": dict(Counter(doc.get("extension") for doc in documents)),
+        "security_notice": "Private extraction diagnostic. Do not commit.",
+    }
+
+    report = {"summary": summary, "categories": {}}
+    for status, rows in categories.items():
+        report["categories"][status] = [
+            {
+                "document_id": doc.get("document_id"),
+                "filename": doc.get("filename"),
+                "extension": doc.get("extension"),
+                "page_count": doc.get("extraction_diagnostics", {}).get("page_count"),
+                "char_count": doc.get("extraction_diagnostics", {}).get("char_count"),
+                "error_message": doc.get("extraction_diagnostics", {}).get("error_message"),
+                "extraction_note": doc.get("extraction_diagnostics", {}).get("extraction_note"),
+            }
+            for doc in rows
+        ]
+    write_json(REPORT_DIR / f"diagnostic-extraction-{safe_stamp()}.private.json", report)
+
+    print("DIAGNOSTIC EXTRACTION BIBLE ACCORDS")
+    print(f"Documents: {summary['total_documents']}")
+    print(f"EXTRACTION_OK: {summary['extraction_ok']}")
+    print(f"OCR_REQUIRED: {summary['ocr_required']}")
+    print(f"ERREURS TECHNIQUES: {summary['technical_errors']}")
+    print(f"FORMATS NON SUPPORTES: {summary['unsupported_formats']}")
+    print(f"A VERIFIER: {summary['to_verify']}")
+    if args.show_files:
+        for status in ["EXTRACTION_OK", "OCR_REQUIRED", "ERROR", "UNSUPPORTED", "EXTRACTION_A_VERIFIER", "PENDING"]:
+            rows = report["categories"].get(status, [])
+            if not rows:
+                continue
+            print(f"\n{status}")
+            for row in rows:
+                print(
+                    f"- {row['filename']} | pages={row['page_count']} | chars={row['char_count']} | "
+                    f"note={row['extraction_note']}"
+                )
+                if row.get("error_message"):
+                    print(f"  erreur={row['error_message']}")
+    return report
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Bible Accords Sarralbe V1 - local secure pipeline")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -885,6 +992,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_missing = sub.add_parser("missing")
     p_missing.add_argument("--query", required=True)
 
+    p_diagnose = sub.add_parser("diagnose")
+    p_diagnose.add_argument("--show-files", action="store_true", help="Afficher les noms de fichiers localement. Ne pas copier vers GitHub.")
+
     return parser
 
 
@@ -905,6 +1015,8 @@ def main() -> None:
         run_tests(args)
     elif args.command == "missing":
         run_missing(args)
+    elif args.command == "diagnose":
+        diagnose_extractions(args)
     else:
         raise SystemExit(f"Commande inconnue: {args.command}")
 

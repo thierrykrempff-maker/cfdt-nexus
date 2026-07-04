@@ -39,6 +39,8 @@
       "enum": ["PENDING", "EXTRACTION_OK", "EXTRACTION_A_VERIFIER", "OCR_REQUIRED", "ERROR", "UNSUPPORTED"]
     },
     "ocr_required": { "type": "boolean" },
+    "extraction_note": { "type": ["string", "null"] },
+    "error_message": { "type": ["string", "null"] },
     "document_type": { "type": "string" },
     "primary_topic": { "type": "string" },
     "secondary_topics": {
@@ -53,4 +55,3 @@
     "last_checked_at": { "type": "string" }
   }
 }
-

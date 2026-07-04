@@ -13,7 +13,8 @@ Le script `scripts/agreements_bible.py` pilote le pipeline local privé :
 - index lexical ;
 - recherche sourcée ;
 - tests métier ;
-- aide "Que me manque-t-il ?".
+- aide "Que me manque-t-il ?" ;
+- diagnostic local des extractions OCR_REQUIRED / erreurs techniques / formats non supportés.
 
 Les sorties réelles restent dans `local-index/agreements/` et ne doivent jamais être committées.
 

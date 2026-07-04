@@ -31,7 +31,24 @@ apps/cycle-cse-intelligent/
 4. `search` : recherche locale sourcée avec citations.
 5. `test` : tests métier locaux.
 6. `missing` : aide "Que me manque-t-il ?".
-7. `update` : chaîne complète.
+7. `diagnose` : bilan local des extractions par statut.
+8. `update` : chaîne complète.
+
+## Diagnostic OCR
+
+Un PDF peut être techniquement lisible tout en ne contenant aucun texte exploitable, par exemple lorsqu'il s'agit d'un scan.
+
+La règle V1 est :
+
+- `page_count > 0` et `char_count = 0` sur un PDF : `OCR_REQUIRED` ;
+- aucun parseur capable de lire le PDF ou ses pages : `ERROR` ;
+- texte PDF très faible : `OCR_REQUIRED` ou contrôle humain ;
+- format hors PDF/DOCX/TXT : `UNSUPPORTED`.
+
+Les rapports privés ajoutent :
+
+- `extraction_note` pour comprendre le classement ;
+- `error_message` lorsqu'un parseur a renvoyé une erreur technique.
 
 ## Sécurité
 
@@ -87,4 +104,3 @@ La future analyse devra distinguer :
 6. sources institutionnelles ;
 7. analyse syndicale ;
 8. faits du dossier.
-

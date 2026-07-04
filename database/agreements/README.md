@@ -26,6 +26,7 @@ python automation/scripts/agreements_bible.py update
 python automation/scripts/agreements_bible.py search --query "repos entre deux postes"
 python automation/scripts/agreements_bible.py test
 python automation/scripts/agreements_bible.py missing --query "astreinte"
+python automation/scripts/agreements_bible.py diagnose
 ```
 
 Le chemin du corpus peut aussi être passé par argument :
@@ -43,6 +44,7 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - `search` : recherche locale lexicale avec citations.
 - `test` : lance une série de requêtes métier et produit un rapport privé.
 - `missing` : prépare une sortie "Que me manque-t-il ?" pour une situation donnée.
+- `diagnose` : affiche le bilan local des extractions : OK, OCR_REQUIRED, erreurs techniques et formats non supportés.
 
 ## Capacités V1
 
@@ -51,6 +53,8 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - extraction DOCX ;
 - extraction TXT ;
 - détection OCR_REQUIRED ;
+- reclassement en `OCR_REQUIRED` des PDF dont les pages sont lisibles mais dont le texte extrait est vide ;
+- rapport avec `extraction_note` et `error_message` pour distinguer OCR requis et erreur technique réelle ;
 - chunks avec page, section/article quand détectable ;
 - recherche lexicale multi-termes ;
 - filtre par thème, type, document et dates ;
@@ -62,6 +66,7 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 
 - recherche lexicale, pas recherche sémantique ;
 - pas d'OCR cloud ;
+- un PDF classé `OCR_REQUIRED` doit être traité par OCR local ou validé manuellement avant indexation ;
 - pas de conclusion juridique automatique ;
 - les relations entre accords et avenants sont seulement potentielles tant qu'elles ne sont pas établies ou validées ;
 - les pages ne sont disponibles que lorsque le format source permet de les conserver ;

@@ -1,5 +1,12 @@
 # Changelog
 
+## Correctif classification OCR Bible Accords
+
+- Reclassement en `OCR_REQUIRED` des PDF avec pages détectées mais sans texte extrait.
+- Ajout des champs `extraction_note` et `error_message` dans les diagnostics locaux.
+- Ajout de la commande `diagnose` pour distinguer extractions OK, OCR requis, erreurs techniques et formats non supportés.
+- Documentation mise à jour sans ajout de document réel ni d'inventaire privé.
+
 ## Bible Accords Sarralbe V1
 
 - Ajout du pipeline local sécurisé d'inventaire, extraction, indexation et recherche des accords Sarralbe.
