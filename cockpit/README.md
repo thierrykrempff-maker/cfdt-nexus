@@ -72,6 +72,8 @@ Chaque dossier contient :
 
 - Vue statique du socle sources et veille V1.
 - Blocs : Aujourd'hui, Mes sources, À vérifier, Veilles validées.
+- Filtres simples : priorité, thème et domaine.
+- Affichage d'un score de démonstration, d'une justification courte et d'une action suggérée.
 - Rappel permanent : aucune publication automatique.
 - Préparation d'une future connexion n8n, GitHub, agents CFDT Nexus et Document Intelligence Center.
 

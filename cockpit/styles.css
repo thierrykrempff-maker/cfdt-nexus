@@ -756,6 +756,13 @@ label {
   margin-bottom: 16px;
 }
 
+.watch-tools {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
 .watch-stat,
 .watch-item {
   border: 1px solid var(--line);
@@ -800,6 +807,25 @@ label {
   display: grid;
   gap: 9px;
   padding: 14px;
+}
+
+.watch-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: var(--orange);
+  font-size: 12px;
+  font-weight: 950;
 }
 
 .watch-item h4,
@@ -926,7 +952,8 @@ label {
   .resource-grid,
   .integration-grid,
   .watch-board,
-  .watch-summary {
+  .watch-summary,
+  .watch-tools {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -969,6 +996,7 @@ label {
   .watch-grid,
   .watch-board,
   .watch-summary,
+  .watch-tools,
   .security-grid,
   .library-tools {
     grid-template-columns: 1fr;

@@ -39,6 +39,7 @@ Ce dossier est ignoré par Git. Les résultats réels de veille ne doivent pas �
 
 - INRS : page publique des actualités.
 - France Chimie : page publique d'accueil / À la une.
+- CNIL : page publique Actualités et communiqués.
 
 ## Sources manuelles ou à vérifier
 

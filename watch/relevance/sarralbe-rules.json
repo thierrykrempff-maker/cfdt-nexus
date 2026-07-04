@@ -1,0 +1,179 @@
+{
+  "version": "1.0",
+  "created_at": "2026-07-04",
+  "project": "CFDT Nexus",
+  "scope": "Filtre de pertinence Sarralbe V1",
+  "classification": [
+    { "label": "FAIBLE", "min": 0, "max": 24, "default_action": "archiver sans alerte" },
+    { "label": "À SURVEILLER", "min": 25, "max": 49, "default_action": "surveiller" },
+    { "label": "IMPORTANT", "min": 50, "max": 74, "default_action": "afficher dans le bulletin" },
+    { "label": "PRIORITAIRE", "min": 75, "max": 100, "default_action": "créer une alerte visible" }
+  ],
+  "human_validation_label": "ACTION SUGGÉRÉE — VALIDATION HUMAINE REQUISE",
+  "source_bonuses": [
+    {
+      "source_id": "inrs",
+      "points": 8,
+      "reason": "source prévention santé-sécurité utile CSSCT",
+      "domains": ["CSSCT"],
+      "agents": ["Expert CSSCT", "Veille Juridique et Sociale"]
+    },
+    {
+      "source_id": "france-chimie",
+      "points": 8,
+      "reason": "source branche/industrie chimique utile au suivi industriel",
+      "domains": ["CSE", "Analyse financière"],
+      "agents": ["Expert CSE", "Expert Analyse Financière"]
+    },
+    {
+      "source_id": "cnil",
+      "points": 10,
+      "reason": "source institutionnelle prioritaire données personnelles/RGPD",
+      "domains": ["Analyse juridique", "Protection des données CFDT Nexus"],
+      "agents": ["Veille Juridique et Sociale"]
+    }
+  ],
+  "themes": [
+    {
+      "id": "industrie-chimique",
+      "label": "industrie chimique",
+      "points": 20,
+      "keywords": ["industrie chimique", "chimie", "pétrochimie", "petrochimie", "polymère", "polymères", "polymere", "polymeres", "hdpe", "polypropylène", "polypropylene", "pp"],
+      "domains": ["CSE", "Analyse financière", "Communication salariés"],
+      "agents": ["Expert CSE", "Expert Analyse Financière", "Communication Syndicale"],
+      "actions": ["lire la source complète", "demander un document à la direction", "préparer une question CSE"]
+    },
+    {
+      "id": "emploi-restructuration",
+      "label": "emploi industriel / restructuration",
+      "points": 20,
+      "keywords": ["emploi industriel", "restructuration", "fermeture", "réduction de capacité", "reduction de capacite", "baisse de production", "licenciement", "suppression d'emploi", "suppression d’emplois"],
+      "domains": ["CSE", "Analyse financière", "Communication salariés"],
+      "agents": ["Expert CSE", "Expert Analyse Financière", "Communication Syndicale"],
+      "actions": ["préparer une question CSE", "demander un document à la direction", "vérifier un ancien PV"]
+    },
+    {
+      "id": "investissement-energie",
+      "label": "investissement / énergie / compétitivité",
+      "points": 15,
+      "keywords": ["investissement", "capex", "énergie", "energie", "compétitivité", "competitivite", "transition énergétique", "transition energetique", "coût énergie", "cout energie"],
+      "domains": ["CSE", "Analyse financière"],
+      "agents": ["Expert CSE", "Expert Analyse Financière"],
+      "actions": ["surveiller", "préparer une question CSE", "demander un document à la direction"]
+    },
+    {
+      "id": "organisation-travail",
+      "label": "organisation du travail",
+      "points": 15,
+      "keywords": ["travail posté", "travail poste", "5x8", "travail de nuit", "temps de travail", "temps de repos", "astreinte", "fatigue", "droit à la déconnexion", "deconnexion"],
+      "domains": ["CSE", "CSSCT", "Accords Sarralbe"],
+      "agents": ["Expert CSE", "Expert CSSCT", "Expert Accords Sarralbe"],
+      "actions": ["vérifier les accords Sarralbe", "préparer une question CSE", "préparer une question CSSCT"]
+    },
+    {
+      "id": "sante-securite",
+      "label": "santé sécurité / prévention",
+      "points": 18,
+      "keywords": ["risques chimiques", "risque chimique", "accident industriel", "accidents industriels", "exposition professionnelle", "prévention", "prevention", "santé sécurité", "sante securite", "rps", "troubles psychosociaux", "canicule", "forte chaleur", "protection respiratoire", "maladie professionnelle"],
+      "domains": ["CSSCT", "CSE", "Communication salariés"],
+      "agents": ["Expert CSSCT", "Expert CSE", "Communication Syndicale"],
+      "actions": ["préparer une question CSSCT", "lire la source complète", "informer les adhérents"]
+    },
+    {
+      "id": "instances",
+      "label": "CSE / CSSCT",
+      "points": 12,
+      "keywords": ["cse", "cssct", "consultation", "information consultation", "ordre du jour", "expertise"],
+      "domains": ["CSE", "CSSCT"],
+      "agents": ["Expert CSE", "Expert CSSCT"],
+      "actions": ["préparer une question CSE", "préparer une question CSSCT", "vérifier un ancien PV"]
+    },
+    {
+      "id": "remuneration-convention",
+      "label": "rémunération / convention Chimie",
+      "points": 18,
+      "keywords": ["rémunération", "remuneration", "salaires", "salaire", "classification", "convention collective chimie", "idcc 44", "prime", "primes", "minima", "avantages sociaux"],
+      "domains": ["CSE", "Accords Sarralbe", "Analyse juridique"],
+      "agents": ["Expert Convention Chimie", "Expert Accords Sarralbe", "Veille Juridique et Sociale"],
+      "actions": ["vérifier les accords Sarralbe", "vérifier la source primaire", "informer les adhérents"]
+    },
+    {
+      "id": "jurisprudence-sociale",
+      "label": "jurisprudence sociale",
+      "points": 16,
+      "keywords": ["jurisprudence sociale", "cour de cassation", "prud'hommes", "prudhommes", "sanction disciplinaire", "licenciement", "harcèlement", "harcelement", "discrimination"],
+      "domains": ["Analyse juridique", "Défenseur Syndical"],
+      "agents": ["Défenseur Syndical", "Veille Juridique et Sociale"],
+      "actions": ["rechercher une jurisprudence", "vérifier la source primaire", "lire la source complète"]
+    },
+    {
+      "id": "cnil-rgpd",
+      "label": "RGPD / données personnelles",
+      "points": 18,
+      "keywords": ["rgpd", "données personnelles", "donnees personnelles", "confidentialité", "confidentialite", "droit d'accès", "droit d’acces", "rectification", "effacement", "conservation des données", "conservation des donnees", "cybersécurité", "cybersecurite", "fuite de données", "violation de données"],
+      "domains": ["Analyse juridique", "Dossier d'accompagnement", "Protection des données CFDT Nexus", "Communication salariés"],
+      "agents": ["Veille Juridique et Sociale", "Communication Syndicale"],
+      "actions": ["lire la recommandation CNIL", "vérifier les droits d’accès", "demander la durée de conservation", "demander les destinataires des données", "informer les salariés"]
+    },
+    {
+      "id": "cnil-surveillance-travail",
+      "label": "surveillance / contrôle de l'activité",
+      "points": 24,
+      "keywords": ["surveillance au travail", "surveillance des salariés", "controle d'activité", "contrôle d’activité", "contrôle de l'activité", "controle de l'activite", "vidéosurveillance", "videosurveillance", "vidéoprotection", "videoprotection", "géolocalisation", "geolocalisation", "badgeage", "contrôle d'accès", "controle d'acces", "biométrie", "biometrie", "messagerie professionnelle", "logiciel de suivi", "suivi d'activité", "outils numériques rh", "données rh", "donnees rh"],
+      "domains": ["CSE", "Analyse juridique", "Défenseur Syndical", "Dossier d'accompagnement", "Protection des données CFDT Nexus"],
+      "agents": ["Expert CSE", "Défenseur Syndical", "Veille Juridique et Sociale"],
+      "actions": ["vérifier la base juridique du traitement", "vérifier l’information des salariés", "vérifier la consultation éventuelle du CSE", "demander la durée de conservation", "demander les catégories de données collectées", "demander les destinataires des données", "vérifier la proportionnalité du dispositif", "vérifier le règlement intérieur", "vérifier les accords Sarralbe pertinents", "demander un document à la direction"]
+    },
+    {
+      "id": "cnil-ia-travail",
+      "label": "IA au travail / décisions automatisées",
+      "points": 20,
+      "keywords": ["intelligence artificielle au travail", "ia au travail", "recrutement algorithmique", "décision automatisée", "decision automatisee", "règlement ia", "reglement ia", "algorithme", "outils numériques de l'employeur", "outil numérique employeur"],
+      "domains": ["CSE", "Analyse juridique", "Dossier d'accompagnement", "Protection des données CFDT Nexus"],
+      "agents": ["Expert CSE", "Veille Juridique et Sociale", "Communication Syndicale"],
+      "actions": ["vérifier la proportionnalité du dispositif", "vérifier l’information des salariés", "vérifier la consultation éventuelle du CSE", "préparer une question CSE", "informer les salariés"]
+    },
+    {
+      "id": "cnil-sante-reunions",
+      "label": "données de santé / enregistrement réunion",
+      "points": 22,
+      "keywords": ["données de santé", "donnees de sante", "santé au travail", "sante au travail", "enregistrement audio", "enregistrement vidéo", "enregistrement video", "transcription de réunion", "transcription de reunions", "transcription de réunions"],
+      "domains": ["CSSCT", "Analyse juridique", "Dossier d'accompagnement", "Protection des données CFDT Nexus"],
+      "agents": ["Expert CSSCT", "Veille Juridique et Sociale"],
+      "actions": ["vérifier la base juridique du traitement", "préparer une analyse CSSCT", "demander la durée de conservation", "demander les destinataires des données", "vérifier les droits d’accès"]
+    }
+  ],
+  "content_type_rules": [
+    {
+      "label": "décision ou sanction",
+      "keywords": ["sanction", "mise en demeure", "décision", "decision", "amende"],
+      "prudence": "Peut révéler une obligation ou une interprétation forte, mais doit être contextualisée."
+    },
+    {
+      "label": "recommandation",
+      "keywords": ["recommandation", "recommande", "lignes directrices"],
+      "prudence": "Ne pas présenter automatiquement comme une disposition légale obligatoire."
+    },
+    {
+      "label": "guide / fiche pratique",
+      "keywords": ["guide", "fiche pratique", "questions-réponses", "questions réponses"],
+      "prudence": "Support pédagogique à recouper avec les textes applicables."
+    },
+    {
+      "label": "actualité",
+      "keywords": ["actualité", "actualite", "publié le", "communiqué"],
+      "prudence": "Information utile à qualifier avant toute action."
+    },
+    {
+      "label": "consultation publique",
+      "keywords": ["consultation publique"],
+      "prudence": "Signal à surveiller, pas règle applicable à ce stade."
+    }
+  ],
+  "fallback_actions": {
+    "FAIBLE": ["aucune action"],
+    "À SURVEILLER": ["surveiller"],
+    "IMPORTANT": ["lire la source complète"],
+    "PRIORITAIRE": ["lire la source complète", "préparer une question CSE"]
+  }
+}

@@ -815,7 +815,48 @@
       "active": false,
       "notes": "Source spécialisée proposée mais non vérifiée automatiquement dans cette session.",
       "verification_rule": "Vérifier manuellement l'URL et les conditions d'utilisation avant activation."
+    },
+    {
+      "id": "cnil",
+      "name": "CNIL",
+      "organization": "Commission nationale de l'informatique et des libertés",
+      "url": "https://www.cnil.fr/",
+      "source_category": "institutionnelle",
+      "source_type": "site",
+      "topics": [
+        "rgpd",
+        "donnees-personnelles",
+        "surveillance-au-travail",
+        "videosurveillance",
+        "geolocalisation",
+        "badgeage",
+        "controle-acces",
+        "biometrie",
+        "messagerie-professionnelle",
+        "donnees-rh",
+        "intelligence-artificielle",
+        "cybersecurite",
+        "donnees-sante",
+        "protection-donnees-cfdt-nexus"
+      ],
+      "geographical_scope": "France",
+      "sector_scope": "Tous secteurs",
+      "trust_level": "A",
+      "legal_proof_level": "reference-officielle",
+      "detection_value": "forte",
+      "analysis_value": "forte",
+      "update_frequency": "continue",
+      "monitoring_frequency": "hebdomadaire",
+      "access_type": "public",
+      "rss_url": null,
+      "api_available": null,
+      "api_documentation": null,
+      "social_platform": null,
+      "official_verified": true,
+      "last_verified_at": "2026-07-04",
+      "active": true,
+      "notes": "Source institutionnelle prioritaire pour RGPD, données personnelles des salariés, surveillance, IA au travail et protection des données dans CFDT Nexus. La page actualités publique a été vérifiée ; aucun flux RSS officiel fiable n'a été confirmé en V1.",
+      "verification_rule": "Qualifier la nature du contenu CNIL : texte applicable, décision ou sanction, recommandation, guide, fiche pratique, actualité ou consultation publique. Ne pas présenter automatiquement une recommandation comme une obligation légale."
     }
   ]
 }
-

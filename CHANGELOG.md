@@ -10,6 +10,15 @@
 - Extension du cockpit avec la vue statique `Veille & Sources`.
 - Aucune donnée confidentielle, aucun accord réel et aucun document privé n'ont été ajoutés.
 
+## Filtre pertinence Sarralbe V1
+
+- Ajout du filtre local déterministe de pertinence Sarralbe.
+- Ajout des règles de scoring explicables sur 100.
+- Ajout de la CNIL comme source institutionnelle prioritaire.
+- Ajout du canal de veille données personnelles / CNIL.
+- Extension légère de la vue `Veille & Sources` avec filtres, score, justification et action suggérée.
+- Les rapports réels restent dans `local-index/` et ne sont pas versionnés.
+
 ## Cycle CSE Intelligent et Analyse Financiere Sarralbe V1
 
 - Ajout des methodologies Cycle CSE Intelligent V1 et Analyse Financiere Sarralbe V1.

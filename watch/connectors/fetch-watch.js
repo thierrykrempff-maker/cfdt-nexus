@@ -30,6 +30,36 @@ const cleanText = (value) =>
       .trim()
   );
 
+const parseDateFromText = (value) => {
+  const text = cleanText(value);
+  const numeric = text.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+  if (numeric) return `${numeric[3]}-${numeric[2]}-${numeric[1]}`;
+
+  const months = {
+    janvier: "01",
+    fevrier: "02",
+    février: "02",
+    mars: "03",
+    avril: "04",
+    mai: "05",
+    juin: "06",
+    juillet: "07",
+    aout: "08",
+    août: "08",
+    septembre: "09",
+    octobre: "10",
+    novembre: "11",
+    decembre: "12",
+    décembre: "12",
+  };
+  const long = text.toLowerCase().match(/\b(\d{1,2})\s+(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre)\s+(\d{4})\b/);
+  if (!long) return null;
+
+  return `${long[3]}-${months[long[2]]}-${long[1].padStart(2, "0")}`;
+};
+
+const removeLeadingDate = (value) => cleanText(value).replace(/^\d{2}\/\d{2}\/\d{4}\s+/, "").trim();
+
 const toAbsoluteUrl = (href, baseUrl) => {
   try {
     return new URL(href, baseUrl).toString();
@@ -50,6 +80,40 @@ const uniqueBy = (items, keyFn) => {
   }
 
   return result;
+};
+
+const isLikelyNavigation = (title, url) => {
+  const normalizedTitle = title.toLowerCase();
+  const normalizedUrl = url.toLowerCase();
+  const blockedTitlePatterns = [
+    /^recherche rapide$/,
+    /^navigation principale$/,
+    /^aller au contenu$/,
+    /^pied de page$/,
+    /^santé et sécurité au travail$/,
+    /^sante et securite au travail$/,
+    /^poser une question$/,
+    /^risques professionnels$/,
+    /^métiers et secteurs d'activité$/,
+    /^metiers et secteurs d'activite$/,
+    /^nous connaître$/,
+    /^nous connaitre$/,
+    /^découvrir france chimie$/,
+    /^decouvrir france chimie$/,
+    /^pourquoi adhérer/,
+    /^pourquoi adherer/,
+    /^base documentaire/,
+    /^la chimie en france$/,
+    /^l(&#039;|'|’)industrie de la chimie$/,
+    /^environnement & rse$/,
+    /^emploi & recrutement$/,
+  ];
+
+  if (blockedTitlePatterns.some((pattern) => pattern.test(normalizedTitle))) return true;
+  if (normalizedUrl.startsWith("javascript:")) return true;
+  if (normalizedUrl.includes("#")) return true;
+  if (normalizedUrl.includes(".quicksearch_")) return true;
+  return false;
 };
 
 const fetchText = async (url) => {
@@ -102,6 +166,25 @@ const extractRssItems = (xml, baseUrl) => {
 };
 
 const extractPageItems = (html, baseUrl, sourceId) => {
+  if (sourceId === "cnil") {
+    const cnilItems = [];
+    const cnilPattern = /<h3[^>]*>\s*<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>\s*<\/h3>([\s\S]*?)(?=<h3|$)/gi;
+
+    for (const match of html.matchAll(cnilPattern)) {
+      const title = cleanText(match[2]);
+      const url = toAbsoluteUrl(match[1], baseUrl);
+      if (!url || title.length < 12 || title.length > 220) continue;
+      cnilItems.push({
+        title,
+        url,
+        published_at: parseDateFromText(match[3]),
+        extraction_type: "page-card",
+      });
+    }
+
+    if (cnilItems.length) return uniqueBy(cnilItems, (item) => `${item.title}|${item.url}`).slice(0, MAX_ITEMS_PER_SOURCE);
+  }
+
   const candidates = [];
   const linkPattern = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
 
@@ -113,11 +196,12 @@ const extractPageItems = (html, baseUrl, sourceId) => {
     if (!url || !title) continue;
     if (title.length < 12 || title.length > 180) continue;
     if (/^(en savoir plus|voir la carte|accueil|suivant|précédent|linkedin|facebook|instagram|youtube|twitter)$/i.test(title)) continue;
+    if (isLikelyNavigation(title, url)) continue;
 
     candidates.push({
-      title,
+      title: removeLeadingDate(title),
       url,
-      published_at: null,
+      published_at: parseDateFromText(title),
       extraction_type: "page-link",
     });
   }

@@ -119,7 +119,27 @@
       "preferred_sources": ["fce-cfdt", "france-chimie", "dares", "insee"],
       "agents": ["communication", "analyse-financiere", "cse"],
       "output": ["note-transition", "article-pedagogique", "questions-cse"]
+    },
+    {
+      "id": "donnees-personnelles-cnil",
+      "name": "Données personnelles et CNIL",
+      "priority": "haute",
+      "topics": [
+        "rgpd",
+        "donnees personnelles salaries",
+        "surveillance au travail",
+        "videosurveillance",
+        "geolocalisation",
+        "badgeage",
+        "messagerie professionnelle",
+        "donnees rh",
+        "ia au travail",
+        "donnees de sante",
+        "confidentialite cfdt nexus"
+      ],
+      "preferred_sources": ["cnil"],
+      "agents": ["juriste", "defenseur", "cse", "cssct", "communication"],
+      "output": ["veille-juridique", "question-cse", "question-cssct", "note-protection-donnees", "article-pedagogique"]
     }
   ]
 }
-

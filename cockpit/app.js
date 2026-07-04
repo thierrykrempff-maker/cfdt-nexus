@@ -74,23 +74,54 @@ const watchTodayItems = [
     detail: "Exemple fictif de veille prévention à relire avant exploitation CSSCT.",
     source: "INRS",
     confidence: "Moyen",
+    score: 68,
+    priority: "IMPORTANT",
+    theme: "Santé sécurité / prévention",
+    domain: "CSSCT",
+    reason: "prévention + source santé-sécurité utile CSSCT",
+    action: "préparer une question CSSCT",
   },
   {
-    title: "Jurisprudence sociale",
-    detail: "Signal fictif : rechercher la décision primaire avant toute analyse.",
-    source: "Cour de cassation",
-    confidence: "Faible",
+    title: "Données personnelles",
+    detail: "Exemple fictif CNIL : surveillance ou données RH à qualifier avant action.",
+    source: "CNIL",
+    confidence: "Fort",
+    score: 82,
+    priority: "PRIORITAIRE",
+    theme: "RGPD / données personnelles",
+    domain: "Protection des données CFDT Nexus",
+    reason: "CNIL + données personnelles + contrôle d'activité potentiel",
+    action: "vérifier la base juridique du traitement",
   },
   {
     title: "Branche Chimie",
     detail: "Surveiller les évolutions IDCC 44 sur Légifrance et croiser avec les accords locaux.",
     source: "Légifrance",
     confidence: "Fort",
+    score: 58,
+    priority: "IMPORTANT",
+    theme: "Industrie chimique",
+    domain: "CSE",
+    reason: "branche Chimie + impact potentiel accords locaux",
+    action: "vérifier les accords Sarralbe",
+  },
+  {
+    title: "Organisation du travail",
+    detail: "Exemple fictif : rythme, repos ou travail de nuit à relier aux accords locaux.",
+    source: "Veille locale",
+    confidence: "Moyen",
+    score: 46,
+    priority: "À SURVEILLER",
+    theme: "Organisation du travail",
+    domain: "CSE",
+    reason: "organisation du travail à surveiller",
+    action: "surveiller",
   },
 ];
 
 const watchSources = [
   { name: "Légifrance", kind: "Source A", detail: "Textes, conventions collectives et jurisprudence." },
+  { name: "CNIL", kind: "Source A", detail: "RGPD, données salariés, surveillance, IA et protection des données." },
   { name: "FCE-CFDT", kind: "Source B", detail: "Positions fédérales Chimie Énergie." },
   { name: "INRS", kind: "Source B", detail: "Prévention, risques chimiques et santé sécurité." },
   { name: "France Chimie", kind: "Source B", detail: "Contexte branche et industrie chimique." },
@@ -106,7 +137,7 @@ const watchReviewItems = [
 
 const watchValidatedItems = [
   { title: "Registre sources V1", detail: "Sources classées par niveau de confiance A / B / C / D." },
-  { title: "Canaux de veille V1", detail: "13 canaux prévus : droit, CSE, CSSCT, paie, Chimie, CFDT et industrie." },
+  { title: "Canaux de veille V1", detail: "14 canaux prévus : droit, CSE, CSSCT, paie, Chimie, CFDT, industrie et CNIL." },
   { title: "Règles validation V1", detail: "Publication automatique interdite ; validation Thierry obligatoire." },
 ];
 
@@ -224,6 +255,9 @@ const selectors = {
   globalSearch: document.querySelector("#global-search"),
   watchSourceCount: document.querySelector("#watch-source-count"),
   watchReviewCount: document.querySelector("#watch-review-count"),
+  watchPriorityFilter: document.querySelector("#watch-priority-filter"),
+  watchThemeFilter: document.querySelector("#watch-theme-filter"),
+  watchDomainFilter: document.querySelector("#watch-domain-filter"),
   watchTodayList: document.querySelector("#watch-today-list"),
   watchSourcesList: document.querySelector("#watch-sources-list"),
   watchReviewList: document.querySelector("#watch-review-list"),
@@ -433,19 +467,35 @@ const renderLibrary = () => {
 const renderWatch = () => {
   selectors.watchSourceCount.textContent = String(watchSources.length);
   selectors.watchReviewCount.textContent = String(watchReviewItems.length);
+  const priority = selectors.watchPriorityFilter.value;
+  const theme = selectors.watchThemeFilter.value;
+  const domain = selectors.watchDomainFilter.value;
+  const filteredTodayItems = watchTodayItems.filter((item) => {
+    const matchesPriority = priority === "Toutes" || item.priority === priority;
+    const matchesTheme = theme === "Tous" || item.theme === theme;
+    const matchesDomain = domain === "Tous" || item.domain === domain;
+    return matchesPriority && matchesTheme && matchesDomain;
+  });
 
-  selectors.watchTodayList.innerHTML = watchTodayItems
+  selectors.watchTodayList.innerHTML = filteredTodayItems
     .map(
       (item) => `
         <article class="watch-item">
-          <span class="badge">${item.source}</span>
+          <div class="watch-item__top">
+            <span class="badge">${item.source}</span>
+            <span class="score-badge">${item.score}/100</span>
+          </div>
           <h4>${item.title}</h4>
           <p>${item.detail}</p>
-          <small>Confiance : ${item.confidence}</small>
+          <small>Priorité : ${item.priority}</small>
+          <small>Thème : ${item.theme}</small>
+          <small>Domaine : ${item.domain}</small>
+          <small>Raison : ${item.reason}</small>
+          <small>Action suggérée : ${item.action}</small>
         </article>
       `
     )
-    .join("");
+    .join("") || `<article class="watch-item"><p>Aucune veille ne correspond aux filtres.</p></article>`;
 
   selectors.watchSourcesList.innerHTML = watchSources
     .map(
@@ -617,6 +667,9 @@ const initializeEvents = () => {
   selectors.libraryCategoryFilter.addEventListener("change", renderLibrary);
   selectors.contentForm.addEventListener("submit", generateContent);
   selectors.chatForm.addEventListener("submit", handleChatSubmit);
+  selectors.watchPriorityFilter.addEventListener("change", renderWatch);
+  selectors.watchThemeFilter.addEventListener("change", renderWatch);
+  selectors.watchDomainFilter.addEventListener("change", renderWatch);
 
   selectors.presetButtons.forEach((button) => {
     button.addEventListener("click", () => {

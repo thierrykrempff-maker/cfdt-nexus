@@ -127,6 +127,25 @@
       ],
       "method": "Lecture ponctuelle de la page publique d'accueil et extraction prudente des titres visibles.",
       "business_uses": ["alerte CSE", "veille industrie chimique", "point à vérifier", "idée d'article"]
+    },
+    {
+      "id": "cnil",
+      "name": "CNIL",
+      "official_url": "https://www.cnil.fr/",
+      "watch_url": "https://www.cnil.fr/fr/actualites",
+      "access_type": "page publique",
+      "status": "actif",
+      "enabled": true,
+      "last_verified_at": "2026-07-04",
+      "recommended_frequency": "hebdomadaire",
+      "known_limits": [
+        "Aucun flux RSS officiel fiable n'a été confirmé en V1.",
+        "Extraction limitée aux titres, dates et tags visibles sur la page publique Actualités et communiqués.",
+        "Chaque contenu doit être qualifié : texte applicable, décision/sanction, recommandation, guide, fiche pratique, actualité ou consultation publique.",
+        "Ne pas présenter automatiquement une recommandation CNIL comme une obligation légale."
+      ],
+      "method": "Lecture ponctuelle de la page publique Actualités et communiqués CNIL, puis extraction prudente des liens/titres publics.",
+      "business_uses": ["veille juridique", "question CSE", "question CSSCT", "protection des données CFDT Nexus", "communication salariés"]
     }
   ]
 }
