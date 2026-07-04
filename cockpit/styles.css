@@ -706,6 +706,35 @@ label {
   gap: 8px;
 }
 
+.resource-coverage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbfcff;
+}
+
+.resource-coverage span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.resource-coverage strong {
+  display: block;
+  color: var(--orange-dark);
+  font-size: 20px;
+}
+
+.resource-warning {
+  padding: 12px;
+  border-left: 3px solid var(--orange);
+  border-radius: 12px;
+  background: #fff8ed;
+  color: var(--text);
+}
+
 .level-private {
   color: #1d4ed8;
   background: #e8efff;

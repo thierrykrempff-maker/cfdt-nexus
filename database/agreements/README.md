@@ -27,6 +27,8 @@ python automation/scripts/agreements_bible.py search --query "repos entre deux p
 python automation/scripts/agreements_bible.py test
 python automation/scripts/agreements_bible.py missing --query "astreinte"
 python automation/scripts/agreements_bible.py diagnose
+python automation/scripts/agreements_bible.py ocr-diagnose
+python automation/scripts/agreements_bible.py ocr-run --limit 3
 ```
 
 Le chemin du corpus peut aussi être passé par argument :
@@ -45,6 +47,8 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - `test` : lance une série de requêtes métier et produit un rapport privé.
 - `missing` : prépare une sortie "Que me manque-t-il ?" pour une situation donnée.
 - `diagnose` : affiche le bilan local des extractions : OK, OCR_REQUIRED, erreurs techniques et formats non supportés.
+- `ocr-diagnose` : vérifie les dépendances OCR locales et la couverture documentaire.
+- `ocr-run` : traite localement les PDF `OCR_REQUIRED`, sur copie de travail, puis réinjecte les résultats dans l'index.
 
 ## Capacités V1
 
@@ -55,6 +59,9 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - détection OCR_REQUIRED ;
 - reclassement en `OCR_REQUIRED` des PDF dont les pages sont lisibles mais dont le texte extrait est vide ;
 - rapport avec `extraction_note` et `error_message` pour distinguer OCR requis et erreur technique réelle ;
+- OCR local avec reprise après interruption ;
+- sortie OCR privée dans `local-index/agreements/ocr/` ;
+- statut `OCR_LOW_CONFIDENCE` en cas de qualité OCR faible ;
 - chunks avec page, section/article quand détectable ;
 - recherche lexicale multi-termes ;
 - filtre par thème, type, document et dates ;
@@ -67,6 +74,7 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - recherche lexicale, pas recherche sémantique ;
 - pas d'OCR cloud ;
 - un PDF classé `OCR_REQUIRED` doit être traité par OCR local ou validé manuellement avant indexation ;
+- l'OCR nécessite Tesseract avec la langue `fra` et, idéalement, OCRmyPDF + Ghostscript ;
 - pas de conclusion juridique automatique ;
 - les relations entre accords et avenants sont seulement potentielles tant qu'elles ne sont pas établies ou validées ;
 - les pages ne sont disponibles que lorsque le format source permet de les conserver ;
@@ -85,3 +93,11 @@ GitHub ne doit jamais contenir :
 - résultats de recherche réels ;
 - chemin absolu privé ;
 - donnée nominative.
+
+## Procédure OCR Windows
+
+Voir :
+
+```text
+docs/workflows/OCR_LOCAL_WINDOWS.md
+```

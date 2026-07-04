@@ -32,7 +32,44 @@ apps/cycle-cse-intelligent/
 5. `test` : tests métier locaux.
 6. `missing` : aide "Que me manque-t-il ?".
 7. `diagnose` : bilan local des extractions par statut.
-8. `update` : chaîne complète.
+8. `ocr-diagnose` : diagnostic des dépendances OCR locales.
+9. `ocr-run` : OCR local sur copie de travail des PDF `OCR_REQUIRED`.
+10. `update` : chaîne complète.
+
+## OCR local
+
+L'OCR local est strictement privé.
+
+Architecture :
+
+```text
+Dossier source privé
+  -> copie de travail locale
+  -> local-index/agreements/ocr/
+  -> extraction texte OCR
+  -> chunks
+  -> index lexical
+  -> citations document/page
+```
+
+Les PDF originaux du corpus privé ne sont jamais modifiés.
+
+Le moteur privilégie :
+
+- OCRmyPDF ;
+- Tesseract OCR avec langue `fra` ;
+- Ghostscript ;
+- repli local `pdftoppm + tesseract` si OCRmyPDF n'est pas disponible.
+
+Si la confiance OCR est faible, le statut `OCR_LOW_CONFIDENCE` est utilisé et la citation doit porter un avertissement.
+
+La reprise après interruption repose sur :
+
+```text
+local-index/agreements/ocr/<document_id>/ocr-status.private.json
+```
+
+Un document déjà OCRisé avec succès n'est pas retraité sans `--force-ocr`.
 
 ## Diagnostic OCR
 
@@ -63,6 +100,7 @@ Les sorties réelles sont privées :
 
 ```text
 local-index/agreements/
+local-index/agreements/ocr/
 ```
 
 Ce dossier est ignoré par Git.

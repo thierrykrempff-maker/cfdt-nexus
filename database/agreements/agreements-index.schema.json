@@ -36,11 +36,15 @@
     },
     "extraction_status": {
       "type": "string",
-      "enum": ["PENDING", "EXTRACTION_OK", "EXTRACTION_A_VERIFIER", "OCR_REQUIRED", "ERROR", "UNSUPPORTED"]
+      "enum": ["PENDING", "EXTRACTION_OK", "EXTRACTION_A_VERIFIER", "OCR_REQUIRED", "OCR_LOW_CONFIDENCE", "ERROR", "UNSUPPORTED"]
     },
     "ocr_required": { "type": "boolean" },
     "extraction_note": { "type": ["string", "null"] },
     "error_message": { "type": ["string", "null"] },
+    "ocr_status": { "type": ["string", "null"] },
+    "ocr_engine": { "type": ["string", "null"] },
+    "ocr_confidence": { "type": ["number", "null"] },
+    "ocr_confidence_status": { "type": ["string", "null"] },
     "document_type": { "type": "string" },
     "primary_topic": { "type": "string" },
     "secondary_topics": {

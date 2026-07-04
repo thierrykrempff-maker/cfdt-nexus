@@ -1,5 +1,14 @@
 # Changelog
 
+## OCR local Bible Accords Sarralbe V1
+
+- Ajout du diagnostic OCR local pour Tesseract, Ghostscript, OCRmyPDF, `pdftoppm` et langue `fra`.
+- Ajout de la commande `ocr-run` avec `--limit`, `--document-id`, reprise après interruption et copie de travail locale.
+- Ajout du dossier privé cible `local-index/agreements/ocr/` sans contenu versionné.
+- Ajout du statut `OCR_LOW_CONFIDENCE` et des avertissements de source OCR faible.
+- Extension minimale du cockpit avec indicateurs de couverture documentaire sans contenu privé.
+- Documentation Windows et sécurité OCR ajoutées.
+
 ## Correctif classification OCR Bible Accords
 
 - Reclassement en `OCR_REQUIRED` des PDF avec pages détectées mais sans texte extrait.

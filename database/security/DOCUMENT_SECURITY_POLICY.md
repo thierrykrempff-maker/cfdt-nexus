@@ -15,6 +15,8 @@ Le dépôt GitHub doit rester un espace de versionnage technique et méthodologi
 5. Les documents privés restent sur le PC ou cloud privé de Thierry.
 6. Seuls les index et métadonnées expurgées peuvent être versionnés.
 7. Toute publication vers le site public nécessite une validation humaine.
+8. Aucun PDF OCRisé réel ne doit être ajouté à GitHub.
+9. Aucun texte OCR réel ne doit être ajouté à GitHub.
 
 ## Niveaux de confidentialité
 
@@ -98,6 +100,34 @@ Toute connexion future doit respecter cette politique :
 - Agent CSSCT : prudence renforcée sur santé, sécurité et données personnelles.
 - Agent Convention Chimie : privilégier les sources publiques ou validées.
 - Veille juridique : sources officielles ou liens publics uniquement.
+
+## OCR local
+
+L'OCR des accords et documents privés doit rester strictement local.
+
+Interdit :
+
+- API OCR cloud ;
+- envoi vers OpenAI, Google, Microsoft, AWS ou autre service externe ;
+- stockage de PDF OCRisé réel dans GitHub ;
+- stockage de texte OCR réel dans GitHub ;
+- stockage de rapport OCR privé dans GitHub.
+
+Autorisé uniquement en local :
+
+- copie de travail temporaire ;
+- PDF OCRisé privé ;
+- pages texte OCR privées ;
+- rapport OCR privé ;
+- statut OCR privé.
+
+Emplacement local prévu :
+
+```text
+local-index/agreements/ocr/
+```
+
+Ce dossier doit rester ignoré par Git.
 
 ## Validation humaine
 

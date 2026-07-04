@@ -17,9 +17,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
+import shutil
+import subprocess
+import time
 import unicodedata
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -35,11 +39,15 @@ INDEX_DIR = LOCAL_ROOT / "index"
 REPORT_DIR = LOCAL_ROOT / "reports"
 SEARCH_DIR = LOCAL_ROOT / "search"
 TEST_DIR = LOCAL_ROOT / "tests"
+OCR_DIR = LOCAL_ROOT / "ocr"
+SOURCE_CONFIG_PATH = STATE_DIR / "source-config.private.json"
 
 MIN_TEXT_CHARS = 800
 MIN_PAGE_TEXT_CHARS = 20
 MAX_CHUNK_CHARS = 2400
 CHUNK_OVERLAP_CHARS = 240
+OCR_LOW_CONFIDENCE_THRESHOLD = 70.0
+OCR_LANG_DEFAULT = "fra+eng"
 
 DOCUMENT_TYPES = [
     ("avenant", [r"\bavenant\b", r"\bmodification\b"]),
@@ -128,7 +136,7 @@ def now_iso() -> str:
 
 
 def ensure_dirs() -> None:
-    for directory in [STATE_DIR, TEXT_DIR, INDEX_DIR, REPORT_DIR, SEARCH_DIR, TEST_DIR]:
+    for directory in [STATE_DIR, TEXT_DIR, INDEX_DIR, REPORT_DIR, SEARCH_DIR, TEST_DIR, OCR_DIR]:
         directory.mkdir(parents=True, exist_ok=True)
 
 
@@ -174,7 +182,7 @@ def tokenize(value: str) -> list[str]:
 
 
 def source_path_from_args(args: argparse.Namespace) -> Path:
-    source = args.source or os.environ.get("CFDT_NEXUS_CORPUS_PATH")
+    source = getattr(args, "source", None) or os.environ.get("CFDT_NEXUS_CORPUS_PATH") or load_remembered_source()
     if not source:
         raise SystemExit(
             "Source corpus manquante. Utiliser --source ou la variable CFDT_NEXUS_CORPUS_PATH."
@@ -182,7 +190,26 @@ def source_path_from_args(args: argparse.Namespace) -> Path:
     path = Path(source).expanduser()
     if not path.exists() or not path.is_dir():
         raise SystemExit("Le chemin source n'est pas accessible ou n'est pas un dossier.")
+    remember_source(path)
     return path
+
+
+def remember_source(path: Path) -> None:
+    write_json(
+        SOURCE_CONFIG_PATH,
+        {
+            "source_path": str(path),
+            "updated_at": now_iso(),
+            "security_notice": "Private local source path. Do not commit.",
+        },
+    )
+
+
+def load_remembered_source() -> str | None:
+    config = load_json(SOURCE_CONFIG_PATH, None)
+    if not config:
+        return None
+    return config.get("source_path")
 
 
 def relative_to_source(path: Path, source: Path) -> str:
@@ -346,6 +373,7 @@ def build_quality_summary(documents: list[dict[str, Any]]) -> dict[str, Any]:
         "extraction_ok": count_extraction(documents, "EXTRACTION_OK"),
         "extraction_to_verify": count_extraction(documents, "EXTRACTION_A_VERIFIER"),
         "ocr_required": sum(1 for d in documents if d.get("ocr_required")),
+        "ocr_low_confidence": count_extraction(documents, "OCR_LOW_CONFIDENCE"),
         "errors": count_extraction(documents, "ERROR"),
         "unsupported": count_extraction(documents, "UNSUPPORTED"),
         "classified": sum(1 for d in documents if d.get("document_type") not in {"à classer"}),
@@ -415,6 +443,359 @@ def extract_txt(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         except UnicodeDecodeError:
             continue
     return [], extraction_diagnostics([], ["encoding unsupported"], ocr_possible=False)
+
+
+def ocr_doc_dir(document_id: str) -> Path:
+    return OCR_DIR / document_id
+
+
+def ocr_status_path(document_id: str) -> Path:
+    return ocr_doc_dir(document_id) / "ocr-status.private.json"
+
+
+def ocr_local_path(relative_path: str | None) -> Path | None:
+    if not relative_path:
+        return None
+    return LOCAL_ROOT / relative_path
+
+
+def ocr_relative_path(path: Path) -> str:
+    return str(path.relative_to(LOCAL_ROOT)).replace("\\", "/")
+
+
+def load_ocr_status(doc: dict[str, Any]) -> dict[str, Any] | None:
+    status = load_json(ocr_status_path(doc["document_id"]), None)
+    if not status or status.get("document_id") != doc.get("document_id"):
+        return None
+    return status
+
+
+def is_ocr_success(status: dict[str, Any] | None) -> bool:
+    if not status or status.get("status") not in {"OCR_SUCCESS", "OCR_LOW_CONFIDENCE"}:
+        return False
+    output_pdf = ocr_local_path(status.get("output_pdf_path"))
+    pages_path = ocr_local_path(status.get("text_pages_path"))
+    return bool((output_pdf and output_pdf.exists()) or (pages_path and pages_path.exists()))
+
+
+def ocr_result_newer_than_text(doc: dict[str, Any], text_path: Path) -> bool:
+    status_path = ocr_status_path(doc["document_id"])
+    if not is_ocr_success(load_ocr_status(doc)) or not status_path.exists():
+        return False
+    return not text_path.exists() or status_path.stat().st_mtime >= text_path.stat().st_mtime
+
+
+def run_local_command(cmd: list[str], cwd: Path | None = None, timeout: int | None = None) -> dict[str, Any]:
+    started = time.monotonic()
+    try:
+        completed = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd else None,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout,
+            check=False,
+        )
+        return {
+            "ok": completed.returncode == 0,
+            "returncode": completed.returncode,
+            "stdout": completed.stdout.strip(),
+            "stderr": completed.stderr.strip(),
+            "duration_seconds": round(time.monotonic() - started, 2),
+        }
+    except Exception as error:  # pragma: no cover - depends on local tools
+        return {
+            "ok": False,
+            "returncode": None,
+            "stdout": "",
+            "stderr": str(error),
+            "duration_seconds": round(time.monotonic() - started, 2),
+        }
+
+
+def command_version(command: str | None) -> str | None:
+    if not command:
+        return None
+    result = run_local_command([command, "--version"], timeout=20)
+    output = result.get("stdout") or result.get("stderr") or ""
+    return output.splitlines()[0] if output else None
+
+
+def tesseract_languages(tesseract_cmd: str | None) -> list[str]:
+    if not tesseract_cmd:
+        return []
+    result = run_local_command([tesseract_cmd, "--list-langs"], timeout=20)
+    if not result["ok"]:
+        return []
+    return [line.strip() for line in result["stdout"].splitlines() if line.strip() and "List of available languages" not in line]
+
+
+def detect_ocr_environment() -> dict[str, Any]:
+    ocrmypdf = shutil.which("ocrmypdf")
+    tesseract = shutil.which("tesseract")
+    ghostscript = shutil.which("gswin64c") or shutil.which("gs")
+    pdftoppm = shutil.which("pdftoppm")
+    languages = tesseract_languages(tesseract)
+    has_french = "fra" in languages
+    return {
+        "generated_at": now_iso(),
+        "commands": {
+            "ocrmypdf": ocrmypdf,
+            "tesseract": tesseract,
+            "ghostscript": ghostscript,
+            "pdftoppm": pdftoppm,
+        },
+        "versions": {
+            "ocrmypdf": command_version(ocrmypdf),
+            "tesseract": command_version(tesseract),
+            "ghostscript": command_version(ghostscript),
+            "pdftoppm": command_version(pdftoppm),
+        },
+        "python_modules": {
+            "ocrmypdf": bool(importlib.util.find_spec("ocrmypdf")),
+            "pdf2image": bool(importlib.util.find_spec("pdf2image")),
+            "pytesseract": bool(importlib.util.find_spec("pytesseract")),
+            "PIL": bool(importlib.util.find_spec("PIL")),
+            "pdfplumber": bool(importlib.util.find_spec("pdfplumber")),
+            "pypdf": bool(importlib.util.find_spec("pypdf")),
+        },
+        "tesseract_languages": languages,
+        "has_french": has_french,
+        "can_use_ocrmypdf": bool(ocrmypdf and tesseract and ghostscript and has_french),
+        "can_use_tesseract_fallback": bool(tesseract and pdftoppm and has_french),
+        "recommended_engine": "ocrmypdf"
+        if ocrmypdf and tesseract and ghostscript and has_french
+        else "tesseract-pdftoppm"
+        if tesseract and pdftoppm and has_french
+        else None,
+        "security_notice": "Local OCR environment report. Do not commit generated reports.",
+    }
+
+
+def ocr_installation_instructions() -> list[str]:
+    return [
+        "Installer Tesseract OCR Windows 64-bit avec la langue française (fra.traineddata).",
+        "Installer Ghostscript 64-bit si OCRmyPDF est utilisé.",
+        "Installer OCRmyPDF dans un environnement Python local : python -m pip install ocrmypdf.",
+        "Vérifier ensuite dans PowerShell : tesseract --list-langs ; ocrmypdf --version ; gswin64c --version.",
+        "Relancer : python automation/scripts/agreements_bible.py ocr-diagnose.",
+    ]
+
+
+def choose_ocr_language(requested: str, languages: list[str]) -> str | None:
+    requested_parts = [part.strip() for part in requested.split("+") if part.strip()]
+    if "fra" not in languages:
+        return None
+    usable = [part for part in requested_parts if part in languages]
+    if "fra" not in usable:
+        usable.insert(0, "fra")
+    return "+".join(dict.fromkeys(usable))
+
+
+def ocr_required_documents(inventory: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        doc
+        for doc in inventory.get("documents", [])
+        if doc.get("change_status") != "MISSING"
+        and doc.get("extension") == ".pdf"
+        and (doc.get("ocr_required") or doc.get("extraction_status") == "OCR_REQUIRED")
+    ]
+
+
+def count_pdf_pages(path: Path) -> int | None:
+    try:
+        from pypdf import PdfReader  # type: ignore
+
+        return len(PdfReader(str(path)).pages)
+    except Exception:
+        return None
+
+
+def parse_tesseract_tsv(tsv: str) -> tuple[str, float | None]:
+    lines: dict[tuple[str, str, str], list[str]] = defaultdict(list)
+    confidences: list[float] = []
+    for raw_line in tsv.splitlines()[1:]:
+        parts = raw_line.split("\t")
+        if len(parts) < 12:
+            continue
+        text = parts[11].strip()
+        if not text:
+            continue
+        key = (parts[2], parts[3], parts[4])
+        lines[key].append(text)
+        try:
+            confidence = float(parts[10])
+            if confidence >= 0:
+                confidences.append(confidence)
+        except ValueError:
+            continue
+    reconstructed = "\n".join(" ".join(words) for _, words in sorted(lines.items()))
+    average = sum(confidences) / len(confidences) if confidences else None
+    return reconstructed.strip(), average
+
+
+def run_ocrmypdf_for_doc(doc: dict[str, Any], source_pdf: Path, env: dict[str, Any], lang: str) -> dict[str, Any]:
+    doc_dir = ocr_doc_dir(doc["document_id"])
+    work_dir = doc_dir / "work"
+    work_dir.mkdir(parents=True, exist_ok=True)
+    input_copy = work_dir / "source-copy.pdf"
+    output_pdf = doc_dir / "document.ocr.pdf"
+    shutil.copy2(source_pdf, input_copy)
+    started = time.monotonic()
+    command = [
+        env["commands"]["ocrmypdf"],
+        "--skip-text",
+        "--language",
+        lang,
+        "--output-type",
+        "pdf",
+        "--optimize",
+        "0",
+        str(input_copy),
+        str(output_pdf),
+    ]
+    result = run_local_command(command, timeout=None)
+    pages, diagnostics = extract_pdf(output_pdf) if output_pdf.exists() else ([], extraction_diagnostics([], [result["stderr"]], ocr_possible=False))
+    status = "OCR_SUCCESS" if result["ok"] and diagnostics["char_count"] > 0 else "OCR_FAILED"
+    return {
+        "document_id": doc["document_id"],
+        "status": status,
+        "engine": "ocrmypdf",
+        "language": lang,
+        "started_at": now_iso(),
+        "duration_seconds": round(time.monotonic() - started, 2),
+        "output_pdf_path": ocr_relative_path(output_pdf) if output_pdf.exists() else None,
+        "text_pages_path": None,
+        "page_count": diagnostics.get("page_count") or count_pdf_pages(source_pdf),
+        "char_count": diagnostics.get("char_count", 0),
+        "average_confidence": None,
+        "confidence_status": "UNKNOWN",
+        "error_message": None if status == "OCR_SUCCESS" else (result.get("stderr") or result.get("stdout")),
+        "security_notice": "Private OCR status. Do not commit.",
+    }
+
+
+def run_tesseract_fallback_for_doc(doc: dict[str, Any], source_pdf: Path, env: dict[str, Any], lang: str) -> dict[str, Any]:
+    doc_dir = ocr_doc_dir(doc["document_id"])
+    work_dir = doc_dir / "work"
+    work_dir.mkdir(parents=True, exist_ok=True)
+    input_copy = work_dir / "source-copy.pdf"
+    image_prefix = work_dir / "page"
+    pages_path = doc_dir / "pages.private.json"
+    shutil.copy2(source_pdf, input_copy)
+    started = time.monotonic()
+    convert = run_local_command([env["commands"]["pdftoppm"], "-r", "300", "-png", str(input_copy), str(image_prefix)], timeout=None)
+    if not convert["ok"]:
+        return {
+            "document_id": doc["document_id"],
+            "status": "OCR_FAILED",
+            "engine": "tesseract-pdftoppm",
+            "language": lang,
+            "started_at": now_iso(),
+            "duration_seconds": round(time.monotonic() - started, 2),
+            "output_pdf_path": None,
+            "text_pages_path": None,
+            "page_count": count_pdf_pages(source_pdf),
+            "char_count": 0,
+            "average_confidence": None,
+            "confidence_status": "UNKNOWN",
+            "error_message": convert.get("stderr") or convert.get("stdout"),
+            "security_notice": "Private OCR status. Do not commit.",
+        }
+
+    image_files = sorted(work_dir.glob("page-*.png"), key=lambda item: int(re.search(r"-(\d+)\.png$", item.name).group(1)) if re.search(r"-(\d+)\.png$", item.name) else 0)
+    pages: list[dict[str, Any]] = []
+    confidences: list[float] = []
+    errors: list[str] = []
+    for page_number, image in enumerate(image_files, start=1):
+        ocr = run_local_command([env["commands"]["tesseract"], str(image), "stdout", "-l", lang, "--dpi", "300", "tsv"], timeout=None)
+        if not ocr["ok"]:
+            errors.append(f"page {page_number}: {ocr.get('stderr') or ocr.get('stdout')}")
+            pages.append({"page": page_number, "text": "", "ocr_confidence": None})
+            continue
+        text, confidence = parse_tesseract_tsv(ocr["stdout"])
+        if confidence is not None:
+            confidences.append(confidence)
+        pages.append({"page": page_number, "text": text, "ocr_confidence": confidence})
+        try:
+            image.unlink()
+        except OSError:
+            pass
+
+    full_text = "\n".join(page.get("text", "") for page in pages).strip()
+    average = sum(confidences) / len(confidences) if confidences else None
+    confidence_status = "LOW" if average is not None and average < OCR_LOW_CONFIDENCE_THRESHOLD else "OK" if average is not None else "UNKNOWN"
+    status = "OCR_LOW_CONFIDENCE" if full_text and confidence_status == "LOW" else "OCR_SUCCESS" if full_text else "OCR_FAILED"
+    write_json(
+        pages_path,
+        {
+            "document_id": doc["document_id"],
+            "pages": pages,
+            "average_confidence": average,
+            "language": lang,
+            "engine": "tesseract-pdftoppm",
+            "security_notice": "Private OCR text pages. Do not commit.",
+        },
+    )
+    return {
+        "document_id": doc["document_id"],
+        "status": status,
+        "engine": "tesseract-pdftoppm",
+        "language": lang,
+        "started_at": now_iso(),
+        "duration_seconds": round(time.monotonic() - started, 2),
+        "output_pdf_path": None,
+        "text_pages_path": ocr_relative_path(pages_path),
+        "page_count": len(pages),
+        "char_count": len(full_text),
+        "average_confidence": average,
+        "confidence_status": confidence_status,
+        "error_message": " | ".join(errors) if errors else None,
+        "security_notice": "Private OCR status. Do not commit.",
+    }
+
+
+def extract_from_ocr_result(doc: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]] | None:
+    status = load_ocr_status(doc)
+    if not is_ocr_success(status):
+        return None
+    pages_path = ocr_local_path(status.get("text_pages_path"))
+    output_pdf = ocr_local_path(status.get("output_pdf_path"))
+    if pages_path and pages_path.exists():
+        payload = load_json(pages_path, {})
+        pages = payload.get("pages", [])
+        diagnostics = extraction_diagnostics(pages, [], ocr_possible=False)
+    elif output_pdf and output_pdf.exists():
+        pages, diagnostics = extract_pdf(output_pdf)
+    else:
+        return None
+
+    confidence = status.get("average_confidence")
+    confidence_status = status.get("confidence_status", "UNKNOWN")
+    diagnostics["ocr_engine"] = status.get("engine")
+    diagnostics["ocr_confidence"] = confidence
+    diagnostics["ocr_confidence_status"] = confidence_status
+    diagnostics["ocr_status"] = status.get("status")
+    diagnostics["ocr_source"] = "local"
+    if diagnostics["char_count"] == 0:
+        diagnostics["status"] = "OCR_REQUIRED"
+        diagnostics["ocr_required"] = True
+        diagnostics["extraction_note"] = "OCR local réalisé mais aucun texte exploitable n'a été produit."
+    elif status.get("status") == "OCR_LOW_CONFIDENCE" or confidence_status == "LOW":
+        diagnostics["status"] = "OCR_LOW_CONFIDENCE"
+        diagnostics["ocr_required"] = False
+        diagnostics["extraction_note"] = "OCR local exploitable mais confiance faible. Vérification humaine obligatoire."
+    elif diagnostics["status"] == "EXTRACTION_A_VERIFIER":
+        diagnostics["status"] = "OCR_LOW_CONFIDENCE"
+        diagnostics["ocr_required"] = False
+        diagnostics["extraction_note"] = "OCR local extrait mais texte faible ou partiel. Vérification humaine obligatoire."
+    else:
+        diagnostics["status"] = "EXTRACTION_OK"
+        diagnostics["ocr_required"] = False
+        diagnostics["extraction_note"] = "Texte issu d'un OCR local."
+    return pages, diagnostics
 
 
 def extraction_diagnostics(pages: list[dict[str, Any]], errors: list[str], ocr_possible: bool) -> dict[str, Any]:
@@ -497,7 +878,12 @@ def extract_documents(args: argparse.Namespace) -> dict[str, Any]:
             continue
 
         output_path = text_output_path(doc["document_id"])
-        must_extract = args.force or doc.get("change_status") in {"NEW", "MODIFIED", "DUPLICATE_EXACT"} or not output_path.exists()
+        must_extract = (
+            getattr(args, "force", False)
+            or doc.get("change_status") in {"NEW", "MODIFIED", "DUPLICATE_EXACT"}
+            or not output_path.exists()
+            or ocr_result_newer_than_text(doc, output_path)
+        )
         if not must_extract:
             report_rows.append(report_doc(doc, doc.get("extraction_status", "PENDING"), None, None))
             continue
@@ -506,7 +892,11 @@ def extract_documents(args: argparse.Namespace) -> dict[str, Any]:
         pages: list[dict[str, Any]]
         diagnostics: dict[str, Any]
         if doc["extension"] == ".pdf":
-            pages, diagnostics = extract_pdf(file_path)
+            ocr_extracted = extract_from_ocr_result(doc)
+            if ocr_extracted:
+                pages, diagnostics = ocr_extracted
+            else:
+                pages, diagnostics = extract_pdf(file_path)
         elif doc["extension"] == ".docx":
             pages, diagnostics = extract_docx(file_path)
         else:
@@ -519,6 +909,9 @@ def extract_documents(args: argparse.Namespace) -> dict[str, Any]:
         doc["ocr_required"] = diagnostics["ocr_required"]
         doc["extraction_note"] = diagnostics.get("extraction_note")
         doc["error_message"] = diagnostics.get("error_message")
+        doc["ocr_engine"] = diagnostics.get("ocr_engine")
+        doc["ocr_confidence"] = diagnostics.get("ocr_confidence")
+        doc["ocr_confidence_status"] = diagnostics.get("ocr_confidence_status")
         doc["last_extracted_at"] = now_iso()
         doc["extraction_diagnostics"] = diagnostics
 
@@ -570,6 +963,9 @@ def report_doc(doc: dict[str, Any], status: str, chars: int | None, pages: int |
         "primary_topic": doc.get("primary_topic"),
         "error_message": diagnostics.get("error_message"),
         "extraction_note": diagnostics.get("extraction_note"),
+        "ocr_engine": diagnostics.get("ocr_engine") or doc.get("ocr_engine"),
+        "ocr_confidence": diagnostics.get("ocr_confidence") or doc.get("ocr_confidence"),
+        "ocr_confidence_status": diagnostics.get("ocr_confidence_status") or doc.get("ocr_confidence_status"),
     }
 
 
@@ -620,6 +1016,10 @@ def chunk_text(extracted: dict[str, Any], metadata: dict[str, Any]) -> list[dict
                     "document_type": metadata.get("document_type"),
                     "primary_topic": metadata.get("primary_topic"),
                     "secondary_topics": metadata.get("secondary_topics", []),
+                    "ocr_confidence_status": metadata.get("ocr_confidence_status"),
+                    "source_quality_warning": "OCR local à confiance faible : relire le document source avant utilisation."
+                    if metadata.get("extraction_status") == "OCR_LOW_CONFIDENCE"
+                    else None,
                     "text": text,
                 }
             )
@@ -660,7 +1060,7 @@ def build_index(args: argparse.Namespace) -> dict[str, Any]:
     relations = []
 
     for doc in inventory.get("documents", []):
-        if doc.get("change_status") == "MISSING" or doc.get("extraction_status") not in {"EXTRACTION_OK", "EXTRACTION_A_VERIFIER"}:
+        if doc.get("change_status") == "MISSING" or doc.get("extraction_status") not in {"EXTRACTION_OK", "EXTRACTION_A_VERIFIER", "OCR_LOW_CONFIDENCE"}:
             continue
         extracted_path = text_output_path(doc["document_id"])
         if not extracted_path.exists():
@@ -799,6 +1199,7 @@ def format_source(score: float, chunk: dict[str, Any], query_tokens: list[str]) 
         "excerpt": excerpt,
         "match_score": round(score, 2),
         "chunk_id": chunk["chunk_id"],
+        "source_quality_warning": chunk.get("source_quality_warning"),
     }
 
 
@@ -832,6 +1233,8 @@ def print_search_response(response: dict[str, Any]) -> None:
     print(f"SOURCES TROUVÉES: {len(response['sources_used'])}")
     for source in response["sources_used"][:5]:
         print(f"- {source['document']} | {source['location']} | score {source['match_score']}")
+        if source.get("source_quality_warning"):
+            print(f"  avertissement: {source['source_quality_warning']}")
 
 
 def run_update(args: argparse.Namespace) -> None:
@@ -894,6 +1297,186 @@ def run_missing(args: argparse.Namespace) -> dict[str, Any]:
     for item in response["before_continuing_request"]:
         print(f"- {item}")
     return response
+
+
+def ocr_status_summary(inventory: dict[str, Any]) -> dict[str, Any]:
+    documents = [doc for doc in inventory.get("documents", []) if doc.get("change_status") != "MISSING"]
+    required = ocr_required_documents(inventory)
+    ocr_success = 0
+    ocr_low_confidence = 0
+    ocr_failed = 0
+    ocr_pending = 0
+    for doc in required:
+        status = load_ocr_status(doc)
+        if is_ocr_success(status):
+            if status.get("status") == "OCR_LOW_CONFIDENCE":
+                ocr_low_confidence += 1
+            else:
+                ocr_success += 1
+        elif status and status.get("status") == "OCR_FAILED":
+            ocr_failed += 1
+        else:
+            ocr_pending += 1
+    indexed = sum(
+        1
+        for doc in documents
+        if doc.get("extraction_status") in {"EXTRACTION_OK", "EXTRACTION_A_VERIFIER", "OCR_LOW_CONFIDENCE"}
+    )
+    coverage = round((indexed / len(documents)) * 100, 1) if documents else 0.0
+    return {
+        "documents_detected": len(documents),
+        "documents_indexable": indexed,
+        "ocr_required": len(required),
+        "ocr_success": ocr_success,
+        "ocr_low_confidence": ocr_low_confidence,
+        "ocr_failed": ocr_failed,
+        "ocr_pending": ocr_pending,
+        "coverage_percent": coverage,
+    }
+
+
+def run_ocr_diagnose(args: argparse.Namespace) -> dict[str, Any]:
+    ensure_dirs()
+    inventory_path, _ = inventory_paths()
+    inventory = load_json(inventory_path, {"documents": []})
+    env = detect_ocr_environment()
+    summary = ocr_status_summary(inventory)
+    report = {
+        "generated_at": now_iso(),
+        "environment": env,
+        "summary": summary,
+        "installation_instructions": ocr_installation_instructions(),
+        "security_notice": "Private OCR diagnostic. Do not commit.",
+    }
+    write_json(REPORT_DIR / f"ocr-diagnose-{safe_stamp()}.private.json", report)
+
+    print("DIAGNOSTIC OCR LOCAL")
+    print(f"OCRmyPDF: {'OK' if env['commands']['ocrmypdf'] else 'MANQUANT'}")
+    print(f"Tesseract: {'OK' if env['commands']['tesseract'] else 'MANQUANT'}")
+    print(f"Ghostscript: {'OK' if env['commands']['ghostscript'] else 'MANQUANT'}")
+    print(f"pdftoppm: {'OK' if env['commands']['pdftoppm'] else 'MANQUANT'}")
+    print(f"Langue fra: {'OK' if env['has_french'] else 'MANQUANTE'}")
+    print(f"Moteur recommandé: {env['recommended_engine'] or 'aucun moteur OCR local prêt'}")
+    print(
+        f"Documents: {summary['documents_detected']} | indexables: {summary['documents_indexable']} | "
+        f"OCR requis: {summary['ocr_required']} | couverture: {summary['coverage_percent']}%"
+    )
+    if not env["recommended_engine"]:
+        print("OCR local non prêt. Procédure Windows :")
+        for item in ocr_installation_instructions():
+            print(f"- {item}")
+    return report
+
+
+def select_ocr_engine(args: argparse.Namespace, env: dict[str, Any]) -> str | None:
+    requested = getattr(args, "engine", "auto")
+    if requested == "auto":
+        return env.get("recommended_engine")
+    if requested == "ocrmypdf" and env.get("can_use_ocrmypdf"):
+        return "ocrmypdf"
+    if requested == "tesseract-pdftoppm" and env.get("can_use_tesseract_fallback"):
+        return "tesseract-pdftoppm"
+    return None
+
+
+def run_ocr(args: argparse.Namespace) -> dict[str, Any]:
+    ensure_dirs()
+    inventory_path, _ = inventory_paths()
+    inventory = load_json(inventory_path, None)
+    env = detect_ocr_environment()
+    engine = select_ocr_engine(args, env)
+    lang = choose_ocr_language(getattr(args, "lang", OCR_LANG_DEFAULT), env.get("tesseract_languages", []))
+    started = time.monotonic()
+    report = {
+        "generated_at": now_iso(),
+        "engine": engine,
+        "language": lang,
+        "documents_to_process": 0,
+        "ocr_success": 0,
+        "ocr_low_confidence": 0,
+        "ocr_failed": 0,
+        "ocr_skipped": 0,
+        "partial_or_low_confidence": 0,
+        "pages_processed": 0,
+        "duration_seconds": 0,
+        "rows": [],
+        "security_notice": "Private OCR run report. Do not commit.",
+    }
+
+    if not engine or not lang:
+        report["error_message"] = "Dépendances OCR locales incomplètes ou langue française absente."
+        report["installation_instructions"] = ocr_installation_instructions()
+        write_json(REPORT_DIR / f"ocr-run-{safe_stamp()}.private.json", report)
+        print("OCR local non disponible. Aucun document n'a été traité.")
+        for item in ocr_installation_instructions():
+            print(f"- {item}")
+        return report
+
+    source = source_path_from_args(args)
+    if inventory is None:
+        inventory = scan_corpus(args)
+
+    candidates = ocr_required_documents(inventory)
+    if args.document_id:
+        candidates = [doc for doc in candidates if doc.get("document_id") == args.document_id]
+    pending = []
+    for doc in candidates:
+        if is_ocr_success(load_ocr_status(doc)) and not args.force_ocr:
+            report["ocr_skipped"] += 1
+            continue
+        pending.append(doc)
+    if args.limit is not None:
+        pending = pending[: args.limit]
+    report["documents_to_process"] = len(pending)
+
+    for doc in pending:
+        source_pdf = source / doc["relative_path"]
+        if engine == "ocrmypdf":
+            result = run_ocrmypdf_for_doc(doc, source_pdf, env, lang)
+        else:
+            result = run_tesseract_fallback_for_doc(doc, source_pdf, env, lang)
+        write_json(ocr_status_path(doc["document_id"]), result)
+
+        doc["ocr_status"] = result["status"]
+        doc["ocr_engine"] = result["engine"]
+        doc["ocr_confidence"] = result.get("average_confidence")
+        doc["ocr_confidence_status"] = result.get("confidence_status")
+        doc["ocr_last_run_at"] = now_iso()
+        doc["ocr_required"] = result["status"] == "OCR_FAILED"
+        if result["status"] == "OCR_SUCCESS":
+            report["ocr_success"] += 1
+        elif result["status"] == "OCR_LOW_CONFIDENCE":
+            report["ocr_low_confidence"] += 1
+            report["partial_or_low_confidence"] += 1
+        else:
+            report["ocr_failed"] += 1
+        report["pages_processed"] += result.get("page_count") or 0
+        report["rows"].append(
+            {
+                "document_id": doc["document_id"],
+                "status": result["status"],
+                "engine": result["engine"],
+                "page_count": result.get("page_count"),
+                "char_count": result.get("char_count"),
+                "average_confidence": result.get("average_confidence"),
+                "confidence_status": result.get("confidence_status"),
+                "error_message": result.get("error_message"),
+            }
+        )
+        inventory["summary"] = build_quality_summary(inventory["documents"])
+        write_json(inventory_path, inventory)
+
+    report["duration_seconds"] = round(time.monotonic() - started, 2)
+    write_json(REPORT_DIR / f"ocr-run-{safe_stamp()}.private.json", report)
+    print(
+        f"OCR local terminé | traités: {report['documents_to_process']} | succès: {report['ocr_success']} | "
+        f"faible confiance: {report['ocr_low_confidence']} | échecs: {report['ocr_failed']} | pages: {report['pages_processed']}"
+    )
+
+    if report["ocr_success"] or report["ocr_low_confidence"]:
+        extract_documents(args)
+        build_index(args)
+    return report
 
 
 def diagnose_extractions(args: argparse.Namespace) -> dict[str, Any]:
@@ -995,6 +1578,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_diagnose = sub.add_parser("diagnose")
     p_diagnose.add_argument("--show-files", action="store_true", help="Afficher les noms de fichiers localement. Ne pas copier vers GitHub.")
 
+    sub.add_parser("ocr-diagnose")
+
+    p_ocr = sub.add_parser("ocr-run")
+    p_ocr.add_argument("--source", help="Chemin local privé du corpus. Sinon CFDT_NEXUS_CORPUS_PATH ou dernier chemin local mémorisé.")
+    p_ocr.add_argument("--limit", type=int, default=None)
+    p_ocr.add_argument("--document-id")
+    p_ocr.add_argument("--engine", choices=["auto", "ocrmypdf", "tesseract-pdftoppm"], default="auto")
+    p_ocr.add_argument("--lang", default=OCR_LANG_DEFAULT)
+    p_ocr.add_argument("--force-ocr", action="store_true", help="Retraiter même les OCR déjà réussis.")
+
     return parser
 
 
@@ -1017,6 +1610,10 @@ def main() -> None:
         run_missing(args)
     elif args.command == "diagnose":
         diagnose_extractions(args)
+    elif args.command == "ocr-diagnose":
+        run_ocr_diagnose(args)
+    elif args.command == "ocr-run":
+        run_ocr(args)
     else:
         raise SystemExit(f"Commande inconnue: {args.command}")
 
