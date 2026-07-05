@@ -69,6 +69,8 @@ La fiche CSE detaillee doit aussi isoler :
 - le point CSSCT eventuel ;
 - la synthese pour l'elu.
 
+Pour les sujets CSSCT / securite process / maintenance, le pont doit eviter de faire remonter les sources remuneration comme sources dominantes si la requete ne porte pas clairement sur la remuneration.
+
 Le Cycle CSE pourra demander :
 
 - rechercher les accords liés au temps de travail ;

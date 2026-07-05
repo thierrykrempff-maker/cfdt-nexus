@@ -55,6 +55,18 @@ La sortie CSE detaillee produit une fiche de preparation avec :
 - position CFDT a construire ;
 - synthese pour l'elu.
 
+Le profil CSSCT / securite process / maintenance couvre notamment :
+
+- DUERP / DUER ;
+- RPS et charge mentale ;
+- PROVOX / SNCC / analyseurs ;
+- climatisation ;
+- pannes et scenarios de panne ;
+- pieces de rechange et pieces critiques ;
+- plan de contingence ;
+- maintenance preventive ;
+- risques industriels et securite process.
+
 ## Zones
 
 - `scripts/` : scripts réutilisables ;

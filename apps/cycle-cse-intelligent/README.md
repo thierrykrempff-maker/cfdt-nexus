@@ -132,6 +132,19 @@ La fiche contient :
 
 Le module ne conclut jamais seul qu'une mesure est legale ou illegale. Il prepare la discussion CSE et impose une verification humaine.
 
+### Profil CSSCT / securite process / maintenance
+
+La fiche CSE detaillee sait maintenant qualifier les sujets techniques de type PROVOX, SNCC, analyseurs, climatisation, pieces de rechange, pannes, DUERP et RPS.
+
+Elle prepare :
+
+- les risques techniques ;
+- la securite process ;
+- la continuite d'exploitation ;
+- la charge mentale ;
+- les questions CSSCT ;
+- les documents techniques a demander.
+
 ## Integrations futures
 
 Le module prepare les connexions futures avec :

@@ -88,6 +88,7 @@ Les scenarios fictifs couvrent :
 - procedure disciplinaire / reglement interieur ;
 - heures de delegation / droit syndical.
 - prime de nuit / dimanche / jour ferie.
+- CSSCT / securite process / maintenance : PROVOX, SNCC, DUERP, RPS, pannes et pieces critiques.
 
 Ils servent a verifier que la connexion utilise bien les profils metier construits dans la Bible Accords.
 
@@ -111,6 +112,24 @@ Ils servent a verifier que la connexion utilise bien les profils metier construi
 14. synthese pour l'elu.
 
 Le moteur formule des hypotheses prudentes. Il ne remplace pas l'analyse juridique, la lecture des sources citees ni le retour des salaries concernes.
+
+## Profil CSSCT / securite process / maintenance
+
+Ce profil evite de classer en droit syndical un sujet portant sur :
+
+- DUERP ;
+- RPS ;
+- securite process ;
+- maintenance ;
+- pieces de rechange ;
+- climatisation ;
+- analyseurs ;
+- PROVOX / SNCC ;
+- panne ;
+- plan de contingence ;
+- charge mentale.
+
+Les sources remuneration, paie, primes, CET, forfait jours et NAO sont defavorisees et filtrees de la fiche CSE lorsque le sujet ne porte pas clairement sur la remuneration.
 
 ## Principe de prudence
 

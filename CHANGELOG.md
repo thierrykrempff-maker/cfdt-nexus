@@ -1,5 +1,13 @@
 # Changelog
 
+## Profil CSSCT sécurité process maintenance
+
+- Ajout du profil métier `CSSCT / sécurité process / maintenance`.
+- Détection prioritaire des sujets DUERP, RPS, PROVOX, SNCC, analyseurs, climatisation, panne, pièces critiques et plan de contingence.
+- Filtrage des sources rémunération/paie/NAO/CET lorsque le sujet est CSSCT ou sécurité process.
+- Adaptation de la fiche CSE avec risques techniques, sécurité process, continuité d'exploitation, charge mentale, RPS, maintenance préventive, pièces critiques et documents techniques à demander.
+- Ajout du scénario métier PROVOX / DUERP / RPS.
+
 ## Analyse comparative locale CSE V1
 
 - Transformation de `analyze-cse` en fiche de preparation syndicale detaillee.

@@ -34,6 +34,7 @@ PRUDENCE_WARNING = (
 SOURCE_FOUND = "SOURCE LOCALE TROUVÉE"
 SOURCE_TO_VERIFY = "SOURCE LOCALE À VÉRIFIER"
 NO_RELEVANT_SOURCE = "AUCUNE SOURCE LOCALE PERTINENTE TROUVÉE"
+NO_DIRECT_CSSCT_SOURCE = "Aucune source locale directement pertinente trouvée — analyse CSSCT à construire avec DUERP, documents techniques et informations direction."
 
 
 THEME_RULES = [
@@ -107,6 +108,81 @@ THEME_RULES = [
             "projet d'organisation des astreintes",
             "barème d'indemnisation",
             "bilan des interventions passées",
+        ],
+    },
+    {
+        "theme": "CSSCT / sécurité process / maintenance",
+        "patterns": [
+            "duerp",
+            "duer",
+            "rps",
+            "risques psychosociaux",
+            "sécurité",
+            "securite",
+            "sécurité process",
+            "securite process",
+            "prévention",
+            "prevention",
+            "conditions de travail",
+            "maintenance",
+            "pièces de rechange",
+            "pieces de rechange",
+            "stock pièces",
+            "stock pieces",
+            "pièces critiques",
+            "pieces critiques",
+            "climatisation",
+            "analyseurs",
+            "analyseurs en continu",
+            "provox",
+            "sncc",
+            "panne",
+            "scénario de panne",
+            "scenario de panne",
+            "continuité d'exploitation",
+            "continuite d exploitation",
+            "contingence",
+            "plan de contingence",
+            "défaillance technique",
+            "defaillance technique",
+            "incident",
+            "presque accident",
+            "hn",
+            "charge mentale",
+            "stress",
+            "astreinte technique",
+            "risque chimique",
+            "risques industriels",
+        ],
+        "queries": [
+            "DUERP RPS sécurité process maintenance",
+            "PROVOX SNCC analyseurs climatisation panne",
+            "pièces de rechange pièces critiques plan de contingence",
+            "conditions de travail charge mentale risques psychosociaux",
+            "sécurité process risques industriels prévention maintenance",
+        ],
+        "comparison_points": [
+            "état actuel des équipements critiques",
+            "scénarios de panne et plan de contingence",
+            "maintenance préventive et pièces critiques",
+            "mise à jour DUERP et évaluation RPS",
+            "impact sur sécurité process et conditions de travail",
+        ],
+        "questions": [
+            "Quel est l'état réel des équipements et locaux concernés ?",
+            "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+            "Quels scénarios de panne ont été évalués ?",
+            "Le DUERP a-t-il été mis à jour ?",
+            "Quelles mesures de prévention immédiates sont prévues ?",
+        ],
+        "documents_to_request": [
+            "état des lieux technique",
+            "liste des pièces critiques et stocks disponibles",
+            "plan de contingence",
+            "historique incidents et dysfonctionnements",
+            "mise à jour DUERP",
+            "analyse RPS et charge mentale",
+            "plan de maintenance préventive",
         ],
     },
     {
@@ -267,6 +343,13 @@ SCENARIOS = [
         "text": "La direction souhaite revoir les primes de nuit, dimanche et jour ferie.",
         "expected": "les textes remuneration, primes et majorations doivent remonter prioritairement",
     },
+    {
+        "id": "test-6-cssct-provox-duerp",
+        "kind": "cse",
+        "title": "Fiabilité PROVOX, climatisation, pièces de rechange et mise à jour du DUERP",
+        "text": "La CFDT demande un point sur l'état de la climatisation des locaux SNCC PROVOX et des analyseurs en continu, le plan de contingence et la gestion des stocks de pièces de rechange PROVOX, ainsi que les modalités de mise à jour du DUERP pour intégrer les scénarios de panne et l'évaluation des RPS associés.",
+        "expected": "le profil CSSCT / sécurité process / maintenance doit être prioritaire et les documents rémunération ne doivent pas dominer",
+    },
 ]
 
 
@@ -324,6 +407,12 @@ def detect_themes(text: str) -> list[dict[str, Any]]:
                     "documents_to_request": rule["documents_to_request"],
                 }
             )
+    if any(normalize(item["theme"]) == "cssct / securite process / maintenance" for item in detected):
+        detected = [
+            item
+            for item in detected
+            if normalize(item["theme"]) != "relations collectives / droit syndical"
+        ]
     return detected
 
 
@@ -487,6 +576,54 @@ def has_theme(themes: list[dict[str, Any]], *needles: str) -> bool:
     return any(normalize(needle) in haystack for needle in needles)
 
 
+def is_cssct_theme(themes: list[dict[str, Any]]) -> bool:
+    return has_theme(themes, "CSSCT / sécurité process / maintenance")
+
+
+def is_remuneration_source(source: dict[str, Any]) -> bool:
+    haystack = normalize(
+        " ".join(
+            [
+                str(source.get("document") or ""),
+                str(source.get("matched_query") or ""),
+                str(source.get("ranking_profile") or ""),
+                " ".join(str(reason) for reason in source.get("ranking_reasons", [])),
+            ]
+        )
+    )
+    remuneration_terms = [
+        "nao",
+        "paie",
+        "salaire",
+        "salaires",
+        "remuneration",
+        "prime",
+        "primes",
+        "cet",
+        "pereco",
+        "pee",
+        "forfait jours",
+        "forfait jour",
+        "interessement",
+        "participation",
+    ]
+    return any(term in haystack for term in remuneration_terms)
+
+
+def cse_sources_for_theme(sources: list[dict[str, Any]], themes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if not is_cssct_theme(themes):
+        return sources
+    return [source for source in sources if not is_remuneration_source(source)]
+
+
+def cse_source_status(sources: list[dict[str, Any]], themes: list[dict[str, Any]], fallback: str) -> str:
+    if is_cssct_theme(themes) and not sources:
+        return NO_DIRECT_CSSCT_SOURCE
+    if sources:
+        return sources[0].get("source_status") or fallback
+    return fallback
+
+
 def source_reference(source: dict[str, Any]) -> str:
     parts = [source.get("document") or "document local"]
     if source.get("page"):
@@ -511,7 +648,8 @@ def role_probable(source: dict[str, Any], themes: list[dict[str, Any]], index: i
     if "historique" in haystack or "ancien" in haystack:
         return "document historique"
     if "remuneration" not in main_theme and any(
-        term in haystack for term in ["nao", "salaire", "prime", "interessement", "participation"]
+        term in haystack
+        for term in ["nao", "paie", "salaire", "prime", "primes", "cet", "pereco", "pee", "forfait jours", "interessement", "participation"]
     ):
         return "document potentiellement non prioritaire"
     if index == 0 and source.get("source_status") == SOURCE_FOUND:
@@ -555,6 +693,12 @@ def cse_confidence(sources: list[dict[str, Any]]) -> str:
 def direction_intent(text: str, themes: list[dict[str, Any]]) -> str:
     if not themes:
         return "Le changement exact doit être précisé par la direction."
+    if is_cssct_theme(themes):
+        return (
+            "Le point semble porter sur la fiabilité d'équipements critiques, la maintenance, "
+            "la continuité d'exploitation, la mise à jour du DUERP et l'évaluation des RPS. "
+            "L'état réel des installations, les scénarios de panne et les mesures immédiates doivent être précisés."
+        )
     if has_theme(themes, "temps de travail", "repos", "5x8"):
         return (
             "La direction semble vouloir modifier l'organisation du repos, des horaires ou du cycle 5x8. "
@@ -586,6 +730,15 @@ def direction_intent(text: str, themes: list[dict[str, Any]]) -> str:
 def current_situation_checks(themes: list[dict[str, Any]], sources: list[dict[str, Any]]) -> list[str]:
     ref = source_reference(sources[0]) if sources else "une source locale à identifier"
     checks = []
+    if is_cssct_theme(themes):
+        checks.extend(
+            [
+                f"À vérifier dans {ref} ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+                f"À vérifier dans {ref} ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+                f"À vérifier dans {ref} ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence.",
+                f"À vérifier dans {ref} ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+            ]
+        )
     if has_theme(themes, "temps de travail", "repos", "5x8"):
         checks.extend(
             [
@@ -626,6 +779,21 @@ def current_situation_checks(themes: list[dict[str, Any]], sources: list[dict[st
 
 
 def comparison_elements(themes: list[dict[str, Any]]) -> list[str]:
+    if is_cssct_theme(themes):
+        return [
+            "état climatisation locaux SNCC/PROVOX",
+            "fiabilité des analyseurs en continu",
+            "stock de pièces critiques",
+            "délai de réapprovisionnement",
+            "plan de contingence",
+            "scénarios de panne",
+            "sécurité process",
+            "maintenance préventive",
+            "charge mentale",
+            "RPS",
+            "mise à jour DUERP",
+            "escalade en cas de panne",
+        ]
     if has_theme(themes, "temps de travail", "repos", "5x8"):
         return [
             "durée de repos",
@@ -696,9 +864,9 @@ def comparison_table(themes: list[dict[str, Any]], sources: list[dict[str, Any]]
 
 
 def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
-    cssct_sensitive = has_theme(themes, "temps de travail", "repos", "5x8", "astreinte")
+    cssct_sensitive = is_cssct_theme(themes) or has_theme(themes, "temps de travail", "repos", "5x8", "astreinte")
     remuneration_sensitive = has_theme(themes, "rémunération", "primes")
-    return [
+    consequences = [
         {"categorie": "charge de travail", "analyse": "Impact potentiel à mesurer selon la fréquence et les postes concernés."},
         {"categorie": "fatigue", "analyse": "Risque potentiel renforcé si le sujet touche repos, 5x8, astreinte ou travail de nuit." if cssct_sensitive else "À vérifier selon l'organisation concrète."},
         {"categorie": "sommeil", "analyse": "À analyser en CSSCT si travail de nuit, repos réduit ou astreinte sont concernés." if cssct_sensitive else "Impact non établi à ce stade."},
@@ -712,9 +880,27 @@ def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
         {"categorie": "impact sur postés", "analyse": "Point prioritaire si les salariés en 5x8, équipes postées ou travail de nuit sont concernés."},
         {"categorie": "impact sur astreinte", "analyse": "À vérifier si intervention, rappel ou continuité de production sont dans le projet."},
     ]
+    if is_cssct_theme(themes):
+        consequences.extend(
+            [
+                {"categorie": "sécurité process", "analyse": "Risque potentiel en cas de défaillance d'équipements critiques ou d'analyseurs indisponibles."},
+                {"categorie": "continuité d'exploitation", "analyse": "À vérifier avec le plan de contingence, les scénarios de panne et les modalités d'escalade."},
+                {"categorie": "maintenance préventive", "analyse": "À objectiver avec les plans de maintenance, les délais d'intervention et les stocks de pièces critiques."},
+                {"categorie": "charge mentale", "analyse": "Risque RPS potentiel si les équipes compensent une fragilité technique ou une incertitude de dépannage."},
+            ]
+        )
+    return consequences
 
 
 def benefit_balance(themes: list[dict[str, Any]]) -> dict[str, Any]:
+    company_benefits = [
+        "flexibilité",
+        "remplacement plus facile",
+        "couverture des postes",
+        "continuité de production",
+        "optimisation des effectifs",
+        "baisse de contraintes organisationnelles",
+    ]
     employee_benefits = [
         "rémunération éventuelle à chiffrer",
         "organisation plus prévisible si le dispositif est encadré",
@@ -725,15 +911,22 @@ def benefit_balance(themes: list[dict[str, Any]]) -> dict[str, Any]:
     ]
     if has_theme(themes, "rémunération", "primes"):
         employee_benefits.insert(0, "gain financier potentiel à vérifier sur fiche de paie et population concernée")
+    if is_cssct_theme(themes):
+        company_benefits = [
+            "continuité d'exploitation sécurisée",
+            "réduction des indisponibilités techniques",
+            "meilleure anticipation des pannes",
+            "maîtrise des risques industriels",
+        ]
+        employee_benefits = [
+            "conditions de travail sécurisées",
+            "réduction de la charge mentale",
+            "consignes d'escalade plus claires",
+            "meilleure prévention des incidents",
+            "DUERP actualisé",
+        ]
     return {
-        "avantages_probables_pour_l_entreprise": [
-            "flexibilité",
-            "remplacement plus facile",
-            "couverture des postes",
-            "continuité de production",
-            "optimisation des effectifs",
-            "baisse de contraintes organisationnelles",
-        ],
+        "avantages_probables_pour_l_entreprise": company_benefits,
         "avantages_eventuels_pour_les_salaries": dedupe(employee_benefits),
         "conclusion": "Équilibre social à vérifier.",
     }
@@ -757,6 +950,19 @@ def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
                 "risque sur récupération et sécurité process",
             ]
         )
+    if is_cssct_theme(themes):
+        risks.extend(
+            [
+                "risque technique sur équipements critiques",
+                "risque sécurité process",
+                "risque de rupture de continuité d'exploitation",
+                "risque de maintenance préventive insuffisante",
+                "risque de stock insuffisant sur pièces critiques",
+                "risque d'escalade mal définie en cas de panne",
+                "risque de DUERP non actualisé",
+                "risque RPS lié à la charge mentale et au stress opérationnel",
+            ]
+        )
     if has_theme(themes, "disciplinaire"):
         risks.extend(["risque de procédure insuffisamment documentée", "risque de sanction disproportionnée à vérifier"])
     if has_theme(themes, "rémunération", "primes"):
@@ -777,6 +983,21 @@ def missing_information(themes: list[dict[str, Any]]) -> list[str]:
     ]
     if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
         missing.extend(["analyse de risques", "avis du médecin du travail si pertinent", "consultation CSSCT si pertinente", "mesures de prévention"])
+    if is_cssct_theme(themes):
+        missing.extend(
+            [
+                "état réel de la climatisation SNCC/PROVOX et des analyseurs",
+                "historique incidents, dysfonctionnements et alertes",
+                "liste des pièces critiques en stock",
+                "délai de réapprovisionnement des pièces manquantes",
+                "plan de contingence en cas de panne",
+                "scénarios de panne évalués",
+                "analyse sécurité process",
+                "évaluation charge mentale et RPS",
+                "mise à jour DUERP",
+                "mesures de prévention immédiates",
+            ]
+        )
     return dedupe(missing)
 
 
@@ -791,6 +1012,23 @@ def documents_to_request_detailed(themes: list[dict[str, Any]]) -> list[str]:
     ]
     if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
         documents.extend(["données d'absentéisme/fatigue si pertinentes", "évaluation des risques", "mise à jour DUERP si pertinente", "avis ou contribution CSSCT si nécessaire"])
+    if is_cssct_theme(themes):
+        documents.extend(
+            [
+                "état technique climatisation locaux SNCC/PROVOX",
+                "état technique des analyseurs en continu",
+                "registre incidents, dysfonctionnements et alertes",
+                "inventaire des pièces critiques et stocks disponibles",
+                "délais de réapprovisionnement fournisseurs",
+                "plan de contingence et scénarios de panne",
+                "procédure d'escalade en cas de panne",
+                "plan de maintenance préventive",
+                "analyse sécurité process",
+                "mise à jour DUERP",
+                "analyse RPS / charge mentale",
+                "mesures de prévention immédiates",
+            ]
+        )
     if has_theme(themes, "rémunération", "primes"):
         documents.extend(["simulation paie", "population bénéficiaire", "coût global et critères d'attribution"])
     return dedupe(documents + documents_to_request(themes))
@@ -807,6 +1045,19 @@ def main_cse_questions(themes: list[dict[str, Any]]) -> list[str]:
     ]
     if has_theme(themes, "temps de travail", "repos", "5x8"):
         questions.extend(["Quelle fréquence d'utilisation est envisagée ?", "Quelles conséquences sur la fatigue ont été évaluées ?", "Quelles mesures de prévention sont prévues ?", "Quelles contreparties sont proposées ?"])
+    if is_cssct_theme(themes):
+        questions = [
+            "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+            "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+            "Quelles pièces critiques sont en stock ?",
+            "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+            "Quel plan de contingence existe en cas de panne ?",
+            "Quels risques pour la sécurité process ont été identifiés ?",
+            "Quelles conséquences sur la charge mentale des équipes ?",
+            "Le DUERP a-t-il été mis à jour ?",
+            "Quels scénarios de panne ont été évalués ?",
+            "Quelles mesures de prévention immédiates sont prévues ?",
+        ]
     if has_theme(themes, "astreinte"):
         questions.extend(["Quels postes ou services seraient intégrés au dispositif d'astreinte ?", "Comment le repos après intervention serait-il garanti ?", "Quelle indemnisation est prévue pour l'astreinte et les interventions ?"])
     if has_theme(themes, "disciplinaire"):
@@ -828,9 +1079,25 @@ def conditional_followups() -> list[dict[str, Any]]:
 
 def cssct_point(themes: list[dict[str, Any]], text: str) -> dict[str, Any]:
     normalized = normalize(text)
-    probable = has_theme(themes, "temps de travail", "repos", "5x8", "astreinte") or any(
+    probable = is_cssct_theme(themes) or has_theme(themes, "temps de travail", "repos", "5x8", "astreinte") or any(
         term in normalized for term in ["fatigue", "nuit", "securite", "sante", "risque"]
     )
+    if is_cssct_theme(themes):
+        return {
+            "statut": "Point CSSCT probable",
+            "questions_cssct": [
+                "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+                "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+                "Quelles pièces critiques sont en stock ?",
+                "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+                "Quel plan de contingence existe en cas de panne ?",
+                "Quels risques pour la sécurité process ont été identifiés ?",
+                "Quelles conséquences sur la charge mentale des équipes ?",
+                "Le DUERP a-t-il été mis à jour ?",
+                "Quels scénarios de panne ont été évalués ?",
+                "Quelles mesures de prévention immédiates sont prévues ?",
+            ],
+        }
     return {
         "statut": "Point CSSCT probable" if probable else "Point CSSCT à vérifier selon l'impact santé-sécurité",
         "questions_cssct": [
@@ -857,6 +1124,15 @@ def cfdt_position_to_build(themes: list[dict[str, Any]]) -> dict[str, Any]:
     ]
     if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
         non_acceptables.extend(["réduction de repos ou hausse de contrainte sans prévention", "banalisation d'une dérogation"])
+    if is_cssct_theme(themes):
+        non_acceptables.extend(
+            [
+                "absence d'état technique documenté",
+                "absence de plan de contingence",
+                "absence de mise à jour DUERP si les scénarios de panne sont confirmés",
+                "absence de mesures de prévention immédiates",
+            ]
+        )
     return {
         "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
         "points_negociables": ["périmètre", "durée d'application", "phase de test", "fréquence maximale", "modalités de suivi CSE/CSSCT"],
@@ -877,7 +1153,8 @@ def elected_summary(missing: list[str], documents: list[str]) -> dict[str, Any]:
 
 def build_detailed_cse_report(title: str, text: str, base: dict[str, Any], sources: list[dict[str, Any]]) -> dict[str, Any]:
     themes = base["detected_themes"]
-    source_status = base["source_status"]
+    sources = cse_sources_for_theme(sources, themes)
+    source_status = cse_source_status(sources, themes, base["source_status"])
     confidence = cse_confidence(sources)
     enriched_sources = enrich_sources_for_cse(sources, themes)
     current_checks = current_situation_checks(themes, sources)
@@ -1062,6 +1339,8 @@ def print_cse_summary(report: dict[str, Any]) -> None:
     print(report["1_ce_que_la_direction_semble_vouloir_faire"])
     print("")
     print("2. TEXTES LOCAUX POTENTIELLEMENT CONCERNÉS")
+    if not report["2_textes_locaux_potentiellement_concernes"]:
+        print(report["statut_source_locale"])
     for source in report["2_textes_locaux_potentiellement_concernes"][:6]:
         print(
             f"- {source.get('document')} | page {source.get('page')} | "
@@ -1074,18 +1353,18 @@ def print_cse_summary(report: dict[str, Any]) -> None:
     print("")
     print_comparison_rows(report["4_points_a_comparer_avant_apres"])
     print("")
-    print_list("5. CONSÉQUENCES CONCRÈTES POUR LES SALARIÉS", report["5_consequences_concretes_pour_les_salaries"], 12)
+    print_list("5. CONSÉQUENCES CONCRÈTES POUR LES SALARIÉS", report["5_consequences_concretes_pour_les_salaries"], 16)
     print("")
     print("6. À QUI PROFITE LE CHANGEMENT ?")
     print_list("Avantages probables pour l'entreprise", report["6_a_qui_profite_le_changement"]["avantages_probables_pour_l_entreprise"], 6)
     print_list("Avantages éventuels pour les salariés", report["6_a_qui_profite_le_changement"]["avantages_eventuels_pour_les_salaries"], 6)
     print(report["6_a_qui_profite_le_changement"]["conclusion"])
     print("")
-    print_list("7. RISQUES ET POINTS DE VIGILANCE", report["7_risques_et_points_de_vigilance"])
+    print_list("7. RISQUES ET POINTS DE VIGILANCE", report["7_risques_et_points_de_vigilance"], 16)
     print("")
-    print_list("8. INFORMATIONS MANQUANTES", report["8_informations_manquantes"])
+    print_list("8. INFORMATIONS MANQUANTES", report["8_informations_manquantes"], 18)
     print("")
-    print_list("9. DOCUMENTS À DEMANDER", report["9_documents_a_demander"])
+    print_list("9. DOCUMENTS À DEMANDER", report["9_documents_a_demander"], 18)
     print("")
     print_list("10. QUESTIONS PRINCIPALES À POSER EN CSE", report["10_questions_principales_a_poser_en_cse"], 10)
     print("")
