@@ -47,7 +47,7 @@ ACTION HUMAINE RECOMMANDEE
 Commande locale :
 
 ```powershell
-python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "..."
+python automation/scripts/nexus_bible_bridge.py analyze-cse --title "..." --subject "..." --limit 5 --format detailed
 ```
 
 Le rapport CSE doit distinguer :
@@ -59,6 +59,15 @@ Le rapport CSE doit distinguer :
 - les documents a demander ;
 - les informations manquantes ;
 - la position CFDT a construire apres validation humaine.
+
+La fiche CSE detaillee doit aussi isoler :
+
+- la situation actuelle a verifier ;
+- le tableau logique avant/apres ;
+- les consequences concretes pour les salaries ;
+- les relances conditionnelles ;
+- le point CSSCT eventuel ;
+- la synthese pour l'elu.
 
 Le Cycle CSE pourra demander :
 

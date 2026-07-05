@@ -200,9 +200,11 @@ Les commandes de controle sont :
 ```powershell
 python automation/scripts/nexus_bible_bridge.py diagnose
 python automation/scripts/nexus_bible_bridge.py run-scenarios
-python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "..."
+python automation/scripts/nexus_bible_bridge.py analyze-cse --title "..." --subject "..." --limit 5 --format detailed
 python automation/scripts/nexus_bible_bridge.py analyze-document --path "C:\chemin\document.pdf"
 ```
+
+La sortie `analyze-cse` est maintenant une fiche de preparation CSE detaillee : situation actuelle a verifier, comparaison avant/apres, consequences salaries, risques, documents a demander, questions CSE, relances conditionnelles, point CSSCT et synthese pour l'elu.
 
 ## Limites V1
 

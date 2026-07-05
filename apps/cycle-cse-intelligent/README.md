@@ -98,7 +98,7 @@ Pour un sujet CSE, le pont peut produire :
 Commande locale :
 
 ```powershell
-python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "La direction souhaite modifier le repos entre deux postes pour les salaries en 5x8."
+python automation/scripts/nexus_bible_bridge.py analyze-cse --title "Repos entre deux postes" --subject "La direction souhaite modifier le repos entre deux postes pour les salaries en 5x8." --limit 5 --format detailed
 ```
 
 Les rapports reels sont crees uniquement dans :
@@ -108,6 +108,29 @@ local-index/agreements/integration/
 ```
 
 Ils ne doivent jamais etre committes.
+
+## Analyse comparative locale CSE V1
+
+Le format detaille transforme un point CSE en fiche de preparation syndicale.
+
+La fiche contient :
+
+- ce que la direction semble vouloir faire ;
+- les textes locaux potentiellement concernes ;
+- la situation actuelle a verifier ;
+- les points a comparer avant/apres ;
+- les consequences concretes pour les salaries ;
+- les avantages probables pour l'entreprise et les avantages eventuels pour les salaries ;
+- les risques et points de vigilance ;
+- les informations manquantes ;
+- les documents a demander ;
+- les questions principales a poser en CSE ;
+- les relances conditionnelles ;
+- le point CSSCT eventuel ;
+- les elements de position CFDT a construire ;
+- la synthese pour l'elu.
+
+Le module ne conclut jamais seul qu'une mesure est legale ou illegale. Il prepare la discussion CSE et impose une verification humaine.
 
 ## Integrations futures
 

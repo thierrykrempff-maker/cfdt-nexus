@@ -1,5 +1,13 @@
 # Changelog
 
+## Analyse comparative locale CSE V1
+
+- Transformation de `analyze-cse` en fiche de preparation syndicale detaillee.
+- Ajout des sections situation actuelle, comparaison avant/apres, consequences salaries, beneficiaire probable, risques, informations manquantes, documents a demander, questions CSE, relances, point CSSCT, position CFDT et synthese elu.
+- Ajout du scenario prime de nuit / dimanche / jour ferie.
+- Renforcement des tests scenarios pour verifier les rubriques metier de la fiche CSE.
+- Documentation de la commande `--format detailed`.
+
 ## Connexion Bible Accords au Cycle CSE et Document Intelligence
 
 - Ajout du pont local `automation/scripts/nexus_bible_bridge.py`.

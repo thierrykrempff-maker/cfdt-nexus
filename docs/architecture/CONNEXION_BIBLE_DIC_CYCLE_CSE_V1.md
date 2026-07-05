@@ -42,7 +42,7 @@ python automation/scripts/nexus_bible_bridge.py diagnose
 Analyser un point CSE :
 
 ```powershell
-python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "La direction souhaite modifier le repos entre deux postes pour les salaries en 5x8."
+python automation/scripts/nexus_bible_bridge.py analyze-cse --title "Repos entre deux postes" --subject "La direction souhaite modifier le repos entre deux postes pour les salaries en 5x8." --limit 5 --format detailed
 ```
 
 Analyser un document local :
@@ -87,8 +87,30 @@ Les scenarios fictifs couvrent :
 - astreinte ;
 - procedure disciplinaire / reglement interieur ;
 - heures de delegation / droit syndical.
+- prime de nuit / dimanche / jour ferie.
 
 Ils servent a verifier que la connexion utilise bien les profils metier construits dans la Bible Accords.
+
+## Format CSE detaille
+
+`analyze-cse` produit une fiche de preparation syndicale en 14 parties :
+
+1. ce que la direction semble vouloir faire ;
+2. textes locaux potentiellement concernes ;
+3. situation actuelle a verifier ;
+4. points a comparer avant/apres ;
+5. consequences concretes pour les salaries ;
+6. a qui profite le changement ;
+7. risques et points de vigilance ;
+8. informations manquantes ;
+9. documents a demander ;
+10. questions principales a poser en CSE ;
+11. relances conditionnelles ;
+12. point CSSCT eventuel ;
+13. position CFDT a construire ;
+14. synthese pour l'elu.
+
+Le moteur formule des hypotheses prudentes. Il ne remplace pas l'analyse juridique, la lecture des sources citees ni le retour des salaries concernes.
 
 ## Principe de prudence
 

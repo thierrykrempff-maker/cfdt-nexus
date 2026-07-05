@@ -31,7 +31,7 @@ Commandes principales :
 
 ```powershell
 python automation/scripts/nexus_bible_bridge.py diagnose
-python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "..."
+python automation/scripts/nexus_bible_bridge.py analyze-cse --title "..." --subject "..." --limit 5 --format detailed
 python automation/scripts/nexus_bible_bridge.py analyze-document --path "C:\chemin\document.pdf"
 python automation/scripts/nexus_bible_bridge.py run-scenarios
 ```
@@ -39,6 +39,21 @@ python automation/scripts/nexus_bible_bridge.py run-scenarios
 Le pont ne cree pas de nouvelle base de score. Il appelle le moteur de recherche et de scoring de `scripts/agreements_bible.py`.
 
 Les rapports reels restent dans `local-index/agreements/integration/` et ne doivent jamais etre committes.
+
+La sortie CSE detaillee produit une fiche de preparation avec :
+
+- situation actuelle a verifier ;
+- points a comparer avant/apres ;
+- consequences concretes pour les salaries ;
+- beneficiaire probable du changement ;
+- risques et points de vigilance ;
+- informations manquantes ;
+- documents a demander ;
+- questions CSE ;
+- relances conditionnelles ;
+- point CSSCT eventuel ;
+- position CFDT a construire ;
+- synthese pour l'elu.
 
 ## Zones
 
