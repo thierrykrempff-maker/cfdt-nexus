@@ -63,6 +63,24 @@ Pour une requête comme `repos entre deux postes`, le profil `temps de travail /
 
 Les documents NAO, salaires, primes, intéressement ou participation sont pénalisés lorsque la requête ne porte pas sur la rémunération.
 
+Le profil `relations collectives / droit syndical` favorise :
+
+- heures de délégation ;
+- crédit d'heures ;
+- temps de délégation ;
+- mandat ;
+- représentant du personnel ;
+- élu CSE ;
+- membre CSE ;
+- délégué syndical ;
+- représentant syndical ;
+- moyens syndicaux ;
+- local syndical ;
+- affichage syndical ;
+- réunions syndicales.
+
+Il favorise fortement les titres contenant `CSE`, `droit syndical`, `RP` ou `dialogue social`, et pénalise les documents paie, CET, forfait jours ou rémunération lorsque la requête porte clairement sur les relations collectives.
+
 La commande de contrôle local est :
 
 ```powershell

@@ -1,5 +1,12 @@
 # Changelog
 
+## Profil droit syndical Bible Accords
+
+- Ajout du profil `relations collectives / droit syndical`.
+- Ajout de synonymes pour heures de délégation, crédit d'heures, mandat, CSE, RP, délégué syndical et moyens syndicaux.
+- Bonus de titre pour CSE, droit syndical, RP et dialogue social.
+- Pénalisation des documents paie, CET, forfait jours et rémunération lorsque la requête porte sur le droit syndical.
+
 ## Amélioration pertinence recherche Bible Accords
 
 - Ajout d'un scoring explicable par score lexical, expression exacte, proximité, synonymes métier, thème, type et titre.

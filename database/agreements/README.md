@@ -68,6 +68,7 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - recherche lexicale multi-termes ;
 - scoring de pertinence avec expressions exactes, proximité, synonymes métier, thème, type et titre de document ;
 - pénalisation des documents NAO/salariaux quand la requête ne porte pas sur la rémunération ;
+- profil `relations collectives / droit syndical` pour heures de délégation, crédit d'heures, mandat, CSE, RP et moyens syndicaux ;
 - filtre par thème, type, document et dates ;
 - citations sourcées avec extrait court ;
 - classification prudente ;
