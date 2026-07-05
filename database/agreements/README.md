@@ -24,6 +24,7 @@ Depuis la racine du dépôt :
 $env:CFDT_NEXUS_CORPUS_PATH="C:\chemin\vers\corpus-prive"
 python automation/scripts/agreements_bible.py update
 python automation/scripts/agreements_bible.py search --query "repos entre deux postes"
+python automation/scripts/agreements_bible.py search-debug --query "repos entre deux postes"
 python automation/scripts/agreements_bible.py test
 python automation/scripts/agreements_bible.py missing --query "astreinte"
 python automation/scripts/agreements_bible.py diagnose
@@ -44,6 +45,7 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - `index` : crée les chunks juridiques et l'index lexical local.
 - `update` : lance `scan`, `extract` puis `index`.
 - `search` : recherche locale lexicale avec citations.
+- `search-debug` : explique le score de pertinence : lexical, expression exacte, proximité, thème, type, titre, pénalité.
 - `test` : lance une série de requêtes métier et produit un rapport privé.
 - `missing` : prépare une sortie "Que me manque-t-il ?" pour une situation donnée.
 - `diagnose` : affiche le bilan local des extractions : OK, OCR_REQUIRED, erreurs techniques et formats non supportés.
@@ -64,6 +66,8 @@ python automation/scripts/agreements_bible.py update --source "C:\chemin\vers\co
 - statut `OCR_LOW_CONFIDENCE` en cas de qualité OCR faible ;
 - chunks avec page, section/article quand détectable ;
 - recherche lexicale multi-termes ;
+- scoring de pertinence avec expressions exactes, proximité, synonymes métier, thème, type et titre de document ;
+- pénalisation des documents NAO/salariaux quand la requête ne porte pas sur la rémunération ;
 - filtre par thème, type, document et dates ;
 - citations sourcées avec extrait court ;
 - classification prudente ;

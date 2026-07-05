@@ -1,5 +1,12 @@
 # Changelog
 
+## Amélioration pertinence recherche Bible Accords
+
+- Ajout d'un scoring explicable par score lexical, expression exacte, proximité, synonymes métier, thème, type et titre.
+- Ajout d'une pénalisation des documents NAO/salariaux lorsque la requête ne porte pas sur la rémunération.
+- Ajout de la commande `search-debug` pour auditer les raisons d'un classement localement.
+- Amélioration du classement de la requête `repos entre deux postes` vers les documents 5x8, horaires, temps de travail et travail posté.
+
 ## OCR local Bible Accords Sarralbe V1
 
 - Ajout du diagnostic OCR local pour Tesseract, Ghostscript, OCRmyPDF, `pdftoppm` et langue `fra`.

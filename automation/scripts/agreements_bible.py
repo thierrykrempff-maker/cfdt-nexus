@@ -104,6 +104,121 @@ BUSINESS_TESTS = [
     "droit syndical",
 ]
 
+WEAK_QUERY_TOKENS = {"entre", "deux", "trois", "une", "un"}
+
+SEARCH_PROFILES = [
+    {
+        "name": "temps de travail / repos",
+        "triggers": [
+            "repos",
+            "poste",
+            "postes",
+            "5x8",
+            "temps de travail",
+            "temps de repos",
+            "travail poste",
+            "travail posté",
+            "equipes postees",
+            "équipes postées",
+            "horaire",
+            "horaires",
+            "nuit",
+            "astreinte",
+        ],
+        "synonym_phrases": [
+            "repos entre deux postes",
+            "repos entre deux journées",
+            "repos entre deux journees",
+            "repos quotidien",
+            "temps de repos",
+            "temps de travail",
+            "organisation du travail",
+            "durée du travail",
+            "duree du travail",
+            "5x8",
+            "travail posté",
+            "travail poste",
+            "équipes postées",
+            "equipes postees",
+            "travail de nuit",
+            "repos hebdomadaire",
+        ],
+        "topic_bonus": {
+            "repos": 40,
+            "temps de travail": 36,
+            "5x8": 34,
+            "travail posté": 34,
+            "travail de nuit": 24,
+            "astreinte": 20,
+            "conditions de travail": 14,
+            "sécurité": 8,
+        },
+        "theme_bonus_cap": 90,
+        "doc_type_bonus": {
+            "règlement intérieur": 12,
+            "accord entreprise": 8,
+            "convention collective": 14,
+            "avenant": 10,
+        },
+        "title_terms": ["repos", "temps de travail", "5x8", "travail posté", "travail poste", "horaire", "horaires"],
+        "penalty_topics": {
+            "rémunération": 22,
+            "primes": 20,
+            "intéressement": 16,
+            "participation": 16,
+            "épargne salariale": 16,
+        },
+        "penalty_title_terms": ["nao", "salaire", "salaires", "rémunération", "remuneration", "prime", "primes", "intéressement", "interessement", "participation", "pereco", "pee", "télétravail", "teletravail"],
+    },
+    {
+        "name": "rémunération",
+        "triggers": [
+            "salaire",
+            "salaires",
+            "rémunération",
+            "remuneration",
+            "prime",
+            "primes",
+            "ppv",
+            "intéressement",
+            "interessement",
+            "participation",
+            "pereco",
+            "pee",
+        ],
+        "synonym_phrases": [
+            "rémunération",
+            "remuneration",
+            "salaires",
+            "prime",
+            "primes",
+            "prime de nuit",
+            "partage de la valeur",
+            "intéressement",
+            "interessement",
+            "participation",
+            "épargne salariale",
+            "epargne salariale",
+        ],
+        "topic_bonus": {
+            "rémunération": 34,
+            "primes": 34,
+            "intéressement": 28,
+            "participation": 26,
+            "épargne salariale": 24,
+            "travail de nuit": 10,
+        },
+        "theme_bonus_cap": 86,
+        "doc_type_bonus": {
+            "accord entreprise": 8,
+            "décision unilatérale": 8,
+        },
+        "title_terms": ["nao", "salaire", "salaires", "prime", "primes", "rémunération", "remuneration", "intéressement", "participation"],
+        "penalty_topics": {},
+        "penalty_title_terms": [],
+    },
+]
+
 STOPWORDS = {
     "a",
     "au",
@@ -149,6 +264,15 @@ def load_json(path: Path, default: Any) -> Any:
 def write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def try_write_json(path: Path, data: Any) -> bool:
+    try:
+        write_json(path, data)
+        return True
+    except OSError as error:
+        print(f"AVERTISSEMENT: rapport privé non écrit ({error}).")
+        return False
 
 
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -359,7 +483,7 @@ def scan_corpus(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def safe_stamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
 
 
 def build_quality_summary(documents: list[dict[str, Any]]) -> dict[str, Any]:
@@ -1123,18 +1247,247 @@ def detect_potential_relations(documents: list[dict[str, Any]]) -> list[dict[str
     return relations
 
 
-def score_chunk(chunk: dict[str, Any], query_tokens: list[str], exact_query: str) -> float:
-    text = normalize(chunk["text"])
+def select_search_profile(query: str, query_tokens: list[str]) -> dict[str, Any] | None:
+    normalized_query = normalize(query)
+    best_profile = None
+    best_score = 0
+    for profile in SEARCH_PROFILES:
+        score = 0
+        for trigger in profile["triggers"]:
+            normalized_trigger = normalize(trigger)
+            if " " in normalized_trigger and normalized_trigger in normalized_query:
+                score += 4
+            elif normalized_trigger in query_tokens:
+                score += 2
+            elif normalized_trigger in normalized_query:
+                score += 1
+        if score > best_score:
+            best_profile = profile
+            best_score = score
+    return best_profile if best_score > 0 else None
+
+
+def chunk_title_haystack(chunk: dict[str, Any]) -> str:
+    values = [
+        chunk.get("filename", ""),
+        chunk.get("relative_path", ""),
+    ]
+    return normalize(" ".join(values))
+
+
+def token_positions(value: str) -> dict[str, list[int]]:
+    positions: dict[str, list[int]] = defaultdict(list)
+    for index, token in enumerate(tokenize(value)):
+        positions[token].append(index)
+    return positions
+
+
+def proximity_score(text: str, query_tokens: list[str]) -> tuple[float, str | None]:
+    significant_tokens = [token for token in query_tokens if token not in WEAK_QUERY_TOKENS]
+    significant_tokens = list(dict.fromkeys(significant_tokens))
+    if len(significant_tokens) < 2:
+        return 0.0, None
+    positions = token_positions(text)
+    available = [token for token in significant_tokens if positions.get(token)]
+    if len(available) < 2:
+        return 0.0, None
+
+    best_window = None
+    first_token = available[0]
+    for start_position in positions[first_token][:80]:
+        window_positions = [start_position]
+        for token in available[1:]:
+            nearest = min(positions[token], key=lambda item: abs(item - start_position))
+            window_positions.append(nearest)
+        window = max(window_positions) - min(window_positions)
+        best_window = window if best_window is None else min(best_window, window)
+
+    if best_window is None:
+        return 0.0, None
+    if len(available) == len(significant_tokens) and best_window <= 8:
+        return 42.0, f"mots principaux très proches (fenêtre {best_window})"
+    if len(available) == len(significant_tokens) and best_window <= 18:
+        return 30.0, f"mots principaux proches (fenêtre {best_window})"
+    if best_window <= 35:
+        return 16.0, f"mots principaux présents dans un même passage (fenêtre {best_window})"
+    return 6.0, "mots principaux présents mais éloignés"
+
+
+def phrase_hits(haystack: str, phrases: list[str]) -> list[str]:
+    hits = []
+    for phrase in phrases:
+        normalized_phrase = normalize(phrase)
+        if normalized_phrase and normalized_phrase in haystack:
+            hits.append(phrase)
+    return hits
+
+
+def topic_score(chunk: dict[str, Any], profile: dict[str, Any] | None) -> tuple[float, list[str]]:
+    if not profile:
+        return 0.0, []
+    topics = [chunk.get("primary_topic")] + chunk.get("secondary_topics", [])
     score = 0.0
-    if exact_query and normalize(exact_query) in text:
-        score += 20
-    counts = Counter(tokenize(chunk["text"]))
+    reasons = []
+    seen_topics = set()
+    for topic in topics:
+        if not topic:
+            continue
+        normalized_topic = normalize(topic)
+        if normalized_topic in seen_topics:
+            continue
+        seen_topics.add(normalized_topic)
+        for expected, bonus in profile.get("topic_bonus", {}).items():
+            if normalized_topic == normalize(expected):
+                score += bonus
+                reasons.append(f"thème {topic}: +{bonus}")
+    cap = profile.get("theme_bonus_cap")
+    if cap and score > cap:
+        reasons.append(f"bonus thème plafonné à +{cap}")
+        score = float(cap)
+    return score, reasons
+
+
+def type_score(chunk: dict[str, Any], profile: dict[str, Any] | None) -> tuple[float, list[str]]:
+    if not profile:
+        return 0.0, []
+    document_type = chunk.get("document_type", "")
+    for expected, bonus in profile.get("doc_type_bonus", {}).items():
+        if normalize(document_type) == normalize(expected):
+            return float(bonus), [f"type {document_type}: +{bonus}"]
+    return 0.0, []
+
+
+def title_score(title_haystack: str, profile: dict[str, Any] | None, exact_query: str) -> tuple[float, list[str]]:
+    score = 0.0
+    reasons = []
+    normalized_query = normalize(exact_query)
+    if normalized_query and normalized_query in title_haystack:
+        score += 55
+        reasons.append("expression exacte dans le titre/chemin: +55")
+    if profile:
+        hits = phrase_hits(title_haystack, profile.get("title_terms", []))
+        if hits:
+            bonus = min(70, 30 * len(hits))
+            score += bonus
+            reasons.append(f"titre/chemin cohérent ({', '.join(hits[:3])}): +{bonus}")
+    return score, reasons
+
+
+def non_relevant_penalty(chunk: dict[str, Any], title_haystack: str, profile: dict[str, Any] | None, clear_context: bool) -> tuple[float, list[str]]:
+    if not profile:
+        return 0.0, []
+    penalty = 0.0
+    reasons = []
+    multiplier = 0.7 if clear_context else 1.0
+
+    topics = [chunk.get("primary_topic")] if clear_context else [chunk.get("primary_topic")] + chunk.get("secondary_topics", [])
+    for topic in topics:
+        if not topic:
+            continue
+        for expected, value in profile.get("penalty_topics", {}).items():
+            if normalize(topic) == normalize(expected):
+                adjusted = round(value * multiplier, 2)
+                penalty += adjusted
+                reasons.append(f"thème peu pertinent {topic}: -{adjusted}")
+
+    title_hits = phrase_hits(title_haystack, profile.get("penalty_title_terms", []))
+    if title_hits:
+        value = 70 if "nao" in {normalize(hit) for hit in title_hits} else min(55, 18 * len(title_hits))
+        value = round(value * multiplier, 2)
+        penalty += value
+        reasons.append(f"titre salarial/NAO sans passage repos clair ({', '.join(title_hits[:3])}): -{value}")
+    if clear_context and reasons:
+        reasons.append("pénalité réduite : le passage parle clairement du sujet recherché")
+    return penalty, reasons
+
+
+def score_chunk_details(chunk: dict[str, Any], query_tokens: list[str], exact_query: str) -> dict[str, Any]:
+    text = chunk.get("text", "")
+    normalized_text = normalize(text)
+    title_haystack = chunk_title_haystack(chunk)
+    profile = select_search_profile(exact_query, query_tokens)
+    profile_name = profile["name"] if profile else "générique"
+    counts = Counter(tokenize(text))
+
+    lexical = 0.0
+    lexical_reasons = []
     for token in query_tokens:
         if token in counts:
-            score += 5 + min(counts[token], 5)
-    if score > 0 and chunk.get("article"):
-        score += 1
-    return score
+            weight = 2 if token in WEAK_QUERY_TOKENS else 7
+            gain = weight + min(counts[token], 6)
+            lexical += gain
+            lexical_reasons.append(f"{token}: +{round(gain, 2)}")
+
+    exact_expression_bonus = 0.0
+    exact_reasons = []
+    normalized_query = normalize(exact_query)
+    if normalized_query and normalized_query in normalized_text:
+        exact_expression_bonus += 80
+        exact_reasons.append("expression exacte dans le passage: +80")
+
+    proximity_bonus, proximity_reason = proximity_score(text, query_tokens)
+    synonym_bonus = 0.0
+    synonym_reasons = []
+    if profile:
+        text_hits = phrase_hits(normalized_text, profile.get("synonym_phrases", []))
+        text_hits = [hit for hit in text_hits if normalize(hit) != normalized_query]
+        if text_hits:
+            synonym_bonus += min(95, 32 * len(text_hits))
+            synonym_reasons.append(f"synonymes métier dans le passage ({', '.join(text_hits[:4])}): +{round(synonym_bonus, 2)}")
+        title_hits = phrase_hits(title_haystack, profile.get("synonym_phrases", []))
+        if title_hits:
+            title_synonym_bonus = min(45, 20 * len(title_hits))
+            synonym_bonus += title_synonym_bonus
+            synonym_reasons.append(f"synonymes métier dans le titre ({', '.join(title_hits[:3])}): +{title_synonym_bonus}")
+
+    theme_bonus, theme_reasons = topic_score(chunk, profile)
+    doc_type_bonus, type_reasons = type_score(chunk, profile)
+    title_bonus, title_reasons = title_score(title_haystack, profile, exact_query)
+    article_bonus = 4.0 if (lexical + exact_expression_bonus + synonym_bonus > 0 and chunk.get("article")) else 0.0
+    clear_context = bool(exact_expression_bonus or synonym_bonus or proximity_bonus >= 16)
+    penalty, penalty_reasons = non_relevant_penalty(chunk, title_haystack, profile, clear_context)
+    total = max(
+        0.0,
+        lexical
+        + exact_expression_bonus
+        + proximity_bonus
+        + synonym_bonus
+        + theme_bonus
+        + doc_type_bonus
+        + title_bonus
+        + article_bonus
+        - penalty,
+    )
+
+    reasons = []
+    if profile:
+        reasons.append(f"profil détecté: {profile_name}")
+    reasons.extend(lexical_reasons[:5])
+    reasons.extend(exact_reasons)
+    if proximity_reason:
+        reasons.append(f"proximité: {proximity_reason}")
+    reasons.extend(synonym_reasons)
+    reasons.extend(theme_reasons)
+    reasons.extend(type_reasons)
+    reasons.extend(title_reasons)
+    if article_bonus:
+        reasons.append("passage structuré en article: +4")
+    reasons.extend(penalty_reasons)
+
+    return {
+        "total": round(total, 2),
+        "lexical": round(lexical, 2),
+        "exact_expression_bonus": round(exact_expression_bonus, 2),
+        "proximity_bonus": round(proximity_bonus, 2),
+        "synonym_bonus": round(synonym_bonus, 2),
+        "theme_bonus": round(theme_bonus, 2),
+        "document_type_bonus": round(doc_type_bonus, 2),
+        "title_bonus": round(title_bonus, 2),
+        "article_bonus": round(article_bonus, 2),
+        "non_relevant_penalty": round(penalty, 2),
+        "profile": profile_name,
+        "reasons": reasons or ["correspondance lexicale simple"],
+    }
 
 
 def search_index(args: argparse.Namespace, save: bool = True, quiet: bool = False) -> dict[str, Any]:
@@ -1156,14 +1509,15 @@ def search_index(args: argparse.Namespace, save: bool = True, quiet: bool = Fals
             continue
         if args.document_id and args.document_id != chunk.get("document_id"):
             continue
-        score = score_chunk(chunk, query_tokens, query)
+        details = score_chunk_details(chunk, query_tokens, query)
+        score = details["total"]
         if score <= 0:
             continue
-        results.append((score, chunk))
+        results.append((score, chunk, details))
 
     results.sort(key=lambda item: item[0], reverse=True)
     selected = results[: args.limit]
-    sources = [format_source(score, chunk, query_tokens) for score, chunk in selected]
+    sources = [format_source(score, chunk, query_tokens, details) for score, chunk, details in selected]
     confidence = "fort" if selected and selected[0][0] >= 35 else "moyen" if selected else "faible"
     response = {
         "question": query,
@@ -1181,13 +1535,13 @@ def search_index(args: argparse.Namespace, save: bool = True, quiet: bool = Fals
         "security_notice": "Private search result. Do not commit.",
     }
     if save:
-        write_json(SEARCH_DIR / f"search-{safe_stamp()}.private.json", response)
+        try_write_json(SEARCH_DIR / f"search-{safe_stamp()}.private.json", response)
     if not quiet:
         print_search_response(response)
     return response
 
 
-def format_source(score: float, chunk: dict[str, Any], query_tokens: list[str]) -> dict[str, Any]:
+def format_source(score: float, chunk: dict[str, Any], query_tokens: list[str], score_details: dict[str, Any] | None = None) -> dict[str, Any]:
     text = chunk["text"]
     excerpt = best_excerpt(text, query_tokens)
     return {
@@ -1198,6 +1552,8 @@ def format_source(score: float, chunk: dict[str, Any], query_tokens: list[str]) 
         "location": citation_location(chunk),
         "excerpt": excerpt,
         "match_score": round(score, 2),
+        "ranking_profile": score_details.get("profile") if score_details else None,
+        "ranking_reasons": score_details.get("reasons", [])[:8] if score_details else [],
         "chunk_id": chunk["chunk_id"],
         "source_quality_warning": chunk.get("source_quality_warning"),
     }
@@ -1235,6 +1591,56 @@ def print_search_response(response: dict[str, Any]) -> None:
         print(f"- {source['document']} | {source['location']} | score {source['match_score']}")
         if source.get("source_quality_warning"):
             print(f"  avertissement: {source['source_quality_warning']}")
+
+
+def search_debug(args: argparse.Namespace) -> dict[str, Any]:
+    ensure_dirs()
+    chunks = read_jsonl(INDEX_DIR / "chunks.private.jsonl")
+    if not chunks:
+        raise SystemExit("Aucun index local. Lancer update ou index.")
+
+    query = args.query or ""
+    query_tokens = tokenize(query)
+    if not query_tokens:
+        raise SystemExit("Requête vide.")
+
+    rows = []
+    for chunk in chunks:
+        if args.theme and args.theme != chunk.get("primary_topic") and args.theme not in chunk.get("secondary_topics", []):
+            continue
+        if args.doc_type and args.doc_type != chunk.get("document_type"):
+            continue
+        if args.document_id and args.document_id != chunk.get("document_id"):
+            continue
+        details = score_chunk_details(chunk, query_tokens, query)
+        if details["total"] <= 0:
+            continue
+        rows.append((details["total"], chunk, details))
+    rows.sort(key=lambda item: item[0], reverse=True)
+    selected = rows[: args.limit]
+
+    print(f"SEARCH DEBUG: {query}")
+    print(f"Résultats affichés: {len(selected)} / {len(rows)}")
+    for index, (score, chunk, details) in enumerate(selected, start=1):
+        print(f"\n#{index} {chunk.get('filename')} | {citation_location(chunk)}")
+        print(f"score total: {score}")
+        print(f"score lexical: {details['lexical']}")
+        print(f"bonus expression exacte: {details['exact_expression_bonus']}")
+        print(f"bonus proximité: {details['proximity_bonus']}")
+        print(f"bonus synonymes métier: {details['synonym_bonus']}")
+        print(f"bonus thème: {details['theme_bonus']}")
+        print(f"bonus type document: {details['document_type_bonus']}")
+        print(f"bonus titre: {details['title_bonus']}")
+        print(f"pénalité thème non pertinent: -{details['non_relevant_penalty']}")
+        print("raisons:")
+        for reason in details["reasons"][:10]:
+            print(f"- {reason}")
+    return {
+        "query": query,
+        "results_count": len(rows),
+        "displayed": len(selected),
+        "security_notice": "Local debug only. Do not commit generated reports.",
+    }
 
 
 def run_update(args: argparse.Namespace) -> None:
@@ -1569,6 +1975,13 @@ def build_parser() -> argparse.ArgumentParser:
     p_search.add_argument("--doc-type")
     p_search.add_argument("--document-id")
 
+    p_search_debug = sub.add_parser("search-debug")
+    p_search_debug.add_argument("--query", required=True)
+    p_search_debug.add_argument("--limit", type=int, default=8)
+    p_search_debug.add_argument("--theme")
+    p_search_debug.add_argument("--doc-type")
+    p_search_debug.add_argument("--document-id")
+
     p_test = sub.add_parser("test")
     p_test.add_argument("--limit", type=int, default=5)
 
@@ -1604,6 +2017,8 @@ def main() -> None:
         run_update(args)
     elif args.command == "search":
         search_index(args)
+    elif args.command == "search-debug":
+        search_debug(args)
     elif args.command == "test":
         run_tests(args)
     elif args.command == "missing":

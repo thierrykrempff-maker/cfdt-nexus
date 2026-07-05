@@ -29,12 +29,45 @@ apps/cycle-cse-intelligent/
 2. `extract` : extraction PDF/DOCX/TXT locale.
 3. `index` : chunking juridique et index lexical.
 4. `search` : recherche locale sourcée avec citations.
-5. `test` : tests métier locaux.
-6. `missing` : aide "Que me manque-t-il ?".
-7. `diagnose` : bilan local des extractions par statut.
-8. `ocr-diagnose` : diagnostic des dépendances OCR locales.
-9. `ocr-run` : OCR local sur copie de travail des PDF `OCR_REQUIRED`.
-10. `update` : chaîne complète.
+5. `search-debug` : explication locale du score de pertinence.
+6. `test` : tests métier locaux.
+7. `missing` : aide "Que me manque-t-il ?".
+8. `diagnose` : bilan local des extractions par statut.
+9. `ocr-diagnose` : diagnostic des dépendances OCR locales.
+10. `ocr-run` : OCR local sur copie de travail des PDF `OCR_REQUIRED`.
+11. `update` : chaîne complète.
+
+## Pertinence de recherche
+
+Le moteur de recherche V1 pondère désormais :
+
+- score lexical ;
+- expression exacte ;
+- proximité des mots ;
+- synonymes métier ;
+- thème du document ;
+- type de document ;
+- titre ou chemin du document ;
+- pénalité de thème non pertinent.
+
+Pour une requête comme `repos entre deux postes`, le profil `temps de travail / repos` favorise :
+
+- repos quotidien ;
+- repos entre deux journées ;
+- temps de repos ;
+- temps de travail ;
+- organisation du travail ;
+- 5x8 ;
+- travail posté ;
+- horaires de postes.
+
+Les documents NAO, salaires, primes, intéressement ou participation sont pénalisés lorsque la requête ne porte pas sur la rémunération.
+
+La commande de contrôle local est :
+
+```powershell
+python automation/scripts/agreements_bible.py search-debug --query "repos entre deux postes"
+```
 
 ## OCR local
 
