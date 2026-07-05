@@ -13,6 +13,14 @@ Les sorties doivent toujours distinguer :
 
 ## Document Intelligence Center
 
+Le DIC appelle la Bible Accords via le pont local :
+
+```text
+automation/scripts/nexus_bible_bridge.py
+```
+
+Le pont reutilise le moteur `automation/scripts/agreements_bible.py`. Il ne duplique pas le scoring.
+
 Le DIC pourra appeler la Bible Accords pour :
 
 - rechercher dans les accords locaux ;
@@ -35,6 +43,22 @@ ACTION HUMAINE RECOMMANDEE
 ```
 
 ## Cycle CSE
+
+Commande locale :
+
+```powershell
+python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "..."
+```
+
+Le rapport CSE doit distinguer :
+
+- ce qui est connu ;
+- les sources locales trouvees ;
+- les sources locales a verifier ;
+- les questions a poser ;
+- les documents a demander ;
+- les informations manquantes ;
+- la position CFDT a construire apres validation humaine.
 
 Le Cycle CSE pourra demander :
 
@@ -67,6 +91,18 @@ La Bible prépare le routage documentaire vers :
 
 Un même passage peut servir plusieurs agents.
 
+## Statuts de source
+
+Le pont local expose trois statuts :
+
+```text
+SOURCE LOCALE TROUVEE
+SOURCE LOCALE A VERIFIER
+AUCUNE SOURCE LOCALE PERTINENTE TROUVEE
+```
+
+Ces statuts ne sont pas une conclusion juridique.
+
 ## Bouton "Que me manque-t-il ?"
 
 La sortie doit rester une aide à la décision :
@@ -76,3 +112,12 @@ La sortie doit rester une aide à la décision :
 - note terrain possible ;
 - validation humaine d'un document comme suffisant.
 
+## Securite
+
+Les rapports reels restent dans :
+
+```text
+local-index/agreements/integration/
+```
+
+Ils peuvent contenir des noms de documents prives ou des extraits. Ils sont donc exclus de Git.

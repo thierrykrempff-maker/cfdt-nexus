@@ -62,6 +62,10 @@ Chaque dossier contient :
 - Catégories : Convention Chimie, Accords INEOS, Règlement intérieur, Modèles, Jurisprudence, Documentation CFDT.
 - Métadonnées : titre, description, catégorie, mots-clés, date, version, niveau documentaire.
 
+La bibliotheque affiche aussi les indicateurs locaux de couverture Bible Accords : documents detectes, documents indexes, OCR requis, OCR reussis et couverture.
+
+Elle indique le pont local Document Intelligence / Cycle CSE sans afficher de contenu prive.
+
 ### Communication
 
 - Modèles pour article, tract, flash info, courrier et publication web.

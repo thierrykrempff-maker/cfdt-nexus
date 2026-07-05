@@ -19,6 +19,27 @@ Le script `scripts/agreements_bible.py` pilote le pipeline local privé :
 
 Les sorties réelles restent dans `local-index/agreements/` et ne doivent jamais être committées.
 
+## Connexion Document Intelligence / Cycle CSE
+
+Le script `scripts/nexus_bible_bridge.py` relie localement :
+
+- le Document Intelligence Center ;
+- le Cycle CSE intelligent ;
+- la Bible Accords Sarralbe.
+
+Commandes principales :
+
+```powershell
+python automation/scripts/nexus_bible_bridge.py diagnose
+python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "..."
+python automation/scripts/nexus_bible_bridge.py analyze-document --path "C:\chemin\document.pdf"
+python automation/scripts/nexus_bible_bridge.py run-scenarios
+```
+
+Le pont ne cree pas de nouvelle base de score. Il appelle le moteur de recherche et de scoring de `scripts/agreements_bible.py`.
+
+Les rapports reels restent dans `local-index/agreements/integration/` et ne doivent jamais etre committes.
+
 ## Zones
 
 - `scripts/` : scripts réutilisables ;

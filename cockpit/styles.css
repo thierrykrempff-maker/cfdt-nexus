@@ -727,6 +727,25 @@ label {
   font-size: 20px;
 }
 
+.resource-bridge {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px dashed rgba(242, 140, 0, 0.45);
+  border-radius: 16px;
+  background: #fffdf8;
+}
+
+.resource-bridge strong {
+  color: var(--orange-dark);
+}
+
+.resource-bridge span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .resource-warning {
   padding: 12px;
   border-left: 3px solid var(--orange);

@@ -74,6 +74,41 @@ Avant usage reel, il faudra ajouter :
 - suppression securisee ;
 - cloisonnement par organisation.
 
+## Connexion Bible Accords V1
+
+Le Cycle CSE peut maintenant appeler localement la Bible Accords Sarralbe via le pont :
+
+```text
+automation/scripts/nexus_bible_bridge.py
+```
+
+Cette connexion sert a preparer un point CSE sans exposer les documents prives.
+
+Pour un sujet CSE, le pont peut produire :
+
+- ce que la direction semble vouloir presenter ;
+- les textes locaux potentiellement lies ;
+- les accords ou documents a verifier avec page et article si disponibles ;
+- les questions a poser a la direction ;
+- les questions de relance selon la reponse ;
+- les documents complementaires a demander ;
+- les risques et opportunites a qualifier ;
+- les informations manquantes avant de prendre position.
+
+Commande locale :
+
+```powershell
+python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "La direction souhaite modifier le repos entre deux postes pour les salaries en 5x8."
+```
+
+Les rapports reels sont crees uniquement dans :
+
+```text
+local-index/agreements/integration/
+```
+
+Ils ne doivent jamais etre committes.
+
 ## Integrations futures
 
 Le module prepare les connexions futures avec :

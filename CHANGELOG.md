@@ -1,5 +1,14 @@
 # Changelog
 
+## Connexion Bible Accords au Cycle CSE et Document Intelligence
+
+- Ajout du pont local `automation/scripts/nexus_bible_bridge.py`.
+- Connexion reelle au moteur de recherche et de scoring `agreements_bible.py`.
+- Ajout des commandes `diagnose`, `analyze-cse`, `analyze-document` et `run-scenarios`.
+- Ajout de rapports locaux prives sous `local-index/agreements/integration/`.
+- Documentation du Document Intelligence Center, du Cycle CSE, des contrats d'integration et de l'architecture.
+- Extension du cockpit avec l'indicateur de pont local Bible Accords / DIC / Cycle CSE sans contenu prive.
+
 ## Profil droit syndical Bible Accords
 
 - Ajout du profil `relations collectives / droit syndical`.

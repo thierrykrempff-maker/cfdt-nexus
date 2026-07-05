@@ -172,6 +172,38 @@ Si la page ou l'article n'est pas disponible, la sortie doit indiquer :
 LOCALISATION NON DÉTERMINÉE
 ```
 
+## Connexion Document Intelligence / Cycle CSE
+
+La Bible Accords est maintenant accessible via un pont local :
+
+```text
+automation/scripts/nexus_bible_bridge.py
+```
+
+Ce pont sert deux usages V1 :
+
+- analyser un document local dans le Document Intelligence Center ;
+- analyser un point CSE avant reunion.
+
+Le pont reutilise le scoring, les citations et les profils metier de `automation/scripts/agreements_bible.py`.
+
+Il genere des rapports prives dans :
+
+```text
+local-index/agreements/integration/
+```
+
+Ces rapports ne doivent pas etre committes.
+
+Les commandes de controle sont :
+
+```powershell
+python automation/scripts/nexus_bible_bridge.py diagnose
+python automation/scripts/nexus_bible_bridge.py run-scenarios
+python automation/scripts/nexus_bible_bridge.py analyze-cse --subject "..."
+python automation/scripts/nexus_bible_bridge.py analyze-document --path "C:\chemin\document.pdf"
+```
+
 ## Limites V1
 
 - Recherche lexicale uniquement.

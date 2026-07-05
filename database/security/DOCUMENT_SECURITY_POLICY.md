@@ -129,6 +129,26 @@ local-index/agreements/ocr/
 
 Ce dossier doit rester ignoré par Git.
 
+## Rapports d'integration locale
+
+Les analyses generees par la connexion Bible Accords, Document Intelligence Center et Cycle CSE restent strictement locales.
+
+Emplacement local prevu :
+
+```text
+local-index/agreements/integration/
+```
+
+Interdit dans GitHub :
+
+- rapport d'analyse CSE reel ;
+- rapport d'analyse documentaire reel ;
+- scenario contenant un nom de document prive ;
+- extrait d'accord, de reglement interieur ou de document interne ;
+- chemin absolu vers un corpus prive.
+
+Ces rapports peuvent servir a preparer une reunion, une question ou une analyse, mais ils necessitent toujours une validation humaine avant toute utilisation externe.
+
 ## Validation humaine
 
 Avant diffusion, Thierry ou une personne habilitée doit vérifier :

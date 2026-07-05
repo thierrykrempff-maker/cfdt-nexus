@@ -170,12 +170,13 @@ const libraryDocuments = [
     level: "Confidentiel",
     coverage: {
       documentsDetected: 106,
-      documentsIndexed: 41,
-      ocrRequired: 65,
-      ocrSuccess: 0,
+      documentsIndexed: 106,
+      ocrRequired: 0,
+      ocrSuccess: 65,
       ocrFailed: 0,
-      coveragePercent: 38.7,
+      coveragePercent: 100,
     },
+    bridge: ["Textes locaux liés", "Points à comparer", "Questions suggérées", "Informations manquantes", "Niveau de confiance"],
     warning: "Une réponse peut être incomplète tant que la couverture documentaire n’est pas suffisante. Vérifier le niveau de couverture et les sources citées avant toute utilisation en CSE, CSSCT ou négociation.",
   },
   {
@@ -475,6 +476,7 @@ const renderLibrary = () => {
             <span><strong>${item.coverage.ocrFailed}</strong> OCR échec</span>
             <span><strong>${item.coverage.coveragePercent}%</strong> couverture</span>
           </div>
+          ${item.bridge ? `<div class="resource-bridge"><strong>Pont local DIC / Cycle CSE</strong><span>${item.bridge.join(" · ")}</span></div>` : ""}
           <p class="resource-warning">${item.warning}</p>
         `
         : "";
