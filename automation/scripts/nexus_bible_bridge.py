@@ -37,6 +37,9 @@ NO_RELEVANT_SOURCE = "AUCUNE SOURCE LOCALE PERTINENTE TROUVÉE"
 NO_DIRECT_CSSCT_SOURCE = "Aucune source locale directement pertinente trouvée — analyse CSSCT à construire avec DUERP, documents techniques et informations direction."
 NO_PRECISE_PAID_LEAVE_RULE = "Aucune règle locale précise identifiée dans les sources remontées. Vérification juridique externe nécessaire."
 PAID_LEAVE_THEME = "paie / congés payés / indemnité de congés"
+CLASSIFICATION_THEME = "classification / emploi / carrière / coefficient"
+INAPTITUDE_THEME = "inaptitude / reclassement / santé au travail"
+OVERTIME_COUNTER_THEME = "temps de travail / heures supplémentaires / compteurs"
 
 PAID_LEAVE_SOURCE_MARKERS = [
     "congés payés",
@@ -152,6 +155,189 @@ THEME_RULES = [
             "projet d'organisation des astreintes",
             "barème d'indemnisation",
             "bilan des interventions passées",
+        ],
+    },
+    {
+        "theme": CLASSIFICATION_THEME,
+        "patterns": [
+            "classification",
+            "coefficient",
+            "niveau",
+            "échelon",
+            "echelon",
+            "emploi",
+            "fiche de poste",
+            "fonctions exercées",
+            "fonctions exercees",
+            "responsabilités",
+            "responsabilites",
+            "autonomie",
+            "technicité",
+            "technicite",
+            "évolution de poste",
+            "evolution de poste",
+            "carrière",
+            "carriere",
+            "polyvalence",
+            "pesée de poste",
+            "pesee de poste",
+        ],
+        "queries": [
+            "classification coefficient emploi carrière fiche de poste",
+            "coefficient niveau échelon fonctions exercées responsabilités autonomie technicité",
+            "évolution de poste polyvalence pesée de poste critères conventionnels",
+            "classification emploi poste convention collective coefficient",
+        ],
+        "comparison_points": [
+            "fiche de poste actuelle",
+            "fonctions réellement exercées",
+            "niveau d'autonomie",
+            "responsabilités",
+            "technicité",
+            "comparaison avec salariés similaires",
+            "historique des changements de poste",
+            "critères conventionnels à vérifier",
+            "demande de réexamen du coefficient",
+        ],
+        "questions": [
+            "Quelle est la fiche de poste actuelle et correspond-elle aux fonctions réellement exercées ?",
+            "Quel niveau d'autonomie, de responsabilité et de technicité est attendu et constaté ?",
+            "Quels salariés comparables ont un coefficient ou une classification différente ?",
+            "Quels critères conventionnels justifient le coefficient retenu ?",
+            "Un réexamen du coefficient est-il prévu après l'évolution de poste ?",
+        ],
+        "documents_to_request": [
+            "fiche de poste actuelle",
+            "descriptif des fonctions réellement exercées",
+            "historique des changements de poste",
+            "grille de classification et critères conventionnels applicables",
+            "comparaison anonymisée avec salariés similaires",
+            "éléments justifiant le coefficient actuel",
+            "demande ou réponse de réexamen du coefficient",
+        ],
+    },
+    {
+        "theme": INAPTITUDE_THEME,
+        "patterns": [
+            "inaptitude",
+            "reclassement",
+            "médecin du travail",
+            "medecin du travail",
+            "aptitude",
+            "restrictions médicales",
+            "restrictions medicales",
+            "aménagement de poste",
+            "amenagement de poste",
+            "adaptation de poste",
+            "poste compatible",
+            "recherche de reclassement",
+            "consultation cse",
+            "impossibilité de reclassement",
+            "impossibilite de reclassement",
+            "licenciement pour inaptitude",
+            "santé au travail",
+            "sante au travail",
+        ],
+        "queries": [
+            "inaptitude reclassement médecin du travail restrictions médicales",
+            "recherche de reclassement poste compatible adaptation de poste",
+            "licenciement pour inaptitude impossibilité de reclassement consultation CSE",
+            "santé au travail aptitude aménagement de poste reclassement",
+        ],
+        "comparison_points": [
+            "avis du médecin du travail",
+            "restrictions médicales",
+            "étude de poste",
+            "postes disponibles",
+            "adaptations possibles",
+            "formations envisageables",
+            "périmètre de reclassement",
+            "consultation éventuelle du CSE",
+            "échanges avec le salarié",
+            "traçabilité des recherches",
+        ],
+        "questions": [
+            "Quel avis le médecin du travail a-t-il rendu et quelles restrictions sont mentionnées ?",
+            "Quelle étude de poste a été réalisée ?",
+            "Quels postes disponibles ou compatibles ont été recherchés ?",
+            "Quelles adaptations de poste ou formations ont été étudiées ?",
+            "Quelle traçabilité existe sur les échanges avec le salarié et les recherches de reclassement ?",
+        ],
+        "documents_to_request": [
+            "avis du médecin du travail",
+            "restrictions médicales",
+            "étude de poste",
+            "liste des postes disponibles",
+            "analyse des adaptations possibles",
+            "formations envisageables",
+            "périmètre de reclassement",
+            "éléments de consultation éventuelle du CSE",
+            "échanges avec le salarié",
+            "traçabilité des recherches de reclassement",
+        ],
+    },
+    {
+        "theme": OVERTIME_COUNTER_THEME,
+        "patterns": [
+            "heures supplémentaires",
+            "heures supplementaires",
+            "compteur",
+            "compteur d'heures",
+            "compteur d heures",
+            "récupération",
+            "recuperation",
+            "repos compensateur",
+            "majoration",
+            "solde",
+            "pointage",
+            "badgeage",
+            "temps de travail effectif",
+            "heures effectuées",
+            "heures effectuees",
+            "heures payées",
+            "heures payees",
+            "heures récupérées",
+            "heures recuperees",
+            "contingent",
+            "modulation",
+            "annualisation",
+        ],
+        "queries": [
+            "heures supplémentaires compteur heures récupération repos compensateur",
+            "pointage badgeage temps de travail effectif heures effectuées heures payées",
+            "majoration contingent modulation annualisation compteur d'heures",
+            "temps de travail heures supplémentaires repos compensateur convention collective",
+        ],
+        "comparison_points": [
+            "relevés de pointage",
+            "compteurs d'heures",
+            "heures validées ou refusées",
+            "règles de majoration",
+            "récupération",
+            "contingent",
+            "repos compensateur",
+            "paramétrage logiciel",
+            "exemples anonymisés",
+            "période à contrôler",
+        ],
+        "questions": [
+            "Quels relevés de pointage ou badgeage justifient les heures effectuées ?",
+            "Quelles heures ont été validées, refusées, payées ou récupérées ?",
+            "Quelles règles de majoration et de repos compensateur sont appliquées ?",
+            "Quel contingent, modulation ou annualisation s'applique au périmètre concerné ?",
+            "Quel paramétrage logiciel produit les compteurs transmis aux salariés ?",
+        ],
+        "documents_to_request": [
+            "relevés de pointage",
+            "compteurs d'heures",
+            "liste des heures validées et refusées",
+            "règles de majoration",
+            "règles de récupération",
+            "contingent applicable",
+            "règles de repos compensateur",
+            "paramétrage logiciel",
+            "exemples anonymisés",
+            "période à contrôler",
         ],
     },
     {
@@ -352,7 +538,6 @@ THEME_RULES = [
     {
         "theme": "relations collectives / droit syndical",
         "patterns": [
-            "cse",
             "heures de délégation",
             "heures de delegation",
             "crédit d'heures",
@@ -360,15 +545,23 @@ THEME_RULES = [
             "moyens syndicaux",
             "droit syndical",
             "mandat",
+            "mandat syndical",
             "représentant du personnel",
             "representant du personnel",
-            "rp",
             "délégué syndical",
             "delegue syndical",
             "représentant syndical",
             "representant syndical",
             "élu cse",
             "elu cse",
+            "membre cse",
+            "fonctionnement du cse",
+            "local syndical",
+            "affichage syndical",
+            "réunion syndicale",
+            "reunion syndicale",
+            "réunions syndicales",
+            "reunions syndicales",
         ],
         "queries": [
             "heures de délégation droit syndical",
@@ -502,6 +695,86 @@ SCENARIOS = [
             "moyens syndicaux",
         ],
     },
+    {
+        "id": "test-classification-coefficient",
+        "kind": "cse",
+        "title": "Classification, coefficient et évolution de poste",
+        "text": "La CFDT demande une analyse CSE sur un salarié dont les fonctions réellement exercées, responsabilités, autonomie et technicité semblent avoir évolué sans réexamen du coefficient. Préparer les questions à poser sur la fiche de poste actuelle, les critères conventionnels de classification, la comparaison avec salariés similaires, l'historique des changements de poste et la demande de réexamen du coefficient.",
+        "expected": "le profil classification / emploi / carrière / coefficient doit être prioritaire sans classement droit syndical",
+        "expected_theme": CLASSIFICATION_THEME,
+        "forbidden_themes": ["relations collectives / droit syndical"],
+        "allow_no_sources": True,
+        "must_contain": [
+            "fiche de poste actuelle",
+            "fonctions réellement exercées",
+            "niveau d'autonomie",
+            "responsabilités",
+            "technicité",
+            "comparaison avec salariés similaires",
+            "critères conventionnels",
+            "réexamen du coefficient",
+        ],
+        "must_not_contain": [
+            "crédit d'heures",
+            "heures de délégation",
+            "mandat syndical",
+            "moyens syndicaux",
+        ],
+    },
+    {
+        "id": "test-inaptitude-reclassement",
+        "kind": "cse",
+        "title": "Inaptitude, restrictions médicales et reclassement",
+        "text": "La CFDT prépare un point CSE sur une situation d'inaptitude avec avis du médecin du travail, restrictions médicales, recherche de reclassement, adaptation de poste, postes compatibles, formations envisageables, consultation éventuelle du CSE, échanges avec le salarié et traçabilité des recherches.",
+        "expected": "le profil inaptitude / reclassement / santé au travail doit être prioritaire sans classement CSSCT process ni droit syndical",
+        "expected_theme": INAPTITUDE_THEME,
+        "forbidden_themes": ["relations collectives / droit syndical", "CSSCT / sécurité process / maintenance"],
+        "allow_no_sources": True,
+        "must_contain": [
+            "avis du médecin du travail",
+            "restrictions médicales",
+            "étude de poste",
+            "postes disponibles",
+            "adaptations possibles",
+            "formations envisageables",
+            "périmètre de reclassement",
+            "traçabilité des recherches",
+        ],
+        "must_not_contain": [
+            "crédit d'heures",
+            "heures de délégation",
+            "mandat syndical",
+            "moyens syndicaux",
+        ],
+    },
+    {
+        "id": "test-heures-supplementaires-compteurs",
+        "kind": "cse",
+        "title": "Heures supplémentaires, compteurs et récupération",
+        "text": "La CFDT demande une analyse CSE sur des heures supplémentaires et compteurs d'heures : relevés de pointage, badgeage, temps de travail effectif, heures effectuées, heures validées ou refusées, heures payées, heures récupérées, majoration, récupération, contingent, repos compensateur, modulation, annualisation et paramétrage logiciel.",
+        "expected": "le profil temps de travail / heures supplémentaires / compteurs doit être prioritaire sans classement rémunération générale ni droit syndical",
+        "expected_theme": OVERTIME_COUNTER_THEME,
+        "forbidden_themes": ["relations collectives / droit syndical"],
+        "allow_no_sources": True,
+        "must_contain": [
+            "relevés de pointage",
+            "compteurs",
+            "heures validées",
+            "heures refusées",
+            "règles de majoration",
+            "récupération",
+            "contingent",
+            "repos compensateur",
+            "paramétrage logiciel",
+            "période à contrôler",
+        ],
+        "must_not_contain": [
+            "crédit d'heures",
+            "heures de délégation",
+            "mandat syndical",
+            "moyens syndicaux",
+        ],
+    },
 ]
 
 
@@ -570,6 +843,27 @@ def detect_themes(text: str) -> list[dict[str, Any]]:
             item
             for item in detected
             if normalize(item["theme"]) != "relations collectives / droit syndical"
+        ]
+    precise_hr_payroll_themes = {
+        normalize(CLASSIFICATION_THEME),
+        normalize(INAPTITUDE_THEME),
+        normalize(OVERTIME_COUNTER_THEME),
+    }
+    if any(normalize(item["theme"]) in precise_hr_payroll_themes for item in detected):
+        detected = [
+            item
+            for item in detected
+            if normalize(item["theme"]) != "relations collectives / droit syndical"
+        ]
+    if any(normalize(item["theme"]) == normalize(INAPTITUDE_THEME) for item in detected):
+        detected = [
+            item
+            for item in detected
+            if normalize(item["theme"])
+            not in {
+                normalize(CLASSIFICATION_THEME),
+                "cssct / securite process / maintenance",
+            }
         ]
     return detected
 
@@ -735,12 +1029,32 @@ def has_theme(themes: list[dict[str, Any]], *needles: str) -> bool:
     return any(normalize(needle) in haystack for needle in needles)
 
 
+def has_exact_theme(themes: list[dict[str, Any]], theme_name: str) -> bool:
+    return any(normalize(theme["theme"]) == normalize(theme_name) for theme in themes)
+
+
+def is_worktime_rest_theme(themes: list[dict[str, Any]]) -> bool:
+    return has_exact_theme(themes, "temps de travail / repos / 5x8")
+
+
 def is_cssct_theme(themes: list[dict[str, Any]]) -> bool:
     return has_theme(themes, "CSSCT / sécurité process / maintenance")
 
 
 def is_paid_leave_theme(themes: list[dict[str, Any]]) -> bool:
     return has_theme(themes, PAID_LEAVE_THEME, "congés payés", "indemnité de congés")
+
+
+def is_classification_theme(themes: list[dict[str, Any]]) -> bool:
+    return has_theme(themes, CLASSIFICATION_THEME)
+
+
+def is_inaptitude_theme(themes: list[dict[str, Any]]) -> bool:
+    return has_theme(themes, INAPTITUDE_THEME)
+
+
+def is_overtime_counter_theme(themes: list[dict[str, Any]]) -> bool:
+    return has_theme(themes, OVERTIME_COUNTER_THEME)
 
 
 def paid_leave_specific_source(source: dict[str, Any]) -> bool:
@@ -891,6 +1205,24 @@ def cse_confidence(sources: list[dict[str, Any]]) -> str:
 def direction_intent(text: str, themes: list[dict[str, Any]]) -> str:
     if not themes:
         return "Le changement exact doit être précisé par la direction."
+    if is_classification_theme(themes):
+        return (
+            "Le point semble porter sur la classification, le coefficient, l'emploi tenu ou l'évolution de poste. "
+            "Il faut objectiver les fonctions réellement exercées, l'autonomie, les responsabilités, la technicité "
+            "et les critères conventionnels avant toute demande de réexamen."
+        )
+    if is_inaptitude_theme(themes):
+        return (
+            "Le point semble porter sur une situation d'inaptitude, de restrictions médicales ou de reclassement. "
+            "La priorité est de vérifier l'avis du médecin du travail, l'étude de poste, les adaptations possibles "
+            "et la traçabilité des recherches de reclassement."
+        )
+    if is_overtime_counter_theme(themes):
+        return (
+            "Le point semble porter sur les heures supplémentaires, compteurs d'heures, récupérations ou majorations. "
+            "Il faut rapprocher pointage, heures effectuées, heures validées, heures payées ou récupérées, contingent "
+            "et paramétrage logiciel."
+        )
     if is_cssct_theme(themes):
         return (
             "Le point semble porter sur la fiabilité d'équipements critiques, la maintenance, "
@@ -903,7 +1235,7 @@ def direction_intent(text: str, themes: list[dict[str, Any]]) -> str:
             "comparaison entre maintien de salaire et règle du dixième, assiette de calcul, période de référence "
             "et éventuel impact d'un passage à l'année civile. La règle locale précise et le paramétrage paie doivent être vérifiés."
         )
-    if has_theme(themes, "temps de travail", "repos", "5x8"):
+    if is_worktime_rest_theme(themes):
         return (
             "La direction semble vouloir modifier l'organisation du repos, des horaires ou du cycle 5x8. "
             "Le changement exact doit être précisé par la direction."
@@ -934,6 +1266,36 @@ def direction_intent(text: str, themes: list[dict[str, Any]]) -> str:
 def current_situation_checks(themes: list[dict[str, Any]], sources: list[dict[str, Any]]) -> list[str]:
     ref = source_reference(sources[0]) if sources else "une source locale à identifier"
     checks = []
+    if is_classification_theme(themes):
+        checks.extend(
+            [
+                f"À vérifier dans {ref} : fiche de poste actuelle et classification/coefficient retenus.",
+                f"À vérifier dans {ref} : fonctions réellement exercées, responsabilités, autonomie et technicité.",
+                f"À vérifier dans {ref} : comparaison avec des salariés occupant des postes similaires.",
+                f"À vérifier dans {ref} : historique des évolutions de poste, polyvalence et changements de périmètre.",
+                f"À vérifier dans {ref} : critères conventionnels applicables et possibilité de réexamen du coefficient.",
+            ]
+        )
+    if is_inaptitude_theme(themes):
+        checks.extend(
+            [
+                f"À vérifier dans {ref} : avis du médecin du travail et restrictions médicales mentionnées.",
+                f"À vérifier dans {ref} : étude de poste et analyse des adaptations possibles.",
+                f"À vérifier dans {ref} : postes disponibles, postes compatibles et formations envisageables.",
+                f"À vérifier dans {ref} : périmètre de reclassement et traçabilité des recherches.",
+                f"À vérifier dans {ref} : échanges avec le salarié et consultation éventuelle du CSE si requise.",
+            ]
+        )
+    if is_overtime_counter_theme(themes):
+        checks.extend(
+            [
+                f"À vérifier dans {ref} : relevés de pointage, badgeage et compteurs d'heures.",
+                f"À vérifier dans {ref} : heures effectuées, validées, refusées, payées ou récupérées.",
+                f"À vérifier dans {ref} : règles de majoration, contingent et repos compensateur.",
+                f"À vérifier dans {ref} : modulation, annualisation ou temps de travail effectif applicables.",
+                f"À vérifier dans {ref} : paramétrage logiciel et période à contrôler.",
+            ]
+        )
     if is_cssct_theme(themes):
         checks.extend(
             [
@@ -957,7 +1319,7 @@ def current_situation_checks(themes: list[dict[str, Any]], sources: list[dict[st
                 f"À vérifier dans {ref} : régularisations ou rappels de salaire déjà réalisés ou à prévoir.",
             ]
         )
-    if has_theme(themes, "temps de travail", "repos", "5x8"):
+    if is_worktime_rest_theme(themes):
         checks.extend(
             [
                 f"À vérifier dans {ref} : règle actuelle de repos et éventuelles dérogations.",
@@ -997,6 +1359,48 @@ def current_situation_checks(themes: list[dict[str, Any]], sources: list[dict[st
 
 
 def comparison_elements(themes: list[dict[str, Any]]) -> list[str]:
+    if is_classification_theme(themes):
+        return [
+            "fiche de poste actuelle",
+            "fonctions réellement exercées",
+            "niveau d'autonomie",
+            "responsabilités",
+            "technicité",
+            "polyvalence",
+            "comparaison avec salariés similaires",
+            "historique des changements de poste",
+            "critères conventionnels",
+            "coefficient actuel",
+            "coefficient revendiqué ou à réexaminer",
+        ]
+    if is_inaptitude_theme(themes):
+        return [
+            "avis du médecin du travail",
+            "restrictions médicales",
+            "étude de poste",
+            "postes disponibles",
+            "adaptations possibles",
+            "formations envisageables",
+            "périmètre de reclassement",
+            "consultation éventuelle du CSE",
+            "échanges avec le salarié",
+            "traçabilité des recherches",
+        ]
+    if is_overtime_counter_theme(themes):
+        return [
+            "relevés de pointage",
+            "compteurs d'heures",
+            "heures effectuées",
+            "heures validées",
+            "heures refusées",
+            "heures payées",
+            "heures récupérées",
+            "règles de majoration",
+            "contingent",
+            "repos compensateur",
+            "paramétrage logiciel",
+            "période à contrôler",
+        ]
     if is_cssct_theme(themes):
         return [
             "état climatisation locaux SNCC/PROVOX",
@@ -1033,7 +1437,7 @@ def comparison_elements(themes: list[dict[str, Any]]) -> list[str]:
             "période à contrôler",
             "données de paie nécessaires",
         ]
-    if has_theme(themes, "temps de travail", "repos", "5x8"):
+    if is_worktime_rest_theme(themes):
         return [
             "durée de repos",
             "délai de prévenance",
@@ -1115,8 +1519,8 @@ def comparison_table(themes: list[dict[str, Any]], sources: list[dict[str, Any]]
 
 
 def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
-    cssct_sensitive = is_cssct_theme(themes) or has_theme(themes, "temps de travail", "repos", "5x8", "astreinte")
-    remuneration_sensitive = has_theme(themes, "rémunération", "primes") or is_paid_leave_theme(themes)
+    cssct_sensitive = is_cssct_theme(themes) or is_inaptitude_theme(themes) or is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte")
+    remuneration_sensitive = has_theme(themes, "rémunération", "primes") or is_paid_leave_theme(themes) or is_overtime_counter_theme(themes) or is_classification_theme(themes)
     consequences = [
         {"categorie": "charge de travail", "analyse": "Impact potentiel à mesurer selon la fréquence et les postes concernés."},
         {"categorie": "fatigue", "analyse": "Risque potentiel renforcé si le sujet touche repos, 5x8, astreinte ou travail de nuit." if cssct_sensitive else "À vérifier selon l'organisation concrète."},
@@ -1138,6 +1542,33 @@ def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
                 {"categorie": "continuité d'exploitation", "analyse": "À vérifier avec le plan de contingence, les scénarios de panne et les modalités d'escalade."},
                 {"categorie": "maintenance préventive", "analyse": "À objectiver avec les plans de maintenance, les délais d'intervention et les stocks de pièces critiques."},
                 {"categorie": "charge mentale", "analyse": "Risque RPS potentiel si les équipes compensent une fragilité technique ou une incertitude de dépannage."},
+            ]
+        )
+    if is_classification_theme(themes):
+        consequences.extend(
+            [
+                {"categorie": "carrière", "analyse": "Impact possible sur évolution professionnelle, reconnaissance du poste et trajectoire de carrière."},
+                {"categorie": "rémunération", "analyse": "Effet possible sur salaire de base, primes liées au coefficient ou évolutions futures."},
+                {"categorie": "égalité de traitement", "analyse": "Comparer la situation avec des salariés aux fonctions, responsabilités et niveaux d'autonomie similaires."},
+                {"categorie": "reconnaissance du travail réel", "analyse": "Objectiver l'écart éventuel entre fiche de poste et fonctions réellement exercées."},
+            ]
+        )
+    if is_inaptitude_theme(themes):
+        consequences.extend(
+            [
+                {"categorie": "maintien dans l'emploi", "analyse": "Point central : vérifier les adaptations, formations et postes compatibles avant toute conclusion."},
+                {"categorie": "santé au travail", "analyse": "Respecter les restrictions médicales et éviter toute exposition incompatible avec l'avis du médecin du travail."},
+                {"categorie": "reclassement", "analyse": "Contrôler le périmètre, la réalité et la traçabilité des recherches de reclassement."},
+                {"categorie": "rupture du contrat", "analyse": "Risque de licenciement pour inaptitude si l'impossibilité de reclassement est invoquée."},
+            ]
+        )
+    if is_overtime_counter_theme(themes):
+        consequences.extend(
+            [
+                {"categorie": "rémunération", "analyse": "Impact direct si des heures effectuées ne sont pas payées, majorées ou récupérées correctement."},
+                {"categorie": "temps de repos", "analyse": "Vérifier les repos compensateurs, récupérations et effets sur la fatigue."},
+                {"categorie": "compteurs", "analyse": "Risque d'écart entre pointage, compteur logiciel et bulletin de paie."},
+                {"categorie": "charge de travail", "analyse": "Identifier si les heures supplémentaires traduisent un besoin structurel d'effectifs ou d'organisation."},
             ]
         )
     if is_paid_leave_theme(themes):
@@ -1198,6 +1629,15 @@ def benefit_balance(themes: list[dict[str, Any]]) -> dict[str, Any]:
             "transparence sur l'assiette et les périodes de référence",
             "contrôle spécifique des salariés postés et éléments variables",
         ]
+    if is_classification_theme(themes):
+        company_benefits = ["clarification des emplois réellement tenus", "grille de classification mieux documentée", "réduction du risque de contestation individuelle"]
+        employee_benefits = ["reconnaissance du travail réel", "réexamen du coefficient si les critères le justifient", "meilleure égalité de traitement entre postes comparables"]
+    if is_inaptitude_theme(themes):
+        company_benefits = ["dossier de reclassement mieux tracé", "adaptations de poste objectivées", "réduction du risque contentieux"]
+        employee_benefits = ["maintien dans l'emploi recherché loyalement", "prise en compte des restrictions médicales", "visibilité sur les postes compatibles et formations possibles"]
+    if is_overtime_counter_theme(themes):
+        company_benefits = ["fiabilisation du suivi du temps", "clarification des compteurs", "réduction des écarts entre pointage et paie"]
+        employee_benefits = ["paiement ou récupération des heures dues", "meilleure transparence des compteurs", "contrôle des majorations et repos compensateurs"]
     return {
         "avantages_probables_pour_l_entreprise": company_benefits,
         "avantages_eventuels_pour_les_salaries": dedupe(employee_benefits),
@@ -1213,7 +1653,7 @@ def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
         "risque d'impact sur un autre accord",
         "risque de perte de droit si le projet modifie une garantie existante",
     ]
-    if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
+    if is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte"):
         risks.extend(
             [
                 "risque santé-sécurité",
@@ -1248,6 +1688,38 @@ def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
                 "risque d'inventer une règle locale sans source précise",
             ]
         )
+    if is_classification_theme(themes):
+        risks.extend(
+            [
+                "risque de sous-classification du poste réellement tenu",
+                "risque d'écart entre fiche de poste et fonctions exercées",
+                "risque d'inégalité de traitement avec des salariés similaires",
+                "risque de critères conventionnels non vérifiés",
+                "risque d'absence de réexamen du coefficient malgré une évolution de poste",
+            ]
+        )
+    if is_inaptitude_theme(themes):
+        risks.extend(
+            [
+                "risque de restrictions médicales insuffisamment prises en compte",
+                "risque d'étude de poste incomplète",
+                "risque de recherches de reclassement non tracées",
+                "risque d'adaptations ou formations non étudiées",
+                "risque de consultation CSE absente ou insuffisante si elle est requise",
+                "risque de licenciement pour inaptitude sans démonstration complète de l'impossibilité de reclassement",
+            ]
+        )
+    if is_overtime_counter_theme(themes):
+        risks.extend(
+            [
+                "risque d'heures effectuées non validées",
+                "risque d'heures supplémentaires non payées ou non majorées",
+                "risque d'écart entre pointage, badgeage, compteur et paie",
+                "risque de récupération ou repos compensateur mal appliqué",
+                "risque de dépassement du contingent non identifié",
+                "risque de paramétrage logiciel erroné",
+            ]
+        )
     if has_theme(themes, "disciplinaire"):
         risks.extend(["risque de procédure insuffisamment documentée", "risque de sanction disproportionnée à vérifier"])
     if has_theme(themes, "rémunération", "primes"):
@@ -1266,7 +1738,7 @@ def missing_information(themes: list[dict[str, Any]]) -> list[str]:
         "données chiffrées",
         "contreparties proposées",
     ]
-    if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
+    if is_worktime_rest_theme(themes) or has_theme(themes, "astreinte"):
         missing.extend(["analyse de risques", "avis du médecin du travail si pertinent", "consultation CSSCT si pertinente", "mesures de prévention"])
     if is_cssct_theme(themes):
         missing.extend(
@@ -1301,6 +1773,51 @@ def missing_information(themes: list[dict[str, Any]]) -> list[str]:
                 "paramétrage fonctionnel du logiciel de paie",
             ]
         )
+    if is_classification_theme(themes):
+        missing.extend(
+            [
+                "fiche de poste actuelle",
+                "fonctions réellement exercées",
+                "niveau d'autonomie",
+                "responsabilités",
+                "technicité",
+                "comparaison avec salariés similaires",
+                "historique des changements de poste",
+                "critères conventionnels à vérifier",
+                "éléments permettant une demande de réexamen du coefficient",
+            ]
+        )
+    if is_inaptitude_theme(themes):
+        missing.extend(
+            [
+                "avis du médecin du travail",
+                "restrictions médicales",
+                "étude de poste",
+                "postes disponibles",
+                "adaptations possibles",
+                "formations envisageables",
+                "périmètre de reclassement",
+                "consultation éventuelle du CSE",
+                "échanges avec le salarié",
+                "traçabilité des recherches",
+            ]
+        )
+    if is_overtime_counter_theme(themes):
+        missing.extend(
+            [
+                "relevés de pointage",
+                "compteurs",
+                "heures validées ou refusées",
+                "heures payées ou récupérées",
+                "règles de majoration",
+                "règles de récupération",
+                "contingent",
+                "repos compensateur",
+                "paramétrage logiciel",
+                "exemples anonymisés",
+                "période à contrôler",
+            ]
+        )
     return dedupe(missing)
 
 
@@ -1313,7 +1830,7 @@ def documents_to_request_detailed(themes: list[dict[str, Any]]) -> list[str]:
         "planning ou simulations",
         "historique des dérogations existantes",
     ]
-    if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
+    if is_worktime_rest_theme(themes) or has_theme(themes, "astreinte"):
         documents.extend(["données d'absentéisme/fatigue si pertinentes", "évaluation des risques", "mise à jour DUERP si pertinente", "avis ou contribution CSSCT si nécessaire"])
     if is_cssct_theme(themes):
         documents.extend(
@@ -1349,6 +1866,51 @@ def documents_to_request_detailed(themes: list[dict[str, Any]]) -> list[str]:
                 "échantillons anonymisés salariés postés, variables et profils standards",
             ]
         )
+    if is_classification_theme(themes):
+        documents.extend(
+            [
+                "fiche de poste actuelle",
+                "descriptif des fonctions réellement exercées",
+                "éléments sur le niveau d'autonomie",
+                "éléments sur les responsabilités",
+                "éléments sur la technicité",
+                "comparaison anonymisée avec salariés similaires",
+                "historique des changements de poste",
+                "grille et critères conventionnels de classification",
+                "éléments de polyvalence ou pesée de poste",
+                "demande de réexamen du coefficient",
+            ]
+        )
+    if is_inaptitude_theme(themes):
+        documents.extend(
+            [
+                "avis du médecin du travail",
+                "restrictions médicales",
+                "étude de poste",
+                "liste des postes disponibles",
+                "analyse des adaptations possibles",
+                "formations envisageables",
+                "périmètre de reclassement",
+                "éléments de consultation éventuelle du CSE",
+                "échanges avec le salarié",
+                "traçabilité des recherches de reclassement",
+            ]
+        )
+    if is_overtime_counter_theme(themes):
+        documents.extend(
+            [
+                "relevés de pointage",
+                "compteurs d'heures",
+                "heures validées et refusées",
+                "règles de majoration",
+                "règles de récupération",
+                "contingent applicable",
+                "règles de repos compensateur",
+                "paramétrage logiciel",
+                "exemples anonymisés",
+                "période à contrôler",
+            ]
+        )
     if has_theme(themes, "rémunération", "primes"):
         documents.extend(["simulation paie", "population bénéficiaire", "coût global et critères d'attribution"])
     return dedupe(documents + documents_to_request(themes))
@@ -1363,8 +1925,40 @@ def main_cse_questions(themes: list[dict[str, Any]]) -> list[str]:
         "Le dispositif serait-il temporaire ou permanent ?",
         "Comment le CSE pourra-t-il suivre les effets réels après mise en œuvre ?",
     ]
-    if has_theme(themes, "temps de travail", "repos", "5x8"):
+    if is_worktime_rest_theme(themes):
         questions.extend(["Quelle fréquence d'utilisation est envisagée ?", "Quelles conséquences sur la fatigue ont été évaluées ?", "Quelles mesures de prévention sont prévues ?", "Quelles contreparties sont proposées ?"])
+    if is_classification_theme(themes):
+        questions = [
+            "Quelle fiche de poste est actuellement retenue pour ce salarié ou ce groupe de salariés ?",
+            "Quelles fonctions sont réellement exercées au quotidien ?",
+            "Quel niveau d'autonomie, de responsabilité et de technicité est reconnu ?",
+            "Quels critères conventionnels justifient le coefficient actuel ?",
+            "Existe-t-il des salariés similaires avec une classification ou un coefficient différent ?",
+            "Quels changements de poste, de périmètre ou de polyvalence ont été constatés ?",
+            "La direction accepte-t-elle un réexamen du coefficient ?",
+        ]
+    if is_inaptitude_theme(themes):
+        questions = [
+            "Quel avis le médecin du travail a-t-il rendu et quelles restrictions médicales s'appliquent ?",
+            "Quelle étude de poste a été réalisée ?",
+            "Quels postes disponibles ont été recensés dans le périmètre de reclassement ?",
+            "Quelles adaptations de poste ou formations ont été envisagées ?",
+            "Quels postes ont été considérés comme compatibles ou incompatibles, et pour quels motifs ?",
+            "Le salarié a-t-il été associé aux échanges sur les possibilités de reclassement ?",
+            "Quelle traçabilité des recherches de reclassement pouvez-vous transmettre ?",
+            "Une consultation du CSE est-elle requise ou prévue sur ce dossier ?",
+        ]
+    if is_overtime_counter_theme(themes):
+        questions = [
+            "Quels relevés de pointage ou de badgeage couvrent la période concernée ?",
+            "Quel est le solde des compteurs d'heures au début et à la fin de la période ?",
+            "Quelles heures ont été validées, refusées, payées ou récupérées ?",
+            "Quelles règles de majoration sont appliquées aux heures supplémentaires ?",
+            "Quel contingent et quel repos compensateur sont applicables ?",
+            "Comment le logiciel calcule-t-il les compteurs et les récupérations ?",
+            "Pouvez-vous fournir des exemples anonymisés de calcul ?",
+            "Quelle période doit être contrôlée ?",
+        ]
     if is_cssct_theme(themes):
         questions = [
             "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
@@ -1431,6 +2025,24 @@ def conditional_followups(themes: list[dict[str, Any]] | None = None) -> list[di
                 ],
             },
         ]
+    if themes and is_classification_theme(themes):
+        return [
+            {"si_reponse_direction": "le coefficient est conforme", "relances": ["Quels critères conventionnels avez-vous appliqués ?", "Comment les fonctions réellement exercées ont-elles été prises en compte ?", "Quelle comparaison avec des postes similaires a été réalisée ?"]},
+            {"si_reponse_direction": "la fiche de poste n'a pas changé", "relances": ["Les responsabilités réelles ont-elles évolué ?", "La polyvalence ou la technicité ont-elles augmenté ?", "Depuis quelle date le périmètre réel du poste est-il constaté ?"]},
+            {"si_reponse_direction": "pas de réexamen prévu", "relances": ["Quelle procédure de réexamen existe ?", "Quels éléments le salarié ou le CSE peut-il transmettre ?", "Sous quel délai une réponse motivée peut-elle être donnée ?"]},
+        ]
+    if themes and is_inaptitude_theme(themes):
+        return [
+            {"si_reponse_direction": "aucun poste disponible", "relances": ["Quel périmètre a été recherché ?", "À quelle date la liste des postes a-t-elle été arrêtée ?", "Les adaptations ou formations ont-elles été étudiées ?"]},
+            {"si_reponse_direction": "reclassement impossible", "relances": ["Quels postes ont été examinés un par un ?", "Quels motifs précis d'incompatibilité sont retenus ?", "Quelle traçabilité pouvez-vous transmettre ?"]},
+            {"si_reponse_direction": "le salarié ne peut pas tenir le poste", "relances": ["Quelle restriction médicale l'interdit ?", "Quel aménagement de poste a été étudié ?", "Le médecin du travail a-t-il été sollicité sur l'adaptation envisagée ?"]},
+        ]
+    if themes and is_overtime_counter_theme(themes):
+        return [
+            {"si_reponse_direction": "le compteur est automatique", "relances": ["Quel paramétrage logiciel est utilisé ?", "Qui valide les anomalies ?", "Comment sont traitées les heures refusées ?"]},
+            {"si_reponse_direction": "les heures ont été récupérées", "relances": ["À quelles dates ?", "Avec quel solde avant/après ?", "Le repos compensateur ou la majoration applicable a-t-il été respecté ?"]},
+            {"si_reponse_direction": "aucun écart paie", "relances": ["Sur quelle période le contrôle a-t-il été réalisé ?", "Quels exemples anonymisés le démontrent ?", "Le rapprochement pointage / compteur / bulletin a-t-il été fait ?"]},
+        ]
     return [
         {"si_reponse_direction": "besoin d'organisation", "relances": ["Quel besoin précis ?", "Depuis quand ?", "Sur quels postes ?", "Avec quelles données ?"]},
         {"si_reponse_direction": "pas d'impact", "relances": ["Quelle évaluation permet de l'affirmer ?", "Qui l'a réalisée ?", "Quels indicateurs seront suivis ?"]},
@@ -1440,7 +2052,7 @@ def conditional_followups(themes: list[dict[str, Any]] | None = None) -> list[di
 
 def cssct_point(themes: list[dict[str, Any]], text: str) -> dict[str, Any]:
     normalized = normalize(text)
-    probable = is_cssct_theme(themes) or has_theme(themes, "temps de travail", "repos", "5x8", "astreinte") or any(
+    probable = is_cssct_theme(themes) or is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte") or any(
         term in normalized for term in ["fatigue", "nuit", "securite", "sante", "risque"]
     )
     if is_cssct_theme(themes):
@@ -1483,7 +2095,7 @@ def cfdt_position_to_build(themes: list[dict[str, Any]]) -> dict[str, Any]:
         "absence d'analyse d'impact pour les salariés",
         "absence de garantie ou de suivi",
     ]
-    if has_theme(themes, "temps de travail", "repos", "5x8", "astreinte"):
+    if is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte"):
         non_acceptables.extend(["réduction de repos ou hausse de contrainte sans prévention", "banalisation d'une dérogation"])
     if is_cssct_theme(themes):
         non_acceptables.extend(
@@ -1518,6 +2130,36 @@ def cfdt_position_to_build(themes: list[dict[str, Any]]) -> dict[str, Any]:
             ],
             "consultation_des_salaries": "Recueillir des exemples terrain de baisse constatée sans collecter de données personnelles inutiles.",
             "alternative_a_travailler": "Demander un audit paie ciblé sur les congés payés avec restitution anonymisée au CSE.",
+        }
+    if is_classification_theme(themes):
+        non_acceptables.extend(["absence de fiche de poste à jour", "absence de prise en compte des fonctions réelles", "absence de critères conventionnels vérifiés", "absence de comparaison avec postes similaires"])
+        return {
+            "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
+            "points_negociables": ["calendrier de réexamen", "périmètre des postes comparables", "format des éléments anonymisés", "modalités de réponse motivée"],
+            "contreparties_possibles": ["réexamen du coefficient", "mise à jour de la fiche de poste", "rappel salarial si un écart est établi", "revue collective de postes similaires"],
+            "conditions_minimales": ["fiche de poste actuelle", "fonctions réelles documentées", "critères conventionnels identifiés", "comparaison anonymisée avec salariés similaires"],
+            "consultation_des_salaries": "Recueillir le descriptif factuel des missions réellement exercées et des évolutions de poste.",
+            "alternative_a_travailler": "Demander une revue RH ciblée de classification avec réponse écrite et critères explicités.",
+        }
+    if is_inaptitude_theme(themes):
+        non_acceptables.extend(["absence d'avis du médecin du travail", "absence d'étude de poste", "absence de recherche tracée de reclassement", "absence d'étude des adaptations ou formations possibles"])
+        return {
+            "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
+            "points_negociables": ["périmètre de reclassement", "délai de recherche", "modalités d'échanges avec le salarié", "formation ou adaptation de poste"],
+            "contreparties_possibles": ["maintien dans l'emploi par adaptation", "formation de reclassement", "recherche élargie de postes compatibles", "suivi écrit avec le salarié"],
+            "conditions_minimales": ["avis médical et restrictions", "étude de poste", "liste des postes disponibles", "traçabilité des recherches", "échanges avec le salarié"],
+            "consultation_des_salaries": "Échanger avec le salarié concerné dans le respect de la confidentialité médicale.",
+            "alternative_a_travailler": "Demander une reprise contradictoire des recherches de reclassement et adaptations possibles.",
+        }
+    if is_overtime_counter_theme(themes):
+        non_acceptables.extend(["absence de relevés de pointage", "absence de compteurs vérifiables", "absence de règle claire de majoration ou récupération", "absence de rapprochement avec la paie"])
+        return {
+            "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
+            "points_negociables": ["période de contrôle", "format des extractions anonymisées", "règles de validation des heures", "calendrier de régularisation"],
+            "contreparties_possibles": ["paiement des heures dues", "récupération conforme", "correction du compteur", "contrôle périodique CSE anonymisé"],
+            "conditions_minimales": ["relevés de pointage", "compteurs", "règles de majoration", "heures validées/refusées", "paramétrage logiciel", "exemples anonymisés"],
+            "consultation_des_salaries": "Recueillir les écarts constatés sans collecter de données personnelles inutiles.",
+            "alternative_a_travailler": "Demander un audit paie/temps de travail sur la période à contrôler.",
         }
     return {
         "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
@@ -1828,7 +2470,7 @@ def validate_scenario(scenario: dict[str, Any], report: dict[str, Any], sources:
         },
         {
             "name": "sources_ou_prudence_locale",
-            "ok": bool(sources) or report.get("statut_source_locale") == NO_PRECISE_PAID_LEAVE_RULE,
+            "ok": bool(sources) or bool(scenario.get("allow_no_sources")) or report.get("statut_source_locale") == NO_PRECISE_PAID_LEAVE_RULE,
             "detail": f"{len(sources)} source(s) filtrée(s)",
         },
     ]
