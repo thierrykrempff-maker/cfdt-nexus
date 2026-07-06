@@ -35,6 +35,50 @@ SOURCE_FOUND = "SOURCE LOCALE TROUVÉE"
 SOURCE_TO_VERIFY = "SOURCE LOCALE À VÉRIFIER"
 NO_RELEVANT_SOURCE = "AUCUNE SOURCE LOCALE PERTINENTE TROUVÉE"
 NO_DIRECT_CSSCT_SOURCE = "Aucune source locale directement pertinente trouvée — analyse CSSCT à construire avec DUERP, documents techniques et informations direction."
+NO_PRECISE_PAID_LEAVE_RULE = "Aucune règle locale précise identifiée dans les sources remontées. Vérification juridique externe nécessaire."
+PAID_LEAVE_THEME = "paie / congés payés / indemnité de congés"
+
+PAID_LEAVE_SOURCE_MARKERS = [
+    "congés payés",
+    "conges payes",
+    "congé payé",
+    "conge paye",
+    "indemnité de congés",
+    "indemnite de conges",
+    "indemnité compensatrice de congés",
+    "indemnite compensatrice de conges",
+    "règle du dixième",
+    "regle du dixieme",
+    "dixième",
+    "dixieme",
+    "règle des 10",
+    "regle des 10",
+    "10 %",
+    "maintien de salaire",
+]
+
+PAID_LEAVE_CONTEXT_MARKERS = [
+    "congés",
+    "conges",
+    "congé",
+    "conge",
+    "assiette",
+    "salaire de référence",
+    "salaire de reference",
+    "rémunération brute de référence",
+    "remuneration brute de reference",
+    "période de référence",
+    "periode de reference",
+    "période d'acquisition",
+    "periode d'acquisition",
+    "prise des congés",
+    "prise des conges",
+    "régularisation",
+    "regularisation",
+    "rappel de salaire",
+    "année civile",
+    "annee civile",
+]
 
 
 THEME_RULES = [
@@ -222,6 +266,90 @@ THEME_RULES = [
         ],
     },
     {
+        "theme": PAID_LEAVE_THEME,
+        "patterns": [
+            "congés payés",
+            "conges payes",
+            "congé payé",
+            "conge paye",
+            "indemnité de congés payés",
+            "indemnite de conges payes",
+            "indemnité de congés",
+            "indemnite de conges",
+            "règle du dixième",
+            "regle du dixieme",
+            "dixième",
+            "dixieme",
+            "règle des 10 %",
+            "regle des 10 %",
+            "règle des 10 pour cent",
+            "regle des 10 pour cent",
+            "maintien de salaire",
+            "comparaison dixième maintien",
+            "comparaison dixieme maintien",
+            "salaire de référence",
+            "salaire de reference",
+            "rémunération brute de référence",
+            "remuneration brute de reference",
+            "assiette de calcul",
+            "période de référence",
+            "periode de reference",
+            "période d'acquisition",
+            "periode d'acquisition",
+            "prise des congés",
+            "prise des conges",
+            "indemnité compensatrice de congés payés",
+            "indemnite compensatrice de conges payes",
+            "régularisation",
+            "regularisation",
+            "rappel de salaire",
+            "année civile",
+            "annee civile",
+        ],
+        "queries": [
+            "congés payés indemnité dixième maintien de salaire",
+            "indemnité de congés payés règle du dixième maintien de salaire",
+            "congés payés salaire de référence assiette période de référence",
+            "indemnité compensatrice congés payés régularisation rappel de salaire",
+            "passage année civile congés payés période de référence acquisition",
+            "temps de travail congés payés prise des congés",
+            "convention collective congés payés indemnité maintien dixième",
+        ],
+        "comparison_points": [
+            "méthode actuellement appliquée par l'entreprise",
+            "date d'un éventuel changement de méthode",
+            "règle du maintien de salaire",
+            "règle du dixième",
+            "comparaison individuelle dixième / maintien",
+            "méthode la plus favorable à retenir selon le cadre applicable",
+            "éléments inclus ou exclus de l'assiette",
+            "période de référence et période d'acquisition",
+            "impact du passage éventuel à l'année civile",
+            "régularisations ou rappels de salaire éventuels",
+        ],
+        "questions": [
+            "Quelle méthode de calcul de l'indemnité de congés payés est actuellement appliquée ?",
+            "Les deux méthodes, maintien de salaire et dixième, sont-elles comparées pour chaque salarié lorsque le droit applicable l'exige ?",
+            "Quels éléments de rémunération entrent dans l'assiette du dixième ?",
+            "Quelle conséquence a eu le passage éventuel à l'année civile ?",
+            "À quelle date le paramétrage ou la méthode de paie a-t-il changé ?",
+            "Combien de salariés ont été contrôlés ?",
+            "Existe-t-il des écarts défavorables et une régularisation rétroactive est-elle prévue ?",
+        ],
+        "documents_to_request": [
+            "note détaillée de méthode de calcul",
+            "règle utilisée avant et après le changement évoqué",
+            "date exacte du changement",
+            "exemples anonymisés de calcul",
+            "comparaison dixième / maintien pour plusieurs profils",
+            "éléments de rémunération intégrés et exclus de l'assiette",
+            "nombre de salariés concernés",
+            "montant global des écarts éventuels",
+            "historique des régularisations",
+            "paramétrage fonctionnel du logiciel de paie pertinent",
+        ],
+    },
+    {
         "theme": "relations collectives / droit syndical",
         "patterns": [
             "cse",
@@ -350,6 +478,30 @@ SCENARIOS = [
         "text": "La CFDT demande un point sur l'état de la climatisation des locaux SNCC PROVOX et des analyseurs en continu, le plan de contingence et la gestion des stocks de pièces de rechange PROVOX, ainsi que les modalités de mise à jour du DUERP pour intégrer les scénarios de panne et l'évaluation des RPS associés.",
         "expected": "le profil CSSCT / sécurité process / maintenance doit être prioritaire et les documents rémunération ne doivent pas dominer",
     },
+    {
+        "id": "test-7-conges-payes-dixieme",
+        "kind": "cse",
+        "title": "Valorisation des congés payés et règle du dixième",
+        "text": "La CFDT constate que la règle du dixième pour l'indemnité de congés payés semble ne plus être appliquée depuis le passage à l'année civile et que certains salariés constatent une baisse de rémunération nette. Préparer une analyse CSE complète : méthode actuelle de calcul, comparaison avec le maintien de salaire et la règle du dixième, accords locaux éventuellement concernés, populations touchées, données de paie à demander, exemples de calcul à exiger de la direction, questions CSE, relances et position CFDT à construire.",
+        "expected": "le profil paie / congés payés / indemnité de congés doit être prioritaire et aucun bloc droit syndical ne doit remonter",
+        "expected_theme": PAID_LEAVE_THEME,
+        "forbidden_themes": ["relations collectives / droit syndical"],
+        "must_contain": [
+            "règle du dixième",
+            "maintien de salaire",
+            "comparaison",
+            "données de paie",
+            "assiette",
+            "régularisation",
+        ],
+        "must_not_contain": [
+            "crédit d'heures",
+            "credits d'heures",
+            "heures de délégation",
+            "mandat syndical",
+            "moyens syndicaux",
+        ],
+    },
 ]
 
 
@@ -408,6 +560,12 @@ def detect_themes(text: str) -> list[dict[str, Any]]:
                 }
             )
     if any(normalize(item["theme"]) == "cssct / securite process / maintenance" for item in detected):
+        detected = [
+            item
+            for item in detected
+            if normalize(item["theme"]) != "relations collectives / droit syndical"
+        ]
+    if any(normalize(item["theme"]) == normalize(PAID_LEAVE_THEME) for item in detected):
         detected = [
             item
             for item in detected
@@ -541,8 +699,9 @@ def dedupe(values: list[str]) -> list[str]:
 
 
 def build_document_analysis(title: str, text: str, limit: int) -> dict[str, Any]:
-    themes = detect_themes(text)
-    queries = generated_queries(text, themes)
+    analysis_text = f"{title}\n{text}".strip()
+    themes = detect_themes(analysis_text)
+    queries = generated_queries(analysis_text, themes)
     searches = [{"query": query, "sources": search_bible(query, limit)} for query in queries]
     sources = merge_sources(searches, limit)
     source_status = sources[0]["source_status"] if sources else NO_RELEVANT_SOURCE
@@ -580,6 +739,33 @@ def is_cssct_theme(themes: list[dict[str, Any]]) -> bool:
     return has_theme(themes, "CSSCT / sécurité process / maintenance")
 
 
+def is_paid_leave_theme(themes: list[dict[str, Any]]) -> bool:
+    return has_theme(themes, PAID_LEAVE_THEME, "congés payés", "indemnité de congés")
+
+
+def paid_leave_specific_source(source: dict[str, Any]) -> bool:
+    haystack = normalize(
+        " ".join(
+            [
+                str(source.get("document") or ""),
+                str(source.get("article_or_section") or ""),
+                str(source.get("location") or ""),
+                str(source.get("excerpt") or ""),
+                " ".join(str(reason) for reason in source.get("ranking_reasons", [])),
+            ]
+        )
+    )
+    if any(normalize(marker) in haystack for marker in PAID_LEAVE_SOURCE_MARKERS):
+        return True
+    has_leave = any(normalize(marker) in haystack for marker in ["congés", "conges", "congé", "conge"])
+    has_pay_context = any(
+        normalize(marker) in haystack
+        for marker in PAID_LEAVE_CONTEXT_MARKERS
+        if normalize(marker) not in {"conges", "conge"}
+    )
+    return has_leave and has_pay_context
+
+
 def is_remuneration_source(source: dict[str, Any]) -> bool:
     haystack = normalize(
         " ".join(
@@ -611,12 +797,16 @@ def is_remuneration_source(source: dict[str, Any]) -> bool:
 
 
 def cse_sources_for_theme(sources: list[dict[str, Any]], themes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if is_paid_leave_theme(themes):
+        return [source for source in sources if paid_leave_specific_source(source)]
     if not is_cssct_theme(themes):
         return sources
     return [source for source in sources if not is_remuneration_source(source)]
 
 
 def cse_source_status(sources: list[dict[str, Any]], themes: list[dict[str, Any]], fallback: str) -> str:
+    if is_paid_leave_theme(themes) and not sources:
+        return NO_PRECISE_PAID_LEAVE_RULE
     if is_cssct_theme(themes) and not sources:
         return NO_DIRECT_CSSCT_SOURCE
     if sources:
@@ -641,6 +831,14 @@ def role_probable(source: dict[str, Any], themes: list[dict[str, Any]], index: i
         )
     )
     main_theme = normalize(theme_names(themes)[0]) if themes else ""
+    if is_paid_leave_theme(themes):
+        if "convention" in haystack or "ccnic" in haystack:
+            return "convention collective à vérifier pour congés payés"
+        if "temps de travail" in haystack or "conges" in haystack or "conge" in haystack:
+            return "texte congés payés ou temps de travail à vérifier"
+        if "remuneration" in haystack or "paie" in haystack or "salaire" in haystack:
+            return "document paie à vérifier uniquement s'il traite explicitement les congés payés"
+        return "source congés payés à vérifier"
     if "reglement" in haystack or "interieur" in haystack:
         return "règlement intérieur"
     if "convention" in haystack or "ccnic" in haystack:
@@ -699,6 +897,12 @@ def direction_intent(text: str, themes: list[dict[str, Any]]) -> str:
             "la continuité d'exploitation, la mise à jour du DUERP et l'évaluation des RPS. "
             "L'état réel des installations, les scénarios de panne et les mesures immédiates doivent être précisés."
         )
+    if is_paid_leave_theme(themes):
+        return (
+            "Le point semble porter sur le calcul de l'indemnité de congés payés : méthode actuellement appliquée, "
+            "comparaison entre maintien de salaire et règle du dixième, assiette de calcul, période de référence "
+            "et éventuel impact d'un passage à l'année civile. La règle locale précise et le paramétrage paie doivent être vérifiés."
+        )
     if has_theme(themes, "temps de travail", "repos", "5x8"):
         return (
             "La direction semble vouloir modifier l'organisation du repos, des horaires ou du cycle 5x8. "
@@ -737,6 +941,20 @@ def current_situation_checks(themes: list[dict[str, Any]], sources: list[dict[st
                 f"À vérifier dans {ref} ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
                 f"À vérifier dans {ref} ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence.",
                 f"À vérifier dans {ref} ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+            ]
+        )
+    if is_paid_leave_theme(themes):
+        if not sources:
+            checks.append(NO_PRECISE_PAID_LEAVE_RULE)
+        checks.extend(
+            [
+                f"À vérifier dans {ref} : méthode actuellement appliquée pour l'indemnité de congés payés.",
+                f"À vérifier dans {ref} : date exacte d'un éventuel changement de méthode ou de paramétrage paie.",
+                f"À vérifier dans {ref} : règle du maintien de salaire et règle du dixième applicables au périmètre concerné.",
+                f"À vérifier dans {ref} : comparaison individuelle des deux méthodes et méthode la plus favorable à retenir selon le cadre applicable.",
+                f"À vérifier dans {ref} : éléments inclus ou exclus de l'assiette de calcul, notamment primes variables et éléments propres aux postés.",
+                f"À vérifier dans {ref} : période de référence, période d'acquisition, prise des congés et impact éventuel du passage à l'année civile.",
+                f"À vérifier dans {ref} : régularisations ou rappels de salaire déjà réalisés ou à prévoir.",
             ]
         )
     if has_theme(themes, "temps de travail", "repos", "5x8"):
@@ -794,6 +1012,27 @@ def comparison_elements(themes: list[dict[str, Any]]) -> list[str]:
             "mise à jour DUERP",
             "escalade en cas de panne",
         ]
+    if is_paid_leave_theme(themes):
+        return [
+            "méthode actuellement appliquée par l'entreprise",
+            "date d'un éventuel changement de méthode ou de paramétrage",
+            "maintien de salaire",
+            "règle du dixième",
+            "comparaison individuelle des deux méthodes",
+            "méthode la plus favorable à retenir selon le cadre applicable",
+            "salaire de référence et rémunération brute de référence",
+            "éléments inclus dans l'assiette",
+            "éléments exclus de l'assiette",
+            "période de référence",
+            "période d'acquisition",
+            "prise des congés",
+            "indemnité compensatrice de congés payés",
+            "salariés postés, primes variables et éléments particuliers",
+            "impact du passage éventuel à l'année civile",
+            "régularisations et rappels de salaire",
+            "période à contrôler",
+            "données de paie nécessaires",
+        ]
     if has_theme(themes, "temps de travail", "repos", "5x8"):
         return [
             "durée de repos",
@@ -850,6 +1089,18 @@ def comparison_elements(themes: list[dict[str, Any]]) -> list[str]:
 
 def comparison_table(themes: list[dict[str, Any]], sources: list[dict[str, Any]]) -> list[dict[str, str]]:
     refs = [source_reference(source) for source in sources] or ["source locale à identifier"]
+    if is_paid_leave_theme(themes):
+        return [
+            {
+                "element": element,
+                "situation_actuelle": f"À vérifier dans {refs[index % len(refs)]} et avec le paramétrage paie réel.",
+                "projet_direction": "Demander le calcul appliqué, la date d'effet et les exemples anonymisés avant/après.",
+                "ecart_ou_changement": "Écart à mesurer par comparaison maintien de salaire / dixième pour chaque profil concerné.",
+                "risque_ou_effet_possible": "Risque de perte individuelle, d'assiette incomplète ou de régularisation non réalisée.",
+                "source_a_verifier": refs[index % len(refs)],
+            }
+            for index, element in enumerate(comparison_elements(themes))
+        ]
     return [
         {
             "element": element,
@@ -865,7 +1116,7 @@ def comparison_table(themes: list[dict[str, Any]], sources: list[dict[str, Any]]
 
 def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
     cssct_sensitive = is_cssct_theme(themes) or has_theme(themes, "temps de travail", "repos", "5x8", "astreinte")
-    remuneration_sensitive = has_theme(themes, "rémunération", "primes")
+    remuneration_sensitive = has_theme(themes, "rémunération", "primes") or is_paid_leave_theme(themes)
     consequences = [
         {"categorie": "charge de travail", "analyse": "Impact potentiel à mesurer selon la fréquence et les postes concernés."},
         {"categorie": "fatigue", "analyse": "Risque potentiel renforcé si le sujet touche repos, 5x8, astreinte ou travail de nuit." if cssct_sensitive else "À vérifier selon l'organisation concrète."},
@@ -887,6 +1138,16 @@ def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
                 {"categorie": "continuité d'exploitation", "analyse": "À vérifier avec le plan de contingence, les scénarios de panne et les modalités d'escalade."},
                 {"categorie": "maintenance préventive", "analyse": "À objectiver avec les plans de maintenance, les délais d'intervention et les stocks de pièces critiques."},
                 {"categorie": "charge mentale", "analyse": "Risque RPS potentiel si les équipes compensent une fragilité technique ou une incertitude de dépannage."},
+            ]
+        )
+    if is_paid_leave_theme(themes):
+        consequences.extend(
+            [
+                {"categorie": "rémunération nette", "analyse": "Impact possible si la méthode appliquée ne retient pas le résultat le plus favorable entre maintien et dixième lorsque le cadre applicable l'exige."},
+                {"categorie": "salariés postés", "analyse": "Vérifier le traitement des primes et majorations liées aux horaires postés dans l'assiette de calcul."},
+                {"categorie": "éléments variables", "analyse": "Contrôler l'intégration ou l'exclusion des primes variables, rappels, majorations et éléments exceptionnels selon leur nature."},
+                {"categorie": "régularisation", "analyse": "Demander la période contrôlée, le nombre de salariés concernés et le montant global des écarts éventuels."},
+                {"categorie": "année civile", "analyse": "Analyser le raccordement des périodes de référence et d'acquisition si la méthode ou le calendrier annuel a changé."},
             ]
         )
     return consequences
@@ -924,6 +1185,18 @@ def benefit_balance(themes: list[dict[str, Any]]) -> dict[str, Any]:
             "consignes d'escalade plus claires",
             "meilleure prévention des incidents",
             "DUERP actualisé",
+        ]
+    if is_paid_leave_theme(themes):
+        company_benefits = [
+            "sécurisation du paramétrage paie",
+            "réduction du risque de litige individuel ou collectif",
+            "clarification des règles de calcul appliquées",
+        ]
+        employee_benefits = [
+            "application de la méthode la plus favorable lorsque le cadre applicable l'exige",
+            "régularisation des écarts défavorables éventuels",
+            "transparence sur l'assiette et les périodes de référence",
+            "contrôle spécifique des salariés postés et éléments variables",
         ]
     return {
         "avantages_probables_pour_l_entreprise": company_benefits,
@@ -963,6 +1236,18 @@ def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
                 "risque RPS lié à la charge mentale et au stress opérationnel",
             ]
         )
+    if is_paid_leave_theme(themes):
+        risks.extend(
+            [
+                "risque de non-comparaison entre maintien de salaire et règle du dixième",
+                "risque d'assiette de calcul incomplète",
+                "risque de perte de rémunération nette non détectée",
+                "risque de traitement défavorable des salariés postés ou des éléments variables",
+                "risque de raccordement incorrect des périodes lors du passage à l'année civile",
+                "risque d'absence de régularisation rétroactive si des écarts sont confirmés",
+                "risque d'inventer une règle locale sans source précise",
+            ]
+        )
     if has_theme(themes, "disciplinaire"):
         risks.extend(["risque de procédure insuffisamment documentée", "risque de sanction disproportionnée à vérifier"])
     if has_theme(themes, "rémunération", "primes"):
@@ -998,6 +1283,24 @@ def missing_information(themes: list[dict[str, Any]]) -> list[str]:
                 "mesures de prévention immédiates",
             ]
         )
+    if is_paid_leave_theme(themes):
+        missing.extend(
+            [
+                "méthode actuellement appliquée par l'entreprise",
+                "date exacte d'un éventuel changement de méthode",
+                "règle utilisée avant et après le changement évoqué",
+                "comparaison maintien de salaire / règle du dixième",
+                "éléments inclus et exclus de l'assiette de calcul",
+                "période de référence et période d'acquisition utilisées",
+                "populations concernées",
+                "données de paie nécessaires au contrôle",
+                "exemples anonymisés de calcul",
+                "nombre de salariés contrôlés",
+                "montant global des écarts éventuels",
+                "historique des régularisations",
+                "paramétrage fonctionnel du logiciel de paie",
+            ]
+        )
     return dedupe(missing)
 
 
@@ -1029,6 +1332,23 @@ def documents_to_request_detailed(themes: list[dict[str, Any]]) -> list[str]:
                 "mesures de prévention immédiates",
             ]
         )
+    if is_paid_leave_theme(themes):
+        documents.extend(
+            [
+                "note détaillée de méthode de calcul de l'indemnité de congés payés",
+                "règle utilisée avant et après le changement évoqué",
+                "date exacte du changement de méthode ou de paramétrage",
+                "exemples anonymisés de calcul",
+                "comparaison dixième / maintien pour plusieurs profils",
+                "éléments de rémunération intégrés et exclus de l'assiette",
+                "nombre de salariés concernés",
+                "montant global des écarts éventuels",
+                "historique des régularisations",
+                "paramétrage fonctionnel du logiciel de paie pertinent, sans données personnelles inutiles",
+                "données de paie agrégées nécessaires au contrôle",
+                "échantillons anonymisés salariés postés, variables et profils standards",
+            ]
+        )
     if has_theme(themes, "rémunération", "primes"):
         documents.extend(["simulation paie", "population bénéficiaire", "coût global et critères d'attribution"])
     return dedupe(documents + documents_to_request(themes))
@@ -1058,6 +1378,19 @@ def main_cse_questions(themes: list[dict[str, Any]]) -> list[str]:
             "Quels scénarios de panne ont été évalués ?",
             "Quelles mesures de prévention immédiates sont prévues ?",
         ]
+    if is_paid_leave_theme(themes):
+        questions = [
+            "Quelle méthode de calcul de l'indemnité de congés payés est actuellement appliquée ?",
+            "Les deux méthodes, maintien de salaire et règle du dixième, sont-elles comparées pour chaque salarié lorsque le droit applicable l'exige ?",
+            "Quels éléments de rémunération entrent dans l'assiette du dixième ?",
+            "Quels éléments sont exclus de l'assiette et pour quel motif ?",
+            "Quelle conséquence a eu le passage éventuel à l'année civile ?",
+            "À quelle date le paramétrage ou la méthode de paie a-t-il changé ?",
+            "Combien de salariés ont été contrôlés ?",
+            "Existe-t-il des écarts défavorables ?",
+            "Une régularisation rétroactive est-elle prévue si des anomalies sont constatées ?",
+            "Quels exemples anonymisés avant/après pouvez-vous communiquer pour les salariés postés, variables et profils standards ?",
+        ]
     if has_theme(themes, "astreinte"):
         questions.extend(["Quels postes ou services seraient intégrés au dispositif d'astreinte ?", "Comment le repos après intervention serait-il garanti ?", "Quelle indemnisation est prévue pour l'astreinte et les interventions ?"])
     if has_theme(themes, "disciplinaire"):
@@ -1069,7 +1402,35 @@ def main_cse_questions(themes: list[dict[str, Any]]) -> list[str]:
     return dedupe(questions)[:10]
 
 
-def conditional_followups() -> list[dict[str, Any]]:
+def conditional_followups(themes: list[dict[str, Any]] | None = None) -> list[dict[str, Any]]:
+    if themes and is_paid_leave_theme(themes):
+        return [
+            {
+                "si_reponse_direction": "le logiciel calcule automatiquement",
+                "relances": [
+                    "Quel paramétrage est utilisé ?",
+                    "Qui l'a validé ?",
+                    "Depuis quelle date ?",
+                    "Un contrôle comparatif maintien de salaire / dixième a-t-il été réalisé ?",
+                ],
+            },
+            {
+                "si_reponse_direction": "il n'y a aucune perte",
+                "relances": [
+                    "Sur quel échantillon ?",
+                    "Avec quelle méthode de comparaison ?",
+                    "Pouvez-vous fournir des exemples anonymisés avant/après ?",
+                ],
+            },
+            {
+                "si_reponse_direction": "le changement d'année civile est neutre",
+                "relances": [
+                    "Quelle étude d'impact le démontre ?",
+                    "Comment les périodes de référence ont-elles été raccordées ?",
+                    "Comment les éléments variables ont-ils été traités ?",
+                ],
+            },
+        ]
     return [
         {"si_reponse_direction": "besoin d'organisation", "relances": ["Quel besoin précis ?", "Depuis quand ?", "Sur quels postes ?", "Avec quelles données ?"]},
         {"si_reponse_direction": "pas d'impact", "relances": ["Quelle évaluation permet de l'affirmer ?", "Qui l'a réalisée ?", "Quels indicateurs seront suivis ?"]},
@@ -1133,6 +1494,31 @@ def cfdt_position_to_build(themes: list[dict[str, Any]]) -> dict[str, Any]:
                 "absence de mesures de prévention immédiates",
             ]
         )
+    if is_paid_leave_theme(themes):
+        non_acceptables.extend(
+            [
+                "absence de méthode de calcul écrite",
+                "absence de comparaison maintien de salaire / règle du dixième",
+                "absence d'exemples anonymisés de calcul",
+                "absence de justification sur l'assiette retenue",
+                "absence de contrôle des salariés postés et éléments variables",
+                "absence de régularisation si des écarts défavorables sont confirmés",
+            ]
+        )
+        return {
+            "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
+            "points_negociables": ["période de contrôle", "calendrier de régularisation", "format des données agrégées", "échantillons anonymisés", "clause de revoyure paie"],
+            "contreparties_possibles": ["régularisation rétroactive", "contrôle annuel partagé", "information individuelle si un écart est identifié", "tableau de suivi CSE anonymisé"],
+            "conditions_minimales": [
+                "source locale ou conventionnelle identifiée, ou constat explicite d'absence de règle locale précise",
+                "méthode actuelle vérifiée",
+                "comparaison maintien de salaire / dixième documentée",
+                "assiette et périodes de référence explicitées",
+                "données de paie nécessaires communiquées sous forme proportionnée et anonymisée",
+            ],
+            "consultation_des_salaries": "Recueillir des exemples terrain de baisse constatée sans collecter de données personnelles inutiles.",
+            "alternative_a_travailler": "Demander un audit paie ciblé sur les congés payés avec restitution anonymisée au CSE.",
+        }
     return {
         "points_non_acceptables_sans_garantie": dedupe(non_acceptables),
         "points_negociables": ["périmètre", "durée d'application", "phase de test", "fréquence maximale", "modalités de suivi CSE/CSSCT"],
@@ -1165,7 +1551,7 @@ def build_detailed_cse_report(title: str, text: str, base: dict[str, Any], sourc
     missing = missing_information(themes)
     requested_documents = documents_to_request_detailed(themes)
     questions = main_cse_questions(themes)
-    relances = conditional_followups()
+    relances = conditional_followups(themes)
     cssct = cssct_point(themes, text)
     cfdt_position = cfdt_position_to_build(themes)
     synthesis = elected_summary(missing, requested_documents)
@@ -1428,6 +1814,66 @@ def command_analyze_document(args: argparse.Namespace) -> dict[str, Any]:
     return report
 
 
+def scenario_validation_text(report: dict[str, Any]) -> str:
+    return normalize(json.dumps(report, ensure_ascii=False, sort_keys=True))
+
+
+def validate_scenario(scenario: dict[str, Any], report: dict[str, Any], sources: list[dict[str, Any]], missing_sections: list[str]) -> list[dict[str, Any]]:
+    text = scenario_validation_text(report)
+    checks = [
+        {
+            "name": "sections_cse_requises",
+            "ok": not missing_sections,
+            "detail": "sections présentes" if not missing_sections else ", ".join(missing_sections),
+        },
+        {
+            "name": "sources_ou_prudence_locale",
+            "ok": bool(sources) or report.get("statut_source_locale") == NO_PRECISE_PAID_LEAVE_RULE,
+            "detail": f"{len(sources)} source(s) filtrée(s)",
+        },
+    ]
+
+    expected_theme = scenario.get("expected_theme")
+    if expected_theme:
+        detected = report.get("sujet_detecte") or report.get("A_sujet_principal") or ""
+        checks.append(
+            {
+                "name": "profil_metier_detecte",
+                "ok": normalize(detected) == normalize(expected_theme),
+                "detail": detected,
+            }
+        )
+
+    detected_themes = normalize(" ".join(theme_names(report.get("detected_themes", []))))
+    for forbidden_theme in scenario.get("forbidden_themes", []):
+        checks.append(
+            {
+                "name": f"theme_absent_{normalize(forbidden_theme).replace(' ', '_')}",
+                "ok": normalize(forbidden_theme) not in detected_themes,
+                "detail": forbidden_theme,
+            }
+        )
+
+    for required in scenario.get("must_contain", []):
+        checks.append(
+            {
+                "name": f"contenu_present_{normalize(required).replace(' ', '_')}",
+                "ok": normalize(required) in text,
+                "detail": required,
+            }
+        )
+
+    for forbidden in scenario.get("must_not_contain", []):
+        checks.append(
+            {
+                "name": f"contenu_absent_{normalize(forbidden).replace(' ', '_')}",
+                "ok": normalize(forbidden) not in text,
+                "detail": forbidden,
+            }
+        )
+    return checks
+
+
 def command_run_scenarios(args: argparse.Namespace) -> dict[str, Any]:
     ensure_dirs()
     rows = []
@@ -1439,7 +1885,8 @@ def command_run_scenarios(args: argparse.Namespace) -> dict[str, Any]:
             report = build_document_analysis(scenario["title"], scenario["text"], args.limit)
             sources = report["C_textes_locaux_potentiellement_concernes"]
         missing_sections = [section for section in REQUIRED_CSE_SECTIONS if not report.get(section)]
-        section_check_ok = not missing_sections and bool(sources)
+        validations = validate_scenario(scenario, report, sources, missing_sections)
+        section_check_ok = all(check["ok"] for check in validations)
         rows.append(
             {
                 "id": scenario["id"],
@@ -1447,6 +1894,7 @@ def command_run_scenarios(args: argparse.Namespace) -> dict[str, Any]:
                 "source_status": report["source_status"],
                 "section_check_ok": section_check_ok,
                 "missing_sections": missing_sections,
+                "validations": validations,
                 "questions_count": len(report.get("10_questions_principales_a_poser_en_cse", [])),
                 "comparison_rows_count": len(report.get("4_points_a_comparer_avant_apres", [])),
                 "top_sources": [
@@ -1469,8 +1917,12 @@ def command_run_scenarios(args: argparse.Namespace) -> dict[str, Any]:
     write_private_json(BRIDGE_TEST_DIR / f"integration-scenarios-{stamp()}.private.json", report)
     print("SCÉNARIOS D'INTÉGRATION")
     for row in rows:
-        status = "fiche OK" if row["section_check_ok"] else f"fiche incomplète: {', '.join(row['missing_sections'])}"
+        failed = [check["name"] for check in row["validations"] if not check["ok"]]
+        status = "fiche OK" if row["section_check_ok"] else f"contrôles KO: {', '.join(failed)}"
         print(f"- {row['id']} | {row['source_status']} | {status} | top sources: {len(row['top_sources'])}")
+    failed_rows = [row for row in rows if not row["section_check_ok"]]
+    if failed_rows:
+        raise SystemExit("Scénarios en échec: " + ", ".join(row["id"] for row in failed_rows))
     return report
 
 

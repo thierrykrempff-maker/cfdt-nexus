@@ -69,6 +69,7 @@ TOPIC_RULES = [
     ("travail posté", [r"travail poste", r"travail posté", r"\bposte\b", r"\bpostes\b"]),
     ("travail de nuit", [r"travail de nuit", r"\bnuit\b"]),
     ("repos", [r"\brepos\b", r"repos quotidien", r"repos hebdomadaire"]),
+    ("congés payés", [r"conges payes", r"congés payés", r"conge paye", r"congé payé", r"indemnite de conges", r"indemnité de congés", r"regle du dixieme", r"règle du dixième", r"\bdixieme\b", r"\bdixième\b", r"maintien de salaire", r"periode de reference", r"période de référence", r"periode d'acquisition", r"période d'acquisition", r"indemnite compensatrice de conges", r"indemnité compensatrice de congés"]),
     ("congés", [r"conges", r"congés", r"conge", r"congé"]),
     ("astreinte", [r"astreinte"]),
     ("classification", [r"classification", r"coefficient", r"classement"]),
@@ -100,6 +101,7 @@ BUSINESS_TESTS = [
     "durée du travail",
     "heures supplémentaires",
     "congé ancienneté",
+    "congés payés règle du dixième maintien de salaire",
     "départ retraite",
     "classification",
     "procédure disciplinaire",
@@ -174,6 +176,135 @@ SEARCH_PROFILES = [
             "épargne salariale": 16,
         },
         "penalty_title_terms": ["nao", "salaire", "salaires", "rémunération", "remuneration", "prime", "primes", "intéressement", "interessement", "participation", "pereco", "pee", "télétravail", "teletravail"],
+    },
+    {
+        "name": "paie / congés payés / indemnité de congés",
+        "triggers": [
+            "congés payés",
+            "conges payes",
+            "congé payé",
+            "conge paye",
+            "indemnité de congés",
+            "indemnite de conges",
+            "indemnité de congés payés",
+            "indemnite de conges payes",
+            "indemnité compensatrice",
+            "indemnite compensatrice",
+            "règle du dixième",
+            "regle du dixieme",
+            "dixième",
+            "dixieme",
+            "règle des 10",
+            "regle des 10",
+            "10 %",
+            "maintien de salaire",
+            "salaire de référence",
+            "salaire de reference",
+            "rémunération brute de référence",
+            "remuneration brute de reference",
+            "assiette",
+            "période de référence",
+            "periode de reference",
+            "période d'acquisition",
+            "periode d'acquisition",
+            "prise des congés",
+            "prise des conges",
+            "régularisation",
+            "regularisation",
+            "rappel de salaire",
+            "année civile",
+            "annee civile",
+        ],
+        "synonym_phrases": [
+            "congés payés",
+            "conges payes",
+            "congé payé",
+            "conge paye",
+            "indemnité de congés payés",
+            "indemnite de conges payes",
+            "indemnité de congés",
+            "indemnite de conges",
+            "indemnité compensatrice de congés payés",
+            "indemnite compensatrice de conges payes",
+            "règle du dixième",
+            "regle du dixieme",
+            "règle des 10 %",
+            "regle des 10 %",
+            "règle des 10 pour cent",
+            "regle des 10 pour cent",
+            "maintien de salaire",
+            "comparaison dixième maintien",
+            "comparaison dixieme maintien",
+            "salaire de référence",
+            "salaire de reference",
+            "rémunération brute de référence",
+            "remuneration brute de reference",
+            "assiette de calcul",
+            "période de référence",
+            "periode de reference",
+            "période d'acquisition",
+            "periode d'acquisition",
+            "prise des congés",
+            "prise des conges",
+            "régularisation",
+            "regularisation",
+            "rappel de salaire",
+            "année civile",
+            "annee civile",
+        ],
+        "topic_bonus": {
+            "congés payés": 64,
+            "congés": 54,
+            "temps de travail": 28,
+            "rémunération": 18,
+            "primes": 10,
+            "travail posté": 8,
+            "travail de nuit": 8,
+        },
+        "theme_bonus_cap": 120,
+        "doc_type_bonus": {
+            "convention collective": 18,
+            "accord entreprise": 14,
+            "avenant": 12,
+            "note collective": 8,
+        },
+        "title_terms": [
+            "congés",
+            "conges",
+            "congés payés",
+            "conges payes",
+            "indemnité de congés",
+            "indemnite de conges",
+            "dixième",
+            "dixieme",
+            "maintien de salaire",
+            "période de référence",
+            "periode de reference",
+            "temps de travail",
+            "convention collective",
+        ],
+        "penalty_topics": {
+            "droit syndical": 48,
+            "CSE": 42,
+            "dialogue social": 38,
+            "intéressement": 36,
+            "participation": 36,
+            "épargne salariale": 34,
+            "fin de carrière": 20,
+        },
+        "penalty_title_terms": [
+            "nao",
+            "prime",
+            "primes",
+            "intéressement",
+            "interessement",
+            "participation",
+            "pereco",
+            "pee",
+            "cet",
+            "forfait jours",
+            "forfait jour",
+        ],
     },
     {
         "name": "rémunération",
@@ -513,6 +644,32 @@ CSSCT_PRIORITY_TERMS = [
     "astreinte technique",
     "risque chimique",
     "risques industriels",
+]
+
+PAID_LEAVE_PRIORITY_TERMS = [
+    "congés payés",
+    "conges payes",
+    "congé payé",
+    "conge paye",
+    "indemnité de congés",
+    "indemnite de conges",
+    "indemnité de congés payés",
+    "indemnite de conges payes",
+    "règle du dixième",
+    "regle du dixieme",
+    "dixième",
+    "dixieme",
+    "règle des 10",
+    "regle des 10",
+    "maintien de salaire",
+    "période de référence",
+    "periode de reference",
+    "période d'acquisition",
+    "periode d'acquisition",
+    "indemnité compensatrice",
+    "indemnite compensatrice",
+    "passage à l'année civile",
+    "passage a l'annee civile",
 ]
 
 REMUNERATION_QUERY_TERMS = [
@@ -1535,7 +1692,12 @@ def detect_potential_relations(documents: list[dict[str, Any]]) -> list[dict[str
 def select_search_profile(query: str, query_tokens: list[str]) -> dict[str, Any] | None:
     normalized_query = normalize(query)
     cssct_priority = any(normalize(term) in normalized_query for term in CSSCT_PRIORITY_TERMS)
+    paid_leave_priority = any(normalize(term) in normalized_query for term in PAID_LEAVE_PRIORITY_TERMS)
     remuneration_query = any(normalize(term) in normalized_query for term in REMUNERATION_QUERY_TERMS)
+    if paid_leave_priority:
+        for profile in SEARCH_PROFILES:
+            if normalize(profile["name"]) == "paie / conges payes / indemnite de conges":
+                return profile
     if cssct_priority and not remuneration_query:
         for profile in SEARCH_PROFILES:
             if normalize(profile["name"]) == "cssct / securite process / maintenance":
@@ -1687,7 +1849,7 @@ def non_relevant_penalty(chunk: dict[str, Any], title_haystack: str, profile: di
         value = 70 if "nao" in {normalize(hit) for hit in title_hits} else min(55, 18 * len(title_hits))
         value = round(value * multiplier, 2)
         penalty += value
-        reasons.append(f"titre salarial/NAO sans passage repos clair ({', '.join(title_hits[:3])}): -{value}")
+        reasons.append(f"titre potentiellement hors sujet sans passage métier clair ({', '.join(title_hits[:3])}): -{value}")
     if clear_context and reasons:
         reasons.append("pénalité réduite : le passage parle clairement du sujet recherché")
     return penalty, reasons
