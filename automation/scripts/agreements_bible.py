@@ -469,9 +469,19 @@ SEARCH_PROFILES = [
             "recuperation",
             "repos compensateur",
             "majoration",
+            "majoration des heures supplémentaires",
+            "majoration des heures supplementaires",
             "solde",
             "pointage",
             "badgeage",
+            "durée du travail",
+            "duree du travail",
+            "35 heures",
+            "35 h",
+            "35h",
+            "horaire",
+            "horaires",
+            "cycle de travail",
             "temps de travail effectif",
             "heures effectuées",
             "heures effectuees",
@@ -494,9 +504,19 @@ SEARCH_PROFILES = [
             "recuperation",
             "repos compensateur",
             "majoration",
+            "majoration des heures supplémentaires",
+            "majoration des heures supplementaires",
             "solde",
             "pointage",
             "badgeage",
+            "durée du travail",
+            "duree du travail",
+            "35 heures",
+            "35 h",
+            "35h",
+            "horaire",
+            "horaires",
+            "cycle de travail",
             "temps de travail effectif",
             "heures effectuées",
             "heures effectuees",
@@ -511,6 +531,9 @@ SEARCH_PROFILES = [
         "topic_bonus": {
             "heures supplémentaires": 70,
             "temps de travail": 46,
+            "5x8": 26,
+            "travail posté": 18,
+            "travail de nuit": 14,
             "repos": 24,
             "rémunération": 14,
             "primes": 10,
@@ -522,7 +545,7 @@ SEARCH_PROFILES = [
             "avenant": 10,
             "note collective": 8,
         },
-        "title_terms": ["heures supplémentaires", "heures supplementaires", "compteur", "compteurs", "temps de travail", "repos compensateur", "pointage", "badgeage"],
+        "title_terms": ["heures supplémentaires", "heures supplementaires", "35 h", "35h", "temps de travail", "durée du travail", "duree du travail", "horaire", "horaires", "annualisation", "modulation", "compteur", "compteurs", "repos compensateur", "pointage", "badgeage"],
         "penalty_topics": {
             "droit syndical": 44,
             "CSE": 36,
@@ -533,7 +556,7 @@ SEARCH_PROFILES = [
             "securite process": 22,
             "maintenance": 22,
         },
-        "penalty_title_terms": ["droit syndical", "mandat", "heures de delegation", "credit d heures", "nao", "interessement", "participation", "provox", "maintenance"],
+        "penalty_title_terms": ["droit syndical", "mandat", "heures de delegation", "credit d heures", "nao", "salaire", "salaires", "remuneration", "rémunération", "prime", "primes", "interessement", "intéressement", "participation", "provox", "maintenance"],
     },
     {
         "name": "rémunération",
@@ -2163,6 +2186,25 @@ def non_relevant_penalty(chunk: dict[str, Any], title_haystack: str, profile: di
         reasons.append(f"titre potentiellement hors sujet sans passage métier clair ({', '.join(title_hits[:3])}): -{value}")
     if clear_context and reasons:
         reasons.append("pénalité réduite : le passage parle clairement du sujet recherché")
+    if normalize(profile.get("name", "")) == "temps de travail / heures supplementaires / compteurs":
+        combined = normalize(f"{chunk.get('text', '')} {title_haystack}")
+        overtime_context = any(normalize(term) in combined for term in OVERTIME_COUNTER_PRIORITY_TERMS)
+        remuneration_context = any(
+            term in combined
+            for term in [
+                "harmonisation remunerations",
+                "harmonisation remuneration",
+                "salaire",
+                "salaires",
+                "remuneration",
+                "prime",
+                "primes",
+                "majoration",
+            ]
+        )
+        if remuneration_context and not overtime_context:
+            penalty += 80
+            reasons.append("document rémunération générale sans élément précis de temps de travail/compteur: -80")
     return penalty, reasons
 
 
@@ -2255,6 +2297,32 @@ def score_chunk_details(chunk: dict[str, Any], query_tokens: list[str], exact_qu
     }
 
 
+def diversify_scored_rows(rows: list[tuple[float, dict[str, Any], dict[str, Any]]], limit: int) -> list[tuple[float, dict[str, Any], dict[str, Any]]]:
+    if len(rows) <= limit:
+        return rows
+    best_score = rows[0][0] if rows else 0
+    selected = []
+    selected_chunk_ids = set()
+    by_document: Counter[str] = Counter()
+    for score, chunk, details in rows:
+        document = str(chunk.get("filename") or chunk.get("document_id") or "document local")
+        cap = 3 if best_score and score >= best_score * 0.85 else 2
+        if by_document[document] >= cap:
+            continue
+        selected.append((score, chunk, details))
+        selected_chunk_ids.add(chunk.get("chunk_id"))
+        by_document[document] += 1
+        if len(selected) >= limit:
+            return selected
+    for score, chunk, details in rows:
+        if chunk.get("chunk_id") in selected_chunk_ids:
+            continue
+        selected.append((score, chunk, details))
+        if len(selected) >= limit:
+            break
+    return selected[:limit]
+
+
 def search_index(args: argparse.Namespace, save: bool = True, quiet: bool = False) -> dict[str, Any]:
     ensure_dirs()
     chunks = read_jsonl(INDEX_DIR / "chunks.private.jsonl")
@@ -2281,7 +2349,7 @@ def search_index(args: argparse.Namespace, save: bool = True, quiet: bool = Fals
         results.append((score, chunk, details))
 
     results.sort(key=lambda item: item[0], reverse=True)
-    selected = results[: args.limit]
+    selected = diversify_scored_rows(results, args.limit)
     sources = [format_source(score, chunk, query_tokens, details) for score, chunk, details in selected]
     confidence = "fort" if selected and selected[0][0] >= 35 else "moyen" if selected else "faible"
     response = {

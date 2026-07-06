@@ -41,6 +41,54 @@ CLASSIFICATION_THEME = "classification / emploi / carrière / coefficient"
 INAPTITUDE_THEME = "inaptitude / reclassement / santé au travail"
 OVERTIME_COUNTER_THEME = "temps de travail / heures supplémentaires / compteurs"
 
+PROJECT_CONTEXT = "projet collectif / modification d'organisation"
+PAYROLL_CONTROL_CONTEXT = "anomalie ou contrôle de paie"
+INDIVIDUAL_HR_CONTEXT = "situation individuelle RH"
+CSSCT_CONTEXT = "santé-sécurité / CSSCT"
+COLLECTIVE_RELATIONS_CONTEXT = "relations collectives / mandat"
+
+CSSCT_PROCESS_SOURCE_MARKERS = [
+    "provox",
+    "sncc",
+    "analyseur",
+    "analyseurs",
+    "climatisation",
+    "pièces critiques",
+    "pieces critiques",
+    "pièces de rechange",
+    "pieces de rechange",
+    "sécurité process",
+    "securite process",
+    "plan de contingence",
+    "duerp",
+]
+
+OVERTIME_SOURCE_MARKERS = [
+    "heures supplémentaires",
+    "heures supplementaires",
+    "durée du travail",
+    "duree du travail",
+    "temps de travail",
+    "35 heures",
+    "35 h",
+    "35h",
+    "annualisation",
+    "modulation",
+    "contingent",
+    "repos compensateur",
+    "récupération",
+    "recuperation",
+    "compteur",
+    "compteurs",
+    "pointage",
+    "badgeage",
+    "horaire",
+    "horaires",
+    "cycle de travail",
+    "majoration des heures supplémentaires",
+    "majoration des heures supplementaires",
+]
+
 PAID_LEAVE_SOURCE_MARKERS = [
     "congés payés",
     "conges payes",
@@ -705,6 +753,7 @@ SCENARIOS = [
         "forbidden_themes": ["relations collectives / droit syndical"],
         "allow_no_sources": True,
         "must_contain": [
+            "récupérer fiche de poste et historique",
             "fiche de poste actuelle",
             "fonctions réellement exercées",
             "niveau d'autonomie",
@@ -719,6 +768,15 @@ SCENARIOS = [
             "heures de délégation",
             "mandat syndical",
             "moyens syndicaux",
+            "provox",
+            "sncc",
+            "analyseurs",
+            "pièces critiques",
+            "pieces critiques",
+            "sécurité process",
+            "securite process",
+            "duerp",
+            "climatisation",
         ],
     },
     {
@@ -731,6 +789,7 @@ SCENARIOS = [
         "forbidden_themes": ["relations collectives / droit syndical", "CSSCT / sécurité process / maintenance"],
         "allow_no_sources": True,
         "must_contain": [
+            "vérifier avis et restrictions",
             "avis du médecin du travail",
             "restrictions médicales",
             "étude de poste",
@@ -745,6 +804,13 @@ SCENARIOS = [
             "heures de délégation",
             "mandat syndical",
             "moyens syndicaux",
+            "projet écrit complet",
+            "tableau comparatif ancien/nouveau",
+            "fréquence prévue",
+            "durée de la mesure",
+            "contreparties proposées",
+            "planning ou simulations",
+            "historique des dérogations",
         ],
     },
     {
@@ -756,9 +822,12 @@ SCENARIOS = [
         "expected_theme": OVERTIME_COUNTER_THEME,
         "forbidden_themes": ["relations collectives / droit syndical"],
         "allow_no_sources": True,
+        "min_source_documents": 2,
         "must_contain": [
+            "fixer la période de contrôle",
             "relevés de pointage",
             "compteurs",
+            "paie",
             "heures validées",
             "heures refusées",
             "règles de majoration",
@@ -773,6 +842,15 @@ SCENARIOS = [
             "heures de délégation",
             "mandat syndical",
             "moyens syndicaux",
+            "projet écrit complet",
+            "tableau comparatif ancien/nouveau",
+            "montant exact est prévu",
+            "population bénéficiaire",
+            "sécurité process",
+            "securite process",
+            "duerp",
+            "provox",
+            "sncc",
         ],
     },
 ]
@@ -811,6 +889,34 @@ def write_private_json(path: Path, data: dict[str, Any]) -> None:
 
 def normalize(value: str) -> str:
     return bible.normalize(value)
+
+
+def compatible_theme_names(primary_theme: str) -> set[str]:
+    primary = normalize(primary_theme)
+    if primary == normalize(CLASSIFICATION_THEME):
+        return {
+            normalize(CLASSIFICATION_THEME),
+            "remuneration / primes",
+        }
+    if primary == normalize(INAPTITUDE_THEME):
+        return {normalize(INAPTITUDE_THEME)}
+    if primary == normalize(OVERTIME_COUNTER_THEME):
+        return {normalize(OVERTIME_COUNTER_THEME)}
+    if primary == normalize(PAID_LEAVE_THEME):
+        return {
+            normalize(PAID_LEAVE_THEME),
+            "temps de travail / repos / 5x8",
+        }
+    return set()
+
+
+def apply_theme_compatibility(themes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if not themes:
+        return themes
+    allowed = compatible_theme_names(themes[0]["theme"])
+    if not allowed:
+        return themes
+    return [theme for theme in themes if normalize(theme["theme"]) in allowed]
 
 
 def detect_themes(text: str) -> list[dict[str, Any]]:
@@ -865,7 +971,7 @@ def detect_themes(text: str) -> list[dict[str, Any]]:
                 "cssct / securite process / maintenance",
             }
         ]
-    return detected
+    return apply_theme_compatibility(detected)
 
 
 def generated_queries(text: str, themes: list[dict[str, Any]]) -> list[str]:
@@ -898,12 +1004,12 @@ def search_bible(query: str, limit: int) -> list[dict[str, Any]]:
         rows.append((details["total"], chunk, details))
     rows.sort(key=lambda item: item[0], reverse=True)
     sources = []
-    for score, chunk, details in rows[:limit]:
+    for score, chunk, details in rows[: max(limit * 5, limit)]:
         source = bible.format_source(score, chunk, query_tokens, details)
         source["source_status"] = classify_source(score, source)
         source["confidence_level"] = confidence_level(score)
         sources.append(source)
-    return sources
+    return diversify_sources(sources, limit)
 
 
 def classify_source(score: float, source: dict[str, Any]) -> str:
@@ -922,6 +1028,34 @@ def confidence_level(score: float) -> str:
     return "faible"
 
 
+def diversify_sources(sources: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    if len(sources) <= limit:
+        return sources
+    best_score = float(sources[0].get("match_score") or 0)
+    selected = []
+    by_document: Counter[str] = Counter()
+    selected_ids = set()
+    for source in sources:
+        document = str(source.get("document") or source.get("document_id") or "document local")
+        score = float(source.get("match_score") or 0)
+        cap = 3 if best_score and score >= best_score * 0.85 else 2
+        if by_document[document] >= cap:
+            continue
+        selected.append(source)
+        selected_ids.add(source.get("chunk_id"))
+        by_document[document] += 1
+        if len(selected) >= limit:
+            return selected
+    for source in sources:
+        chunk_id = source.get("chunk_id")
+        if chunk_id in selected_ids:
+            continue
+        selected.append(source)
+        if len(selected) >= limit:
+            break
+    return selected[:limit]
+
+
 def merge_sources(searches: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
     by_chunk = {}
     for search in searches:
@@ -934,7 +1068,8 @@ def merge_sources(searches: list[dict[str, Any]], limit: int) -> list[dict[str, 
                 merged = dict(source)
                 merged["matched_query"] = search["query"]
                 by_chunk[chunk_id] = merged
-    return sorted(by_chunk.values(), key=lambda item: item["match_score"], reverse=True)[:limit]
+    ranked = sorted(by_chunk.values(), key=lambda item: item["match_score"], reverse=True)
+    return diversify_sources(ranked, limit)
 
 
 def main_subject(text: str, themes: list[dict[str, Any]]) -> str:
@@ -979,6 +1114,13 @@ def documents_to_request(themes: list[dict[str, Any]]) -> list[str]:
     for theme in themes:
         docs.extend(theme["documents_to_request"])
     return dedupe(docs + ["texte projeté", "note d'impact", "calendrier de mise en œuvre"])
+
+
+def theme_documents_to_request(themes: list[dict[str, Any]]) -> list[str]:
+    docs = []
+    for theme in themes:
+        docs.extend(theme["documents_to_request"])
+    return dedupe(docs)
 
 
 def dedupe(values: list[str]) -> list[str]:
@@ -1057,6 +1199,18 @@ def is_overtime_counter_theme(themes: list[dict[str, Any]]) -> bool:
     return has_theme(themes, OVERTIME_COUNTER_THEME)
 
 
+def cse_context(themes: list[dict[str, Any]]) -> str:
+    if is_inaptitude_theme(themes) or is_classification_theme(themes):
+        return INDIVIDUAL_HR_CONTEXT
+    if is_overtime_counter_theme(themes) or is_paid_leave_theme(themes):
+        return PAYROLL_CONTROL_CONTEXT
+    if is_cssct_theme(themes):
+        return CSSCT_CONTEXT
+    if has_theme(themes, "droit syndical", "relations collectives"):
+        return COLLECTIVE_RELATIONS_CONTEXT
+    return PROJECT_CONTEXT
+
+
 def paid_leave_specific_source(source: dict[str, Any]) -> bool:
     haystack = normalize(
         " ".join(
@@ -1080,17 +1234,37 @@ def paid_leave_specific_source(source: dict[str, Any]) -> bool:
     return has_leave and has_pay_context
 
 
-def is_remuneration_source(source: dict[str, Any]) -> bool:
-    haystack = normalize(
+def source_haystack(source: dict[str, Any]) -> str:
+    return normalize(
         " ".join(
             [
                 str(source.get("document") or ""),
                 str(source.get("matched_query") or ""),
                 str(source.get("ranking_profile") or ""),
+                str(source.get("article_or_section") or ""),
+                str(source.get("location") or ""),
+                str(source.get("excerpt") or ""),
                 " ".join(str(reason) for reason in source.get("ranking_reasons", [])),
             ]
         )
     )
+
+
+def has_any_marker(source: dict[str, Any], markers: list[str]) -> bool:
+    haystack = source_haystack(source)
+    return any(normalize(marker) in haystack for marker in markers)
+
+
+def is_cssct_process_source(source: dict[str, Any]) -> bool:
+    return has_any_marker(source, CSSCT_PROCESS_SOURCE_MARKERS)
+
+
+def is_overtime_specific_source(source: dict[str, Any]) -> bool:
+    return has_any_marker(source, OVERTIME_SOURCE_MARKERS)
+
+
+def is_remuneration_source(source: dict[str, Any]) -> bool:
+    haystack = source_haystack(source)
     remuneration_terms = [
         "nao",
         "paie",
@@ -1113,6 +1287,15 @@ def is_remuneration_source(source: dict[str, Any]) -> bool:
 def cse_sources_for_theme(sources: list[dict[str, Any]], themes: list[dict[str, Any]]) -> list[dict[str, Any]]:
     if is_paid_leave_theme(themes):
         return [source for source in sources if paid_leave_specific_source(source)]
+    if is_classification_theme(themes):
+        return [source for source in sources if not is_cssct_process_source(source)]
+    if is_inaptitude_theme(themes):
+        return [source for source in sources if not is_cssct_process_source(source)]
+    if is_overtime_counter_theme(themes):
+        specific = [source for source in sources if is_overtime_specific_source(source)]
+        if specific:
+            return specific
+        return [source for source in sources if not is_remuneration_source(source)]
     if not is_cssct_theme(themes):
         return sources
     return [source for source in sources if not is_remuneration_source(source)]
@@ -1121,6 +1304,8 @@ def cse_sources_for_theme(sources: list[dict[str, Any]], themes: list[dict[str, 
 def cse_source_status(sources: list[dict[str, Any]], themes: list[dict[str, Any]], fallback: str) -> str:
     if is_paid_leave_theme(themes) and not sources:
         return NO_PRECISE_PAID_LEAVE_RULE
+    if (is_classification_theme(themes) or is_inaptitude_theme(themes) or is_overtime_counter_theme(themes)) and not sources:
+        return NO_RELEVANT_SOURCE
     if is_cssct_theme(themes) and not sources:
         return NO_DIRECT_CSSCT_SOURCE
     if sources:
@@ -1493,6 +1678,42 @@ def comparison_elements(themes: list[dict[str, Any]]) -> list[str]:
 
 def comparison_table(themes: list[dict[str, Any]], sources: list[dict[str, Any]]) -> list[dict[str, str]]:
     refs = [source_reference(source) for source in sources] or ["source locale à identifier"]
+    if is_classification_theme(themes):
+        return [
+            {
+                "element": element,
+                "situation_actuelle": f"À documenter avec {refs[index % len(refs)]} et les éléments RH du poste.",
+                "projet_direction": "Demander la position motivée de la direction sur le coefficient et les critères retenus.",
+                "ecart_ou_changement": "Écart à objectiver entre fonctions réelles, fiche de poste et critères conventionnels.",
+                "risque_ou_effet_possible": "Risque de sous-classification ou d'inégalité avec des salariés similaires.",
+                "source_a_verifier": refs[index % len(refs)],
+            }
+            for index, element in enumerate(comparison_elements(themes))
+        ]
+    if is_inaptitude_theme(themes):
+        return [
+            {
+                "element": element,
+                "situation_actuelle": f"À vérifier avec {refs[index % len(refs)]} et les pièces du dossier individuel.",
+                "projet_direction": "Demander les recherches, adaptations ou motifs d'impossibilité déjà documentés.",
+                "ecart_ou_changement": "Écart à objectiver entre restrictions médicales, postes disponibles et recherches réalisées.",
+                "risque_ou_effet_possible": "Risque de reclassement insuffisant ou de rupture sans traçabilité complète.",
+                "source_a_verifier": refs[index % len(refs)],
+            }
+            for index, element in enumerate(comparison_elements(themes))
+        ]
+    if is_overtime_counter_theme(themes):
+        return [
+            {
+                "element": element,
+                "situation_actuelle": f"À contrôler avec {refs[index % len(refs)]}, pointage, compteur et paie.",
+                "projet_direction": "Demander les règles de validation et le rapprochement des données sur la période contrôlée.",
+                "ecart_ou_changement": "Écart à mesurer entre heures effectuées, validées, payées, récupérées et majorées.",
+                "risque_ou_effet_possible": "Risque d'heures non reconnues, non majorées ou mal récupérées.",
+                "source_a_verifier": refs[index % len(refs)],
+            }
+            for index, element in enumerate(comparison_elements(themes))
+        ]
     if is_paid_leave_theme(themes):
         return [
             {
@@ -1519,6 +1740,30 @@ def comparison_table(themes: list[dict[str, Any]], sources: list[dict[str, Any]]
 
 
 def employee_consequences(themes: list[dict[str, Any]]) -> list[dict[str, str]]:
+    if is_classification_theme(themes):
+        return [
+            {"categorie": "carrière", "analyse": "Impact possible sur évolution professionnelle, reconnaissance du poste et trajectoire de carrière."},
+            {"categorie": "rémunération", "analyse": "Effet possible sur salaire de base, primes liées au coefficient ou évolutions futures."},
+            {"categorie": "égalité de traitement", "analyse": "Comparer la situation avec des salariés aux fonctions, responsabilités et niveaux d'autonomie similaires."},
+            {"categorie": "reconnaissance du travail réel", "analyse": "Objectiver l'écart éventuel entre fiche de poste et fonctions réellement exercées."},
+            {"categorie": "évolution de poste", "analyse": "Vérifier si l'historique du poste justifie une demande de réexamen du coefficient."},
+        ]
+    if is_inaptitude_theme(themes):
+        return [
+            {"categorie": "maintien dans l'emploi", "analyse": "Point central : vérifier les adaptations, formations et postes compatibles avant toute conclusion."},
+            {"categorie": "santé au travail", "analyse": "Respecter les restrictions médicales et éviter toute exposition incompatible avec l'avis du médecin du travail."},
+            {"categorie": "reclassement", "analyse": "Contrôler le périmètre, la réalité et la traçabilité des recherches de reclassement."},
+            {"categorie": "rupture du contrat", "analyse": "Risque de licenciement pour inaptitude si l'impossibilité de reclassement est invoquée."},
+            {"categorie": "confidentialité", "analyse": "Limiter les échanges CSE aux informations nécessaires, sans données médicales inutiles."},
+        ]
+    if is_overtime_counter_theme(themes):
+        return [
+            {"categorie": "rémunération", "analyse": "Impact direct si des heures effectuées ne sont pas payées, majorées ou récupérées correctement."},
+            {"categorie": "temps de repos", "analyse": "Vérifier les repos compensateurs, récupérations et effets sur la fatigue."},
+            {"categorie": "compteurs", "analyse": "Risque d'écart entre pointage, compteur logiciel et bulletin de paie."},
+            {"categorie": "charge de travail", "analyse": "Identifier si les heures supplémentaires traduisent un besoin structurel d'effectifs ou d'organisation."},
+            {"categorie": "régularisation", "analyse": "Prévoir correction des compteurs et régularisation paie si des écarts sont confirmés."},
+        ]
     cssct_sensitive = is_cssct_theme(themes) or is_inaptitude_theme(themes) or is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte")
     remuneration_sensitive = has_theme(themes, "rémunération", "primes") or is_paid_leave_theme(themes) or is_overtime_counter_theme(themes) or is_classification_theme(themes)
     consequences = [
@@ -1646,14 +1891,30 @@ def benefit_balance(themes: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
-    risks = [
-        "risque juridique à qualifier avec une source précise",
-        "compatibilité à analyser avec les textes locaux, la convention collective et le Code du travail",
-        "risque d'absence de contrepartie",
-        "risque d'impact sur un autre accord",
-        "risque de perte de droit si le projet modifie une garantie existante",
-    ]
-    if is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte"):
+    context = cse_context(themes)
+    if context == INDIVIDUAL_HR_CONTEXT:
+        risks = [
+            "risque juridique à qualifier avec une source précise",
+            "compatibilité à analyser avec les textes locaux, la convention collective et le Code du travail",
+            "risque de dossier insuffisamment documenté",
+            "risque d'égalité de traitement ou de confidentialité à maîtriser",
+        ]
+    elif context == PAYROLL_CONTROL_CONTEXT:
+        risks = [
+            "risque juridique à qualifier avec une source précise",
+            "compatibilité à analyser avec les textes locaux, la convention collective et le Code du travail",
+            "risque d'écart paie non régularisé",
+            "risque de données insuffisantes pour contrôler la période",
+        ]
+    else:
+        risks = [
+            "risque juridique à qualifier avec une source précise",
+            "compatibilité à analyser avec les textes locaux, la convention collective et le Code du travail",
+            "risque d'absence de contrepartie",
+            "risque d'impact sur un autre accord",
+            "risque de perte de droit si le projet modifie une garantie existante",
+        ]
+    if is_worktime_rest_theme(themes) or has_theme(themes, "astreinte"):
         risks.extend(
             [
                 "risque santé-sécurité",
@@ -1712,6 +1973,8 @@ def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
     if is_overtime_counter_theme(themes):
         risks.extend(
             [
+                "risque fatigue si le volume d'heures est important",
+                "risque de récupération insuffisante",
                 "risque d'heures effectuées non validées",
                 "risque d'heures supplémentaires non payées ou non majorées",
                 "risque d'écart entre pointage, badgeage, compteur et paie",
@@ -1728,16 +1991,51 @@ def risk_watchpoints(themes: list[dict[str, Any]]) -> list[str]:
 
 
 def missing_information(themes: list[dict[str, Any]]) -> list[str]:
-    missing = [
-        "texte exact du projet",
-        "comparaison avant/après",
-        "salariés concernés",
-        "fréquence prévue",
-        "durée de la mesure",
-        "justification direction",
-        "données chiffrées",
-        "contreparties proposées",
-    ]
+    context = cse_context(themes)
+    if context == PAYROLL_CONTROL_CONTEXT:
+        missing = [
+            "période contrôlée",
+            "salariés ou services concernés",
+            "règle appliquée",
+            "données chiffrées nécessaires au contrôle",
+            "écarts constatés ou allégués",
+            "modalités de correction ou régularisation",
+        ]
+    elif context == INDIVIDUAL_HR_CONTEXT:
+        missing = [
+            "situation exacte à examiner",
+            "salarié, emploi ou poste concerné",
+            "dates clés du dossier",
+            "documents RH existants",
+            "position écrite ou justification de la direction",
+        ]
+    elif context == CSSCT_CONTEXT:
+        missing = [
+            "périmètre technique ou organisationnel concerné",
+            "faits, incidents ou alertes recensés",
+            "analyse d'impact santé-sécurité",
+            "mesures de prévention existantes",
+            "calendrier de traitement",
+        ]
+    elif context == COLLECTIVE_RELATIONS_CONTEXT:
+        missing = [
+            "mandats ou représentants concernés",
+            "accord ou règle de fonctionnement applicable",
+            "moyens actuels",
+            "modification envisagée",
+            "garanties proposées",
+        ]
+    else:
+        missing = [
+            "texte exact du projet",
+            "comparaison avant/après",
+            "salariés concernés",
+            "fréquence prévue",
+            "durée de la mesure",
+            "justification direction",
+            "données chiffrées",
+            "contreparties proposées",
+        ]
     if is_worktime_rest_theme(themes) or has_theme(themes, "astreinte"):
         missing.extend(["analyse de risques", "avis du médecin du travail si pertinent", "consultation CSSCT si pertinente", "mesures de prévention"])
     if is_cssct_theme(themes):
@@ -1822,14 +2120,46 @@ def missing_information(themes: list[dict[str, Any]]) -> list[str]:
 
 
 def documents_to_request_detailed(themes: list[dict[str, Any]]) -> list[str]:
-    documents = [
-        "projet écrit complet",
-        "tableau comparatif ancien/nouveau",
-        "note explicative direction",
-        "analyse d'impact",
-        "planning ou simulations",
-        "historique des dérogations existantes",
-    ]
+    context = cse_context(themes)
+    if context == PAYROLL_CONTROL_CONTEXT:
+        documents = [
+            "période contrôlée",
+            "extractions anonymisées utiles au contrôle",
+            "règles applicables",
+            "rapprochement avec bulletins de paie si pertinent",
+            "exemples anonymisés",
+        ]
+    elif context == INDIVIDUAL_HR_CONTEXT:
+        documents = [
+            "chronologie du dossier",
+            "documents RH disponibles",
+            "échanges écrits avec le salarié si communicables",
+            "justification écrite de la direction",
+        ]
+    elif context == CSSCT_CONTEXT:
+        documents = [
+            "état des lieux documenté",
+            "analyse d'impact santé-sécurité",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+        ]
+    elif context == COLLECTIVE_RELATIONS_CONTEXT:
+        documents = [
+            "accord ou règle de fonctionnement applicable",
+            "état actuel des moyens",
+            "projet de modification des moyens",
+            "garanties proposées",
+        ]
+    else:
+        documents = [
+            "projet écrit complet",
+            "tableau comparatif ancien/nouveau",
+            "note explicative direction",
+            "analyse d'impact",
+            "planning ou simulations",
+            "historique des dérogations existantes",
+        ]
     if is_worktime_rest_theme(themes) or has_theme(themes, "astreinte"):
         documents.extend(["données d'absentéisme/fatigue si pertinentes", "évaluation des risques", "mise à jour DUERP si pertinente", "avis ou contribution CSSCT si nécessaire"])
     if is_cssct_theme(themes):
@@ -1913,7 +2243,7 @@ def documents_to_request_detailed(themes: list[dict[str, Any]]) -> list[str]:
         )
     if has_theme(themes, "rémunération", "primes"):
         documents.extend(["simulation paie", "population bénéficiaire", "coût global et critères d'attribution"])
-    return dedupe(documents + documents_to_request(themes))
+    return dedupe(documents + theme_documents_to_request(themes))
 
 
 def main_cse_questions(themes: list[dict[str, Any]]) -> list[str]:
@@ -2051,6 +2381,30 @@ def conditional_followups(themes: list[dict[str, Any]] | None = None) -> list[di
 
 
 def cssct_point(themes: list[dict[str, Any]], text: str) -> dict[str, Any]:
+    if is_classification_theme(themes):
+        return {
+            "statut": "Point CSSCT non prioritaire",
+            "questions_cssct": ["Vérifier uniquement si l'évolution de poste révèle aussi un risque collectif sur charge de travail, organisation ou santé."],
+        }
+    if is_overtime_counter_theme(themes):
+        return {
+            "statut": "Point fatigue / récupération à vérifier si le volume d'heures est significatif",
+            "questions_cssct": [
+                "Quel volume d'heures supplémentaires est constaté sur la période contrôlée ?",
+                "Les récupérations et repos compensateurs ont-ils été pris effectivement ?",
+                "Les compteurs révèlent-ils une surcharge durable sur certains postes ou équipes ?",
+                "Des mesures d'organisation ou de prévention sont-elles nécessaires si le volume est structurel ?",
+            ],
+        }
+    if is_inaptitude_theme(themes):
+        return {
+            "statut": "Point santé au travail individuel - CSSCT collective à vérifier seulement si un risque collectif apparaît",
+            "questions_cssct": [
+                "Les restrictions médicales imposent-elles une adaptation de l'organisation collective ?",
+                "Existe-t-il plusieurs situations similaires révélant un risque collectif ?",
+                "Une étude de poste ou une prévention collective doit-elle être actualisée ?",
+            ],
+        }
     normalized = normalize(text)
     probable = is_cssct_theme(themes) or is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte") or any(
         term in normalized for term in ["fatigue", "nuit", "securite", "sante", "risque"]
@@ -2089,12 +2443,41 @@ def cssct_point(themes: list[dict[str, Any]], text: str) -> dict[str, Any]:
 
 
 def cfdt_position_to_build(themes: list[dict[str, Any]]) -> dict[str, Any]:
-    non_acceptables = [
-        "absence de projet écrit",
-        "absence de comparaison avant/après",
-        "absence d'analyse d'impact pour les salariés",
-        "absence de garantie ou de suivi",
-    ]
+    context = cse_context(themes)
+    if context == PAYROLL_CONTROL_CONTEXT:
+        non_acceptables = [
+            "absence de période de contrôle",
+            "absence de données vérifiables",
+            "absence de rapprochement avec la paie si pertinent",
+            "absence de correction ou régularisation des écarts confirmés",
+        ]
+    elif context == INDIVIDUAL_HR_CONTEXT:
+        non_acceptables = [
+            "absence de pièces du dossier",
+            "absence de justification écrite",
+            "absence de traçabilité des échanges",
+            "absence de vérification des critères applicables",
+        ]
+    elif context == CSSCT_CONTEXT:
+        non_acceptables = [
+            "absence d'analyse d'impact santé-sécurité",
+            "absence de mesures de prévention",
+            "absence de calendrier de traitement",
+            "absence de suivi CSE/CSSCT",
+        ]
+    elif context == COLLECTIVE_RELATIONS_CONTEXT:
+        non_acceptables = [
+            "absence de texte applicable",
+            "absence d'état des moyens actuels",
+            "absence de garanties pour l'exercice du mandat",
+        ]
+    else:
+        non_acceptables = [
+            "absence de projet écrit",
+            "absence de comparaison avant/après",
+            "absence d'analyse d'impact pour les salariés",
+            "absence de garantie ou de suivi",
+        ]
     if is_worktime_rest_theme(themes) or is_overtime_counter_theme(themes) or has_theme(themes, "astreinte"):
         non_acceptables.extend(["réduction de repos ou hausse de contrainte sans prévention", "banalisation d'une dérogation"])
     if is_cssct_theme(themes):
@@ -2171,7 +2554,38 @@ def cfdt_position_to_build(themes: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def elected_summary(missing: list[str], documents: list[str]) -> dict[str, Any]:
+def elected_summary(missing: list[str], documents: list[str], themes: list[dict[str, Any]]) -> dict[str, Any]:
+    if is_classification_theme(themes):
+        return {
+            "avant_de_prendre_position_demander_en_priorite": [
+                "récupérer fiche de poste et historique",
+                "comparer fonctions réelles aux critères applicables",
+                "objectiver autonomie, technicité et responsabilités",
+                "construire la demande de réexamen",
+            ],
+            "conclusion": "Position CFDT à construire après comparaison factuelle entre travail réel, critères conventionnels et situations similaires.",
+        }
+    if is_inaptitude_theme(themes):
+        return {
+            "avant_de_prendre_position_demander_en_priorite": [
+                "vérifier avis et restrictions",
+                "contrôler étude de poste et adaptations",
+                "vérifier postes disponibles et périmètre",
+                "contrôler traçabilité du reclassement",
+            ],
+            "conclusion": "Position CFDT à construire après contrôle de la recherche loyale de reclassement et des adaptations possibles.",
+        }
+    if is_overtime_counter_theme(themes):
+        return {
+            "avant_de_prendre_position_demander_en_priorite": [
+                "fixer la période de contrôle",
+                "rapprocher pointage, compteur et paie",
+                "vérifier majorations, récupération et repos compensateurs",
+                "identifier les écarts individuels et collectifs",
+                "demander correction et régularisation si nécessaire",
+            ],
+            "conclusion": "Position CFDT à construire après rapprochement chiffré entre heures effectuées, compteurs, récupération et bulletins de paie.",
+        }
     priorities = dedupe([documents[0], documents[1], missing[0], "analyse d'impact salariés"])[:3]
     return {
         "avant_de_prendre_position_demander_en_priorite": priorities,
@@ -2196,7 +2610,7 @@ def build_detailed_cse_report(title: str, text: str, base: dict[str, Any], sourc
     relances = conditional_followups(themes)
     cssct = cssct_point(themes, text)
     cfdt_position = cfdt_position_to_build(themes)
-    synthesis = elected_summary(missing, requested_documents)
+    synthesis = elected_summary(missing, requested_documents, themes)
     return {
         "kind": "cse-point-analysis",
         "generated_at": now_iso(),
@@ -2511,6 +2925,20 @@ def validate_scenario(scenario: dict[str, Any], report: dict[str, Any], sources:
                 "name": f"contenu_absent_{normalize(forbidden).replace(' ', '_')}",
                 "ok": normalize(forbidden) not in text,
                 "detail": forbidden,
+            }
+        )
+    min_source_documents = scenario.get("min_source_documents")
+    if min_source_documents and len(sources) >= min_source_documents:
+        unique_documents = {
+            source.get("document")
+            for source in sources
+            if source.get("document")
+        }
+        checks.append(
+            {
+                "name": "diversite_minimale_sources",
+                "ok": len(unique_documents) >= min_source_documents,
+                "detail": f"{len(unique_documents)} document(s) distinct(s)",
             }
         )
     return checks
