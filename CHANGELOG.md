@@ -1,5 +1,15 @@
 # Changelog
 
+## Assistant DS Router V1
+
+- Ajout du routeur central `automation/scripts/assistant_ds_router.py`.
+- Classification des demandes par domaines metier et intentions utilisateur.
+- Orchestration locale de `agreements_bible.py` et `nexus_bible_bridge.py` sans reecrire les moteurs specialistes.
+- Ajout des commandes `ask`, `route`, `diagnose` et `run-scenarios` avec sorties `text` et `json`.
+- Ajout de 25 scenarios de routage, dont les 20 cas obligatoires et 5 cas multi-domaines.
+- Documentation de l'architecture dans `docs/architecture/ASSISTANT_DS_ROUTER_V1.md`.
+- Les modules non connectes restent signales explicitement : Document Intelligence, controle paie dedie et veille juridique.
+
 ## Profil CSSCT sécurité process maintenance
 
 - Ajout du profil métier `CSSCT / sécurité process / maintenance`.

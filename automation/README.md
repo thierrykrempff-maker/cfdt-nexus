@@ -2,6 +2,25 @@
 
 Ce dossier accueillera les scripts, jobs et traitements automatisés.
 
+## Assistant DS Router V1
+
+Le script `scripts/assistant_ds_router.py` est le point d'entree naturel de l'Assistant DS CFDT Nexus.
+
+Il classe une question libre par domaines metier et intentions, choisit les moteurs locaux disponibles, execute la Bible Accords et le pont Nexus/Bible si necessaire, puis fusionne une reponse courte avec sources, documents a recuperer, questions a poser et avertissements.
+
+Commandes principales :
+
+```powershell
+python automation/scripts/assistant_ds_router.py route --query "Combien de repos entre deux postes en 5x8 ?"
+python automation/scripts/assistant_ds_router.py ask --query "La direction veut reduire le repos entre deux postes. Prepare le CSE."
+python automation/scripts/assistant_ds_router.py diagnose
+python automation/scripts/assistant_ds_router.py run-scenarios
+```
+
+Les sorties `--format text` et `--format json` sont disponibles pour preparer une future interface.
+
+Le routeur n'execute jamais un module non connecte : Document Intelligence, controle paie dedie et veille juridique sont signales explicitement lorsqu'ils sont detectes mais indisponibles.
+
 ## Bible Accords Sarralbe
 
 Le script `scripts/agreements_bible.py` pilote le pipeline local privé :
