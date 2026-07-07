@@ -1,5 +1,16 @@
 # Changelog
 
+## Assistant DS Router V1.1
+
+- Ajout d'une couche de reranking contextuel dans `assistant_ds_router.py` sans modifier le scoring de `agreements_bible.py`.
+- Limitation et diversification des sources principales avec option CLI `--source-limit`.
+- Ajout d'une deduplication semantique legere pour constats, documents, questions et avertissements.
+- Correction de `working_position`, maintenant construite explicitement par domaine au lieu de reprendre le premier document/point.
+- Ajout de `issue_groups` pour les demandes multi-domaines, notamment astreinte + repos + paie.
+- Separation des garde-fous generiques dans un bloc court de prudence.
+- Extension de `run-scenarios` avec 8 validations `ask` V1.1 couvrant les 3 cas reels et 5 tests supplementaires.
+- Documentation V1.1 ajoutee dans `docs/architecture/ASSISTANT_DS_ROUTER_V1_1.md`.
+
 ## Assistant DS Router V1
 
 - Ajout du routeur central `automation/scripts/assistant_ds_router.py`.

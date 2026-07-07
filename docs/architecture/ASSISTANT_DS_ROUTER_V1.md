@@ -158,6 +158,8 @@ Interdits :
 
 ## Evolution
 
+La consolidation V1.1 est documentee dans `docs/architecture/ASSISTANT_DS_ROUTER_V1_1.md`.
+
 Le routeur prepare une future interface graphique :
 
 - route et reponse en JSON ;

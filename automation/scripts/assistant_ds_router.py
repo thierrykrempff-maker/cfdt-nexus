@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Assistant DS CFDT Nexus V1.
+Assistant DS CFDT Nexus V1.1.
 
 Central local router for natural-language DS questions. The router classifies the
 request, selects callable local engines, executes them when available, and fuses a
@@ -34,6 +34,242 @@ PRUDENCE_WARNING = (
     "leur date, leur champ d'application et leur articulation avec les normes superieures "
     "avant toute position definitive."
 )
+
+ROUTER_VERSION = "1.1"
+DEFAULT_SOURCE_LIMIT = 6
+MAX_SOURCE_LIMIT = 12
+
+BUSINESS_DOMAIN_EXCLUSIONS = {"bible_accords"}
+
+PRUDENCE_POINTS = [
+    "Verifier l'applicabilite, la date et le champ des textes cites.",
+    "Verifier les avenants, usages ou textes plus recents eventuels.",
+    "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+]
+
+GENERIC_PRUDENCE_MARKERS = [
+    "verifier si le document est toujours applicable",
+    "verifier s il existe un avenant",
+    "croiser avec la convention collective",
+    "relire les sources citees",
+    "valider la portee avant utilisation",
+]
+
+DOMAIN_LABELS = {
+    "bible_accords": "Bible Accords",
+    "classification_carriere": "classification/carriere",
+    "inaptitude_reclassement": "inaptitude/reclassement",
+    "disciplinaire": "disciplinaire",
+    "cssct_securite": "CSSCT/securite",
+    "temps_travail": "temps de travail",
+    "astreinte": "astreinte",
+    "paie_remuneration": "paie/remuneration",
+    "conges_payes": "conges payes",
+    "droit_syndical": "droit syndical",
+    "analyse_documentaire": "analyse documentaire",
+    "veille_juridique": "veille juridique",
+    "cse": "CSE",
+}
+
+INTENT_LABELS = {
+    "question_simple": "question simple",
+    "rechercher_droit_local": "recherche de droit local",
+    "preparer_cse": "preparation CSE",
+    "preparer_cssct": "preparation CSSCT",
+    "analyser_situation_individuelle": "situation individuelle",
+    "analyser_paie": "controle paie",
+    "analyser_document": "analyse documentaire",
+    "preparer_negociation": "preparation de negociation",
+    "preparer_entretien_direction": "entretien direction",
+    "construire_argumentaire": "argumentaire",
+    "demander_documents": "demande de documents",
+    "verifier_conformite": "controle de conformite",
+    "rechercher_veille": "veille juridique",
+}
+
+STOPWORDS = {
+    "a",
+    "afin",
+    "ai",
+    "ainsi",
+    "alors",
+    "au",
+    "aux",
+    "avec",
+    "avant",
+    "ce",
+    "ces",
+    "cet",
+    "cette",
+    "comme",
+    "dans",
+    "de",
+    "des",
+    "du",
+    "elle",
+    "en",
+    "est",
+    "et",
+    "etre",
+    "faire",
+    "il",
+    "ils",
+    "la",
+    "le",
+    "les",
+    "leur",
+    "leurs",
+    "mais",
+    "ou",
+    "par",
+    "pas",
+    "pour",
+    "que",
+    "qui",
+    "sa",
+    "sans",
+    "se",
+    "si",
+    "son",
+    "sur",
+    "un",
+    "une",
+    "verifier",
+    "verification",
+    "verifications",
+}
+
+DOMAIN_SOURCE_BOOSTS: dict[str, list[tuple[str, int]]] = {
+    "classification_carriere": [
+        ("classification", 28),
+        ("coefficient", 24),
+        ("gepp", 26),
+        ("gestion de carriere", 22),
+        ("carriere", 16),
+        ("emploi", 16),
+        ("fiche de poste", 18),
+        ("fonction", 16),
+        ("responsabilite", 14),
+        ("autonomie", 14),
+        ("technicite", 14),
+        ("pesee de poste", 20),
+        ("ccnic", 12),
+    ],
+    "temps_travail": [
+        ("5x8", 34),
+        ("35 h", 22),
+        ("35h", 22),
+        ("temps de travail", 24),
+        ("horaire poste", 26),
+        ("horaires postes", 26),
+        ("repos", 24),
+        ("travail de nuit", 18),
+        ("cycle", 14),
+        ("poste", 10),
+        ("duree du travail", 18),
+        ("compteur", 10),
+        ("pointage", 10),
+    ],
+    "astreinte": [
+        ("accord astreinte", 42),
+        ("astreinte", 36),
+        ("intervention", 20),
+        ("repos apres intervention", 28),
+        ("repos compensateur", 24),
+        ("declenchement", 14),
+        ("trajet", 10),
+    ],
+    "paie_remuneration": [
+        ("paie", 22),
+        ("remuneration", 18),
+        ("majoration", 26),
+        ("bulletin", 18),
+        ("heures payees", 18),
+        ("heures d intervention", 18),
+        ("prime", 14),
+        ("salaire", 12),
+        ("indemnisation", 18),
+    ],
+    "conges_payes": [
+        ("conges payes", 34),
+        ("dixieme", 30),
+        ("indemnite de conges", 26),
+        ("maintien de salaire", 18),
+    ],
+    "inaptitude_reclassement": [
+        ("inaptitude", 30),
+        ("inapte", 26),
+        ("reclassement", 30),
+        ("avis medical", 20),
+        ("medecin du travail", 24),
+        ("restriction", 18),
+        ("etude de poste", 20),
+        ("adaptation", 16),
+    ],
+    "disciplinaire": [
+        ("disciplinaire", 30),
+        ("sanction", 22),
+        ("convocation", 20),
+        ("reglement interieur", 24),
+        ("entretien disciplinaire", 26),
+    ],
+    "droit_syndical": [
+        ("droit syndical", 34),
+        ("heures de delegation", 34),
+        ("credit d heures", 28),
+        ("elu cse", 22),
+        ("mandat", 20),
+        ("delegue syndical", 24),
+        ("moyens syndicaux", 22),
+    ],
+    "cssct_securite": [
+        ("cssct", 30),
+        ("duerp", 28),
+        ("duer", 24),
+        ("securite process", 30),
+        ("provox", 34),
+        ("sncc", 30),
+        ("panne", 18),
+        ("pieces critiques", 24),
+        ("maintenance", 18),
+        ("risque", 14),
+    ],
+}
+
+DOMAIN_SOURCE_PENALTIES: dict[str, list[tuple[str, int]]] = {
+    "classification_carriere": [
+        ("teletravail", -55),
+        ("cet", -38),
+        ("forfait jours", -50),
+        ("securite process", -30),
+    ],
+    "temps_travail": [
+        ("forfait jours", -55),
+        ("cet", -38),
+        ("remuneration generale", -25),
+    ],
+    "astreinte": [
+        ("forfait jours", -65),
+        ("cet", -50),
+        ("teletravail", -35),
+    ],
+    "paie_remuneration": [
+        ("cet", -28),
+        ("forfait jours", -32),
+    ],
+    "cssct_securite": [
+        ("cet", -40),
+        ("forfait jours", -35),
+        ("remuneration", -25),
+        ("paie", -25),
+    ],
+    "droit_syndical": [
+        ("cet", -35),
+        ("forfait jours", -35),
+        ("paie", -25),
+        ("remuneration", -25),
+    ],
+}
 
 DOMAIN_ORDER = [
     "classification_carriere",
@@ -668,6 +904,80 @@ ROUTING_SCENARIOS: list[dict[str, Any]] = [
     },
 ]
 
+ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
+    {
+        "id": "ask-real-classification",
+        "query": "Un salarie pense etre mal classe car il exerce plus de responsabilites que sa fiche de poste. Que dois-je verifier ?",
+        "expected_domains": ["classification_carriere"],
+        "expected_intents": ["analyser_situation_individuelle", "verifier_conformite"],
+        "top_source_any": ["classification", "gepp", "gestion de carriere", "ccnic"],
+        "forbidden_top_sources": ["teletravail"],
+        "working_position_terms": ["classification", "fonctions", "coefficient"],
+        "forbidden_text": ["provox", "cssct"],
+        "dedupe_lists": True,
+    },
+    {
+        "id": "ask-real-cse-repos-5x8",
+        "query": "La direction veut reduire le repos entre deux postes en 5x8. Prepare-moi le point CSE.",
+        "expected_domains": ["temps_travail"],
+        "expected_intents": ["preparer_cse"],
+        "top_source_any": ["5x8", "35 h", "horaires postes"],
+        "forbidden_top_sources": ["forfait jours"],
+        "working_position_terms": ["reduction", "repos", "projet", "garanties"],
+        "max_sources": 6,
+    },
+    {
+        "id": "ask-real-multi-astreinte-repos-paie",
+        "query": "Un salarie d'astreinte intervient de nuit, termine son intervention a 4 h et reprend son poste a 8 h. Il pense egalement que ses heures d'intervention et ses majorations ont ete mal payees. Que dois-je verifier et quels documents dois-je demander ?",
+        "expected_domains": ["temps_travail", "astreinte", "paie_remuneration"],
+        "expected_intents": ["analyser_situation_individuelle", "analyser_paie"],
+        "top_source_any": ["astreinte"],
+        "source_any": ["repos", "5x8", "temps de travail", "majoration", "paie"],
+        "forbidden_top_sources": ["cet", "forfait jours"],
+        "issue_groups": ["repos", "astreinte", "paie"],
+        "working_position_terms": ["repos", "intervention", "majorations", "bulletins"],
+        "warning_terms": ["module paie"],
+    },
+    {
+        "id": "ask-extra-repos-5x8-simple",
+        "query": "Combien de repos entre deux postes en 5x8 ?",
+        "expected_domains": ["temps_travail"],
+        "expected_intents": ["question_simple"],
+        "forbidden_engines": ["nexus_bible_bridge"],
+        "max_sources": 4,
+        "response_depth": "question_simple",
+    },
+    {
+        "id": "ask-extra-inaptitude",
+        "query": "Un salarie est declare inapte. Que dois-je verifier ?",
+        "expected_domains": ["inaptitude_reclassement"],
+        "expected_intents": ["analyser_situation_individuelle"],
+        "required_text": ["avis medical", "restrictions", "etude de poste", "reclassement", "tracabilite"],
+    },
+    {
+        "id": "ask-extra-provox-cssct",
+        "query": "PROVOX tombe regulierement en panne et les pieces critiques sont difficiles a obtenir.",
+        "expected_domains": ["cssct_securite"],
+        "expected_intents": ["preparer_cssct"],
+        "forbidden_domains": ["paie_remuneration"],
+        "required_text": ["provox", "risque", "prevention"],
+    },
+    {
+        "id": "ask-extra-droit-syndical",
+        "query": "Combien d'heures de delegation pour les elus ?",
+        "expected_domains": ["droit_syndical"],
+        "expected_intents": ["question_simple"],
+        "forbidden_domains": ["cssct_securite", "paie_remuneration"],
+    },
+    {
+        "id": "ask-extra-conges-dixieme",
+        "query": "Je veux verifier le calcul des conges payes au dixieme.",
+        "expected_domains": ["conges_payes", "paie_remuneration"],
+        "expected_intents": ["analyser_paie", "verifier_conformite"],
+        "required_text": ["conges", "dixieme", "bulletins"],
+    },
+]
+
 
 def normalize(value: str) -> str:
     return bible.normalize(value or "")
@@ -686,6 +996,67 @@ def dedupe(values: list[Any]) -> list[Any]:
             continue
         seen.add(key)
         result.append(value)
+    return result
+
+
+def label_for(value: str, labels: dict[str, str]) -> str:
+    return labels.get(value, value.replace("_", " "))
+
+
+def business_domains(route: dict[str, Any]) -> list[str]:
+    return [domain for domain in route.get("domains", []) if domain not in BUSINESS_DOMAIN_EXCLUSIONS]
+
+
+def stem_token(token: str) -> str:
+    for suffix in ["ements", "ement", "ations", "ation", "iques", "ique", "elles", "elle", "ites", "ite", "eurs", "euses", "euse", "es", "s"]:
+        if len(token) > len(suffix) + 3 and token.endswith(suffix):
+            return token[: -len(suffix)]
+    return token
+
+
+def significant_tokens(value: Any) -> set[str]:
+    text = normalize(str(value or ""))
+    tokens = re.findall(r"[a-z0-9]{3,}", text)
+    return {stem_token(token) for token in tokens if token not in STOPWORDS}
+
+
+def semantic_similarity(left: Any, right: Any) -> float:
+    left_tokens = significant_tokens(left)
+    right_tokens = significant_tokens(right)
+    if not left_tokens or not right_tokens:
+        return 0.0
+    return len(left_tokens & right_tokens) / len(left_tokens | right_tokens)
+
+
+def semantic_dedupe(values: list[Any], threshold: float = 0.66) -> list[Any]:
+    result: list[Any] = []
+    token_sets: list[set[str]] = []
+    for value in values:
+        if value is None:
+            continue
+        text = compact_text(value).strip() if isinstance(value, dict) else str(value).strip()
+        if not text:
+            continue
+        tokens = significant_tokens(text)
+        if not tokens:
+            key = normalize(text)
+            if any(normalize(compact_text(item) if isinstance(item, dict) else str(item)) == key for item in result):
+                continue
+            result.append(value)
+            token_sets.append(tokens)
+            continue
+        duplicate = False
+        for existing_tokens in token_sets:
+            if not existing_tokens:
+                continue
+            similarity = len(tokens & existing_tokens) / len(tokens | existing_tokens)
+            if similarity >= threshold or (tokens <= existing_tokens and len(tokens) >= 2):
+                duplicate = True
+                break
+        if duplicate:
+            continue
+        result.append(value)
+        token_sets.append(tokens)
     return result
 
 
@@ -720,6 +1091,16 @@ def source_key(source: dict[str, Any]) -> str:
 def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
     article = source.get("article") or source.get("article_or_section")
     page = source.get("page")
+    context_parts = [
+        source.get("document"),
+        article,
+        source.get("location"),
+        source.get("excerpt"),
+        source.get("ranking_profile"),
+        " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
+        source.get("role_probable_du_document"),
+        source.get("raison_de_pertinence"),
+    ]
     return {
         "document": source.get("document"),
         "page": page,
@@ -729,7 +1110,165 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "status": source.get("source_status") or source.get("confidence_level") or source.get("source_quality_warning"),
         "origin": origin,
         "nature": "regle_locale_a_verifier",
+        "_chunk_id": source.get("chunk_id"),
+        "_context": " ".join(str(part) for part in context_parts if part),
     }
+
+
+def source_context(source: dict[str, Any]) -> str:
+    return normalize(
+        " ".join(
+            str(part)
+            for part in [
+                source.get("document"),
+                source.get("article"),
+                source.get("location"),
+                source.get("status"),
+                source.get("_context"),
+            ]
+            if part
+        )
+    )
+
+
+def weighted_term_score(context: str, terms: list[tuple[str, int]]) -> int:
+    score = 0
+    for term, weight in terms:
+        if normalize(term) in context:
+            score += weight
+    return score
+
+
+def source_base_score(source: dict[str, Any]) -> float:
+    try:
+        return float(source.get("score") or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def source_direct_relevance(source: dict[str, Any], domains: list[str]) -> int:
+    context = source_context(source)
+    return sum(weighted_term_score(context, DOMAIN_SOURCE_BOOSTS.get(domain, [])) for domain in domains)
+
+
+def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> float:
+    domains = business_domains(route)
+    query = normalize(route.get("query", ""))
+    context = source_context(source)
+    base = source_base_score(source) * 0.08
+    score = base
+
+    query_hits = [token for token in significant_tokens(query) if token in significant_tokens(context)]
+    score += min(18, len(query_hits) * 3)
+
+    direct = 0
+    for domain in domains:
+        domain_direct = weighted_term_score(context, DOMAIN_SOURCE_BOOSTS.get(domain, []))
+        direct += domain_direct
+        score += domain_direct
+
+        for term, penalty in DOMAIN_SOURCE_PENALTIES.get(domain, []):
+            normalized_term = normalize(term)
+            if normalized_term in query:
+                continue
+            if normalized_term in context and domain_direct < 18:
+                score += penalty
+
+    document = normalize(str(source.get("document") or ""))
+    if "astreinte" in domains and "accord astreinte" in document:
+        score += 45
+    if "temps_travail" in domains and ("5x8" in document or "35 h" in document or "35h" in document):
+        score += 38
+    if "temps_travail" in domains and "horaires postes" in document:
+        score += 30
+    if "classification_carriere" in domains and ("gepp" in document or "gestion de carriere" in document):
+        score += 36
+    if "classification_carriere" in domains and "ccnic" in document:
+        score += 18
+    if "paie_remuneration" in domains and "repos compensateur" in document:
+        score += 24
+    if "conges_payes" in domains and ("conges" in document or "dixieme" in context):
+        score += 28
+    if "cssct_securite" in domains and any(term in document for term in ["provox", "sncc", "securite", "maintenance"]):
+        score += 28
+    if "droit_syndical" in domains and any(term in document for term in ["droit syndical", "cse", "rp", "dialogue social"]):
+        score += 28
+
+    if source.get("origin") == "nexus_bible_bridge" and any(intent in route.get("intents", []) for intent in ["preparer_cse", "analyser_situation_individuelle", "analyser_paie"]):
+        score += 6
+    if source.get("origin") == "bible_accords" and route.get("engines") == ["bible_accords"]:
+        score += 4
+
+    source["_router_score"] = round(score, 3)
+    source["_direct_relevance"] = direct
+    return score
+
+
+def clean_source(source: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in source.items() if not key.startswith("_")}
+
+
+def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], source_limit: int) -> list[dict[str, Any]]:
+    limit = max(1, min(source_limit, MAX_SOURCE_LIMIT))
+    unique: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for source in sources:
+        key = source_key(source)
+        if key and key in seen:
+            continue
+        if key:
+            seen.add(key)
+        unique.append(source)
+
+    ranked = sorted(unique, key=lambda item: contextual_source_score(item, route), reverse=True)
+    if not ranked:
+        return []
+
+    selected: list[dict[str, Any]] = []
+    skipped_noise: list[dict[str, Any]] = []
+    by_document: dict[str, int] = {}
+    top_score = float(ranked[0].get("_router_score") or 0)
+    for source in ranked:
+        if len(selected) >= 4 and is_contextual_noise_source(source, route):
+            skipped_noise.append(source)
+            continue
+        document = normalize(str(source.get("document") or "document local"))
+        current = by_document.get(document, 0)
+        cap = 3 if float(source.get("_router_score") or 0) >= top_score - 16 else 2
+        if current >= cap:
+            continue
+        selected.append(source)
+        by_document[document] = current + 1
+        if len(selected) >= limit:
+            break
+
+    minimum_sources = min(4, limit)
+    if len(selected) < minimum_sources:
+        selected_keys = {source_key(source) for source in selected}
+        for source in ranked + skipped_noise:
+            key = source_key(source)
+            if key in selected_keys:
+                continue
+            selected.append(source)
+            selected_keys.add(key)
+            if len(selected) >= minimum_sources:
+                break
+
+    return [clean_source(source) for source in selected[:limit]]
+
+
+def is_contextual_noise_source(source: dict[str, Any], route: dict[str, Any]) -> bool:
+    query = normalize(route.get("query", ""))
+    document = normalize(str(source.get("document") or ""))
+    direct = int(source.get("_direct_relevance") or 0)
+    for domain in business_domains(route):
+        for term, _penalty in DOMAIN_SOURCE_PENALTIES.get(domain, []):
+            normalized_term = normalize(term)
+            if normalized_term in query:
+                continue
+            if normalized_term in document and direct < 130:
+                return True
+    return False
 
 
 def primary_domain(domains: list[str]) -> str:
@@ -849,12 +1388,12 @@ def engine_status() -> dict[str, dict[str, Any]]:
         "paie_control": {
             "available": False,
             "detected": False,
-            "reason": "module paie dedie non connecte en V1",
+            "reason": "module paie dedie non connecte en V1.1",
         },
         "veille_juridique": {
             "available": False,
             "detected": False,
-            "reason": "connecteur de veille non connecte en V1",
+            "reason": "connecteur de veille non connecte en V1.1",
         },
     }
 
@@ -886,7 +1425,7 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
     if "analyser_paie" in intents:
         warnings.append("Module paie dedie non connecte : controle realise via sources locales et methode metier.")
     if "rechercher_veille" in intents or "veille_juridique" in domains:
-        warnings.append("Veille juridique non connectee en V1 : verifier les sources externes a jour manuellement.")
+        warnings.append("Veille juridique non connectee en V1.1 : verifier les sources externes a jour manuellement.")
 
     engines = dedupe(engines)
     plan = []
@@ -937,10 +1476,14 @@ def route_query(query: str) -> dict[str, Any]:
     score_total = sum(domain_scores.values()) + sum(intent_scores.values())
     confidence = "fort" if score_total >= 5 else "moyen" if score_total >= 2 else "faible"
     main_domain = primary_domain(domains)
+    secondary_domains = [domain for domain in business_domains({"domains": domains}) if domain != main_domain]
     route = {
         "query": query,
+        "router_version": ROUTER_VERSION,
         "domains": domains,
         "main_domain": main_domain,
+        "primary_domain": main_domain,
+        "secondary_domains": secondary_domains,
         "intents": intents,
         "engines": engines,
         "confidence": confidence,
@@ -957,9 +1500,17 @@ def search_bible(query: str, limit: int) -> dict[str, Any]:
 
 
 def understanding_for(route: dict[str, Any]) -> str:
-    main = route["main_domain"].replace("_", " ")
-    intents = ", ".join(intent.replace("_", " ") for intent in route["intents"][:3])
-    return f"Demande classee principalement en {main}, avec intention(s) {intents}."
+    main = label_for(route["main_domain"], DOMAIN_LABELS)
+    secondary = [label_for(domain, DOMAIN_LABELS) for domain in route.get("secondary_domains", []) if domain != "cse"]
+    intents = [label_for(intent, INTENT_LABELS) for intent in route["intents"][:4]]
+    sentence = f"Demande portant principalement sur {main}"
+    if secondary:
+        sentence += ", avec enjeux associes de " + ", ".join(secondary)
+    if intents:
+        sentence += ". L'analyse vise " + ", ".join(intents) + "."
+    else:
+        sentence += "."
+    return sentence
 
 
 def default_documents(route: dict[str, Any]) -> list[str]:
@@ -998,6 +1549,43 @@ def default_documents(route: dict[str, Any]) -> list[str]:
                 "parametrage logiciel et periode a controler",
             ]
         )
+    if "temps_travail" in domains and "preparer_cse" in route["intents"]:
+        documents.extend(
+            [
+                "projet ecrit complet",
+                "base juridique ou conventionnelle invoquee",
+                "comparatif avant/apres des horaires et repos",
+                "planning actuel et planning projete",
+                "evaluation des impacts fatigue et sante",
+                "garanties de prevention, compensation et suivi",
+            ]
+        )
+    if "astreinte" in domains:
+        documents.extend(
+            [
+                "accord astreinte applicable",
+                "releve d'intervention avec heure de debut et de fin",
+                "declenchement et motif de l'intervention",
+                "temps de trajet si applicable",
+                "regle de repos apres intervention",
+            ]
+        )
+    if "paie_remuneration" in domains:
+        documents.extend(
+            [
+                "bulletins de paie de la periode controlee",
+                "detail des majorations appliquees",
+                "historique des paiements et recuperations",
+            ]
+        )
+    if "conges_payes" in domains:
+        documents.extend(
+            [
+                "decompte conges payes",
+                "base de calcul du dixieme",
+                "comparaison maintien de salaire / dixieme",
+            ]
+        )
     if "disciplinaire" in domains:
         documents.extend(["convocation", "reglement interieur", "faits reproches", "dossier disciplinaire communique"])
     if "cssct_securite" in domains:
@@ -1034,6 +1622,31 @@ def default_questions(route: dict[str, Any]) -> list[str]:
                 "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
             ]
         )
+    if "temps_travail" in domains and "preparer_cse" in route["intents"]:
+        questions.extend(
+            [
+                "Quelle base juridique ou conventionnelle autoriserait la reduction du repos ?",
+                "Quelle comparaison avant/apres des horaires et repos est communiquee au CSE ?",
+                "Quels impacts fatigue, travail de nuit et securite ont ete evalues ?",
+                "Quelles garanties de prevention, compensation et suivi sont proposees ?",
+            ]
+        )
+    if "astreinte" in domains:
+        questions.extend(
+            [
+                "Quelle regle d'astreinte s'applique a l'intervention concernee ?",
+                "A quelle heure l'intervention a-t-elle reellement commence et pris fin ?",
+                "Le repos apres intervention a-t-il ete reporte, compense ou derogatoire ?",
+            ]
+        )
+    if "paie_remuneration" in domains:
+        questions.extend(
+            [
+                "Quelles heures d'intervention ont ete payees, majorees ou recuperees ?",
+                "Quelle regle de majoration nuit, dimanche ou jour ferie a ete appliquee ?",
+                "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
+            ]
+        )
     if "cssct_securite" in domains:
         questions.extend(
             [
@@ -1047,21 +1660,148 @@ def default_questions(route: dict[str, Any]) -> list[str]:
     return dedupe(questions)
 
 
-def position_for(route: dict[str, Any], findings: list[str]) -> str:
+def default_findings(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
+    intents = set(route["intents"])
+    findings: list[str] = []
+
+    if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
+        findings.extend(
+            [
+                "Verifier le repos entre la fin reelle de l'intervention et la reprise du poste.",
+                "Qualifier le temps d'intervention d'astreinte, y compris le trajet si applicable.",
+                "Rapprocher heures d'intervention, compteurs, majorations et bulletins de paie.",
+            ]
+        )
+    elif "classification_carriere" in domains:
+        findings.extend(
+            [
+                "Comparer le coefficient et l'emploi retenus avec les fonctions reellement exercees.",
+                "Objectiver le niveau d'autonomie, de responsabilite et de technicite.",
+                "Verifier les criteres conventionnels et les comparaisons internes disponibles.",
+            ]
+        )
+    elif "inaptitude_reclassement" in domains:
+        findings.extend(
+            [
+                "Verifier l'avis medical, les restrictions et les preconisations du medecin du travail.",
+                "Controler l'etude de poste, les adaptations envisagees et les postes compatibles.",
+                "Reconstituer la tracabilite des recherches de reclassement et des echanges avec le salarie.",
+            ]
+        )
+    elif "disciplinaire" in domains:
+        findings.extend(
+            [
+                "Verifier les faits reproches, les preuves, les dates et les delais de procedure.",
+                "Controler les droits de defense et les garanties prevues par le reglement interieur.",
+            ]
+        )
+    elif "droit_syndical" in domains:
+        findings.extend(
+            [
+                "Identifier le texte local applicable aux mandats, heures de delegation ou moyens syndicaux.",
+                "Verifier le perimetre des beneficiaires et les conditions pratiques d'utilisation.",
+            ]
+        )
+    elif "cssct_securite" in domains:
+        findings.extend(
+            [
+                "Identifier le risque, les incidents ou pannes traces et les mesures de prevention existantes.",
+                "Verifier DUERP, plan d'action, maintenance, pieces critiques et suivi CSSCT.",
+            ]
+        )
+    elif "conges_payes" in domains:
+        findings.extend(
+            [
+                "Comparer le calcul au dixieme avec le maintien de salaire sur la periode utile.",
+                "Verifier les elements de remuneration inclus ou exclus de l'assiette.",
+            ]
+        )
+    elif "temps_travail" in domains and "preparer_cse" in intents:
+        findings.extend(
+            [
+                "Verifier la regle de repos applicable et les derogations eventuelles.",
+                "Comparer la situation actuelle et le projet poste par poste ou cycle par cycle.",
+                "Evaluer les impacts fatigue, travail de nuit, securite et compensations.",
+            ]
+        )
+    elif "temps_travail" in domains:
+        findings.extend(
+            [
+                "Identifier la regle locale de temps de travail applicable.",
+                "Verifier les horaires reels, les repos et les compteurs sur la periode concernee.",
+            ]
+        )
+    elif "paie_remuneration" in domains:
+        findings.extend(
+            [
+                "Rapprocher la regle de paie applicable avec les bulletins et compteurs.",
+                "Identifier les ecarts de taux, majorations, primes ou recuperations.",
+            ]
+        )
+
+    return findings
+
+
+def build_working_position(route: dict[str, Any], findings: list[str], engine_results: list[dict[str, Any]] | None = None) -> str:
+    domains = set(route["domains"])
+    intents = set(route["intents"])
+    if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
+        return (
+            "Verifier separement le respect du repos apres intervention, la comptabilisation du temps "
+            "d'intervention et l'application des majorations, puis rapprocher l'accord d'astreinte, "
+            "les horaires reels, les compteurs et les bulletins de paie."
+        )
     if "classification_carriere" in domains:
-        return "Construire un dossier factuel sur les fonctions exercees avant de demander le reexamen du coefficient."
+        return (
+            "Objectiver l'ecart entre la classification actuelle et les fonctions reellement exercees "
+            "avant de demander un reexamen motive du coefficient."
+        )
+    if "temps_travail" in domains and "preparer_cse" in intents:
+        return (
+            "Ne pas accepter une reduction du repos sans projet ecrit, base juridique precise, "
+            "comparaison avant/apres, evaluation des impacts sur la fatigue et garanties de prevention "
+            "et de compensation."
+        )
     if "inaptitude_reclassement" in domains:
-        return "Verifier la realite, la loyauté et la tracabilite de la recherche de reclassement avant toute conclusion."
-    if "temps_travail" in domains and ("paie_remuneration" in domains or "analyser_paie" in route["intents"]):
-        return "Rapprocher heures effectuees, compteurs, recuperation et bulletins avant de demander correction ou regularisation."
-    if "cssct_securite" in domains:
-        return "Objectiver les risques, demander les documents techniques et exiger des mesures de prevention tracees."
+        return (
+            "Controler la realite et la tracabilite des recherches de reclassement, les adaptations "
+            "etudiees et leur compatibilite avec l'avis medical avant toute conclusion."
+        )
+    if "disciplinaire" in domains:
+        return (
+            "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier "
+            "la proportionnalite d'une eventuelle sanction."
+        )
     if "droit_syndical" in domains:
-        return "Identifier le texte local applicable puis verifier qu'il vise bien les mandats et moyens syndicaux."
+        return (
+            "Identifier le texte local applicable aux mandats ou moyens syndicaux, puis verifier son "
+            "champ, ses beneficiaires et ses modalites pratiques avant de contester ou revendiquer."
+        )
+    if "cssct_securite" in domains:
+        return (
+            "Obtenir une evaluation documentee du risque, les mesures de prevention et un plan "
+            "d'action suivi avant de considerer le risque comme maitrise."
+        )
+    if "conges_payes" in domains:
+        return (
+            "Rapprocher l'assiette, la methode du dixieme, le maintien de salaire et les bulletins afin "
+            "d'identifier et chiffrer l'eventuel ecart de conges payes."
+        )
+    if "paie_remuneration" in domains:
+        return (
+            "Rapprocher les horaires ou elements variables, les compteurs, les regles de paie et les "
+            "bulletins afin d'identifier et chiffrer les ecarts."
+        )
+    if "question_simple" in intents:
+        return "Identifier la regle locale applicable dans les sources citees avant de formuler une reponse prudente."
     if findings:
         return "Utiliser les sources locales comme base de travail, sans conclure avant verification humaine."
     return "Demande a approfondir avec les sources locales et les elements factuels."
+
+
+def position_for(route: dict[str, Any], findings: list[str]) -> str:
+    return build_working_position(route, findings, None)
 
 
 def next_action_for(route: dict[str, Any]) -> str:
@@ -1077,6 +1817,184 @@ def next_action_for(route: dict[str, Any]) -> str:
     if "preparer_cse" in route["intents"] or "preparer_cssct" in route["intents"]:
         return "Mettre le sujet a l'ordre du jour avec les documents demandes et les questions prioritaires."
     return "Completer les faits, relire les sources citees puis choisir la suite syndicale adaptee."
+
+
+def is_generic_prudence(value: str) -> bool:
+    normalized = normalize(value)
+    if any(marker in normalized for marker in GENERIC_PRUDENCE_MARKERS):
+        return True
+    if "avenant" in normalized and ("texte plus recent" in normalized or "existe" in normalized):
+        return True
+    if "document" in normalized and "applicable" in normalized:
+        return True
+    if "convention collective" in normalized and ("jurisprudence" in normalized or "loi" in normalized):
+        return True
+    if "relire" in normalized and "sources citees" in normalized:
+        return True
+    return False
+
+
+def split_prudence_findings(findings: list[str]) -> tuple[list[str], list[str]]:
+    business: list[str] = []
+    prudence: list[str] = []
+    for item in findings:
+        if is_generic_prudence(item):
+            prudence.append(item)
+        else:
+            business.append(item)
+    return business, prudence
+
+
+def response_depth(route: dict[str, Any]) -> str:
+    domains = set(route.get("domains", []))
+    intents = set(route.get("intents", []))
+    business = [domain for domain in business_domains(route) if domain != "cse"]
+    if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains) or len(business) >= 3:
+        return "multi_domain"
+    if "preparer_cse" in intents:
+        return "preparation_cse"
+    if "question_simple" in intents and route.get("engines") == ["bible_accords"]:
+        return "question_simple"
+    if "analyser_situation_individuelle" in intents:
+        return "situation_individuelle"
+    if "preparer_cssct" in intents:
+        return "preparation_cssct"
+    return "standard"
+
+
+def answer_limits(route: dict[str, Any], source_limit: int) -> dict[str, int]:
+    depth = response_depth(route)
+    sources = max(1, min(source_limit, MAX_SOURCE_LIMIT))
+    if depth == "question_simple":
+        sources = min(sources, 4)
+        return {"sources": sources, "findings": 5, "documents": 5, "questions": 5}
+    if depth == "preparation_cse":
+        return {"sources": sources, "findings": 8, "documents": 10, "questions": 8}
+    if depth == "multi_domain":
+        return {"sources": sources, "findings": 12, "documents": 14, "questions": 12}
+    if depth == "situation_individuelle":
+        return {"sources": sources, "findings": 8, "documents": 10, "questions": 8}
+    return {"sources": sources, "findings": 8, "documents": 10, "questions": 8}
+
+
+ISSUE_GROUP_TEMPLATES: dict[str, dict[str, Any]] = {
+    "repos": {
+        "name": "Repos et reprise du poste",
+        "keywords": ["repos", "reprise", "reprend", "horaire", "planning", "badgeage", "pointage", "fatigue"],
+        "findings": [
+            "Verifier l'heure reelle de fin d'intervention et l'heure de reprise du poste.",
+            "Identifier la regle de repos applicable et toute derogation invoquee.",
+            "Verifier la compensation ou le repos associe si le repos normal n'a pas ete respecte.",
+        ],
+        "documents": [
+            "planning de travail",
+            "releves de pointage ou badgeage",
+            "historique des heures et repos",
+        ],
+        "questions": [
+            "Quelle heure de fin d'intervention et quelle heure de reprise sont retenues ?",
+            "Quelle regle autorise ou interdit cette reprise ?",
+            "Quelle compensation ou quel repos a ete accorde ?",
+        ],
+    },
+    "astreinte": {
+        "name": "Astreinte et intervention",
+        "keywords": ["astreinte", "intervention", "declenchement", "trajet", "duree", "accord astreinte"],
+        "findings": [
+            "Verifier le declenchement, la duree reelle et le regime d'astreinte applicable.",
+            "Identifier si le trajet ou les temps annexes doivent etre comptabilises.",
+        ],
+        "documents": [
+            "accord astreinte applicable",
+            "releve d'intervention",
+            "trace du declenchement et de la duree",
+        ],
+        "questions": [
+            "Qui a declenche l'intervention et pour quel motif ?",
+            "Quelle duree reelle, trajet compris si applicable, est retenue ?",
+            "Quel regime l'accord d'astreinte prevoit-il ?",
+        ],
+    },
+    "paie": {
+        "name": "Paie et majorations",
+        "keywords": ["paie", "paye", "payees", "majoration", "bulletin", "prime", "remuneration", "recuperation"],
+        "findings": [
+            "Verifier les heures payees, recuperees ou majorees sur la periode.",
+            "Controler les majorations nuit, dimanche ou jour ferie si elles sont concernees.",
+            "Rapprocher bulletin, compteur et regle locale applicable.",
+        ],
+        "documents": [
+            "bulletins de paie",
+            "detail des compteurs",
+            "regles de majoration",
+            "historique des paiements et recuperations",
+        ],
+        "questions": [
+            "Quelles heures d'intervention ont ete payees ou recuperees ?",
+            "Quelle majoration a ete appliquee et sur quelle base ?",
+            "Le bulletin correspond-il au compteur et au releve d'intervention ?",
+        ],
+    },
+    "classification": {
+        "name": "Classification et fonctions exercees",
+        "keywords": ["classification", "coefficient", "fiche de poste", "fonction", "responsabilite", "autonomie"],
+        "findings": [
+            "Comparer la classification actuelle aux fonctions reellement exercees.",
+            "Objectiver responsabilites, autonomie, technicite et comparaisons internes.",
+        ],
+        "documents": ["fiche de poste", "descriptif des fonctions reelles", "criteres conventionnels"],
+        "questions": ["Quels ecarts concrets existent entre fiche de poste et travail reel ?", "Quel coefficient est justifie par les criteres conventionnels ?"],
+    },
+    "cssct": {
+        "name": "Risque et prevention",
+        "keywords": ["cssct", "duerp", "risque", "securite", "panne", "maintenance", "provox"],
+        "findings": ["Qualifier le risque et les mesures de prevention existantes.", "Verifier le suivi DUERP/CSSCT et le plan d'action."],
+        "documents": ["DUERP/DUER", "registre securite", "plan d'action ou de maintenance"],
+        "questions": ["Quels incidents sont traces ?", "Quelles mesures immediates protegent les salaries ?"],
+    },
+}
+
+
+def select_items_for_group(values: list[str], keywords: list[str], defaults: list[str], limit: int) -> list[str]:
+    normalized_keywords = [normalize(keyword) for keyword in keywords]
+    selected = [
+        value
+        for value in values
+        if any(keyword and keyword in normalize(value) for keyword in normalized_keywords)
+    ]
+    return semantic_dedupe(selected + defaults)[:limit]
+
+
+def build_issue_groups(route: dict[str, Any], findings: list[str], documents: list[str], questions: list[str]) -> list[dict[str, Any]]:
+    domains = set(route.get("domains", []))
+    ordered_group_ids: list[str] = []
+    if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
+        ordered_group_ids = ["repos", "astreinte", "paie"]
+    elif response_depth(route) == "multi_domain":
+        if "classification_carriere" in domains:
+            ordered_group_ids.append("classification")
+        if "temps_travail" in domains:
+            ordered_group_ids.append("repos")
+        if "astreinte" in domains:
+            ordered_group_ids.append("astreinte")
+        if "paie_remuneration" in domains or "conges_payes" in domains:
+            ordered_group_ids.append("paie")
+        if "cssct_securite" in domains:
+            ordered_group_ids.append("cssct")
+
+    groups: list[dict[str, Any]] = []
+    for group_id in dedupe(ordered_group_ids):
+        template = ISSUE_GROUP_TEMPLATES[group_id]
+        groups.append(
+            {
+                "id": group_id,
+                "name": template["name"],
+                "findings": select_items_for_group(findings, template["keywords"], template["findings"], 5),
+                "documents": select_items_for_group(documents, template["keywords"], template["documents"], 5),
+                "questions": select_items_for_group(questions, template["keywords"], template["questions"], 4),
+            }
+        )
+    return groups
 
 
 def merge_bible_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
@@ -1105,28 +2023,27 @@ def merge_bridge_result(answer: dict[str, Any], report: dict[str, Any]) -> None:
         answer["confidence"] = report["niveau_de_confiance"]
 
 
-def finalize_answer(answer: dict[str, Any]) -> dict[str, Any]:
-    answer["sources"] = dedupe(answer["sources"])
-    source_seen: set[str] = set()
-    source_rows = []
-    for source in answer["sources"]:
-        key = source_key(source)
-        if key and key not in source_seen:
-            source_seen.add(key)
-            source_rows.append(source)
-    answer["sources"] = source_rows[:10]
-    answer["findings"] = dedupe([item for item in answer["findings"] if item])[:12]
-    answer["documents_to_request"] = dedupe(answer["documents_to_request"] + default_documents(answer["route"]))[:14]
-    answer["questions_to_ask"] = dedupe(answer["questions_to_ask"] + default_questions(answer["route"]))[:14]
-    answer["warnings"] = dedupe(answer["warnings"] + [PRUDENCE_WARNING])
-    if not answer["working_position"]:
-        answer["working_position"] = position_for(answer["route"], answer["findings"])
+def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
+    route = answer["route"]
+    limits = answer_limits(route, source_limit)
+
+    answer["sources"] = select_final_sources(answer["sources"], route, limits["sources"])
+
+    business_findings, prudence_findings = split_prudence_findings([item for item in answer["findings"] if item])
+    answer["findings"] = semantic_dedupe(business_findings + default_findings(route))[: limits["findings"]]
+    answer["documents_to_request"] = semantic_dedupe(answer["documents_to_request"] + default_documents(route))[: limits["documents"]]
+    answer["questions_to_ask"] = semantic_dedupe(answer["questions_to_ask"] + default_questions(route))[: limits["questions"]]
+    answer["issue_groups"] = build_issue_groups(route, answer["findings"], answer["documents_to_request"], answer["questions_to_ask"])
+    module_warnings = [warning for warning in answer["warnings"] if not is_generic_prudence(warning)]
+    answer["warnings"] = semantic_dedupe(module_warnings + PRUDENCE_POINTS)
+    answer["working_position"] = build_working_position(route, answer["findings"], None)
     if not answer["next_action"]:
-        answer["next_action"] = next_action_for(answer["route"])
+        answer["next_action"] = next_action_for(route)
+    answer["response_depth"] = response_depth(route)
     return answer
 
 
-def ask(query: str, limit: int) -> dict[str, Any]:
+def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
     route = route_query(query)
     answer: dict[str, Any] = {
         "query": query,
@@ -1134,6 +2051,7 @@ def ask(query: str, limit: int) -> dict[str, Any]:
         "route": route,
         "execution_plan": route["execution_plan"],
         "sources": [],
+        "issue_groups": [],
         "findings": [],
         "documents_to_request": [],
         "questions_to_ask": [],
@@ -1156,7 +2074,7 @@ def ask(query: str, limit: int) -> dict[str, Any]:
         except SystemExit as exc:
             answer["warnings"].append(f"Pont Nexus/Bible indisponible: {exc}")
 
-    return finalize_answer(answer)
+    return finalize_answer(answer, source_limit)
 
 
 def format_route_text(route: dict[str, Any]) -> str:
@@ -1200,6 +2118,20 @@ def format_answer_text(answer: dict[str, Any]) -> str:
             parts.append(str(source["status"]))
         return " | ".join(parts)
 
+    def grouped_lines(section: str, key: str, fallback: list[str]) -> list[str]:
+        if not answer.get("issue_groups"):
+            return ["", section, *list_or_dash(fallback)]
+        lines = ["", section]
+        for group in answer["issue_groups"]:
+            values = group.get(key, [])
+            if not values:
+                continue
+            lines.append(group["name"])
+            lines.extend(f"- {value}" for value in values)
+        if len(lines) == 2:
+            lines.extend(list_or_dash(fallback))
+        return lines
+
     lines = [
         "ASSISTANT DS — ANALYSE",
         "",
@@ -1212,12 +2144,9 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         "Sources locales principales :",
     ]
     lines.extend(list_or_dash(answer["sources"], source_line))
-    lines.extend(["", "Ce qu'il faut verifier :"])
-    lines.extend(list_or_dash(answer["findings"]))
-    lines.extend(["", "Documents à récupérer :"])
-    lines.extend(list_or_dash(answer["documents_to_request"]))
-    lines.extend(["", "Questions a poser :"])
-    lines.extend(list_or_dash(answer["questions_to_ask"]))
+    lines.extend(grouped_lines("Ce qu'il faut verifier :", "findings", answer["findings"]))
+    lines.extend(grouped_lines("Documents a recuperer :", "documents", answer["documents_to_request"]))
+    lines.extend(grouped_lines("Questions a poser :", "questions", answer["questions_to_ask"]))
     lines.extend(
         [
             "",
@@ -1230,7 +2159,7 @@ def format_answer_text(answer: dict[str, Any]) -> str:
             "Niveau de confiance :",
             answer["confidence"],
             "",
-            "Avertissement :",
+            "Points de prudence :",
         ]
     )
     lines.extend(f"- {warning}" for warning in answer["warnings"])
@@ -1250,6 +2179,7 @@ def diagnose() -> dict[str, Any]:
     if not status["nexus_bible_bridge"]["available"]:
         errors.append("nexus_bible_bridge.py indisponible.")
     return {
+        "router_version": ROUTER_VERSION,
         "bible_accords_available": status["bible_accords"]["available"],
         "chunks": status["bible_accords"]["chunks"],
         "nexus_bible_bridge_available": status["nexus_bible_bridge"]["available"],
@@ -1260,6 +2190,9 @@ def diagnose() -> dict[str, Any]:
         "corpus_local_configured": source_config.exists(),
         "source_config_path": str(source_config),
         "local_index_ignored": local_index_ignored,
+        "local_index_protected": local_index_ignored,
+        "connected_modules": [name for name, item in status.items() if item.get("available")],
+        "detected_unavailable_modules": [name for name, item in status.items() if item.get("detected") and not item.get("available")],
         "errors": errors,
         "security_notice": "local-index/ et les fichiers *.private.* doivent rester hors Git.",
     }
@@ -1268,6 +2201,7 @@ def diagnose() -> dict[str, Any]:
 def format_diagnose_text(report: dict[str, Any]) -> str:
     lines = [
         "DIAGNOSTIC ASSISTANT DS ROUTER",
+        f"Version routeur : V{report['router_version']}",
         f"Bible Accords disponible : {'oui' if report['bible_accords_available'] else 'non'}",
         f"Chunks indexes : {report['chunks']}",
         f"Pont nexus_bible_bridge.py disponible : {'oui' if report['nexus_bible_bridge_available'] else 'non'}",
@@ -1277,6 +2211,8 @@ def format_diagnose_text(report: dict[str, Any]) -> str:
         f"Veille juridique : {report['veille_juridique']['reason']}",
         f"Corpus local configure : {'oui' if report['corpus_local_configured'] else 'non'}",
         f"local-index/ ignore par Git : {'oui' if report['local_index_ignored'] else 'non'}",
+        "Modules connectes : " + ", ".join(report["connected_modules"]),
+        "Modules detectes non executables : " + (", ".join(report["detected_unavailable_modules"]) or "aucun"),
     ]
     if report["errors"]:
         lines.append("Erreurs :")
@@ -1313,6 +2249,125 @@ def validate_scenario(scenario: dict[str, Any], route: dict[str, Any]) -> list[d
     return checks
 
 
+def answer_validation_text(answer: dict[str, Any]) -> str:
+    return normalize(
+        json.dumps(
+            {
+                "route": answer.get("route", {}),
+                "sources": answer.get("sources", []),
+                "issue_groups": answer.get("issue_groups", []),
+                "findings": answer.get("findings", []),
+                "documents_to_request": answer.get("documents_to_request", []),
+                "questions_to_ask": answer.get("questions_to_ask", []),
+                "working_position": answer.get("working_position", ""),
+                "warnings": answer.get("warnings", []),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    )
+
+
+def source_text(answer: dict[str, Any], first_n: int | None = None) -> str:
+    sources = answer.get("sources", [])
+    if first_n is not None:
+        sources = sources[:first_n]
+    return normalize(json.dumps(sources, ensure_ascii=False, sort_keys=True))
+
+
+def has_semantic_duplicates(values: list[str]) -> bool:
+    token_sets: list[set[str]] = []
+    for value in values:
+        tokens = significant_tokens(value)
+        if not tokens:
+            continue
+        for existing in token_sets:
+            if existing and len(tokens & existing) / len(tokens | existing) >= 0.66:
+                return True
+        token_sets.append(tokens)
+    return False
+
+
+def validate_answer_scenario(scenario: dict[str, Any], answer: dict[str, Any]) -> list[dict[str, Any]]:
+    route = answer["route"]
+    domains = set(route["domains"])
+    intents = set(route["intents"])
+    engines = set(route["engines"])
+    text = answer_validation_text(answer)
+    top_sources = source_text(answer, 3)
+    all_sources = source_text(answer)
+    checks: list[dict[str, Any]] = []
+
+    for domain in scenario.get("expected_domains", []):
+        checks.append({"name": f"domaine_{domain}", "ok": domain in domains, "detail": domain})
+    for domain in scenario.get("forbidden_domains", []):
+        checks.append({"name": f"absence_domaine_{domain}", "ok": domain not in domains, "detail": domain})
+    for intent in scenario.get("expected_intents", []):
+        checks.append({"name": f"intention_{intent}", "ok": intent in intents, "detail": intent})
+    for engine in scenario.get("forbidden_engines", []):
+        checks.append({"name": f"absence_moteur_{engine}", "ok": engine not in engines, "detail": engine})
+
+    if scenario.get("top_source_any"):
+        terms = [normalize(term) for term in scenario["top_source_any"]]
+        checks.append(
+            {
+                "name": "source_prioritaire",
+                "ok": any(term in top_sources for term in terms),
+                "detail": ", ".join(scenario["top_source_any"]),
+            }
+        )
+    if scenario.get("source_any"):
+        terms = [normalize(term) for term in scenario["source_any"]]
+        checks.append(
+            {
+                "name": "source_pertinente",
+                "ok": any(term in all_sources for term in terms),
+                "detail": ", ".join(scenario["source_any"]),
+            }
+        )
+    for forbidden in scenario.get("forbidden_top_sources", []):
+        checks.append(
+            {
+                "name": f"source_bruitee_absente_{normalize(forbidden).replace(' ', '_')}",
+                "ok": normalize(forbidden) not in top_sources,
+                "detail": forbidden,
+            }
+        )
+    for term in scenario.get("working_position_terms", []):
+        checks.append(
+            {
+                "name": f"position_{normalize(term).replace(' ', '_')}",
+                "ok": normalize(term) in normalize(answer.get("working_position", "")),
+                "detail": answer.get("working_position", ""),
+            }
+        )
+    for term in scenario.get("required_text", []):
+        checks.append({"name": f"contenu_{normalize(term).replace(' ', '_')}", "ok": normalize(term) in text, "detail": term})
+    for term in scenario.get("forbidden_text", []):
+        checks.append({"name": f"absence_contenu_{normalize(term).replace(' ', '_')}", "ok": normalize(term) not in text, "detail": term})
+    for term in scenario.get("warning_terms", []):
+        warnings = normalize(" ".join(answer.get("warnings", [])))
+        checks.append({"name": f"avertissement_{normalize(term).replace(' ', '_')}", "ok": normalize(term) in warnings, "detail": term})
+    for group_id in scenario.get("issue_groups", []):
+        group_ids = {group.get("id") for group in answer.get("issue_groups", [])}
+        checks.append({"name": f"groupe_{group_id}", "ok": group_id in group_ids, "detail": group_id})
+    if scenario.get("max_sources"):
+        checks.append({"name": "source_limit", "ok": len(answer.get("sources", [])) <= scenario["max_sources"], "detail": len(answer.get("sources", []))})
+    if scenario.get("response_depth"):
+        checks.append({"name": "profondeur_reponse", "ok": answer.get("response_depth") == scenario["response_depth"], "detail": answer.get("response_depth")})
+    if scenario.get("dedupe_lists"):
+        checks.append({"name": "documents_dedoublonnes", "ok": not has_semantic_duplicates(answer.get("documents_to_request", [])), "detail": "documents"})
+        checks.append({"name": "questions_dedoublonnees", "ok": not has_semantic_duplicates(answer.get("questions_to_ask", [])), "detail": "questions"})
+    checks.append(
+        {
+            "name": "working_position_phrase_complete",
+            "ok": len(significant_tokens(answer.get("working_position", ""))) >= 6,
+            "detail": answer.get("working_position", ""),
+        }
+    )
+    return checks
+
+
 def run_scenarios() -> dict[str, Any]:
     rows = []
     for scenario in ROUTING_SCENARIOS:
@@ -1331,14 +2386,35 @@ def run_scenarios() -> dict[str, Any]:
                 "checks": checks,
             }
         )
+    ask_rows = []
+    for scenario in ASK_REGRESSION_SCENARIOS:
+        answer = ask(scenario["query"], scenario.get("limit", 6), scenario.get("source_limit", DEFAULT_SOURCE_LIMIT))
+        checks = validate_answer_scenario(scenario, answer)
+        ok = all(check["ok"] for check in checks)
+        ask_rows.append(
+            {
+                "id": scenario["id"],
+                "query": scenario["query"],
+                "main_domain": answer["route"]["main_domain"],
+                "domains": answer["route"]["domains"],
+                "intents": answer["route"]["intents"],
+                "engines": answer["route"]["engines"],
+                "response_depth": answer.get("response_depth"),
+                "source_count": len(answer.get("sources", [])),
+                "ok": ok,
+                "checks": checks,
+            }
+        )
     simple_count = len([row for row in rows if not row["id"].startswith("test-multi-")])
     multi_count = len([row for row in rows if row["id"].startswith("test-multi-")])
     return {
         "scenario_count": len(rows),
         "simple_scenarios": simple_count,
         "multi_domain_scenarios": multi_count,
-        "ok": all(row["ok"] for row in rows) and simple_count >= 20 and multi_count >= 5,
+        "ask_regression_count": len(ask_rows),
+        "ok": all(row["ok"] for row in rows) and all(row["ok"] for row in ask_rows) and simple_count >= 20 and multi_count >= 5,
         "rows": rows,
+        "ask_rows": ask_rows,
     }
 
 
@@ -1346,6 +2422,7 @@ def format_scenarios_text(report: dict[str, Any]) -> str:
     lines = [
         "SCENARIOS ASSISTANT DS ROUTER",
         f"Scenarios : {report['scenario_count']} dont {report['simple_scenarios']} simples et {report['multi_domain_scenarios']} multi-domaines",
+        f"Scenarios ask V1.1 : {report['ask_regression_count']}",
         f"Statut global : {'OK' if report['ok'] else 'ERREUR'}",
         "",
     ]
@@ -1354,6 +2431,13 @@ def format_scenarios_text(report: dict[str, Any]) -> str:
         failed = [check["name"] for check in row["checks"] if not check["ok"]]
         suffix = "" if not failed else " | echecs: " + ", ".join(failed)
         lines.append(f"- {row['id']} | {status} | {row['main_domain']} | {', '.join(row['engines'])}{suffix}")
+    if report.get("ask_rows"):
+        lines.extend(["", "Scenarios ask V1.1 :"])
+        for row in report["ask_rows"]:
+            status = "OK" if row["ok"] else "ERREUR"
+            failed = [check["name"] for check in row["checks"] if not check["ok"]]
+            suffix = "" if not failed else " | echecs: " + ", ".join(failed)
+            lines.append(f"- {row['id']} | {status} | {row['main_domain']} | sources {row['source_count']} | {row['response_depth']}{suffix}")
     return "\n".join(lines)
 
 
@@ -1365,12 +2449,13 @@ def emit(data: dict[str, Any], fmt: str, text_formatter) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="CFDT Nexus - Assistant DS router V1")
+    parser = argparse.ArgumentParser(description="CFDT Nexus - Assistant DS router V1.1")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_ask = sub.add_parser("ask")
     p_ask.add_argument("--query", required=True)
     p_ask.add_argument("--limit", type=int, default=6)
+    p_ask.add_argument("--source-limit", type=int, default=DEFAULT_SOURCE_LIMIT)
     p_ask.add_argument("--format", choices=["text", "json"], default="text")
 
     p_route = sub.add_parser("route")
@@ -1390,7 +2475,7 @@ def main() -> None:
     if args.command == "route":
         emit(route_query(args.query), args.format, format_route_text)
     elif args.command == "ask":
-        emit(ask(args.query, args.limit), args.format, format_answer_text)
+        emit(ask(args.query, args.limit, args.source_limit), args.format, format_answer_text)
     elif args.command == "diagnose":
         emit(diagnose(), args.format, format_diagnose_text)
     elif args.command == "run-scenarios":

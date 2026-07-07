@@ -31,22 +31,22 @@ CFDT Nexus doit pouvoir évoluer vers :
 - architecture lisible et maintenable ;
 - amélioration continue par versions.
 
-## Assistant DS Router V1
+## Assistant DS Router V1.1
 
 Le prototype `automation/scripts/assistant_ds_router.py` sert de routeur central local.
 
-Il recoit une question naturelle, detecte les domaines metier et l'intention, choisit automatiquement les moteurs locaux disponibles, puis produit une reponse Assistant DS avec sources locales, documents a recuperer, questions a poser, position de travail et avertissements.
+Il recoit une question naturelle, detecte les domaines metier et l'intention, choisit automatiquement les moteurs locaux disponibles, puis produit une reponse Assistant DS avec sources locales rerankees, documents a recuperer, questions a poser, groupes d'enjeux, position de travail et points de prudence.
 
 Commandes principales :
 
 ```powershell
-python automation/scripts/assistant_ds_router.py ask --query "Un salarie pense etre mal classe car il exerce plus de responsabilites que sa fiche de poste."
+python automation/scripts/assistant_ds_router.py ask --query "Un salarie pense etre mal classe car il exerce plus de responsabilites que sa fiche de poste." --source-limit 6
 python automation/scripts/assistant_ds_router.py route --query "Quels documents demander pour controler les compteurs d'heures ?"
 python automation/scripts/assistant_ds_router.py diagnose
 python automation/scripts/assistant_ds_router.py run-scenarios
 ```
 
-Documentation : `docs/architecture/ASSISTANT_DS_ROUTER_V1.md`.
+Documentation : `docs/architecture/ASSISTANT_DS_ROUTER_V1.md` et `docs/architecture/ASSISTANT_DS_ROUTER_V1_1.md`.
 
 ## Architecture
 
