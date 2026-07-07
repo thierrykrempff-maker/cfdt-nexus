@@ -34,7 +34,7 @@
       <section class="ask-panel" aria-labelledby="askTitle">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Nexus V2.1</p>
+            <p class="eyebrow">Nexus V2.2</p>
             <h1 id="askTitle">Question a analyser</h1>
           </div>
           <div class="confidence-pill" id="statusPill">Pret</div>
@@ -128,6 +128,29 @@
               <div class="confidence-pill" id="expertConfidence">-</div>
             </div>
             <div id="expertContent"></div>
+          </section>
+
+          <section class="report-panel" id="reportPanel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Rapport</p>
+                <h3>Fiche d'analyse</h3>
+              </div>
+              <div class="report-actions">
+                <button class="secondary-button" type="button" id="generateReportButton" disabled>
+                  Generer un rapport
+                </button>
+                <button class="secondary-button" type="button" id="copyReportButton" disabled>
+                  Copier le rapport
+                </button>
+                <button class="secondary-button" type="button" id="downloadReportButton" disabled>
+                  Telecharger .md
+                </button>
+              </div>
+            </div>
+            <div class="report-output" id="reportOutput">
+              Lance une analyse Nexus, puis genere la fiche de travail a partir du resultat reel.
+            </div>
           </section>
 
           <section class="panel">

@@ -1,5 +1,13 @@
 # Changelog
 
+## Nexus V2.2 rapport d'analyse connecte au moteur reel
+
+- Ajout de `automation/experts/report_generator.py` pour transformer le payload reel `assistant_ds_router.py` + `orchestrator.py` en rapport structure.
+- Extension de `/api/analyze` dans `apps/nexus-local-interface/server.py` avec `analysis_report`, genere apres l'orchestration Juriste/Paie.
+- Ajout dans l'interface locale canonique d'un bouton rapport, copie et telechargement Markdown.
+- Les rapports consomment les sources, domaines, experts, limites et niveaux de confiance reellement remontes par Nexus.
+- Renforcement des tests HTTP locaux pour verifier le flux routeur V1.2 -> orchestrateur -> experts -> rapport.
+
 ## Nexus V2.1 orchestration Juriste + Paie
 
 - Renforcement de l'Expert Juriste avec qualification juridique, analyse, vigilance, position de travail, sources et distinction regle certaine / interpretation / hypothese / information manquante.

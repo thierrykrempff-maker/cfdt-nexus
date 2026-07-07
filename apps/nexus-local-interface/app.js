@@ -20,6 +20,13 @@ const issueGroups = document.getElementById("issueGroups");
 const expertPanel = document.getElementById("expertPanel");
 const expertContent = document.getElementById("expertContent");
 const expertConfidence = document.getElementById("expertConfidence");
+const generateReportButton = document.getElementById("generateReportButton");
+const copyReportButton = document.getElementById("copyReportButton");
+const downloadReportButton = document.getElementById("downloadReportButton");
+const reportOutput = document.getElementById("reportOutput");
+
+let currentPayload = null;
+let currentReportMarkdown = "";
 
 const examples = [
   "classification",
@@ -167,7 +174,121 @@ function renderExperts(payload) {
   ]);
 }
 
+function resetReportState(message = "Lance une analyse Nexus, puis genere la fiche de travail a partir du resultat reel.") {
+  currentReportMarkdown = "";
+  reportOutput.textContent = message;
+  generateReportButton.disabled = !currentPayload?.analysis_report;
+  copyReportButton.disabled = true;
+  downloadReportButton.disabled = true;
+}
+
+function reportFileName(report) {
+  const slug = String(report?.title || "rapport-analyse-nexus")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+  return `${slug || "rapport-analyse-nexus"}.md`;
+}
+
+function reportBlock(title, values) {
+  const section = document.createElement("section");
+  section.className = "report-block";
+  const heading = document.createElement("h4");
+  heading.textContent = title;
+  section.appendChild(heading);
+  const items = Array.isArray(values) && values.length ? values : ["Aucun element distinct remonte par l'analyse Nexus a ce stade."];
+  if (items.length === 1) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = items[0];
+    section.appendChild(paragraph);
+  } else {
+    const list = document.createElement("ul");
+    fillList(list, items);
+    section.appendChild(list);
+  }
+  return section;
+}
+
+function renderReport() {
+  const report = currentPayload?.analysis_report;
+  if (!report) {
+    resetReportState("Aucun rapport Nexus n'est disponible pour cette analyse.");
+    return;
+  }
+  currentReportMarkdown = report.markdown || "";
+  reportOutput.textContent = "";
+
+  const meta = document.createElement("div");
+  meta.className = "report-meta";
+  const version = document.createElement("span");
+  version.textContent = `Rapport V${report.version || "2.2"}`;
+  const title = document.createElement("strong");
+  title.textContent = report.title || "Rapport Nexus";
+  meta.appendChild(version);
+  meta.appendChild(title);
+  reportOutput.appendChild(meta);
+
+  const flow = document.createElement("p");
+  flow.className = "report-flow";
+  flow.textContent = `Flux reel : ${(report.generated_from || []).join(" -> ")}`;
+  reportOutput.appendChild(flow);
+
+  for (const item of report.sections || []) {
+    reportOutput.appendChild(reportBlock(item.title, item.items));
+  }
+
+  const juristeSections = report.expert_sections?.juriste || [];
+  if (juristeSections.length) {
+    reportOutput.appendChild(reportBlock("Analyse Juriste reelle", juristeSections.map((item) => `${item.title}: ${(item.items || []).join(" / ")}`)));
+  }
+
+  const paieSections = report.expert_sections?.paie || [];
+  if (paieSections.length) {
+    reportOutput.appendChild(reportBlock("Analyse Paie reelle", paieSections.map((item) => `${item.title}: ${(item.items || []).join(" / ")}`)));
+  }
+
+  copyReportButton.disabled = !currentReportMarkdown;
+  downloadReportButton.disabled = !currentReportMarkdown;
+}
+
+async function copyReport() {
+  if (!currentReportMarkdown) return;
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(currentReportMarkdown);
+    setStatus("Rapport copie", currentPayload?.orchestration?.niveau_de_confiance);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = currentReportMarkdown;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+  setStatus("Rapport copie", currentPayload?.orchestration?.niveau_de_confiance);
+}
+
+function downloadReport() {
+  if (!currentReportMarkdown) return;
+  const blob = new Blob([currentReportMarkdown], { type: "text/markdown;charset=utf-8" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = reportFileName(currentPayload?.analysis_report);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 500);
+  setStatus("Rapport telecharge", currentPayload?.orchestration?.niveau_de_confiance);
+}
+
 function renderResult(payload) {
+  currentPayload = payload;
   const answer = payload.answer;
   const orchestration = payload.orchestration || {};
   emptyState.hidden = true;
@@ -185,9 +306,12 @@ function renderResult(payload) {
   fillList(warningsList, orchestration.limites || answer.warnings || []);
   renderIssueGroups(answer.issue_groups || []);
   renderExperts(payload);
+  resetReportState();
 }
 
 function renderError(message) {
+  currentPayload = null;
+  resetReportState();
   emptyState.hidden = false;
   resultContent.hidden = true;
   emptyState.innerHTML = "";
@@ -231,3 +355,7 @@ form.addEventListener("submit", async (event) => {
     button.disabled = false;
   }
 });
+
+generateReportButton.addEventListener("click", renderReport);
+copyReportButton.addEventListener("click", copyReport);
+downloadReportButton.addEventListener("click", downloadReport);

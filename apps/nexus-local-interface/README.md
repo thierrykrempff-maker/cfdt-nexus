@@ -29,9 +29,10 @@ http://127.0.0.1:8765/
 - aucun document interne envoye a l'exterieur ;
 - appel local au routeur `automation/scripts/assistant_ds_router.py ask --format json` ;
 - enrichissement local par `automation/experts/orchestrator.py` ;
+- rapport d'analyse local par `automation/experts/report_generator.py`, uniquement a partir du resultat reel Nexus ;
 - experts locaux Juriste et Paie, sans service IA externe.
 
-## Perimetre V2.1
+## Perimetre V2.2
 
 L'interface affiche :
 
@@ -47,6 +48,21 @@ L'interface affiche :
 - questions utiles ;
 - groupes d'enjeux ;
 - analyses par expertise Juriste et/ou Paie ;
+- rapport d'analyse structure ;
+- copie du rapport ;
+- telechargement Markdown ;
 - prudence et limites.
 
 L'orchestration conserve le routeur V1.2 : elle enrichit la reponse apres `assistant_ds_router.py ask --format json` sans remplacer le routage.
+
+Flux du rapport :
+
+```text
+question utilisateur
+-> apps/nexus-local-interface/server.py
+-> automation/scripts/assistant_ds_router.py ask --format json
+-> automation/experts/orchestrator.py
+-> automation/experts/juriste_travail.py et/ou automation/experts/paie.py
+-> automation/experts/report_generator.py
+-> affichage dans apps/nexus-local-interface
+```
