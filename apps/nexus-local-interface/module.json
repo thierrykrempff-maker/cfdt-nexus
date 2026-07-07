@@ -1,0 +1,9 @@
+{
+  "id": "nexus-local-interface",
+  "name": "Nexus Local Interface",
+  "version": "2.0.0",
+  "kind": "private-local-app",
+  "entrypoint": "server.py",
+  "network": "local-only",
+  "requires_internet": false
+}

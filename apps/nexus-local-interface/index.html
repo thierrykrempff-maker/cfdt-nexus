@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CFDT Nexus - Interface locale</title>
+    <meta name="description" content="Interface locale privee pour interroger Nexus sans PowerShell.">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    >
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#questionInput">Aller a la question</a>
+
+    <header class="app-header">
+      <div class="brand-block">
+        <span class="brand-mark">Cfdt.</span>
+        <span class="brand-copy">
+          <strong>CFDT Nexus</strong>
+          <span>Assistant DS local</span>
+        </span>
+      </div>
+      <div class="status-line">
+        <span class="status-dot" aria-hidden="true"></span>
+        Local prive - aucun envoi externe
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="ask-panel" aria-labelledby="askTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Nexus V2</p>
+            <h1 id="askTitle">Question a analyser</h1>
+          </div>
+          <div class="confidence-pill" id="statusPill">Pret</div>
+        </div>
+
+        <form id="questionForm" class="question-form">
+          <label for="questionInput">Question</label>
+          <textarea id="questionInput" name="query" rows="5" required></textarea>
+          <div class="form-row">
+            <label class="source-limit">
+              <span>Sources</span>
+              <input id="sourceLimitInput" type="number" min="3" max="12" value="6">
+            </label>
+            <button class="primary-button" type="submit">
+              <span aria-hidden="true">›</span>
+              Analyser avec Nexus
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="result-panel" aria-live="polite">
+        <div class="empty-state" id="emptyState">
+          <h2>Resultat Nexus</h2>
+          <p>Pose une question, puis lance l'analyse locale.</p>
+        </div>
+
+        <div class="result-content" id="resultContent" hidden>
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Reponse</p>
+              <h2 id="resultQuestion">Question</h2>
+            </div>
+            <div class="confidence-pill" id="confidenceValue">-</div>
+          </div>
+
+          <section class="response-band">
+            <h3>Reponse courte</h3>
+            <p id="shortAnswer"></p>
+          </section>
+
+          <section class="response-band">
+            <h3>Regles ou position de travail</h3>
+            <p id="workingPosition"></p>
+          </section>
+
+          <div class="grid-two">
+            <section class="panel">
+              <h3>Sources locales principales</h3>
+              <ul id="sourcesList"></ul>
+            </section>
+            <section class="panel">
+              <h3>Ce qu'il faut verifier</h3>
+              <ul id="findingsList"></ul>
+            </section>
+          </div>
+
+          <section class="panel" id="issueGroupsPanel" hidden>
+            <h3>Enjeux separes</h3>
+            <div id="issueGroups"></div>
+          </section>
+
+          <div class="grid-two">
+            <section class="panel">
+              <h3>Documents a recuperer</h3>
+              <ul id="documentsList"></ul>
+            </section>
+            <section class="panel">
+              <h3>Questions utiles</h3>
+              <ul id="questionsList"></ul>
+            </section>
+          </div>
+
+          <section class="expert-panel" id="expertPanel" hidden>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Expert</p>
+                <h3>Juriste droit du travail V0</h3>
+              </div>
+              <div class="confidence-pill" id="expertConfidence">-</div>
+            </div>
+            <div id="expertContent"></div>
+          </section>
+
+          <section class="panel">
+            <h3>Prudence et limites</h3>
+            <ul id="warningsList"></ul>
+          </section>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

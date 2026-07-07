@@ -1,15 +1,16 @@
 # Applications
 
-Ce dossier accueillera les interfaces applicatives de CFDT Nexus.
+Ce dossier accueille les interfaces applicatives de CFDT Nexus.
 
-## Applications prévues
+## Applications
 
-- `cycle-cse-intelligent/` : prototype privé V1 pour préparer et exploiter les réunions CSE avec analyse financière Sarralbe fictive ;
-- `private-assistant/` : assistant privé pour Thierry ;
-- `public-chatbot/` : chatbot public pour les salariés ;
+- `cycle-cse-intelligent/` : prototype prive V1 pour preparer et exploiter les reunions CSE avec analyse financiere Sarralbe fictive ;
+- `nexus-local-interface/` : interface locale privee V2 pour interroger Nexus sans PowerShell ;
+- `private-assistant/` : assistant prive pour Thierry ;
+- `public-chatbot/` : chatbot public pour les salaries ;
 - `document-intelligence-center/` : cadrage du module d'analyse documentaire locale connecte a la Bible Accords ;
 - `admin/` : outils d'administration, validation et supervision.
 
-## Règle structurante
+## Regle structurante
 
-Le chatbot public ne doit jamais accéder directement aux contenus internes non validés.
+Le chatbot public ne doit jamais acceder directement aux contenus internes non valides.

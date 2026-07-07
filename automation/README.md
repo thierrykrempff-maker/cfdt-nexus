@@ -23,6 +23,17 @@ Les sorties `--format text` et `--format json` sont disponibles pour preparer un
 
 Le routeur n'execute jamais un module non connecte : Document Intelligence, controle paie dedie et veille juridique sont signales explicitement lorsqu'ils sont detectes mais indisponibles.
 
+## Experts Nexus
+
+`experts/` prepare la couche d'expertise metier appelee apres le routage.
+
+V2 ajoute le socle `experts/juriste_travail.py` :
+
+- enrichissement local de la sortie V1.2 ;
+- pas de service externe ;
+- pas de regle juridique inventee ;
+- limites et sources a verifier explicites.
+
 ## Bible Accords Sarralbe
 
 Le script `scripts/agreements_bible.py` pilote le pipeline local privé :

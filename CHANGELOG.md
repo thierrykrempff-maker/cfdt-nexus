@@ -1,5 +1,13 @@
 # Changelog
 
+## Nexus V2 interface locale et Expert Juriste V0
+
+- Ajout de `apps/nexus-local-interface/`, interface locale privee pour interroger Nexus sans PowerShell.
+- Ajout d'un serveur local Python standard library lie a `127.0.0.1`, sans acces internet ni publication web.
+- L'interface appelle le moteur existant `assistant_ds_router.py ask --format json`.
+- Ajout du socle `automation/experts/` et de l'Expert Juriste droit du travail V0.
+- Ajout d'un test HTTP local couvrant les trois questions obligatoires V2.
+
 ## Assistant DS Router V1.2 corrective
 
 - Correction du routage des questions de reunion CSE pendant repos 5x8 : le cas est traite comme articulation mandat CSE / temps de travail, sans declencher une preparation de projet collectif.
