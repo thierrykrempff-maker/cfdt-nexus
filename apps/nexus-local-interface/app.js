@@ -62,6 +62,11 @@ function sourceLine(source) {
   const article = source.article || source.article_or_section;
   if (article) parts.push(article);
   if (source.source_layer_label) parts.push(source.source_layer_label);
+  if (source.official_id) parts.push(source.official_id);
+  if (source.etat) parts.push(`etat ${source.etat}`);
+  if (source.is_in_force !== undefined && source.is_in_force !== null) {
+    parts.push(`en vigueur ${source.is_in_force ? "oui" : "non"}`);
+  }
   if (source.source_quality_warning) parts.push(source.source_quality_warning);
   const line = parts.join(" | ");
   return source.excerpt ? `${line} | extrait: ${source.excerpt}` : line;
@@ -119,7 +124,7 @@ function sourceLayerFallback(sources) {
     autre: "Autres sources"
   };
   const absent = {
-    code_travail: "Code du travail absent du socle documentaire local actuel.",
+    code_travail: "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
     jurisprudence: "Jurisprudence absente du socle documentaire local actuel.",
     prudhommes: "Decisions prud'homales absentes du socle documentaire local actuel.",
     pratique: "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel."
@@ -172,6 +177,17 @@ function renderSources(element, answer, orchestration) {
       if (article) metaParts.push(article);
       if (source.source_layer_label) metaParts.push(source.source_layer_label);
       if (source.chunk_id) metaParts.push(source.chunk_id);
+      if (source.official_id) metaParts.push(source.official_id);
+      if (source.etat) metaParts.push(`etat ${source.etat}`);
+      if (source.is_in_force !== undefined && source.is_in_force !== null) {
+        metaParts.push(`en vigueur ${source.is_in_force ? "oui" : "non"}`);
+      }
+      if (source.version_start_date || source.version_end_date || source.date_debut || source.date_fin) {
+        const start = source.version_start_date || source.date_debut || "?";
+        const end = source.version_end_date || source.date_fin || "?";
+        metaParts.push(`version ${start} -> ${end}`);
+      }
+      if (source.retrieved_at) metaParts.push(`recupere ${source.retrieved_at}`);
       meta.textContent = metaParts.join(" | ") || "Localisation a verifier";
       item.appendChild(meta);
 

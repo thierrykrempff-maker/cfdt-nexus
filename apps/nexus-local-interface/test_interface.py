@@ -77,8 +77,16 @@ def assert_base_payload(payload: dict[str, object]) -> None:
         assert "ranking_reasons" in source
         assert "source_quality_warning" in source
     layers = source_layers(answer)
-    assert layers["code_travail"]["status"] == "absent"
-    assert "Code du travail absent" in layers["code_travail"]["absent_message"]
+    if layers["code_travail"]["status"] == "present":
+        assert layer_sources(answer, "code_travail")
+        for source in layer_sources(answer, "code_travail"):
+            assert source["source_layer"] == "code_travail"
+            assert source["document"] == "Code du travail"
+            assert source["official_id"]
+            assert "retrieved_at" in source
+    else:
+        assert layers["code_travail"]["status"] == "absent"
+        assert "Code du travail absent" in layers["code_travail"]["absent_message"]
     assert layers["jurisprudence"]["status"] == "absent"
     assert layers["prudhommes"]["status"] == "absent"
 

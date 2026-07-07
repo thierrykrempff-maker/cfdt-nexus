@@ -289,8 +289,8 @@ def direction_questions(answer: dict[str, Any]) -> list[str]:
 
 def limits(answer: dict[str, Any]) -> list[str]:
     items = [
-        "L'expert juriste ne consulte aucune source externe et ne remplace pas une validation juridique humaine.",
-        "Il ne dispose que des sources principales selectionnees par le routeur V1.2.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
     ]
     if not answer.get("sources"):
         items.append("Aucune source locale principale n'a ete trouvee pour conclure.")

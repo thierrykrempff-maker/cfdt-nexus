@@ -70,6 +70,17 @@ def source_items(answer: dict[str, Any], orchestration: dict[str, Any]) -> list[
                 parts.append(f"score {score}")
             if source.get("chunk_id"):
                 parts.append(f"chunk {source['chunk_id']}")
+            if source.get("official_id"):
+                parts.append(f"id officiel {source['official_id']}")
+            if source.get("etat"):
+                parts.append(f"etat {source['etat']}")
+            if source.get("is_in_force") is not None:
+                parts.append(f"en vigueur {source['is_in_force']}")
+            dates = [source.get("version_start_date") or source.get("date_debut"), source.get("version_end_date") or source.get("date_fin")]
+            if any(dates):
+                parts.append("version " + " -> ".join(str(item or "?") for item in dates))
+            if source.get("retrieved_at"):
+                parts.append(f"recupere le {source['retrieved_at']}")
             if source.get("source_quality_warning"):
                 parts.append(str(source["source_quality_warning"]))
             if source.get("excerpt"):
@@ -128,7 +139,7 @@ def collect_report_values(payload: dict[str, Any]) -> dict[str, list[str]]:
         established.extend(as_list(juriste.get("ce_qui_est_etabli_par_sources")))
         established.extend(prefixed(reasoning, "Regle certaine"))
     if answer.get("sources"):
-        established.append("Des sources locales ont ete remontees par le routeur Nexus.")
+        established.append("Des sources ont ete remontees par le routeur Nexus.")
 
     interpretations = prefixed(reasoning, "Interpretation") if active(juriste) else []
     hypotheses = prefixed(reasoning, "Hypothese") if active(juriste) else []

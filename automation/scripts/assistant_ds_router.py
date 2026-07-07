@@ -23,6 +23,11 @@ try:
 except ImportError:  # pragma: no cover - diagnosed at runtime.
     bridge = None
 
+try:
+    import legifrance_connector as legifrance
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    legifrance = None
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -68,7 +73,7 @@ SOURCE_LAYER_LABELS = {
 }
 
 SOURCE_LAYER_ABSENT_MESSAGES = {
-    "code_travail": "Code du travail absent du socle documentaire local actuel.",
+    "code_travail": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
     "jurisprudence": "Jurisprudence absente du socle documentaire local actuel.",
     "prudhommes": "Decisions prud'homales absentes du socle documentaire local actuel.",
     "pratique": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
@@ -1218,7 +1223,7 @@ def source_layer_for_source(source: dict[str, Any]) -> str:
 def source_key(source: dict[str, Any]) -> str:
     return "|".join(
         normalize(str(source.get(key) or ""))
-        for key in ["document", "page", "article", "article_or_section", "location"]
+        for key in ["document", "page", "article", "article_or_section", "location", "official_id", "legifrance_id"]
     )
 
 
@@ -1239,6 +1244,8 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         " ".join(ranking_reasons),
         source.get("role_probable_du_document"),
         source.get("raison_de_pertinence"),
+        source.get("official_id"),
+        source.get("etat"),
     ]
     return {
         "document": source.get("document"),
@@ -1256,6 +1263,16 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "document_type": document_type,
         "idcc": source.get("idcc") or ("44" if layer == "convention_collective" else None),
         "version": source.get("version") or ("septembre 2013" if layer == "convention_collective" else None),
+        "official_id": source.get("official_id"),
+        "legifrance_id": source.get("legifrance_id") or source.get("official_id"),
+        "etat": source.get("etat"),
+        "is_in_force": source.get("is_in_force"),
+        "date_debut": source.get("date_debut"),
+        "date_fin": source.get("date_fin"),
+        "version_start_date": source.get("version_start_date") or source.get("date_debut"),
+        "version_end_date": source.get("version_end_date") or source.get("date_fin"),
+        "retrieved_at": source.get("retrieved_at"),
+        "url": source.get("url"),
         "excerpt": excerpt,
         "chunk_id": source.get("chunk_id"),
         "ranking_reasons": ranking_reasons[:8],
@@ -1278,6 +1295,10 @@ def source_context(source: dict[str, Any]) -> str:
                 source.get("document_type"),
                 source.get("idcc"),
                 source.get("version"),
+                source.get("official_id"),
+                source.get("legifrance_id"),
+                source.get("etat"),
+                source.get("url"),
                 source.get("excerpt"),
                 " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
                 source.get("_context"),
@@ -1349,9 +1370,25 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 28
     if "droit_syndical" in domains and any(term in document for term in ["droit syndical", "cse", "rp", "dialogue social"]):
         score += 28
+    if source.get("source_layer") == "code_travail" and any(
+        domain in domains
+        for domain in [
+            "temps_travail",
+            "astreinte",
+            "classification_carriere",
+            "inaptitude_reclassement",
+            "disciplinaire",
+            "droit_syndical",
+            "conges_payes",
+            "paie_remuneration",
+        ]
+    ):
+        score += 18
 
     if source.get("origin") == "nexus_bible_bridge" and any(intent in route.get("intents", []) for intent in ["preparer_cse", "analyser_situation_individuelle", "analyser_paie"]):
         score += 6
+    if source.get("origin") == "legifrance_code_travail":
+        score += 4
     if source.get("origin") == "bible_accords" and route.get("engines") == ["bible_accords"]:
         score += 4
 
@@ -1409,6 +1446,15 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             selected_keys.add(key)
             if len(selected) >= minimum_sources:
                 break
+
+    if any(source.get("source_layer") == "code_travail" for source in ranked) and not any(
+        source.get("source_layer") == "code_travail" for source in selected
+    ):
+        code_source = next(source for source in ranked if source.get("source_layer") == "code_travail")
+        if len(selected) < limit:
+            selected.append(code_source)
+        elif selected:
+            selected[-1] = code_source
 
     return [clean_source(source) for source in selected[:limit]]
 
@@ -1569,9 +1615,34 @@ def simple_bible_only(intents: list[str], domains: list[str], query: str) -> boo
     return bool(re.search(r"^combien|^comment|^quels?", text))
 
 
+def needs_code_travail(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    legal_domains = {
+        "classification_carriere",
+        "inaptitude_reclassement",
+        "disciplinaire",
+        "temps_travail",
+        "astreinte",
+        "droit_syndical",
+        "conges_payes",
+    }
+    if any(domain in domains for domain in legal_domains):
+        return True
+    if "paie_remuneration" in domains and re.search(r"heures?|nuit|dimanche|jour ferie|repos|astreinte|majoration", text):
+        return True
+    if any(intent in intents for intent in ["verifier_conformite", "analyser_situation_individuelle"]):
+        return True
+    return bool(re.search(r"code du travail|legifrance|article [lrd]\.?\s*\d|droits?", text))
+
+
 def engine_status() -> dict[str, dict[str, Any]]:
     chunks_path = bible.INDEX_DIR / "chunks.private.jsonl"
     chunks = bible.read_jsonl(chunks_path) if chunks_path.exists() else []
+    legifrance_status = legifrance.status_from_env() if legifrance is not None else {
+        "detected": False,
+        "available": False,
+        "reason": "connecteur Legifrance absent",
+    }
     return {
         "bible_accords": {
             "available": bool(chunks),
@@ -1603,6 +1674,15 @@ def engine_status() -> dict[str, dict[str, Any]]:
             "available": False,
             "detected": False,
             "reason": "connecteur de veille non connecte en V1.2",
+        },
+        "legifrance_code_travail": {
+            **legifrance_status,
+            "path": str(SCRIPT_DIR / "legifrance_connector.py"),
+            "reason": (
+                "connecteur Legifrance configure"
+                if legifrance_status.get("available")
+                else "connecteur Legifrance non configure: secrets attendus en variables d'environnement"
+            ),
         },
     }
 
@@ -1637,6 +1717,14 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
         warnings.append("Module paie dedie non connecte : controle realise via sources locales et methode metier.")
     if "rechercher_veille" in intents or "veille_juridique" in domains:
         warnings.append("Veille juridique non connectee en V1.2 : verifier les sources externes a jour manuellement.")
+    if needs_code_travail(query, domains, intents):
+        if status["legifrance_code_travail"]["available"]:
+            engines.append("legifrance_code_travail")
+        else:
+            warnings.append(
+                "Code du travail non alimente : connecteur Legifrance non configure ou indisponible. "
+                "Aucun article n'est invente."
+            )
 
     engines = dedupe(engines)
     plan = []
@@ -1654,6 +1742,14 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 {
                     "engine": engine,
                     "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+                    "status": "connected",
+                }
+            )
+        elif engine == "legifrance_code_travail":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
                     "status": "connected",
                 }
             )
@@ -2357,6 +2453,15 @@ def merge_bridge_result(answer: dict[str, Any], report: dict[str, Any]) -> None:
         answer["confidence"] = report["niveau_de_confiance"]
 
 
+def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    for source in result.get("sources", [])[:5]:
+        answer["sources"].append(normalize_source(source, "legifrance_code_travail"))
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("Legifrance: " + str(warning))
+    if result.get("available") and not result.get("sources"):
+        answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
+
+
 def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
     route = answer["route"]
     limits = answer_limits(route, source_limit)
@@ -2419,6 +2524,13 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
             merge_bridge_result(answer, report)
         except SystemExit as exc:
             answer["warnings"].append(f"Pont Nexus/Bible indisponible: {exc}")
+
+    if "legifrance_code_travail" in route["engines"] and legifrance is not None:
+        try:
+            client = legifrance.LegifranceClient()
+            merge_legifrance_result(answer, client.search_code_sources(query, limit=3))
+        except Exception as exc:  # pragma: no cover - network and credential boundary.
+            answer["warnings"].append(f"Legifrance indisponible: {exc}")
 
     return finalize_answer(answer, source_limit)
 
@@ -2553,6 +2665,7 @@ def diagnose() -> dict[str, Any]:
         "cycle_cse": status["cycle_cse"],
         "paie_control": status["paie_control"],
         "veille_juridique": status["veille_juridique"],
+        "legifrance_code_travail": status["legifrance_code_travail"],
         "corpus_local_configured": source_config.exists(),
         "source_config_path": str(source_config),
         "local_index_ignored": local_index_ignored,
@@ -2575,6 +2688,7 @@ def format_diagnose_text(report: dict[str, Any]) -> str:
         f"Cycle CSE : {report['cycle_cse']['reason']}",
         f"Module paie : {report['paie_control']['reason']}",
         f"Veille juridique : {report['veille_juridique']['reason']}",
+        f"Legifrance Code du travail : {report['legifrance_code_travail']['reason']}",
         f"Corpus local configure : {'oui' if report['corpus_local_configured'] else 'non'}",
         f"local-index/ ignore par Git : {'oui' if report['local_index_ignored'] else 'non'}",
         "Modules connectes : " + ", ".join(report["connected_modules"]),
