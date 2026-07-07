@@ -34,7 +34,7 @@
       <section class="ask-panel" aria-labelledby="askTitle">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Nexus V2</p>
+            <p class="eyebrow">Nexus V2.1</p>
             <h1 id="askTitle">Question a analyser</h1>
           </div>
           <div class="confidence-pill" id="statusPill">Pret</div>
@@ -49,7 +49,7 @@
               <input id="sourceLimitInput" type="number" min="3" max="12" value="6">
             </label>
             <button class="primary-button" type="submit">
-              <span aria-hidden="true">›</span>
+              <span aria-hidden="true">></span>
               Analyser avec Nexus
             </button>
           </div>
@@ -65,14 +65,25 @@
         <div class="result-content" id="resultContent" hidden>
           <div class="result-header">
             <div>
-              <p class="eyebrow">Reponse</p>
+              <p class="eyebrow">Question posee</p>
               <h2 id="resultQuestion">Question</h2>
             </div>
             <div class="confidence-pill" id="confidenceValue">-</div>
           </div>
 
+          <div class="grid-two">
+            <section class="panel compact-panel">
+              <h3>Domaines detectes</h3>
+              <div class="inline-list" id="domainsList"></div>
+            </section>
+            <section class="panel compact-panel">
+              <h3>Experts mobilises</h3>
+              <div class="inline-list" id="expertsList"></div>
+            </section>
+          </div>
+
           <section class="response-band">
-            <h3>Reponse courte</h3>
+            <h3>Reponse synthetique Nexus</h3>
             <p id="shortAnswer"></p>
           </section>
 
@@ -111,8 +122,8 @@
           <section class="expert-panel" id="expertPanel" hidden>
             <div class="section-heading">
               <div>
-                <p class="eyebrow">Expert</p>
-                <h3>Juriste droit du travail V0</h3>
+                <p class="eyebrow">Experts</p>
+                <h3>Analyses par expertise</h3>
               </div>
               <div class="confidence-pill" id="expertConfidence">-</div>
             </div>

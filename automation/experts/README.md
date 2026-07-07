@@ -9,9 +9,9 @@ Cette zone accueille les experts metier appeles apres le routage Assistant DS.
 - Expert Paie ;
 - Expert HSE / site Seveso.
 
-## Etat V2
+## Etat V2.1
 
-Seul `juriste_travail.py` est implemente en V0.
+`juriste_travail.py` reste le socle juriste, renforce en V2.1.
 
 L'expert juriste :
 
@@ -19,6 +19,20 @@ L'expert juriste :
 - ne modifie pas le routage ;
 - n'appelle aucun service externe ;
 - n'invente pas de regle absente des sources ;
-- indique clairement quand une conclusion depend d'un texte local ou d'une donnee manquante.
+- distingue regle certaine, interpretation, hypothese et information manquante ;
+- produit qualification juridique, analyse, vigilance, position de travail et limites.
 
-Les autres experts sont reserves pour des missions ulterieures.
+`paie.py` ajoute l'Expert Paie V0 :
+
+- controle salaire, coefficient, heures, majorations, primes, astreinte, recuperations, compteurs et bulletin ;
+- liste les rubriques, donnees, documents et sources necessaires ;
+- ne produit aucun calcul detaille si les heures, taux, assiette, source et valeur bulletin ne sont pas disponibles.
+
+`orchestrator.py` assure la premiere coordination locale :
+
+- appelle Juriste et/ou Paie selon la question ;
+- produit une synthese Nexus unique ;
+- conserve les analyses par expertise sans simple concatenation ;
+- dedoublonne sources, documents, questions et limites.
+
+Les experts DRH contradicteur et HSE / site Seveso restent reserves pour des missions ulterieures.

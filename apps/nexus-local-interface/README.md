@@ -28,13 +28,17 @@ http://127.0.0.1:8765/
 - aucun acces internet requis ;
 - aucun document interne envoye a l'exterieur ;
 - appel local au routeur `automation/scripts/assistant_ds_router.py ask --format json` ;
-- enrichissement local par `automation/experts/juriste_travail.py`.
+- enrichissement local par `automation/experts/orchestrator.py` ;
+- experts locaux Juriste et Paie, sans service IA externe.
 
-## Perimetre V2
+## Perimetre V2.1
 
 L'interface affiche :
 
-- reponse courte ;
+- question posee ;
+- domaines detectes ;
+- experts mobilises ;
+- reponse synthetique Nexus ;
 - position de travail ;
 - sources locales principales ;
 - niveau de confiance ;
@@ -42,4 +46,7 @@ L'interface affiche :
 - documents a recuperer ;
 - questions utiles ;
 - groupes d'enjeux ;
-- bloc Expert Juriste droit du travail V0.
+- analyses par expertise Juriste et/ou Paie ;
+- prudence et limites.
+
+L'orchestration conserve le routeur V1.2 : elle enrichit la reponse apres `assistant_ds_router.py ask --format json` sans remplacer le routage.

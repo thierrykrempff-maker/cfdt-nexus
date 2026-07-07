@@ -1,5 +1,13 @@
 # Changelog
 
+## Nexus V2.1 orchestration Juriste + Paie
+
+- Renforcement de l'Expert Juriste avec qualification juridique, analyse, vigilance, position de travail, sources et distinction regle certaine / interpretation / hypothese / information manquante.
+- Ajout de l'Expert Paie V0 pour les controles bulletin, heures, majorations, primes, astreinte, recuperation et compteurs, sans calcul invente lorsque les donnees manquent.
+- Ajout de `automation/experts/orchestrator.py` pour produire une synthese Nexus unique lorsque Juriste et Paie sont mobilises.
+- Extension de l'interface locale V2.1 : domaines detectes, experts mobilises, reponse synthetique, analyses par expertise, sources, confiance et limites.
+- Ajout de tests HTTP locaux couvrant Juriste seul, Paie seul, Juriste + Paie et question incomplete.
+
 ## Nexus V2 interface locale et Expert Juriste V0
 
 - Ajout de `apps/nexus-local-interface/`, interface locale privee pour interroger Nexus sans PowerShell.

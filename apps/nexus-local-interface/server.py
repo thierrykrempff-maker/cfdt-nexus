@@ -26,7 +26,7 @@ ROUTER_SCRIPT = ROOT / "automation" / "scripts" / "assistant_ds_router.py"
 EXPERTS_DIR = ROOT / "automation"
 
 sys.path.insert(0, str(EXPERTS_DIR))
-from experts import juriste_travail  # noqa: E402
+from experts import orchestrator  # noqa: E402
 
 
 def router_environment() -> dict[str, str]:
@@ -71,15 +71,16 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
     if not cleaned:
         raise ValueError("Question vide.")
     answer = run_router(cleaned, source_limit)
+    expert_payload = orchestrator.orchestrate(answer)
     return {
         "ok": True,
         "answer": answer,
-        "expert_juriste": juriste_travail.enrich(answer),
+        **expert_payload,
     }
 
 
 class NexusHandler(SimpleHTTPRequestHandler):
-    server_version = "NexusLocalInterface/2.0"
+    server_version = "NexusLocalInterface/2.1"
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(APP_DIR), **kwargs)
@@ -100,7 +101,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
         if self.path in {"/", ""}:
             self.path = "/index.html"
         if self.path == "/health":
-            self.send_json(HTTPStatus.OK, {"ok": True, "service": "nexus-local-interface"})
+            self.send_json(HTTPStatus.OK, {"ok": True, "service": "nexus-local-interface", "version": "2.1"})
             return
         super().do_GET()
 

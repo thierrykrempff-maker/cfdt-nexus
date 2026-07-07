@@ -294,6 +294,26 @@ input {
   box-shadow: none;
 }
 
+.compact-panel {
+  padding: 14px;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inline-list span {
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 ul {
   margin: 0;
   padding-left: 20px;
@@ -325,6 +345,20 @@ li {
 
 .expert-block {
   margin-top: 12px;
+}
+
+.expert-card {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.expert-card:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.expert-card h4 {
+  margin: 0;
 }
 
 .expert-block strong {

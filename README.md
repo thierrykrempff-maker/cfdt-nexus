@@ -48,7 +48,7 @@ python automation/scripts/assistant_ds_router.py run-scenarios
 
 Documentation : `docs/architecture/ASSISTANT_DS_ROUTER_V1.md` et `docs/architecture/ASSISTANT_DS_ROUTER_V1_1.md`.
 
-## Interface locale Nexus V2
+## Interface locale Nexus V2.1
 
 `apps/nexus-local-interface/` fournit une interface locale privee pour poser une question a Nexus sans PowerShell.
 
@@ -58,7 +58,7 @@ Lancement :
 apps\nexus-local-interface\start-nexus-local.bat
 ```
 
-L'interface appelle localement `assistant_ds_router.py ask --format json`, puis enrichit la reponse avec l'Expert Juriste droit du travail V0.
+L'interface appelle localement `assistant_ds_router.py ask --format json`, puis enrichit la reponse avec une orchestration locale Juriste + Paie. Le routeur V1.2 reste le socle d'aiguillage ; les experts ajoutent qualification, methode de controle, sources, limites et synthese prudente.
 
 ## Architecture
 

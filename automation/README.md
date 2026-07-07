@@ -27,11 +27,13 @@ Le routeur n'execute jamais un module non connecte : Document Intelligence, cont
 
 `experts/` prepare la couche d'expertise metier appelee apres le routage.
 
-V2 ajoute le socle `experts/juriste_travail.py` :
+V2 ajoute le socle `experts/juriste_travail.py`. V2.1 ajoute `experts/paie.py` et `experts/orchestrator.py` :
 
 - enrichissement local de la sortie V1.2 ;
 - pas de service externe ;
 - pas de regle juridique inventee ;
+- pas de calcul paie invente lorsque des donnees manquent ;
+- synthese unique lorsque Juriste et Paie sont mobilises ;
 - limites et sources a verifier explicites.
 
 ## Bible Accords Sarralbe
