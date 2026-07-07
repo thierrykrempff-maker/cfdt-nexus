@@ -2528,7 +2528,7 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
     if "legifrance_code_travail" in route["engines"] and legifrance is not None:
         try:
             client = legifrance.LegifranceClient()
-            merge_legifrance_result(answer, client.search_code_sources(query, limit=3))
+            merge_legifrance_result(answer, client.search_code_sources(query, limit=5))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Legifrance indisponible: {exc}")
 

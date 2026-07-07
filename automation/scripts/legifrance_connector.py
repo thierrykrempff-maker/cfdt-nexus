@@ -8,7 +8,6 @@ credentials and never fabricates a legal source when the API is unavailable.
 
 from __future__ import annotations
 
-import base64
 import hashlib
 import html
 import json
@@ -46,6 +45,69 @@ DEFAULT_TIMEOUT_SECONDS = 20
 DEFAULT_CACHE_TTL_SECONDS = 24 * 60 * 60
 CODE_DU_TRAVAIL_LEGITEXT = "LEGITEXT000006072050"
 CODE_DU_TRAVAIL_LABEL = "Code du travail"
+
+CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
+    {
+        "topic": "temps_travail_effectif",
+        "article": "L3121-1",
+        "article_id": "LEGIARTI000033020517",
+        "keywords": ["temps de travail", "travail effectif", "intervention", "poste", "reunion", "cse"],
+    },
+    {
+        "topic": "astreinte_definition",
+        "article": "L3121-9",
+        "article_id": "LEGIARTI000033020484",
+        "keywords": ["astreinte", "intervention", "domicile", "appel"],
+    },
+    {
+        "topic": "astreinte_intervention",
+        "article": "L3121-10",
+        "article_id": "LEGIARTI000033020479",
+        "keywords": ["astreinte", "intervention", "temps de travail effectif", "nuit"],
+    },
+    {
+        "topic": "astreinte_compensation",
+        "article": "L3121-11",
+        "article_id": "LEGIARTI000033020471",
+        "keywords": ["astreinte", "compensation", "contrepartie", "indemnisation"],
+    },
+    {
+        "topic": "heures_supplementaires",
+        "article": "L3121-28",
+        "article_id": "LEGIARTI000033020373",
+        "keywords": ["heures supplementaires", "majoration", "paie", "bulletin", "heure"],
+    },
+    {
+        "topic": "repos_quotidien",
+        "article": "L3131-1",
+        "article_id": "LEGIARTI000033020918",
+        "keywords": ["repos quotidien", "repos", "reprise", "nuit", "poste", "5x8", "cse"],
+    },
+    {
+        "topic": "repos_hebdomadaire_interdiction",
+        "article": "L3132-1",
+        "article_id": "LEGIARTI000006902580",
+        "keywords": ["repos hebdomadaire", "repos", "semaine", "dimanche", "cse"],
+    },
+    {
+        "topic": "repos_hebdomadaire_duree",
+        "article": "L3132-2",
+        "article_id": "LEGIARTI000006902581",
+        "keywords": ["repos hebdomadaire", "repos", "24 heures", "35 heures", "dimanche"],
+    },
+    {
+        "topic": "repos_dominical",
+        "article": "L3132-3",
+        "article_id": "LEGIARTI000020967733",
+        "keywords": ["dimanche", "repos dominical", "repos hebdomadaire"],
+    },
+    {
+        "topic": "dimanche_compensation_majoration",
+        "article": "L3132-27",
+        "article_id": "LEGIARTI000020968006",
+        "keywords": ["dimanche", "repos compensateur", "majoration", "salaire", "paie"],
+    },
+]
 
 
 class LegifranceError(RuntimeError):
@@ -177,17 +239,17 @@ class LegifranceClient:
 
         assert self.config.client_id is not None
         assert self.config.client_secret is not None
-        credentials = f"{self.config.client_id}:{self.config.client_secret}".encode("utf-8")
-        auth_header = base64.b64encode(credentials).decode("ascii")
-        form: dict[str, str] = {"grant_type": "client_credentials"}
-        if self.config.scope:
-            form["scope"] = self.config.scope
+        form: dict[str, str] = {
+            "grant_type": "client_credentials",
+            "client_id": self.config.client_id,
+            "client_secret": self.config.client_secret,
+            "scope": self.config.scope or "openid",
+        }
         body = urllib.parse.urlencode(form).encode("utf-8")
         request = urllib.request.Request(
             self.config.token_url,
             data=body,
             headers={
-                "Authorization": f"Basic {auth_header}",
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json",
             },
@@ -255,13 +317,17 @@ class LegifranceClient:
             return merge_search_context(cached, search_hit)
 
         response = self._post_json(self.config.article_endpoint, {"id": cleaned_id})
+        current_id = current_version_id(response)
+        if current_id and current_id != cleaned_id:
+            response = self._post_json(self.config.article_endpoint, {"id": current_id})
+            cleaned_id = current_id
         source = normalize_article_source(response, cleaned_id, search_hit)
         self._write_response_cache(cache_key, source)
         return source
 
     def search_code_sources(self, query: str, limit: int = 3) -> dict[str, Any]:
         try:
-            hits = self.search_article_hits(query, limit=max(limit * 2, limit))
+            hits = mini_index_hits(query, limit=max(limit * 2, limit))
             sources: list[dict[str, Any]] = []
             warnings: list[str] = []
             for hit in hits:
@@ -277,6 +343,13 @@ class LegifranceClient:
                         sources.append(fallback)
                 if len(sources) >= limit:
                     break
+            if not hits:
+                warnings.append("Mini-index Code du travail V1: aucun article cible selectionne pour cette question.")
+            if is_cse_meeting_query(query):
+                warnings.append(
+                    "Mini-index Code du travail V1: aucun article CSE specifique n'est encore valide ; "
+                    "les articles remontes portent sur temps de travail et repos."
+                )
             return {
                 "available": True,
                 "sources": sources,
@@ -454,6 +527,87 @@ def build_search_payload(query: str, limit: int) -> dict[str, Any]:
     }
 
 
+def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
+    text = normalize_text(query)
+    selected: list[dict[str, Any]] = []
+
+    def add(article: str, reason: str, score: int) -> None:
+        for item in CODE_TRAVAIL_MINI_INDEX:
+            if item["article"] == article:
+                selected.append(
+                    {
+                        "official_id": item["article_id"],
+                        "article": item["article"],
+                        "title": CODE_DU_TRAVAIL_LABEL,
+                        "excerpt": "",
+                        "score": score,
+                        "topic": item["topic"],
+                        "reason": reason,
+                    }
+                )
+                return
+
+    if "astreinte" in text:
+        add("L3121-9", "astreinte: definition legale", 100)
+        add("L3121-10", "astreinte: intervention et temps de travail effectif", 96)
+        add("L3121-11", "astreinte: contreparties", 86)
+    if any(term in text for term in ["repos quotidien", "reprise", "interrompu", "nuit", "5x8", "poste"]):
+        add("L3131-1", "repos quotidien", 92)
+    if any(term in text for term in ["repos hebdomadaire", "repos compensateur", "dimanche", "hebdomadaire"]):
+        add("L3132-1", "repos hebdomadaire", 88)
+        add("L3132-2", "duree minimale du repos hebdomadaire", 86)
+    if "dimanche" in text:
+        add("L3132-3", "repos dominical", 96)
+        add("L3132-27", "dimanche: repos compensateur et majoration", 94)
+    if any(term in text for term in ["heure supplementaire", "heures supplementaires", "majoration", "paie", "bulletin"]):
+        add("L3121-28", "heures supplementaires et majoration", 84)
+    if any(term in text for term in ["temps de travail", "travail effectif", "intervention", "reunion", "cse"]):
+        add("L3121-1", "temps de travail effectif", 82)
+    if is_cse_meeting_query(query):
+        add("L3121-1", "CSE pendant repos: qualifier le temps de travail", 90)
+        add("L3131-1", "CSE pendant repos: verifier le repos quotidien", 89)
+        add("L3132-1", "CSE pendant repos: verifier le repos hebdomadaire", 82)
+
+    if not selected:
+        for item in CODE_TRAVAIL_MINI_INDEX:
+            if any(normalize_text(keyword) in text for keyword in item.get("keywords", [])):
+                selected.append(
+                    {
+                        "official_id": item["article_id"],
+                        "article": item["article"],
+                        "title": CODE_DU_TRAVAIL_LABEL,
+                        "excerpt": "",
+                        "score": 60,
+                        "topic": item["topic"],
+                        "reason": "mot-cle du mini-index Code du travail",
+                    }
+                )
+
+    return dedupe_hits(sorted(selected, key=lambda item: int(item.get("score") or 0), reverse=True))[: max(1, limit)]
+
+
+def is_cse_meeting_query(query: str) -> bool:
+    text = normalize_text(query)
+    return "cse" in text and any(term in text for term in ["reunion", "repos", "5x8", "delegation", "elu"])
+
+
+def current_version_id(payload: Any) -> str | None:
+    article = payload.get("article") if isinstance(payload, dict) else None
+    if not isinstance(article, dict):
+        return None
+    versions = article.get("articleVersions")
+    if not isinstance(versions, list):
+        return None
+    for version in reversed(versions):
+        if not isinstance(version, dict):
+            continue
+        etat = normalize_text(version.get("etat"))
+        candidate = version.get("id")
+        if candidate and "vigueur" in etat:
+            return str(candidate)
+    return None
+
+
 def extract_article_hits(payload: Any) -> list[dict[str, Any]]:
     hits: list[dict[str, Any]] = []
     for node in iter_dicts(payload):
@@ -596,9 +750,38 @@ def short_excerpt(value: Any, limit: int = 900) -> str:
 
 
 def first_date_value(payload: Any, keys: list[str]) -> str | None:
-    value = first_text_value(payload, keys)
-    if value:
-        return value[:10]
+    value = first_value_for_keys(payload, keys)
+    if isinstance(value, (int, float)):
+        try:
+            return datetime.fromtimestamp(float(value) / 1000, tz=timezone.utc).date().isoformat()
+        except (OSError, OverflowError, ValueError):
+            return None
+    if isinstance(value, str) and value.strip():
+        stripped = value.strip()
+        if stripped.isdigit():
+            try:
+                return datetime.fromtimestamp(float(stripped) / 1000, tz=timezone.utc).date().isoformat()
+            except (OSError, OverflowError, ValueError):
+                return None
+        return stripped[:10]
+    return None
+
+
+def first_value_for_keys(value: Any, keys: list[str]) -> Any | None:
+    if isinstance(value, dict):
+        lower_keys = {key.lower() for key in keys}
+        for key, candidate in value.items():
+            if key.lower() in lower_keys and candidate not in (None, ""):
+                return candidate
+        for child in value.values():
+            found = first_value_for_keys(child, keys)
+            if found not in (None, ""):
+                return found
+    elif isinstance(value, list):
+        for child in value:
+            found = first_value_for_keys(child, keys)
+            if found not in (None, ""):
+                return found
     return None
 
 
@@ -643,10 +826,20 @@ def normalize_article_source(payload: Any, requested_id: str, search_hit: dict[s
     )
     in_force = is_in_force(etat, end_date)
     warning = None
+    if etat and normalize_text(etat) != "vigueur":
+        warning = f"Article en etat {etat}: verifier la version applicable sur Legifrance."
     if in_force is None:
         warning = "Etat de vigueur non determine automatiquement: verifier la fiche Legifrance."
     if not text:
         warning = "Texte de l'article non extrait: verifier la fiche Legifrance."
+    ranking_reasons = [
+        "Source officielle Legifrance via API PISTE",
+        "Mini-index Code du travail V1",
+    ]
+    if (search_hit or {}).get("topic"):
+        ranking_reasons.append("theme: " + str(search_hit["topic"]))
+    if (search_hit or {}).get("reason"):
+        ranking_reasons.append(str(search_hit["reason"]))
     return {
         "document": CODE_DU_TRAVAIL_LABEL,
         "document_type": "code_travail",
@@ -667,10 +860,7 @@ def normalize_article_source(payload: Any, requested_id: str, search_hit: dict[s
         "excerpt": short_excerpt(text),
         "chunk_id": official_id,
         "score": (search_hit or {}).get("score"),
-        "ranking_reasons": [
-            "Source officielle Legifrance via API PISTE",
-            "Recherche limitee au Code du travail",
-        ],
+        "ranking_reasons": ranking_reasons,
         "source_quality_warning": warning,
     }
 
