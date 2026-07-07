@@ -1,8 +1,18 @@
-# Assistant DS Router V1.1
+# Assistant DS Router V1.1 / V1.2 corrective
 
 ## Role
 
 `automation/scripts/assistant_ds_router.py` reste le routeur local de l'Assistant DS CFDT Nexus. La version 1.1 ne remplace pas les moteurs specialistes (`agreements_bible.py`, `nexus_bible_bridge.py`) : elle ameliore la fusion finale produite par `ask`.
+
+La correction V1.2 conserve l'interface V1.1 et cible trois points : intention reelle des questions reunion CSE/repos, hierarchisation des sources par sous-probleme, et reponse courte avant methode de controle.
+
+## Correctifs V1.2
+
+- une reunion CSE pendant un repos 5x8 est traitee comme une articulation mandat CSE / temps de travail, pas comme un projet collectif de reduction du repos ;
+- le simple mot `CSE` ne suffit plus a declencher `preparer_cse` ;
+- les sources restauration, interessement, harmonisation remuneration et forfait jours sont repoussees lorsqu'elles sont hors sujet ou hors population ;
+- les sujets astreinte + repos + paie priorisent l'accord Astreinte, les sources repos/temps de travail, puis les complements paie ;
+- `ask` affiche une reponse courte avant les sources, la position, les points a verifier, les documents et les questions.
 
 ## Nouveautes V1.1
 

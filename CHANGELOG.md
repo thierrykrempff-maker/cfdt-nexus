@@ -1,5 +1,13 @@
 # Changelog
 
+## Assistant DS Router V1.2 corrective
+
+- Correction du routage des questions de reunion CSE pendant repos 5x8 : le cas est traite comme articulation mandat CSE / temps de travail, sans declencher une preparation de projet collectif.
+- Renforcement du reranking pour ecarter les sources restauration, interessement, harmonisation remuneration et forfait jours lorsqu'elles sont hors population ou hors sujet.
+- Ajout d'une reponse courte avant la methode de controle dans `ask`, avec prudence explicite lorsque les sources ne permettent pas de conclure.
+- Repriorisation des constats, documents et questions metier pour les sujets multi-domaines astreinte + repos + paie.
+- Ajout de 3 scenarios `ask` V1.2 exacts : `classification`, reunion CSE pendant repos 5x8, astreinte + repos + paie.
+
 ## Assistant DS Router V1.1
 
 - Ajout d'une couche de reranking contextuel dans `assistant_ds_router.py` sans modifier le scoring de `agreements_bible.py`.

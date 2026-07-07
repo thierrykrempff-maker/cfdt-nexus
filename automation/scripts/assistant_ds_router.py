@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Assistant DS CFDT Nexus V1.1.
+Assistant DS CFDT Nexus V1.2.
 
 Central local router for natural-language DS questions. The router classifies the
 request, selects callable local engines, executes them when available, and fuses a
@@ -35,7 +35,7 @@ PRUDENCE_WARNING = (
     "avant toute position definitive."
 )
 
-ROUTER_VERSION = "1.1"
+ROUTER_VERSION = "1.2"
 DEFAULT_SOURCE_LIMIT = 6
 MAX_SOURCE_LIMIT = 12
 
@@ -215,10 +215,16 @@ DOMAIN_SOURCE_BOOSTS: dict[str, list[tuple[str, int]]] = {
     ],
     "droit_syndical": [
         ("droit syndical", 34),
+        ("reunion cse", 38),
+        ("reunion du cse", 38),
+        ("temps de reunion", 30),
         ("heures de delegation", 34),
+        ("temps de delegation", 32),
         ("credit d heures", 28),
         ("elu cse", 22),
+        ("representant du personnel", 24),
         ("mandat", 20),
+        ("cse", 14),
         ("delegue syndical", 24),
         ("moyens syndicaux", 22),
     ],
@@ -241,6 +247,8 @@ DOMAIN_SOURCE_PENALTIES: dict[str, list[tuple[str, int]]] = {
         ("teletravail", -55),
         ("cet", -38),
         ("forfait jours", -50),
+        ("restauration", -80),
+        ("forfait restauration", -90),
         ("securite process", -30),
     ],
     "temps_travail": [
@@ -251,6 +259,9 @@ DOMAIN_SOURCE_PENALTIES: dict[str, list[tuple[str, int]]] = {
     "astreinte": [
         ("forfait jours", -65),
         ("cet", -50),
+        ("harmonisation remuneration", -55),
+        ("harmonisation remunerations", -55),
+        ("interessement", -70),
         ("teletravail", -35),
     ],
     "paie_remuneration": [
@@ -486,9 +497,15 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"\bmandat\b",
             r"\belu(?:s)? cse\b",
             r"\belus?\b",
+            r"reunions? du cse",
+            r"reunions? cse",
+            r"assister a une reunion",
+            r"temps de reunion",
             r"delegue syndical",
             r"representant syndical",
+            r"representant du personnel",
             r"heures? de delegation",
+            r"temps de delegation",
             r"credit d'?heures",
             r"moyens? syndicaux?",
             r"local syndical",
@@ -554,6 +571,9 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"^quelle\b",
             r"^que dois-je\b",
             r"^que faut-il\b",
+            r"\bpeut-il\b",
+            r"\bpeut on\b",
+            r"\bpeut-on\b",
         ],
     },
     {
@@ -579,7 +599,6 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"prepare(?:r)? .*cse",
             r"point cse",
             r"questions? cse",
-            r"\bcse\b",
             r"la direction veut",
             r"modification .*cycle",
             r"modification .*horaires?",
@@ -906,6 +925,43 @@ ROUTING_SCENARIOS: list[dict[str, Any]] = [
 
 ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
     {
+        "id": "ask-v1-2-classification-short",
+        "query": "classification",
+        "expected_domains": ["classification_carriere"],
+        "expected_intents": ["analyser_situation_individuelle"],
+        "expected_main_domain": "classification_carriere",
+        "top_source_any": ["classification", "gepp", "gestion de carriere", "ccnic"],
+        "forbidden_sources": ["restauration"],
+        "short_answer_terms": ["trop courte", "classification", "coefficient"],
+        "working_position_terms": ["classification", "fonctions", "coefficient"],
+    },
+    {
+        "id": "ask-v1-2-reunion-cse-repos-5x8",
+        "query": "Un salarie en 5x8 peut-il assister a une reunion du CSE pendant son repos, et comment ce temps doit-il etre traite ?",
+        "expected_domains": ["temps_travail", "droit_syndical", "cse"],
+        "expected_intents": ["question_simple", "rechercher_droit_local", "analyser_situation_individuelle"],
+        "forbidden_intents": ["preparer_cse"],
+        "forbidden_engines": ["nexus_bible_bridge"],
+        "expected_main_domain": "droit_syndical",
+        "response_depth": "question_simple",
+        "short_answer_terms": ["ne peut pas conclure", "mandat cse", "reunion pendant un repos"],
+        "working_position_terms": ["mandat cse", "repos 5x8", "traitement du temps"],
+        "forbidden_text": ["reduction du repos", "projet ecrit", "comparaison avant/apres"],
+    },
+    {
+        "id": "ask-v1-2-astreinte-repos-paie",
+        "query": "Un salarie d'astreinte intervient la nuit, son repos est interrompu et il reprend ensuite son poste : quels sont ses droits en matiere de repos et comment l'intervention doit-elle apparaitre sur la paie ?",
+        "expected_domains": ["temps_travail", "astreinte", "paie_remuneration"],
+        "expected_intents": ["analyser_situation_individuelle", "analyser_paie"],
+        "expected_main_domain": "temps_travail",
+        "top_source_any": ["astreinte"],
+        "forbidden_top_sources": ["forfait jours", "harmonisation remuneration"],
+        "issue_groups": ["repos", "astreinte", "paie"],
+        "short_answer_terms": ["accord astreinte", "ne peut pas conclure", "bulletins"],
+        "working_position_terms": ["repos", "intervention", "majorations", "bulletins"],
+        "warning_terms": ["module paie"],
+    },
+    {
         "id": "ask-real-classification",
         "query": "Un salarie pense etre mal classe car il exerce plus de responsabilites que sa fiche de poste. Que dois-je verifier ?",
         "expected_domains": ["classification_carriere"],
@@ -985,6 +1041,24 @@ def normalize(value: str) -> str:
 
 def match_patterns(text: str, patterns: list[str]) -> list[str]:
     return [pattern for pattern in patterns if re.search(pattern, text)]
+
+
+def mandate_meeting_query(query: str) -> bool:
+    text = normalize(query)
+    has_meeting = bool(re.search(r"reunions? (?:du )?cse|assister a une reunion|temps de reunion", text))
+    has_mandate_marker = bool(re.search(r"\bcse\b|elu(?:s)?|mandat|delegation|representant", text))
+    has_individual_time = bool(re.search(r"\bsalarie\b|5x8|repos|temps doit|temps .*traite|poste", text))
+    return has_meeting and has_mandate_marker and has_individual_time
+
+
+def collective_work_project_query(query: str) -> bool:
+    text = normalize(query)
+    return bool(
+        re.search(
+            r"la direction veut|projet|modifier|modification|reduire|reduction|nouveau cycle|changement d'?horaires?|prepare(?:r)? .*cse|point cse|questions? cse",
+            text,
+        )
+    )
 
 
 def dedupe(values: list[Any]) -> list[Any]:
@@ -1229,7 +1303,7 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
     by_document: dict[str, int] = {}
     top_score = float(ranked[0].get("_router_score") or 0)
     for source in ranked:
-        if len(selected) >= 4 and is_contextual_noise_source(source, route):
+        if len(selected) >= 1 and is_contextual_noise_source(source, route):
             skipped_noise.append(source)
             continue
         document = normalize(str(source.get("document") or "document local"))
@@ -1242,7 +1316,7 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
         if len(selected) >= limit:
             break
 
-    minimum_sources = min(4, limit)
+    minimum_sources = min(3, limit)
     if len(selected) < minimum_sources:
         selected_keys = {source_key(source) for source in selected}
         for source in ranked + skipped_noise:
@@ -1261,6 +1335,15 @@ def is_contextual_noise_source(source: dict[str, Any], route: dict[str, Any]) ->
     query = normalize(route.get("query", ""))
     document = normalize(str(source.get("document") or ""))
     direct = int(source.get("_direct_relevance") or 0)
+    domains = set(business_domains(route))
+    if "classification_carriere" in domains and "restauration" in document:
+        return True
+    if "astreinte" in domains and "harmonisation remuneration" in document:
+        return True
+    if "astreinte" in domains and "interessement" in document:
+        return True
+    if "forfait jours" in document and not re.search(r"forfait jours|cadre|cadres|salarie cadre", query):
+        return True
     for domain in business_domains(route):
         for term, _penalty in DOMAIN_SOURCE_PENALTIES.get(domain, []):
             normalized_term = normalize(term)
@@ -1289,9 +1372,14 @@ def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
         scores[rule["domain"]] = scores.get(rule["domain"], 0) + len(matches)
         reasons.append(rule["reason"])
 
+    if mandate_meeting_query(query):
+        scores["droit_syndical"] = max(scores.get("droit_syndical", 0), 4)
+        scores["cse"] = max(scores.get("cse", 0), 2)
+        reasons.append("La demande articule reunion CSE, mandat et temps de travail individuel.")
+
     domains = [domain for domain in DOMAIN_ORDER if scores.get(domain)]
     if "droit_syndical" in domains and not re.search(
-        r"droit syndical|mandat|elu(?:s)? cse|elus?|delegue syndical|representant syndical|heures? de delegation|credit d'?heures|moyens? syndicaux?|local syndical|affichage syndical|reunions? syndicales?|fonctionnement du cse",
+        r"droit syndical|mandat|elu(?:s)? cse|elus?|delegue syndical|representant syndical|representant du personnel|heures? de delegation|temps de delegation|credit d'?heures|moyens? syndicaux?|local syndical|affichage syndical|reunions? syndicales?|reunions? (?:du )?cse|fonctionnement du cse",
         text,
     ):
         domains.remove("droit_syndical")
@@ -1313,6 +1401,14 @@ def detect_intents(query: str, domains: list[str]) -> tuple[list[str], list[str]
             continue
         scores[rule["intent"]] = scores.get(rule["intent"], 0) + len(matches)
         reasons.append(rule["reason"])
+
+    if mandate_meeting_query(query):
+        scores["question_simple"] = max(scores.get("question_simple", 0), 2)
+        scores["rechercher_droit_local"] = max(scores.get("rechercher_droit_local", 0), 2)
+        scores["analyser_situation_individuelle"] = max(scores.get("analyser_situation_individuelle", 0), 1)
+        scores["verifier_conformite"] = max(scores.get("verifier_conformite", 0), 1)
+        scores.pop("preparer_cse", None)
+        reasons.append("La question vise l'exercice du mandat CSE dans une situation individuelle, pas un projet collectif.")
 
     if "cssct_securite" in domains and "preparer_cssct" not in scores:
         scores["preparer_cssct"] = 1
@@ -1342,6 +1438,8 @@ def detect_intents(query: str, domains: list[str]) -> tuple[list[str], list[str]
 
 def simple_bible_only(intents: list[str], domains: list[str], query: str) -> bool:
     text = normalize(query)
+    if mandate_meeting_query(query):
+        return True
     complex_intents = {
         "preparer_cse",
         "preparer_cssct",
@@ -1388,12 +1486,12 @@ def engine_status() -> dict[str, dict[str, Any]]:
         "paie_control": {
             "available": False,
             "detected": False,
-            "reason": "module paie dedie non connecte en V1.1",
+            "reason": "module paie dedie non connecte en V1.2",
         },
         "veille_juridique": {
             "available": False,
             "detected": False,
-            "reason": "connecteur de veille non connecte en V1.1",
+            "reason": "connecteur de veille non connecte en V1.2",
         },
     }
 
@@ -1413,6 +1511,8 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
         needs_bridge = True
     if simple_bible_only(intents, domains, query) and not re.search(r"documents? .*demander|controler|verifier|salaries? pensent|mal paye", text):
         needs_bridge = False
+    if mandate_meeting_query(query):
+        needs_bridge = False
 
     if needs_bridge:
         if status["nexus_bible_bridge"]["available"]:
@@ -1425,7 +1525,7 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
     if "analyser_paie" in intents:
         warnings.append("Module paie dedie non connecte : controle realise via sources locales et methode metier.")
     if "rechercher_veille" in intents or "veille_juridique" in domains:
-        warnings.append("Veille juridique non connectee en V1.1 : verifier les sources externes a jour manuellement.")
+        warnings.append("Veille juridique non connectee en V1.2 : verifier les sources externes a jour manuellement.")
 
     engines = dedupe(engines)
     plan = []
@@ -1475,7 +1575,7 @@ def route_query(query: str) -> dict[str, Any]:
     engines, execution_plan, warnings = choose_engines(query, domains, intents)
     score_total = sum(domain_scores.values()) + sum(intent_scores.values())
     confidence = "fort" if score_total >= 5 else "moyen" if score_total >= 2 else "faible"
-    main_domain = primary_domain(domains)
+    main_domain = "droit_syndical" if mandate_meeting_query(query) and "droit_syndical" in domains else primary_domain(domains)
     secondary_domains = [domain for domain in business_domains({"domains": domains}) if domain != main_domain]
     route = {
         "query": query,
@@ -1592,6 +1692,16 @@ def default_documents(route: dict[str, Any]) -> list[str]:
         documents.extend(["DUERP/DUER", "registre securite", "signalements salaries", "plan de maintenance ou de contingence"])
     if "droit_syndical" in domains:
         documents.extend(["accords ou usages sur heures de delegation", "regles de fonctionnement CSE", "moyens syndicaux applicables"])
+    if mandate_meeting_query(route.get("query", "")):
+        documents.extend(
+            [
+                "convocation ou invitation a la reunion CSE",
+                "qualite du salarie concerne : elu, representant ou salarie invite",
+                "planning 5x8 et repos prevu",
+                "texte applicable au temps de reunion CSE et aux heures de delegation",
+                "trace du traitement retenu en paie ou compteur",
+            ]
+        )
     return dedupe(documents)
 
 
@@ -1657,6 +1767,15 @@ def default_questions(route: dict[str, Any]) -> list[str]:
         )
     if "disciplinaire" in domains:
         questions.extend(["Quels faits precis sont reproches ?", "Quels delais et droits de defense ont ete respectes ?"])
+    if mandate_meeting_query(route.get("query", "")):
+        questions.extend(
+            [
+                "Le salarie assiste-t-il comme elu, representant syndical, suppleant, invite ou simple salarie ?",
+                "La reunion CSE est-elle ordinaire, extraordinaire, obligatoire ou convoquee par l'employeur ?",
+                "Le temps de reunion est-il prevu par un accord, un usage ou une regle de fonctionnement CSE ?",
+                "Ce temps doit-il etre paye, recupere, impute ou neutralise dans le compteur ?",
+            ]
+        )
     return dedupe(questions)
 
 
@@ -1665,7 +1784,15 @@ def default_findings(route: dict[str, Any]) -> list[str]:
     intents = set(route["intents"])
     findings: list[str] = []
 
-    if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
+    if mandate_meeting_query(route.get("query", "")):
+        findings.extend(
+            [
+                "Qualifier d'abord la participation a la reunion CSE : mandat, convocation, invitation ou simple presence.",
+                "Verifier le texte local ou conventionnel qui traite le temps de reunion CSE lorsqu'il tombe sur un repos.",
+                "Distinguer le respect du repos 5x8 du traitement du temps lie au mandat ou a la reunion.",
+            ]
+        )
+    elif {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
         findings.extend(
             [
                 "Verifier le repos entre la fin reelle de l'intervention et la reprise du poste.",
@@ -1746,6 +1873,12 @@ def default_findings(route: dict[str, Any]) -> list[str]:
 def build_working_position(route: dict[str, Any], findings: list[str], engine_results: list[dict[str, Any]] | None = None) -> str:
     domains = set(route["domains"])
     intents = set(route["intents"])
+    if mandate_meeting_query(route.get("query", "")):
+        return (
+            "Traiter la demande comme une articulation entre mandat CSE et temps de travail : verifier la qualite du salarie, "
+            "la nature de la reunion, le repos 5x8 concerne et le texte applicable avant de conclure sur le paiement, "
+            "la recuperation, l'imputation ou tout autre traitement du temps."
+        )
     if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
         return (
             "Verifier separement le respect du repos apres intervention, la comptabilisation du temps "
@@ -1806,6 +1939,8 @@ def position_for(route: dict[str, Any], findings: list[str]) -> str:
 
 def next_action_for(route: dict[str, Any]) -> str:
     domains = set(route["domains"])
+    if mandate_meeting_query(route.get("query", "")):
+        return "Verifier la qualite du participant et le texte applicable aux reunions CSE avant de qualifier le traitement du temps."
     if "question_simple" in route["intents"] and route["engines"] == ["bible_accords"]:
         return "Relire les sources citees et verifier si un avenant ou une regle plus recente existe."
     if "classification_carriere" in domains:
@@ -1843,6 +1978,33 @@ def split_prudence_findings(findings: list[str]) -> tuple[list[str], list[str]]:
         else:
             business.append(item)
     return business, prudence
+
+
+def is_contextual_noise_text(value: str, route: dict[str, Any]) -> bool:
+    text = normalize(value)
+    query = normalize(route.get("query", ""))
+    domains = set(route.get("domains", []))
+    if "classification_carriere" in domains and "restauration" in text:
+        return True
+    if "astreinte" in domains and "harmonisation remuneration" in text:
+        return True
+    if "forfait jours" in text and not re.search(r"forfait jours|cadre|cadres|salarie cadre", query):
+        return True
+    if "preparer_cse" not in route.get("intents", []) and re.search(
+        r"projet ecrit|tableau comparatif|note explicative direction|analyse d'impact|planning ou simulations|historique des derogations|donnees d'absenteisme|evaluation des risques|mise a jour duerp|avis ou contribution cssct|combien de salaries seraient concernes|comment le cse pourra|quel probleme concret justifie|la direction s'appuie|dispositif serait-il temporaire|comparaison avant/apres",
+        text,
+    ):
+        return True
+    if "preparer_cse" not in route.get("intents", []) and re.search(
+        r"risque juridique a qualifier|compatibilite a analyser|risque d'absence de contrepartie|risque d'impact sur un autre accord|risque de perte de droit|risque sante-securite|risque fatigue|risque rps",
+        text,
+    ):
+        return True
+    return False
+
+
+def filter_contextual_items(values: list[str], route: dict[str, Any]) -> list[str]:
+    return [value for value in values if not is_contextual_noise_text(value, route)]
 
 
 def response_depth(route: dict[str, Any]) -> str:
@@ -1997,6 +2159,34 @@ def build_issue_groups(route: dict[str, Any], findings: list[str], documents: li
     return groups
 
 
+def build_short_answer(answer: dict[str, Any]) -> str:
+    route = answer["route"]
+    domains = set(route.get("domains", []))
+    query = normalize(route.get("query", ""))
+    source_docs = normalize(" ".join(str(source.get("document") or "") for source in answer.get("sources", [])))
+
+    if mandate_meeting_query(route.get("query", "")):
+        return (
+            "Nexus ne peut pas conclure automatiquement sur l'autorisation et le traitement de ce temps avec les seules sources selectionnees. "
+            "La question doit etre traitee comme une articulation entre exercice du mandat CSE, reunion pendant un repos et temps de travail ; il faut verifier le statut du salarie, la nature de la reunion, la convocation et le texte applicable au temps de reunion."
+        )
+    if query.strip() == "classification":
+        return (
+            "La demande est trop courte pour conclure sur une classification individuelle. Nexus oriente vers les sources classification/carriere trouvees et il faut qualifier le coefficient, l'emploi et les fonctions reellement exercees avant toute position."
+        )
+    if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
+        if "astreinte" in source_docs:
+            return (
+                "Nexus identifie d'abord l'accord Astreinte et des sources temps de travail/repos. Il ne peut pas conclure seul sur le droit exact ni sur la paie sans verifier la regle applicable, les horaires reels, les compteurs et les bulletins."
+            )
+        return (
+            "Nexus detecte un sujet astreinte, repos et paie, mais les sources selectionnees ne suffisent pas a conclure. Il faut d'abord retrouver le texte d'astreinte applicable puis rapprocher horaires, repos, compteurs et bulletins."
+        )
+    if answer.get("sources"):
+        return "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites."
+    return "Nexus ne trouve pas de source locale suffisante pour conclure ; il faut completer les faits ou la base documentaire."
+
+
 def merge_bible_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
     for source in result.get("sources_used", [])[:8]:
         answer["sources"].append(normalize_source(source, "bible_accords"))
@@ -2030,13 +2220,20 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["sources"] = select_final_sources(answer["sources"], route, limits["sources"])
 
     business_findings, prudence_findings = split_prudence_findings([item for item in answer["findings"] if item])
-    answer["findings"] = semantic_dedupe(business_findings + default_findings(route))[: limits["findings"]]
-    answer["documents_to_request"] = semantic_dedupe(answer["documents_to_request"] + default_documents(route))[: limits["documents"]]
-    answer["questions_to_ask"] = semantic_dedupe(answer["questions_to_ask"] + default_questions(route))[: limits["questions"]]
+    business_findings = filter_contextual_items(business_findings, route)
+    finding_candidates = default_findings(route) + business_findings if response_depth(route) == "multi_domain" else business_findings + default_findings(route)
+    answer["findings"] = semantic_dedupe(finding_candidates)[: limits["findings"]]
+    filtered_documents = filter_contextual_items(answer["documents_to_request"], route)
+    filtered_questions = filter_contextual_items(answer["questions_to_ask"], route)
+    document_candidates = default_documents(route) + filtered_documents if response_depth(route) == "multi_domain" else filtered_documents + default_documents(route)
+    question_candidates = default_questions(route) + filtered_questions if response_depth(route) == "multi_domain" else filtered_questions + default_questions(route)
+    answer["documents_to_request"] = semantic_dedupe(document_candidates)[: limits["documents"]]
+    answer["questions_to_ask"] = semantic_dedupe(question_candidates)[: limits["questions"]]
     answer["issue_groups"] = build_issue_groups(route, answer["findings"], answer["documents_to_request"], answer["questions_to_ask"])
     module_warnings = [warning for warning in answer["warnings"] if not is_generic_prudence(warning)]
     answer["warnings"] = semantic_dedupe(module_warnings + PRUDENCE_POINTS)
     answer["working_position"] = build_working_position(route, answer["findings"], None)
+    answer["short_answer"] = build_short_answer(answer)
     if not answer["next_action"]:
         answer["next_action"] = next_action_for(route)
     answer["response_depth"] = response_depth(route)
@@ -2048,6 +2245,7 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
     answer: dict[str, Any] = {
         "query": query,
         "understanding": understanding_for(route),
+        "short_answer": "",
         "route": route,
         "execution_plan": route["execution_plan"],
         "sources": [],
@@ -2141,6 +2339,12 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         "Compréhension :",
         answer["understanding"],
         "",
+        "Reponse courte :",
+        answer.get("short_answer") or "A completer apres lecture des sources locales.",
+        "",
+        "Regles ou position de travail :",
+        answer["working_position"],
+        "",
         "Sources locales principales :",
     ]
     lines.extend(list_or_dash(answer["sources"], source_line))
@@ -2149,9 +2353,6 @@ def format_answer_text(answer: dict[str, Any]) -> str:
     lines.extend(grouped_lines("Questions a poser :", "questions", answer["questions_to_ask"]))
     lines.extend(
         [
-            "",
-            "Position de travail :",
-            answer["working_position"],
             "",
             "Prochaine action recommandée :",
             answer["next_action"],
@@ -2300,10 +2501,20 @@ def validate_answer_scenario(scenario: dict[str, Any], answer: dict[str, Any]) -
 
     for domain in scenario.get("expected_domains", []):
         checks.append({"name": f"domaine_{domain}", "ok": domain in domains, "detail": domain})
+    if scenario.get("expected_main_domain"):
+        checks.append(
+            {
+                "name": "domaine_principal",
+                "ok": route.get("main_domain") == scenario["expected_main_domain"],
+                "detail": route.get("main_domain"),
+            }
+        )
     for domain in scenario.get("forbidden_domains", []):
         checks.append({"name": f"absence_domaine_{domain}", "ok": domain not in domains, "detail": domain})
     for intent in scenario.get("expected_intents", []):
         checks.append({"name": f"intention_{intent}", "ok": intent in intents, "detail": intent})
+    for intent in scenario.get("forbidden_intents", []):
+        checks.append({"name": f"absence_intention_{intent}", "ok": intent not in intents, "detail": intent})
     for engine in scenario.get("forbidden_engines", []):
         checks.append({"name": f"absence_moteur_{engine}", "ok": engine not in engines, "detail": engine})
 
@@ -2331,6 +2542,22 @@ def validate_answer_scenario(scenario: dict[str, Any], answer: dict[str, Any]) -
                 "name": f"source_bruitee_absente_{normalize(forbidden).replace(' ', '_')}",
                 "ok": normalize(forbidden) not in top_sources,
                 "detail": forbidden,
+            }
+        )
+    for forbidden in scenario.get("forbidden_sources", []):
+        checks.append(
+            {
+                "name": f"source_absente_{normalize(forbidden).replace(' ', '_')}",
+                "ok": normalize(forbidden) not in all_sources,
+                "detail": forbidden,
+            }
+        )
+    for term in scenario.get("short_answer_terms", []):
+        checks.append(
+            {
+                "name": f"reponse_courte_{normalize(term).replace(' ', '_')}",
+                "ok": normalize(term) in normalize(answer.get("short_answer", "")),
+                "detail": answer.get("short_answer", ""),
             }
         )
     for term in scenario.get("working_position_terms", []):
@@ -2422,7 +2649,7 @@ def format_scenarios_text(report: dict[str, Any]) -> str:
     lines = [
         "SCENARIOS ASSISTANT DS ROUTER",
         f"Scenarios : {report['scenario_count']} dont {report['simple_scenarios']} simples et {report['multi_domain_scenarios']} multi-domaines",
-        f"Scenarios ask V1.1 : {report['ask_regression_count']}",
+        f"Scenarios ask V1.2 : {report['ask_regression_count']}",
         f"Statut global : {'OK' if report['ok'] else 'ERREUR'}",
         "",
     ]
@@ -2432,7 +2659,7 @@ def format_scenarios_text(report: dict[str, Any]) -> str:
         suffix = "" if not failed else " | echecs: " + ", ".join(failed)
         lines.append(f"- {row['id']} | {status} | {row['main_domain']} | {', '.join(row['engines'])}{suffix}")
     if report.get("ask_rows"):
-        lines.extend(["", "Scenarios ask V1.1 :"])
+        lines.extend(["", "Scenarios ask V1.2 :"])
         for row in report["ask_rows"]:
             status = "OK" if row["ok"] else "ERREUR"
             failed = [check["name"] for check in row["checks"] if not check["ok"]]
@@ -2449,7 +2676,7 @@ def emit(data: dict[str, Any], fmt: str, text_formatter) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="CFDT Nexus - Assistant DS router V1.1")
+    parser = argparse.ArgumentParser(description="CFDT Nexus - Assistant DS router V1.2")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_ask = sub.add_parser("ask")

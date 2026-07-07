@@ -2,13 +2,13 @@
 
 Ce dossier accueillera les scripts, jobs et traitements automatisés.
 
-## Assistant DS Router V1.1
+## Assistant DS Router V1.1 / V1.2 corrective
 
 Le script `scripts/assistant_ds_router.py` est le point d'entree naturel de l'Assistant DS CFDT Nexus.
 
 Il classe une question libre par domaines metier et intentions, choisit les moteurs locaux disponibles, execute la Bible Accords et le pont Nexus/Bible si necessaire, puis fusionne une reponse courte avec sources, documents a recuperer, questions a poser, position de travail et points de prudence.
 
-La V1.1 ajoute le reranking contextuel des sources, la limitation lisible des sources principales, le dedoublonnage semantique leger, `issue_groups` pour les sujets multi-domaines et une `working_position` construite explicitement par domaine.
+La V1.1 ajoute le reranking contextuel des sources, la limitation lisible des sources principales, le dedoublonnage semantique leger, `issue_groups` pour les sujets multi-domaines et une `working_position` construite explicitement par domaine. La V1.2 corrective affine l'intention reunion CSE/repos, repousse les sources hors sujet et ajoute une reponse courte avant la methode de controle.
 
 Commandes principales :
 
