@@ -43,8 +43,11 @@ def source_label(source: dict[str, Any]) -> str:
     parts = [str(source.get("document") or "Document local")]
     if source.get("page"):
         parts.append(f"page {source['page']}")
-    if source.get("article"):
-        parts.append(str(source["article"]))
+    article = source.get("article") or source.get("article_or_section")
+    if article:
+        parts.append(str(article))
+    if source.get("source_layer_label"):
+        parts.append(str(source["source_layer_label"]))
     return " | ".join(parts)
 
 

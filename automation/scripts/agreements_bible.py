@@ -51,6 +51,7 @@ OCR_LANG_DEFAULT = "fra+eng"
 
 DOCUMENT_TYPES = [
     ("avenant", [r"\bavenant\b", r"\bmodification\b"]),
+    ("convention_collective", [r"convention collective nationale", r"\bidcc\s*44\b", r"\bccnic\b"]),
     ("règlement intérieur", [r"reglement interieur", r"règlement intérieur"]),
     ("protocole", [r"\bprotocole\b", r"\bpap\b", r"vote electronique", r"vote électronique"]),
     ("décision unilatérale", [r"decision unilaterale", r"décision unilatérale", r"\bdue\b"]),
@@ -1130,12 +1131,42 @@ def match_rules(text: str, rules: list[tuple[str, list[str]]], sort_by_score: bo
     return [item["label"] for item in matches]
 
 
+def is_ccnic_document(relative_path: str, text_sample: str = "") -> bool:
+    haystack = normalize(f"{relative_path}\n{text_sample[:2000]}")
+    return "ccnic" in haystack or (
+        "convention collective nationale" in haystack
+        and ("industries chimiques" in haystack or "idcc 44" in haystack)
+    )
+
+
+def source_layer_for_document(document_type: str | None, relative_path: str = "", text_sample: str = "") -> str:
+    doc_type = normalize(document_type or "")
+    path_text = normalize(relative_path)
+    text = normalize(f"{document_type or ''}\n{relative_path}\n{text_sample[:2000]}")
+    if is_ccnic_document(relative_path, text_sample) or "convention_collective" in doc_type:
+        return "convention_collective"
+    if any(marker in doc_type for marker in ["accord entreprise", "avenant", "protocole", "decision unilateral", "reglement interieur"]):
+        return "accord_entreprise"
+    if "code_travail" in doc_type or "code du travail" in path_text or "legifrance" in path_text:
+        return "code_travail"
+    if "jurisprudence" in doc_type or "jurisprudence" in path_text or "cour de cassation" in path_text:
+        return "jurisprudence"
+    if "prudhom" in text and ("decision" in doc_type or "jugement" in doc_type or "decision" in path_text or "jugement" in path_text):
+        return "prudhommes"
+    if any(marker in text for marker in ["bulletin", "guide", "calendrier", "horaires", "annexe", "communication", "kit pedagogique"]):
+        return "pratique"
+    return "autre"
+
+
 def classify_document(relative_path: str, text_sample: str = "") -> dict[str, Any]:
     combined = f"{relative_path}\n{text_sample[:6000]}"
     doc_types = match_rules(combined, DOCUMENT_TYPES, sort_by_score=False)
     topics = match_rules(combined, TOPIC_RULES)
 
-    if len(doc_types) == 1:
+    if is_ccnic_document(relative_path, text_sample):
+        document_type = "convention_collective"
+        classification_note = "Convention collective Chimie IDCC 44 reconnue comme couche conventionnelle."
+    elif len(doc_types) == 1:
         document_type = doc_types[0]
         classification_note = "Classement V1 déterministe à valider humainement."
     elif len(doc_types) > 1:
@@ -1147,13 +1178,19 @@ def classify_document(relative_path: str, text_sample: str = "") -> dict[str, An
 
     primary_topic = topics[0] if topics else "autres"
     secondary_topics = topics[1:] if len(topics) > 1 else []
+    source_layer = source_layer_for_document(document_type, relative_path, text_sample)
 
-    return {
+    classification = {
         "document_type": document_type,
         "primary_topic": primary_topic,
         "secondary_topics": secondary_topics,
+        "source_layer": source_layer,
         "classification_note": classification_note,
     }
+    if is_ccnic_document(relative_path, text_sample):
+        classification["idcc"] = "44"
+        classification["version"] = "septembre 2013"
+    return classification
 
 
 def inventory_paths() -> tuple[Path, Path]:
@@ -1204,11 +1241,16 @@ def scan_corpus(args: argparse.Namespace) -> dict[str, Any]:
             "document_type": classification["document_type"],
             "primary_topic": classification["primary_topic"],
             "secondary_topics": classification["secondary_topics"],
+            "source_layer": classification["source_layer"],
             "classification_note": classification["classification_note"],
             "confidentiality_level": "private",
             "indexed_at": previous.get("indexed_at") if previous else None,
             "last_checked_at": checked_at,
         }
+        if classification.get("idcc"):
+            item["idcc"] = classification["idcc"]
+        if classification.get("version"):
+            item["version"] = classification["version"]
         current_docs.append(item)
         seen_sha[sha256].append(item)
 
@@ -1899,6 +1941,10 @@ def chunk_text(extracted: dict[str, Any], metadata: dict[str, Any]) -> list[dict
                     "section": current_section,
                     "article": current_article,
                     "document_type": metadata.get("document_type"),
+                    "source_layer": metadata.get("source_layer")
+                    or source_layer_for_document(metadata.get("document_type"), metadata.get("relative_path", "")),
+                    "idcc": metadata.get("idcc"),
+                    "version": metadata.get("version"),
                     "primary_topic": metadata.get("primary_topic"),
                     "secondary_topics": metadata.get("secondary_topics", []),
                     "ocr_confidence_status": metadata.get("ocr_confidence_status"),
@@ -2377,9 +2423,15 @@ def search_index(args: argparse.Namespace, save: bool = True, quiet: bool = Fals
 def format_source(score: float, chunk: dict[str, Any], query_tokens: list[str], score_details: dict[str, Any] | None = None) -> dict[str, Any]:
     text = chunk["text"]
     excerpt = best_excerpt(text, query_tokens)
+    source_layer = chunk.get("source_layer") or source_layer_for_document(chunk.get("document_type"), chunk.get("relative_path", ""), text)
+    document_type = "convention_collective" if source_layer == "convention_collective" else chunk.get("document_type")
     return {
         "document": chunk["filename"],
         "document_id": chunk["document_id"],
+        "document_type": document_type,
+        "source_layer": source_layer,
+        "idcc": chunk.get("idcc") or ("44" if source_layer == "convention_collective" else None),
+        "version": chunk.get("version") or ("septembre 2013" if source_layer == "convention_collective" else None),
         "page": chunk.get("page"),
         "article_or_section": chunk.get("article") or chunk.get("section"),
         "location": citation_location(chunk),

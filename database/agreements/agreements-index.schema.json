@@ -16,6 +16,7 @@
     "extraction_status",
     "ocr_required",
     "document_type",
+    "source_layer",
     "primary_topic",
     "secondary_topics",
     "confidentiality_level",
@@ -46,6 +47,12 @@
     "ocr_confidence": { "type": ["number", "null"] },
     "ocr_confidence_status": { "type": ["string", "null"] },
     "document_type": { "type": "string" },
+    "source_layer": {
+      "type": "string",
+      "enum": ["accord_entreprise", "convention_collective", "code_travail", "jurisprudence", "prudhommes", "pratique", "autre"]
+    },
+    "idcc": { "type": ["string", "null"] },
+    "version": { "type": ["string", "null"] },
     "primary_topic": { "type": "string" },
     "secondary_topics": {
       "type": "array",

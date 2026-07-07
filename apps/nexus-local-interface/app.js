@@ -59,8 +59,12 @@ function sourceLine(source) {
   if (typeof source === "string") return source;
   const parts = [source.document || "Document local"];
   if (source.page) parts.push(`page ${source.page}`);
-  if (source.article) parts.push(source.article);
-  return parts.join(" | ");
+  const article = source.article || source.article_or_section;
+  if (article) parts.push(article);
+  if (source.source_layer_label) parts.push(source.source_layer_label);
+  if (source.source_quality_warning) parts.push(source.source_quality_warning);
+  const line = parts.join(" | ");
+  return source.excerpt ? `${line} | extrait: ${source.excerpt}` : line;
 }
 
 function fillList(element, values, formatter = (item) => item) {
@@ -101,6 +105,93 @@ function renderIssueGroups(groups) {
     fillList(findings, group.findings || []);
     section.appendChild(findings);
     issueGroups.appendChild(section);
+  }
+}
+
+function sourceLayerFallback(sources) {
+  const labels = {
+    accord_entreprise: "Accords d'entreprise",
+    convention_collective: "Convention collective",
+    code_travail: "Code du travail",
+    jurisprudence: "Jurisprudence",
+    prudhommes: "Prud'hommes",
+    pratique: "Points pratiques",
+    autre: "Autres sources"
+  };
+  const absent = {
+    code_travail: "Code du travail absent du socle documentaire local actuel.",
+    jurisprudence: "Jurisprudence absente du socle documentaire local actuel.",
+    prudhommes: "Decisions prud'homales absentes du socle documentaire local actuel.",
+    pratique: "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel."
+  };
+  const order = Object.keys(labels);
+  return order.map((id) => {
+    const layerSources = (sources || []).filter((source) => (source.source_layer || "autre") === id);
+    return {
+      id,
+      label: labels[id],
+      status: layerSources.length ? "present" : "absent",
+      absent_message: absent[id] || "Aucune source de ce niveau n'a ete remontee par Nexus.",
+      sources: layerSources
+    };
+  });
+}
+
+function renderSources(element, answer, orchestration) {
+  element.textContent = "";
+  const layers = answer.source_layers || orchestration.source_layers || sourceLayerFallback(answer.sources || []);
+  for (const layer of layers) {
+    const section = document.createElement("section");
+    section.className = `source-layer source-layer-${layer.status || "absent"}`;
+    const heading = document.createElement("h4");
+    heading.textContent = layer.label || layer.id || "Source";
+    section.appendChild(heading);
+
+    const sources = layer.sources || [];
+    if (!sources.length) {
+      const empty = document.createElement("p");
+      empty.className = "source-absent";
+      empty.textContent = layer.absent_message || "Aucune source de ce niveau n'a ete remontee par Nexus.";
+      section.appendChild(empty);
+      element.appendChild(section);
+      continue;
+    }
+
+    for (const source of sources) {
+      const item = document.createElement("article");
+      item.className = "source-item";
+      const title = document.createElement("strong");
+      title.textContent = source.document || "Document local";
+      item.appendChild(title);
+
+      const meta = document.createElement("p");
+      meta.className = "source-meta";
+      const metaParts = [];
+      if (source.page) metaParts.push(`page ${source.page}`);
+      const article = source.article || source.article_or_section;
+      if (article) metaParts.push(article);
+      if (source.source_layer_label) metaParts.push(source.source_layer_label);
+      if (source.chunk_id) metaParts.push(source.chunk_id);
+      meta.textContent = metaParts.join(" | ") || "Localisation a verifier";
+      item.appendChild(meta);
+
+      if (source.excerpt) {
+        const excerpt = document.createElement("p");
+        excerpt.className = "source-excerpt";
+        excerpt.textContent = source.excerpt;
+        item.appendChild(excerpt);
+      }
+
+      if (source.source_quality_warning) {
+        const warning = document.createElement("p");
+        warning.className = "source-warning";
+        warning.textContent = source.source_quality_warning;
+        item.appendChild(warning);
+      }
+
+      section.appendChild(item);
+    }
+    element.appendChild(section);
   }
 }
 
@@ -299,7 +390,7 @@ function renderResult(payload) {
   fillInlineList(expertsList, orchestration.experts_mobilises || []);
   shortAnswer.textContent = orchestration.reponse_synthetique_nexus || answer.short_answer || "A completer.";
   workingPosition.textContent = orchestration.position_de_travail || answer.working_position || "A completer.";
-  fillList(sourcesList, orchestration.sources || answer.sources || [], sourceLine);
+  renderSources(sourcesList, answer, orchestration);
   fillList(findingsList, answer.findings || []);
   fillList(documentsList, orchestration.documents_necessaires || answer.documents_to_request || []);
   fillList(questionsList, orchestration.questions_utiles || answer.questions_to_ask || []);

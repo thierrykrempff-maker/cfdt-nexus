@@ -20,7 +20,7 @@ V2_QUESTIONS = [
 V21_SCENARIOS = {
     "juriste_seul": "Un salarié peut-il contester sa classification si les fonctions réellement exercées dépassent sa fiche de poste ?",
     "paie_seul": "Je pense qu’il manque des heures de nuit et une majoration dimanche sur mon bulletin. Que faut-il contrôler ?",
-    "juriste_paie": "Un salarié d’astreinte intervient la nuit, son repos est interrompu et il reprend ensuite son poste. Quels sont ses droits et comment contrôler sa paie ?",
+    "juriste_paie": "Un salarié d’astreinte intervient la nuit puis reprend son poste : repos et paie ?",
     "question_incomplete": "Ma prime est fausse.",
 }
 
@@ -52,6 +52,7 @@ def assert_base_payload(payload: dict[str, object]) -> None:
     report = payload["analysis_report"]
     assert answer["short_answer"]
     assert answer["sources"]
+    assert answer["source_layers"]
     assert answer["confidence"]
     assert orchestration["reponse_synthetique_nexus"]
     assert orchestration["domaines_detectes"]
@@ -64,7 +65,22 @@ def assert_base_payload(payload: dict[str, object]) -> None:
     assert "TOPIC_RULES" not in report["markdown"]
     assert "CFDT_NEXUS_SALARY_ANALYSIS_V22" not in report["markdown"]
     assert report_section(report, "sources")["items"]
+    assert report_section(report, "source_layers")["items"]
     assert report_section(report, "synthese")["items"][0] == orchestration["reponse_synthetique_nexus"]
+    assert "source_layers" in orchestration
+    for source in answer["sources"]:
+        assert "source_layer" in source
+        assert "source_layer_label" in source
+        assert "excerpt" in source
+        assert "article_or_section" in source
+        assert "chunk_id" in source
+        assert "ranking_reasons" in source
+        assert "source_quality_warning" in source
+    layers = source_layers(answer)
+    assert layers["code_travail"]["status"] == "absent"
+    assert "Code du travail absent" in layers["code_travail"]["absent_message"]
+    assert layers["jurisprudence"]["status"] == "absent"
+    assert layers["prudhommes"]["status"] == "absent"
 
 
 def report_section(report: dict[str, object], section_id: str) -> dict[str, object]:
@@ -72,6 +88,14 @@ def report_section(report: dict[str, object], section_id: str) -> dict[str, obje
         if section["id"] == section_id:
             return section
     raise AssertionError(f"Section rapport absente: {section_id}")
+
+
+def source_layers(answer: dict[str, object]) -> dict[str, dict[str, object]]:
+    return {layer["id"]: layer for layer in answer["source_layers"]}
+
+
+def layer_sources(answer: dict[str, object], layer_id: str) -> list[dict[str, object]]:
+    return source_layers(answer)[layer_id]["sources"]
 
 
 def main() -> None:
@@ -106,6 +130,16 @@ def main() -> None:
         assert "classification" in normalize(juriste_payload["expert_juriste"]["qualification_juridique_situation"])
         assert "Regle certaine" in " ".join(juriste_payload["expert_juriste"]["analyse_et_raisonnement"])
         assert "classification_carriere" in report_section(juriste_payload["analysis_report"], "domaines")["items"]
+        classification_answer = juriste_payload["answer"]
+        assert layer_sources(classification_answer, "accord_entreprise")
+        convention_sources = layer_sources(classification_answer, "convention_collective")
+        assert convention_sources
+        assert any("ccnic" in normalize(source["document"]) for source in convention_sources)
+        for source in convention_sources:
+            assert source["document_type"] == "convention_collective"
+            assert source["idcc"] == "44"
+            assert source["version"] == "septembre 2013"
+            assert source["excerpt"]
 
         paie_payload = post_json(
             f"http://127.0.0.1:{port}/api/analyze",
@@ -145,13 +179,25 @@ def main() -> None:
         assert_base_payload(incomplete_payload)
         assert incomplete_payload["expert_juriste"]["active"] is False
         assert incomplete_payload["expert_paie"]["active"] is True
+        assert incomplete_payload["answer"]["confidence"] == "faible"
+        assert "incomplete" in normalize(incomplete_payload["answer"]["short_answer"])
         assert incomplete_payload["expert_paie"]["niveau_de_confiance"] == "faible"
-        assert "libelle exact" in normalize(" ".join(incomplete_payload["expert_paie"]["donnees_necessaires_au_calcul"]))
+        incomplete_needed = normalize(" ".join(incomplete_payload["expert_paie"]["donnees_necessaires_au_calcul"]))
+        assert "libelle exact" in incomplete_needed
+        assert "periode" in incomplete_needed
+        assert "montant" in incomplete_needed
         assert "Non produit" in incomplete_payload["expert_paie"]["calcul_detaille"]
         assert "faible" in report_section(incomplete_payload["analysis_report"], "confiance")["items"]
         assert "libelle exact" in normalize(" ".join(report_section(incomplete_payload["analysis_report"], "informations_manquantes")["items"]))
 
-        print("Interface locale: 3 questions V2 + 4 scenarios V2.1 OK")
+        mixed_answer = mixed_payload["answer"]
+        mixed_accords = layer_sources(mixed_answer, "accord_entreprise")
+        assert any("astreinte" in normalize(source["document"]) for source in mixed_accords)
+        assert any("35 h" in normalize(source["document"]) or "5x8" in normalize(source["document"]) for source in mixed_accords)
+        assert layer_sources(mixed_answer, "convention_collective")
+        assert any(source.get("excerpt") for source in mixed_answer["sources"])
+
+        print("Interface locale: socle juridique V1 + scenarios V2.1 OK")
     finally:
         server.shutdown()
         server.server_close()

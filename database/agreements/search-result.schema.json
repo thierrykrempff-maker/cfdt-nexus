@@ -23,13 +23,26 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["document", "page", "article_or_section", "excerpt", "match_score"],
+        "required": ["document", "page", "article_or_section", "excerpt", "match_score", "source_layer"],
         "properties": {
           "document": { "type": "string" },
+          "document_id": { "type": "string" },
+          "document_type": { "type": ["string", "null"] },
+          "source_layer": {
+            "type": "string",
+            "enum": ["accord_entreprise", "convention_collective", "code_travail", "jurisprudence", "prudhommes", "pratique", "autre"]
+          },
+          "idcc": { "type": ["string", "null"] },
+          "version": { "type": ["string", "null"] },
           "page": { "type": ["integer", "null"] },
           "article_or_section": { "type": ["string", "null"] },
+          "location": { "type": "string" },
           "excerpt": { "type": "string" },
-          "match_score": { "type": "number" }
+          "match_score": { "type": "number" },
+          "ranking_profile": { "type": ["string", "null"] },
+          "ranking_reasons": { "type": "array", "items": { "type": "string" } },
+          "chunk_id": { "type": "string" },
+          "source_quality_warning": { "type": ["string", "null"] }
         }
       }
     },
@@ -39,4 +52,3 @@
     "recommended_human_action": { "type": "string" }
   }
 }
-

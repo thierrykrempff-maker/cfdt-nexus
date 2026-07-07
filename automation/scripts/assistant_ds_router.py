@@ -47,6 +47,33 @@ PRUDENCE_POINTS = [
     "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
 ]
 
+SOURCE_LAYER_ORDER = [
+    "accord_entreprise",
+    "convention_collective",
+    "code_travail",
+    "jurisprudence",
+    "prudhommes",
+    "pratique",
+    "autre",
+]
+
+SOURCE_LAYER_LABELS = {
+    "accord_entreprise": "Accords d'entreprise",
+    "convention_collective": "Convention collective",
+    "code_travail": "Code du travail",
+    "jurisprudence": "Jurisprudence",
+    "prudhommes": "Prud'hommes",
+    "pratique": "Points pratiques",
+    "autre": "Autres sources",
+}
+
+SOURCE_LAYER_ABSENT_MESSAGES = {
+    "code_travail": "Code du travail absent du socle documentaire local actuel.",
+    "jurisprudence": "Jurisprudence absente du socle documentaire local actuel.",
+    "prudhommes": "Decisions prud'homales absentes du socle documentaire local actuel.",
+    "pratique": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+}
+
 GENERIC_PRUDENCE_MARKERS = [
     "verifier si le document est toujours applicable",
     "verifier s il existe un avenant",
@@ -1155,6 +1182,39 @@ def compact_text(value: Any) -> str:
     return str(value)
 
 
+def is_ccnic_source(source: dict[str, Any]) -> bool:
+    text = normalize(
+        " ".join(
+            str(source.get(key) or "")
+            for key in ["document", "document_type", "source_layer", "idcc", "version"]
+        )
+    )
+    return "ccnic" in text or "idcc 44" in text or (
+        "convention collective" in text and "chim" in text
+    )
+
+
+def source_layer_for_source(source: dict[str, Any]) -> str:
+    explicit = normalize(source.get("source_layer", ""))
+    if explicit in SOURCE_LAYER_LABELS:
+        return explicit
+    doc_type = normalize(source.get("document_type", ""))
+    document = normalize(source.get("document", ""))
+    if is_ccnic_source(source) or "convention_collective" in doc_type:
+        return "convention_collective"
+    if any(marker in doc_type for marker in ["accord entreprise", "avenant", "protocole", "decision unilateral", "reglement interieur"]):
+        return "accord_entreprise"
+    if "code_travail" in doc_type or "code du travail" in document or "legifrance" in document:
+        return "code_travail"
+    if "jurisprudence" in doc_type or "cour de cassation" in document:
+        return "jurisprudence"
+    if "prudhom" in doc_type and ("decision" in doc_type or "jugement" in doc_type):
+        return "prudhommes"
+    if any(marker in document for marker in ["bulletin", "guide", "calendrier", "horaires", "annexe", "communication", "kit pedagogique"]):
+        return "pratique"
+    return "autre"
+
+
 def source_key(source: dict[str, Any]) -> str:
     return "|".join(
         normalize(str(source.get(key) or ""))
@@ -1165,13 +1225,18 @@ def source_key(source: dict[str, Any]) -> str:
 def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
     article = source.get("article") or source.get("article_or_section")
     page = source.get("page")
+    layer = source_layer_for_source(source)
+    score = source.get("score") or source.get("match_score")
+    document_type = "convention_collective" if layer == "convention_collective" else source.get("document_type")
+    ranking_reasons = [str(item) for item in source.get("ranking_reasons", []) if item]
+    excerpt = source.get("excerpt")
     context_parts = [
         source.get("document"),
         article,
         source.get("location"),
-        source.get("excerpt"),
+        excerpt,
         source.get("ranking_profile"),
-        " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
+        " ".join(ranking_reasons),
         source.get("role_probable_du_document"),
         source.get("raison_de_pertinence"),
     ]
@@ -1179,12 +1244,22 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "document": source.get("document"),
         "page": page,
         "article": article,
+        "article_or_section": article,
         "location": source.get("location") or " - ".join(part for part in [f"Page {page}" if page else "", article or ""] if part),
-        "score": source.get("score") or source.get("match_score"),
+        "score": score,
+        "match_score": score,
         "status": source.get("source_status") or source.get("confidence_level") or source.get("source_quality_warning"),
         "origin": origin,
-        "nature": "regle_locale_a_verifier",
-        "_chunk_id": source.get("chunk_id"),
+        "nature": "regle_locale_a_verifier" if layer not in {"code_travail", "jurisprudence", "prudhommes"} else layer,
+        "source_layer": layer,
+        "source_layer_label": SOURCE_LAYER_LABELS.get(layer, SOURCE_LAYER_LABELS["autre"]),
+        "document_type": document_type,
+        "idcc": source.get("idcc") or ("44" if layer == "convention_collective" else None),
+        "version": source.get("version") or ("septembre 2013" if layer == "convention_collective" else None),
+        "excerpt": excerpt,
+        "chunk_id": source.get("chunk_id"),
+        "ranking_reasons": ranking_reasons[:8],
+        "source_quality_warning": source.get("source_quality_warning"),
         "_context": " ".join(str(part) for part in context_parts if part),
     }
 
@@ -1196,8 +1271,15 @@ def source_context(source: dict[str, Any]) -> str:
             for part in [
                 source.get("document"),
                 source.get("article"),
+                source.get("article_or_section"),
                 source.get("location"),
                 source.get("status"),
+                source.get("source_layer"),
+                source.get("document_type"),
+                source.get("idcc"),
+                source.get("version"),
+                source.get("excerpt"),
+                " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
                 source.get("_context"),
             ]
             if part
@@ -1329,6 +1411,35 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
                 break
 
     return [clean_source(source) for source in selected[:limit]]
+
+
+def build_source_layers(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = {layer: [] for layer in SOURCE_LAYER_ORDER}
+    for source in sources:
+        layer = source.get("source_layer") or "autre"
+        if layer not in grouped:
+            layer = "autre"
+        grouped[layer].append(source)
+
+    layers: list[dict[str, Any]] = []
+    for layer in SOURCE_LAYER_ORDER:
+        layer_sources = grouped[layer]
+        if layer_sources:
+            status = "present"
+            absent_message = None
+        else:
+            status = "absent"
+            absent_message = SOURCE_LAYER_ABSENT_MESSAGES.get(layer, "Aucune source de ce niveau n'a ete remontee par Nexus.")
+        layers.append(
+            {
+                "id": layer,
+                "label": SOURCE_LAYER_LABELS.get(layer, SOURCE_LAYER_LABELS["autre"]),
+                "status": status,
+                "absent_message": absent_message,
+                "sources": layer_sources,
+            }
+        )
+    return layers
 
 
 def is_contextual_noise_source(source: dict[str, Any], route: dict[str, Any]) -> bool:
@@ -1594,6 +1705,15 @@ def route_query(query: str) -> dict[str, Any]:
     return route
 
 
+def is_incomplete_prime_route(route: dict[str, Any]) -> bool:
+    query = normalize(route.get("query", ""))
+    if "prime" not in query:
+        return False
+    if any(term in query for term in ["nuit", "dimanche", "jour ferie", "astreinte", "montant", "taux", "periode", "bulletin", "coefficient"]):
+        return False
+    return "paie_remuneration" in route.get("domains", [])
+
+
 def search_bible(query: str, limit: int) -> dict[str, Any]:
     args = argparse.Namespace(query=query, limit=limit, theme=None, doc_type=None, document_id=None)
     return bible.search_index(args, save=False, quiet=True)
@@ -1673,7 +1793,10 @@ def default_documents(route: dict[str, Any]) -> list[str]:
     if "paie_remuneration" in domains:
         documents.extend(
             [
+                "libelle exact de la prime ou rubrique contestee",
                 "bulletins de paie de la periode controlee",
+                "periode concernee par l'ecart constate",
+                "montant verse et montant attendu",
                 "detail des majorations appliquees",
                 "historique des paiements et recuperations",
             ]
@@ -1752,6 +1875,9 @@ def default_questions(route: dict[str, Any]) -> list[str]:
     if "paie_remuneration" in domains:
         questions.extend(
             [
+                "Quel est le libelle exact de la prime ou de la rubrique contestee ?",
+                "Quelle periode de paie est concernee ?",
+                "Quel montant a ete verse et quel montant est attendu ?",
                 "Quelles heures d'intervention ont ete payees, majorees ou recuperees ?",
                 "Quelle regle de majoration nuit, dimanche ou jour ferie a ete appliquee ?",
                 "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
@@ -1844,6 +1970,14 @@ def default_findings(route: dict[str, Any]) -> list[str]:
                 "Verifier les elements de remuneration inclus ou exclus de l'assiette.",
             ]
         )
+    elif is_incomplete_prime_route(route):
+        findings.extend(
+            [
+                "La question ne permet pas d'identifier la prime concernee.",
+                "Il manque le libelle exact, la periode, le montant verse et le montant attendu.",
+                "Aucun calcul fiable ne peut etre produit sans bulletin et regle applicable.",
+            ]
+        )
     elif "temps_travail" in domains and "preparer_cse" in intents:
         findings.extend(
             [
@@ -1884,6 +2018,11 @@ def build_working_position(route: dict[str, Any], findings: list[str], engine_re
             "Verifier separement le respect du repos apres intervention, la comptabilisation du temps "
             "d'intervention et l'application des majorations, puis rapprocher l'accord d'astreinte, "
             "les horaires reels, les compteurs et les bulletins de paie."
+        )
+    if is_incomplete_prime_route(route):
+        return (
+            "Demander d'abord le libelle exact de la prime, la periode concernee, le montant verse, le montant attendu "
+            "et le bulletin correspondant avant de chercher la source applicable ou de discuter un rappel."
         )
     if "classification_carriere" in domains:
         return (
@@ -2174,6 +2313,11 @@ def build_short_answer(answer: dict[str, Any]) -> str:
         return (
             "La demande est trop courte pour conclure sur une classification individuelle. Nexus oriente vers les sources classification/carriere trouvees et il faut qualifier le coefficient, l'emploi et les fonctions reellement exercees avant toute position."
         )
+    if is_incomplete_prime_route(route):
+        return (
+            "La question est incomplete : Nexus doit d'abord connaitre le libelle exact de la prime, la periode, "
+            "le montant verse, le montant attendu et le bulletin concerne. Sans ces elements, il ne faut pas conclure ni chiffrer."
+        )
     if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
         if "astreinte" in source_docs:
             return (
@@ -2218,6 +2362,7 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     limits = answer_limits(route, source_limit)
 
     answer["sources"] = select_final_sources(answer["sources"], route, limits["sources"])
+    answer["source_layers"] = build_source_layers(answer["sources"])
 
     business_findings, prudence_findings = split_prudence_findings([item for item in answer["findings"] if item])
     business_findings = filter_contextual_items(business_findings, route)
@@ -2236,12 +2381,15 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["short_answer"] = build_short_answer(answer)
     if not answer["next_action"]:
         answer["next_action"] = next_action_for(route)
+    if is_incomplete_prime_route(route):
+        answer["confidence"] = "faible"
     answer["response_depth"] = response_depth(route)
     return answer
 
 
 def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
     route = route_query(query)
+    retrieval_limit = max(limit, source_limit, 8)
     answer: dict[str, Any] = {
         "query": query,
         "understanding": understanding_for(route),
@@ -2261,13 +2409,13 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
 
     if "bible_accords" in route["engines"]:
         try:
-            merge_bible_result(answer, search_bible(query, limit))
+            merge_bible_result(answer, search_bible(query, retrieval_limit))
         except SystemExit as exc:
             answer["warnings"].append(f"Bible Accords indisponible ou index vide: {exc}")
 
     if "nexus_bible_bridge" in route["engines"] and bridge is not None:
         try:
-            report = bridge.build_cse_analysis(query[:80], query, limit)
+            report = bridge.build_cse_analysis(query[:80], query, retrieval_limit)
             merge_bridge_result(answer, report)
         except SystemExit as exc:
             answer["warnings"].append(f"Pont Nexus/Bible indisponible: {exc}")
@@ -2310,11 +2458,30 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         parts = [str(source.get("document") or "Document local")]
         if source.get("page"):
             parts.append(f"page {source['page']}")
-        if source.get("article"):
-            parts.append(str(source["article"]))
+        article = source.get("article") or source.get("article_or_section")
+        if article:
+            parts.append(str(article))
+        if source.get("source_layer_label"):
+            parts.append(str(source["source_layer_label"]))
         if source.get("status"):
             parts.append(str(source["status"]))
-        return " | ".join(parts)
+        line = " | ".join(parts)
+        if source.get("excerpt"):
+            line += " | extrait: " + compact_text(source["excerpt"])[:260]
+        return line
+
+    def source_layer_lines() -> list[str]:
+        layers = answer.get("source_layers") or build_source_layers(answer.get("sources", []))
+        lines = ["", "Sources par niveau juridique :"]
+        for layer in layers:
+            label = layer.get("label") or layer.get("id") or "Source"
+            sources = layer.get("sources") or []
+            if sources:
+                lines.append(str(label))
+                lines.extend(list_or_dash(sources, source_line))
+            else:
+                lines.append(f"{label} : {layer.get('absent_message') or 'Aucune source remontee.'}")
+        return lines
 
     def grouped_lines(section: str, key: str, fallback: list[str]) -> list[str]:
         if not answer.get("issue_groups"):
@@ -2344,10 +2511,8 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         "",
         "Regles ou position de travail :",
         answer["working_position"],
-        "",
-        "Sources locales principales :",
     ]
-    lines.extend(list_or_dash(answer["sources"], source_line))
+    lines.extend(source_layer_lines())
     lines.extend(grouped_lines("Ce qu'il faut verifier :", "findings", answer["findings"]))
     lines.extend(grouped_lines("Documents a recuperer :", "documents", answer["documents_to_request"]))
     lines.extend(grouped_lines("Questions a poser :", "questions", answer["questions_to_ask"]))

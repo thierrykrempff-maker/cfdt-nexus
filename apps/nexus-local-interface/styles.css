@@ -333,6 +333,62 @@ li {
   line-height: 1.45;
 }
 
+.source-layers {
+  display: grid;
+  gap: 12px;
+}
+
+.source-layer {
+  display: grid;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.source-layer:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.source-layer h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.source-absent,
+.source-meta,
+.source-excerpt,
+.source-warning {
+  margin: 0;
+}
+
+.source-absent,
+.source-meta {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.source-item {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.source-excerpt {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.source-warning {
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .issue-group {
   padding: 12px 0;
   border-top: 1px solid var(--line);

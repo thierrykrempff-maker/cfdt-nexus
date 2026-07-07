@@ -61,18 +61,37 @@ def source_items(answer: dict[str, Any], orchestration: dict[str, Any]) -> list[
     for source in raw_sources:
         if isinstance(source, dict):
             parts = [source_label(source)]
+            if source.get("source_layer_label"):
+                parts.append(f"couche {source['source_layer_label']}")
             if source.get("origin"):
                 parts.append(f"origine {source['origin']}")
-            if source.get("match_score") is not None:
-                parts.append(f"score {source['match_score']}")
+            score = source.get("score") if source.get("score") is not None else source.get("match_score")
+            if score is not None:
+                parts.append(f"score {score}")
+            if source.get("chunk_id"):
+                parts.append(f"chunk {source['chunk_id']}")
+            if source.get("source_quality_warning"):
+                parts.append(str(source["source_quality_warning"]))
             if source.get("excerpt"):
-                parts.append(str(source["excerpt"]))
+                parts.append("extrait: " + str(source["excerpt"]))
             values.append(" | ".join(parts))
         else:
             values.append(str(source))
     if not values:
         values.extend(str(item) for item in orchestration.get("sources", []))
     return text_items(values, limit=12)
+
+
+def source_layer_items(answer: dict[str, Any]) -> list[str]:
+    values: list[str] = []
+    for layer in answer.get("source_layers", []):
+        label = layer.get("label") or layer.get("id") or "Source"
+        sources = layer.get("sources") or []
+        if sources:
+            values.append(f"{label}: {len(sources)} source(s) remontee(s).")
+        else:
+            values.append(f"{label}: {layer.get('absent_message') or 'Aucune source remontee.'}")
+    return text_items(values)
 
 
 def juriste_section(juriste: dict[str, Any]) -> list[dict[str, Any]]:
@@ -168,6 +187,7 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
         section("questions_direction", "Questions a poser a la direction", collected["questions_direction"]),
         section("position", "Position de travail", orchestration.get("position_de_travail") or answer.get("working_position")),
         section("conclusion", "Conclusion provisoire", provisional_conclusion(orchestration)),
+        section("source_layers", "Sources par niveau juridique", source_layer_items(answer)),
         section("sources", "Sources reellement remontees par Nexus", source_items(answer, orchestration)),
         section("confiance", "Niveau de confiance", orchestration.get("niveau_de_confiance") or answer.get("confidence")),
         section("limites", "Limites", collected["limites"]),
