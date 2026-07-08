@@ -588,11 +588,17 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"point cse",
             r"questions? cse",
             r"consultation cse",
+            r"presente .*cse",
+            r"presente au cse",
             r"information consultation",
             r"ordre du jour",
             r"la direction veut",
+            r"reorganisation",
+            r"suppression de postes?",
             r"modification .*cycle",
             r"modification .*horaires?",
+            r"changement .*horaires?",
+            r"modification .*taches?",
         ],
     },
 ]
@@ -636,9 +642,15 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"prepare(?:r)? .*cse",
             r"point cse",
             r"questions? cse",
+            r"presente .*cse",
+            r"presente au cse",
             r"la direction veut",
+            r"reorganisation",
+            r"suppression de postes?",
             r"modification .*cycle",
             r"modification .*horaires?",
+            r"changement .*horaires?",
+            r"modification .*taches?",
         ],
     },
     {
@@ -878,6 +890,14 @@ ROUTING_SCENARIOS: list[dict[str, Any]] = [
         "expected_domains": ["temps_travail", "cse"],
         "expected_intents": ["preparer_cse", "verifier_conformite"],
         "expected_engines": ["bible_accords", "nexus_bible_bridge"],
+    },
+    {
+        "id": "test-cse-reorganisation-atelier",
+        "query": "La direction presente au CSE une reorganisation d'atelier avec suppression de postes, changement des horaires et modification des taches. Comment preparer la reunion ?",
+        "expected_domains": ["temps_travail", "cse"],
+        "expected_intents": ["preparer_cse"],
+        "expected_engines": ["bible_accords", "nexus_bible_bridge"],
+        "forbidden_intents": ["question_simple"],
     },
     {
         "id": "test-refus-revoir-coefficient",
@@ -1544,6 +1564,12 @@ def is_contextual_noise_source(source: dict[str, Any], route: dict[str, Any]) ->
         return True
     if "astreinte" in domains and "interessement" in document:
         return True
+    if (
+        "teletravail" in document
+        and "teletravail" not in query
+        and domains & {"temps_travail", "cse", "astreinte", "classification_carriere"}
+    ):
+        return True
     if "forfait jours" in document and not re.search(r"forfait jours|cadre|cadres|salarie cadre", query):
         return True
     for domain in business_domains(route):
@@ -1642,6 +1668,12 @@ def simple_bible_only(intents: list[str], domains: list[str], query: str) -> boo
     text = normalize(query)
     if mandate_meeting_query(query):
         return True
+    if "cse" in domains and re.search(
+        r"reorganisation|suppression de postes?|changement .*horaires?|modification .*taches?|"
+        r"consultation|information consultation|documents?|pv|proces verbal",
+        text,
+    ):
+        return False
     complex_intents = {
         "preparer_cse",
         "preparer_cssct",
@@ -1669,6 +1701,7 @@ def needs_code_travail(query: str, domains: list[str], intents: list[str]) -> bo
         "temps_travail",
         "astreinte",
         "droit_syndical",
+        "cse",
         "conges_payes",
     }
     if any(domain in domains for domain in legal_domains):
@@ -2577,7 +2610,11 @@ def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any], orig
 def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
     text = normalize(query)
     domains = set(route.get("domains", []))
-    if "cse" in domains or "droit_syndical" in domains or re.search(r"\bcse\b|reunion|delegation|mandat", text):
+    if "disciplinaire" in domains or re.search(r"sanction|procedure disciplinaire|entretien disciplinaire", text):
+        return "sanction disciplinaire procedure preuve", "Discipline sanction et preuve"
+    if "cse" in domains and re.search(r"reorganisation|suppression de postes?|changement .*horaires?|modification .*taches?|consultation", text):
+        return "CSE consultation reorganisation", "CSE information consultation reorganisation"
+    if "droit_syndical" in domains or re.search(r"\bcse\b|reunion|delegation|mandat", text):
         return "CSE temps de reunion", "CSE et temps de reunion"
     if "classification_carriere" in domains or re.search(r"classification|coefficient|fonctions? reelles?|fiche de poste", text):
         return "classification fonctions reelles", "Classification et fonctions reelles"
@@ -2878,6 +2915,8 @@ def validate_scenario(scenario: dict[str, Any], route: dict[str, Any]) -> list[d
         checks.append({"name": f"domaine_{domain}", "ok": domain in domains, "detail": domain})
     for intent in scenario.get("expected_intents", []):
         checks.append({"name": f"intention_{intent}", "ok": intent in intents, "detail": intent})
+    for intent in scenario.get("forbidden_intents", []):
+        checks.append({"name": f"absence_intention_{intent}", "ok": intent not in intents, "detail": intent})
     for engine in scenario.get("expected_engines", []):
         checks.append({"name": f"moteur_{engine}", "ok": engine in engines, "detail": engine})
     for domain in scenario.get("forbidden_domains", []):

@@ -276,6 +276,10 @@ def main() -> None:
                 assert analysis["documents_manquants"]
                 assert analysis["questions_prioritaires"]
                 assert analysis["points_pv"]
+                assert "preparer_cse" in payload["answer"]["route"]["intents"]
+                assert "question_simple" not in payload["answer"]["route"]["intents"]
+                cse_sources = " ".join(source["document"] for source in payload["answer"]["sources"])
+                assert "teletravail" not in normalize(cse_sources)
             elif scenario_id == "defense_paie_collective":
                 assert payload["expert_paie"]["active"] is True
                 assert "majoration" in normalize(" ".join(payload["expert_paie"]["elements_du_bulletin_concernes"]))
