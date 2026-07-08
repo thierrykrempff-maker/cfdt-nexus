@@ -45,13 +45,14 @@ DEFAULT_TIMEOUT_SECONDS = 20
 DEFAULT_CACHE_TTL_SECONDS = 24 * 60 * 60
 CODE_DU_TRAVAIL_LEGITEXT = "LEGITEXT000006072050"
 CODE_DU_TRAVAIL_LABEL = "Code du travail"
+JURISPRUDENCE_LABEL = "Jurisprudence Cour de cassation"
 
 CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
     {
         "topic": "temps_travail_effectif",
         "article": "L3121-1",
         "article_id": "LEGIARTI000033020517",
-        "keywords": ["temps de travail", "travail effectif", "intervention", "poste", "reunion", "cse"],
+        "keywords": ["temps de travail", "travail effectif", "intervention", "reunion", "cse"],
     },
     {
         "topic": "astreinte_definition",
@@ -81,7 +82,7 @@ CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
         "topic": "repos_quotidien",
         "article": "L3131-1",
         "article_id": "LEGIARTI000033020918",
-        "keywords": ["repos quotidien", "repos", "reprise", "nuit", "poste", "5x8", "cse"],
+        "keywords": ["repos quotidien", "repos", "reprise", "nuit", "5x8", "cse"],
     },
     {
         "topic": "repos_hebdomadaire_interdiction",
@@ -108,6 +109,75 @@ CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
         "keywords": ["dimanche", "repos compensateur", "majoration", "salaire", "paie"],
     },
 ]
+
+JURISPRUDENCE_MINI_INDEX: list[dict[str, Any]] = [
+    {
+        "topic": "astreinte_repos",
+        "label": "Astreinte, intervention et repos",
+        "query": "astreinte intervention repos quotidien chambre sociale",
+        "keywords": ["astreinte", "intervention", "repos", "reprise", "nuit", "poste"],
+    },
+    {
+        "topic": "repos_temps_travail",
+        "label": "Repos quotidien et temps de travail",
+        "query": "repos quotidien repos hebdomadaire temps travail chambre sociale",
+        "keywords": ["repos quotidien", "repos hebdomadaire", "repos", "5x8", "nuit"],
+    },
+    {
+        "topic": "temps_travail_effectif",
+        "label": "Temps de travail effectif",
+        "query": "temps travail effectif intervention chambre sociale",
+        "keywords": ["temps de travail", "travail effectif", "intervention", "reunion"],
+    },
+    {
+        "topic": "heures_supplementaires",
+        "label": "Heures supplementaires et preuve",
+        "query": "heures supplementaires preuve salaire bulletin chambre sociale",
+        "keywords": ["heures supplementaires", "majoration", "bulletin", "paie", "heures"],
+    },
+    {
+        "topic": "travail_dimanche",
+        "label": "Travail du dimanche",
+        "query": "dimanche repos compensateur majoration salaire chambre sociale",
+        "keywords": ["dimanche", "repos compensateur", "majoration dimanche"],
+    },
+    {
+        "topic": "prime_variable",
+        "label": "Primes et elements variables de paie",
+        "query": "prime remuneration variable salaire bulletin chambre sociale",
+        "keywords": ["prime", "variable", "remuneration", "salaire", "bulletin"],
+    },
+    {
+        "topic": "classification_fonctions_reelles",
+        "label": "Classification et fonctions reellement exercees",
+        "query": "classification fonctions reellement exercees coefficient chambre sociale",
+        "keywords": ["classification", "coefficient", "fiche de poste", "fonctions", "responsabilites"],
+    },
+    {
+        "topic": "cse_temps_reunion_mandat",
+        "label": "CSE, mandat et temps de reunion",
+        "query": "comite social economique reunion temps travail chambre sociale",
+        "keywords": ["cse", "reunion", "mandat", "delegation", "elu", "representant"],
+    },
+]
+
+FRENCH_MONTHS = {
+    "janvier": "01",
+    "fevrier": "02",
+    "février": "02",
+    "mars": "03",
+    "avril": "04",
+    "mai": "05",
+    "juin": "06",
+    "juillet": "07",
+    "aout": "08",
+    "août": "08",
+    "septembre": "09",
+    "octobre": "10",
+    "novembre": "11",
+    "decembre": "12",
+    "décembre": "12",
+}
 
 
 class LegifranceError(RuntimeError):
@@ -306,6 +376,23 @@ class LegifranceClient:
         self._write_response_cache(cache_key, deduped)
         return deduped
 
+    def search_jurisprudence_hits(self, query: str, limit: int = 6) -> list[dict[str, Any]]:
+        self.ensure_configured()
+        cleaned_query = (query or "").strip()
+        if not cleaned_query:
+            return []
+        cache_key = self._cache_key("juri_search", {"query": cleaned_query, "limit": limit})
+        cached = self._read_response_cache(cache_key)
+        if cached is not None:
+            return cached
+
+        payload = build_jurisprudence_search_payload(cleaned_query, limit)
+        response = self._post_json(self.config.search_endpoint, payload)
+        hits = extract_jurisprudence_hits(response)
+        deduped = dedupe_hits(hits)[: max(1, limit)]
+        self._write_response_cache(cache_key, deduped)
+        return deduped
+
     def article_source(self, article_id: str, search_hit: dict[str, Any] | None = None) -> dict[str, Any]:
         self.ensure_configured()
         cleaned_id = (article_id or "").strip()
@@ -355,6 +442,55 @@ class LegifranceClient:
                 "sources": sources,
                 "warnings": warnings,
                 "search_hits": len(hits),
+                "endpoints": self.used_endpoints(),
+            }
+        except LegifranceError as exc:
+            return {
+                "available": False,
+                "sources": [],
+                "warnings": [str(exc)],
+                "search_hits": 0,
+                "endpoints": self.used_endpoints(),
+            }
+
+    def search_jurisprudence_sources(self, query: str, limit: int = 3) -> dict[str, Any]:
+        try:
+            topics = jurisprudence_mini_index_hits(query, limit=4)
+            sources: list[dict[str, Any]] = []
+            warnings: list[str] = []
+            for topic in topics:
+                try:
+                    hits = self.search_jurisprudence_hits(str(topic["query"]), limit=8)
+                except LegifranceError as exc:
+                    warnings.append(str(exc))
+                    continue
+                for hit in hits:
+                    source = normalize_jurisprudence_source(hit, topic)
+                    if source:
+                        sources.append(source)
+                    if len(dedupe_hits(sources)) >= limit:
+                        break
+                if len(dedupe_hits(sources)) >= limit:
+                    break
+            sources = dedupe_hits(sources)[: max(1, limit)]
+            if not topics:
+                warnings.append("Mini-index jurisprudence V1: aucun theme cible selectionne pour cette question.")
+            if topics and not sources:
+                warnings.append(
+                    "Jurisprudence Legifrance: aucune decision Cour de cassation chambre sociale fiable "
+                    "n'a ete remontee par la recherche officielle."
+                )
+            if "astreinte" in normalize_text(query):
+                warnings.append(
+                    "Mini-index jurisprudence V1: aucun arret Cour de cassation chambre sociale specifique "
+                    "a l'astreinte salarie n'est encore valide ; les decisions remontees portent sur repos "
+                    "ou temps de travail effectif."
+                )
+            return {
+                "available": True,
+                "sources": sources,
+                "warnings": warnings,
+                "search_hits": len(sources),
                 "endpoints": self.used_endpoints(),
             }
         except LegifranceError as exc:
@@ -420,6 +556,7 @@ class LegifranceClient:
             "oauth_token": self.config.token_url,
             "api_base": self.config.api_base_url,
             "search": self.config.endpoint_url(self.config.search_endpoint),
+            "jurisprudence_search": self.config.endpoint_url(self.config.search_endpoint),
             "article": self.config.endpoint_url(self.config.article_endpoint),
         }
 
@@ -527,6 +664,31 @@ def build_search_payload(query: str, limit: int) -> dict[str, Any]:
     }
 
 
+def build_jurisprudence_search_payload(query: str, limit: int) -> dict[str, Any]:
+    page_size = max(1, min(limit, 10))
+    return {
+        "recherche": {
+            "champs": [
+                {
+                    "typeChamp": "ALL",
+                    "criteres": [
+                        {
+                            "typeRecherche": "UN_DES_MOTS",
+                            "valeur": query,
+                            "operateur": "ET",
+                        }
+                    ],
+                    "operateur": "ET",
+                }
+            ],
+            "pageNumber": 1,
+            "pageSize": page_size,
+            "sort": "PERTINENCE",
+        },
+        "fond": "JURI",
+    }
+
+
 def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
     text = normalize_text(query)
     selected: list[dict[str, Any]] = []
@@ -551,7 +713,9 @@ def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
         add("L3121-9", "astreinte: definition legale", 100)
         add("L3121-10", "astreinte: intervention et temps de travail effectif", 96)
         add("L3121-11", "astreinte: contreparties", 86)
-    if any(term in text for term in ["repos quotidien", "reprise", "interrompu", "nuit", "5x8", "poste"]):
+    if any(term in text for term in ["repos quotidien", "reprise", "interrompu", "nuit", "5x8"]) or (
+        "poste" in text and any(term in text for term in ["repos", "reprise", "nuit", "astreinte"])
+    ):
         add("L3131-1", "repos quotidien", 92)
     if any(term in text for term in ["repos hebdomadaire", "repos compensateur", "dimanche", "hebdomadaire"]):
         add("L3132-1", "repos hebdomadaire", 88)
@@ -584,6 +748,42 @@ def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
                 )
 
     return dedupe_hits(sorted(selected, key=lambda item: int(item.get("score") or 0), reverse=True))[: max(1, limit)]
+
+
+def jurisprudence_mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
+    text = normalize_text(query)
+    selected: list[dict[str, Any]] = []
+
+    def add(topic: str, reason: str, score: int) -> None:
+        for item in JURISPRUDENCE_MINI_INDEX:
+            if item["topic"] == topic:
+                selected.append({**item, "reason": reason, "score": score})
+                return
+
+    if "astreinte" in text:
+        add("repos_temps_travail", "astreinte: verifier surtout repos et reprise du poste en V1", 100)
+        add("temps_travail_effectif", "astreinte: qualifier le temps d'intervention en V1", 96)
+    if any(term in text for term in ["repos", "reprise", "nuit", "5x8", "hebdomadaire", "quotidien"]):
+        add("repos_temps_travail", "repos quotidien ou hebdomadaire", 94)
+    if any(term in text for term in ["temps de travail", "travail effectif", "intervention", "reunion"]):
+        add("temps_travail_effectif", "qualification du temps de travail effectif", 88)
+    if any(term in text for term in ["heure supplementaire", "heures supplementaires", "majoration", "bulletin", "paie"]):
+        add("heures_supplementaires", "heures supplementaires, preuve ou bulletin", 86)
+    if "dimanche" in text:
+        add("travail_dimanche", "travail du dimanche, compensation ou majoration", 84)
+    if any(term in text for term in ["prime", "remuneration variable", "variable", "salaire"]):
+        add("prime_variable", "prime ou element variable de remuneration", 82)
+    if any(term in text for term in ["classification", "coefficient", "fiche de poste", "fonctions", "responsabilite"]):
+        add("classification_fonctions_reelles", "classification et fonctions reellement exercees", 90)
+    if any(term in text for term in ["cse", "comite social economique", "delegation", "mandat", "elu"]):
+        add("cse_temps_reunion_mandat", "CSE, mandat et temps de reunion", 110)
+
+    if not selected:
+        for item in JURISPRUDENCE_MINI_INDEX:
+            if any(normalize_text(keyword) in text for keyword in item.get("keywords", [])):
+                selected.append({**item, "reason": "mot-cle du mini-index jurisprudence", "score": 60})
+
+    return dedupe_topic_hits(sorted(selected, key=lambda item: int(item.get("score") or 0), reverse=True))[: max(1, limit)]
 
 
 def is_cse_meeting_query(query: str) -> bool:
@@ -628,6 +828,90 @@ def extract_article_hits(payload: Any) -> list[dict[str, Any]]:
             }
         )
     return hits
+
+
+def extract_jurisprudence_hits(payload: Any) -> list[dict[str, Any]]:
+    hits: list[dict[str, Any]] = []
+    results = payload.get("results") if isinstance(payload, dict) else None
+    if not isinstance(results, list):
+        return hits
+    for node in results:
+        if not isinstance(node, dict):
+            continue
+        title = first_jurisprudence_title(node)
+        official_id = first_jurisprudence_id(node)
+        if not title or not official_id or not is_cassation_sociale_title(title):
+            continue
+        principle = best_jurisprudence_principle(node)
+        excerpt = best_jurisprudence_excerpt(node, principle)
+        metadata = parse_jurisprudence_title(title)
+        hits.append(
+            {
+                "official_id": official_id,
+                "document": title,
+                "title": title,
+                "juridiction": metadata.get("juridiction") or "Cour de cassation",
+                "chamber": metadata.get("chamber") or "Chambre sociale",
+                "decision_date": metadata.get("decision_date"),
+                "case_number": metadata.get("case_number"),
+                "solution": clean_text_value(node.get("solution")),
+                "theme": clean_text_value(node.get("themes")) or clean_text_value(node.get("motsCles")),
+                "principle_summary": principle,
+                "excerpt": excerpt,
+                "score": node.get("score") or node.get("pertinence"),
+                "raw_origin": node.get("origin"),
+                "publication": "Publié au bulletin" if "publie au bulletin" in normalize_text(title) else None,
+            }
+        )
+    return hits
+
+
+def normalize_jurisprudence_source(hit: dict[str, Any], topic: dict[str, Any]) -> dict[str, Any] | None:
+    official_id = hit.get("official_id")
+    if not official_id:
+        return None
+    title = strip_markup(hit.get("title") or hit.get("document") or JURISPRUDENCE_LABEL)
+    decision_date = hit.get("decision_date")
+    case_number = hit.get("case_number")
+    location_parts = [part for part in [decision_date, f"pourvoi {case_number}" if case_number else None] if part]
+    principle = short_excerpt(hit.get("principle_summary") or hit.get("excerpt") or "", 500)
+    warning = None
+    if not hit.get("principle_summary"):
+        warning = "Principe resume non fourni distinctement par la recherche Legifrance: verifier la decision complete."
+    ranking_reasons = [
+        "Source officielle Legifrance via API PISTE",
+        "Recherche jurisprudence fond JURI",
+        "Filtre Nexus: Cour de cassation, chambre sociale",
+        "Mini-index jurisprudence V1",
+    ]
+    if topic.get("label"):
+        ranking_reasons.append("theme: " + str(topic["label"]))
+    if topic.get("reason"):
+        ranking_reasons.append(str(topic["reason"]))
+    return {
+        "document": title,
+        "document_type": "jurisprudence",
+        "source_layer": "jurisprudence",
+        "source_layer_label": "Jurisprudence",
+        "juridiction": hit.get("juridiction") or "Cour de cassation",
+        "chamber": hit.get("chamber") or "Chambre sociale",
+        "decision_date": decision_date,
+        "case_number": case_number,
+        "theme": topic.get("label") or hit.get("theme"),
+        "principle_summary": principle,
+        "solution": hit.get("solution"),
+        "article": " | ".join(location_parts) if location_parts else case_number,
+        "article_or_section": " | ".join(location_parts) if location_parts else case_number,
+        "official_id": official_id,
+        "legifrance_id": official_id,
+        "retrieved_at": utc_now(),
+        "url": f"https://www.legifrance.gouv.fr/juri/id/{official_id}",
+        "excerpt": short_excerpt(hit.get("excerpt") or principle),
+        "chunk_id": official_id,
+        "score": hit.get("score") or topic.get("score"),
+        "ranking_reasons": ranking_reasons,
+        "source_quality_warning": warning,
+    }
 
 
 def iter_dicts(value: Any) -> Iterable[dict[str, Any]]:
@@ -685,6 +969,90 @@ def first_article_number(value: Any) -> str | None:
     return None
 
 
+def first_jurisprudence_id(value: Any) -> str | None:
+    if isinstance(value, dict):
+        for key in ["id", "cid", "jurisprudenceId", "idDecision", "official_id"]:
+            candidate = value.get(key)
+            if isinstance(candidate, str) and candidate.startswith("JURITEXT"):
+                return candidate
+        for child in value.values():
+            found = first_jurisprudence_id(child)
+            if found:
+                return found
+    elif isinstance(value, list):
+        for child in value:
+            found = first_jurisprudence_id(child)
+            if found:
+                return found
+    elif isinstance(value, str):
+        match = re.search(r"JURITEXT\d+", value)
+        if match:
+            return match.group(0)
+    return None
+
+
+def first_jurisprudence_title(value: dict[str, Any]) -> str | None:
+    titles = value.get("titles")
+    if isinstance(titles, list):
+        for title in titles:
+            if isinstance(title, dict):
+                candidate = title.get("title")
+                if isinstance(candidate, str) and candidate.strip():
+                    return strip_markup(candidate)
+            elif isinstance(title, str) and title.strip():
+                return strip_markup(title)
+    return clean_text_value(value.get("title") or value.get("titre"))
+
+
+def is_cassation_sociale_title(title: str) -> bool:
+    normalized = normalize_text(title)
+    return "cour de cassation" in normalized and "chambre sociale" in normalized
+
+
+def parse_jurisprudence_title(title: str) -> dict[str, Any]:
+    cleaned = strip_markup(title)
+    return {
+        "juridiction": "Cour de cassation" if "cour de cassation" in normalize_text(cleaned) else first_title_part(cleaned),
+        "chamber": parse_chamber(cleaned),
+        "decision_date": parse_french_date(cleaned),
+        "case_number": parse_case_number(cleaned),
+    }
+
+
+def first_title_part(title: str) -> str | None:
+    part = strip_markup(title).split(",", 1)[0].strip()
+    return part or None
+
+
+def parse_chamber(title: str) -> str | None:
+    match = re.search(r"Chambre\s+sociale", strip_markup(title), flags=re.IGNORECASE)
+    if match:
+        return "Chambre sociale"
+    return None
+
+
+def parse_french_date(text: str) -> str | None:
+    match = re.search(
+        r"\b(\d{1,2})\s+([A-Za-zÀ-ÖØ-öø-ÿ]+)\s+(\d{4})\b",
+        strip_markup(text),
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+    day, month, year = match.groups()
+    month_number = FRENCH_MONTHS.get(month.casefold())
+    if not month_number:
+        return None
+    return f"{year}-{month_number}-{int(day):02d}"
+
+
+def parse_case_number(text: str) -> str | None:
+    matches = re.findall(r"\b\d{2}-\d{2}\.\d{3}\b", strip_markup(text))
+    if not matches:
+        return None
+    return " ".join(matches)
+
+
 def extract_article_number(text: str) -> str | None:
     match = re.search(r"\b([LRD]\.?\s*\d{1,4}-\d{1,4}(?:-\d+)?)\b", strip_markup(text), flags=re.IGNORECASE)
     if not match:
@@ -707,6 +1075,77 @@ def first_text_value(value: Any, keys: list[str]) -> str | None:
             found = first_text_value(child, keys)
             if found:
                 return found
+    return None
+
+
+def clean_text_value(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        cleaned = strip_markup(value)
+        return cleaned or None
+    if isinstance(value, (int, float)):
+        return str(value)
+    if isinstance(value, list):
+        parts = [clean_text_value(item) for item in value]
+        joined = " ".join(part for part in parts if part)
+        return strip_markup(joined) or None
+    if isinstance(value, dict):
+        for key in ["text", "texte", "value", "valeur", "title", "titre", "resume", "label"]:
+            cleaned = clean_text_value(value.get(key))
+            if cleaned:
+                return cleaned
+        parts = [clean_text_value(item) for item in value.values()]
+        joined = " ".join(part for part in parts if part)
+        return strip_markup(joined) or None
+    return strip_markup(value) or None
+
+
+def best_jurisprudence_principle(payload: dict[str, Any]) -> str | None:
+    direct = clean_text_value(payload.get("resumePrincipal"))
+    if direct:
+        return short_excerpt(direct, 700)
+    for field in ["Résumé principal", "Resume principal", "Sommaire", "Abstrat", "Résumé autre", "Resume autre"]:
+        extracted = section_extract_text(payload, field)
+        if extracted:
+            return short_excerpt(extracted, 700)
+    other = clean_text_value(payload.get("autreResume"))
+    if other:
+        return short_excerpt(other, 700)
+    return None
+
+
+def best_jurisprudence_excerpt(payload: dict[str, Any], principle: str | None = None) -> str:
+    text = clean_text_value(payload.get("text"))
+    if text:
+        return short_excerpt(text, 900)
+    if principle:
+        return short_excerpt(principle, 900)
+    values: list[str] = []
+    for section in payload.get("sections") or []:
+        if not isinstance(section, dict):
+            continue
+        for extract in section.get("extracts") or []:
+            cleaned = clean_text_value((extract or {}).get("values"))
+            if cleaned:
+                values.append(cleaned)
+    return short_excerpt(" ".join(values), 900)
+
+
+def section_extract_text(payload: dict[str, Any], field_name: str) -> str | None:
+    expected = normalize_text(field_name)
+    for section in payload.get("sections") or []:
+        if not isinstance(section, dict):
+            continue
+        for extract in section.get("extracts") or []:
+            if not isinstance(extract, dict):
+                continue
+            name = normalize_text(extract.get("searchFieldName"))
+            if name != expected:
+                continue
+            cleaned = clean_text_value(extract.get("values"))
+            if cleaned:
+                return cleaned
     return None
 
 
@@ -913,6 +1352,18 @@ def dedupe_hits(hits: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
         if not official_id or official_id in seen:
             continue
         seen.add(official_id)
+        result.append(hit)
+    return result
+
+
+def dedupe_topic_hits(hits: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for hit in hits:
+        topic = str(hit.get("topic") or "")
+        if not topic or topic in seen:
+            continue
+        seen.add(topic)
         result.append(hit)
     return result
 

@@ -1246,6 +1246,11 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         source.get("raison_de_pertinence"),
         source.get("official_id"),
         source.get("etat"),
+        source.get("juridiction"),
+        source.get("chamber"),
+        source.get("decision_date"),
+        source.get("case_number"),
+        source.get("principle_summary"),
     ]
     return {
         "document": source.get("document"),
@@ -1271,6 +1276,13 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "date_fin": source.get("date_fin"),
         "version_start_date": source.get("version_start_date") or source.get("date_debut"),
         "version_end_date": source.get("version_end_date") or source.get("date_fin"),
+        "juridiction": source.get("juridiction"),
+        "chamber": source.get("chamber"),
+        "decision_date": source.get("decision_date"),
+        "case_number": source.get("case_number"),
+        "theme": source.get("theme"),
+        "principle_summary": source.get("principle_summary"),
+        "solution": source.get("solution"),
         "retrieved_at": source.get("retrieved_at"),
         "url": source.get("url"),
         "excerpt": excerpt,
@@ -1298,6 +1310,13 @@ def source_context(source: dict[str, Any]) -> str:
                 source.get("official_id"),
                 source.get("legifrance_id"),
                 source.get("etat"),
+                source.get("juridiction"),
+                source.get("chamber"),
+                source.get("decision_date"),
+                source.get("case_number"),
+                source.get("theme"),
+                source.get("principle_summary"),
+                source.get("solution"),
                 source.get("url"),
                 source.get("excerpt"),
                 " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
@@ -1389,6 +1408,8 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 6
     if source.get("origin") == "legifrance_code_travail":
         score += 4
+    if source.get("origin") == "legifrance_jurisprudence":
+        score += 4
     if source.get("origin") == "bible_accords" and route.get("engines") == ["bible_accords"]:
         score += 4
 
@@ -1447,14 +1468,23 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             if len(selected) >= minimum_sources:
                 break
 
-    if any(source.get("source_layer") == "code_travail" for source in ranked) and not any(
-        source.get("source_layer") == "code_travail" for source in selected
-    ):
-        code_source = next(source for source in ranked if source.get("source_layer") == "code_travail")
-        if len(selected) < limit:
-            selected.append(code_source)
-        elif selected:
-            selected[-1] = code_source
+    for required_layer in ["code_travail", "jurisprudence"]:
+        if any(source.get("source_layer") == required_layer for source in ranked) and not any(
+            source.get("source_layer") == required_layer for source in selected
+        ):
+            layer_source = next(source for source in ranked if source.get("source_layer") == required_layer)
+            if len(selected) < limit:
+                selected.append(layer_source)
+            elif selected:
+                replace_at = next(
+                    (
+                        index
+                        for index in range(len(selected) - 1, -1, -1)
+                        if selected[index].get("source_layer") not in {"code_travail", "jurisprudence"}
+                    ),
+                    len(selected) - 1,
+                )
+                selected[replace_at] = layer_source
 
     return [clean_source(source) for source in selected[:limit]]
 
@@ -1635,6 +1665,24 @@ def needs_code_travail(query: str, domains: list[str], intents: list[str]) -> bo
     return bool(re.search(r"code du travail|legifrance|article [lrd]\.?\s*\d|droits?", text))
 
 
+def needs_jurisprudence(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    jurisprudence_domains = {
+        "classification_carriere",
+        "temps_travail",
+        "astreinte",
+        "droit_syndical",
+        "cse",
+        "paie_remuneration",
+        "conges_payes",
+    }
+    if any(domain in domains for domain in jurisprudence_domains):
+        return True
+    if any(intent in intents for intent in ["verifier_conformite", "analyser_situation_individuelle", "construire_argumentaire"]):
+        return True
+    return bool(re.search(r"jurisprudence|cour de cassation|arret|pourvoi|decision", text))
+
+
 def engine_status() -> dict[str, dict[str, Any]]:
     chunks_path = bible.INDEX_DIR / "chunks.private.jsonl"
     chunks = bible.read_jsonl(chunks_path) if chunks_path.exists() else []
@@ -1684,6 +1732,15 @@ def engine_status() -> dict[str, dict[str, Any]]:
                 else "connecteur Legifrance non configure: secrets attendus en variables d'environnement"
             ),
         },
+        "legifrance_jurisprudence": {
+            **legifrance_status,
+            "path": str(SCRIPT_DIR / "legifrance_connector.py"),
+            "reason": (
+                "connecteur Legifrance configure pour la recherche JURI"
+                if legifrance_status.get("available")
+                else "connecteur Legifrance non configure: jurisprudence non alimentee"
+            ),
+        },
     }
 
 
@@ -1725,6 +1782,14 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 "Code du travail non alimente : connecteur Legifrance non configure ou indisponible. "
                 "Aucun article n'est invente."
             )
+    if needs_jurisprudence(query, domains, intents):
+        if status["legifrance_jurisprudence"]["available"]:
+            engines.append("legifrance_jurisprudence")
+        else:
+            warnings.append(
+                "Jurisprudence non alimentee : connecteur Legifrance non configure ou indisponible. "
+                "Aucune decision n'est inventee."
+            )
 
     engines = dedupe(engines)
     plan = []
@@ -1750,6 +1815,14 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 {
                     "engine": engine,
                     "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+                    "status": "connected",
+                }
+            )
+        elif engine == "legifrance_jurisprudence":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher des decisions Cour de cassation chambre sociale via l'API officielle Legifrance",
                     "status": "connected",
                 }
             )
@@ -2453,13 +2526,16 @@ def merge_bridge_result(answer: dict[str, Any], report: dict[str, Any]) -> None:
         answer["confidence"] = report["niveau_de_confiance"]
 
 
-def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any], origin: str = "legifrance_code_travail") -> None:
     for source in result.get("sources", [])[:5]:
-        answer["sources"].append(normalize_source(source, "legifrance_code_travail"))
+        answer["sources"].append(normalize_source(source, origin))
     for warning in result.get("warnings", []):
         answer["warnings"].append("Legifrance: " + str(warning))
     if result.get("available") and not result.get("sources"):
-        answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
+        if origin == "legifrance_jurisprudence":
+            answer["warnings"].append("Legifrance: aucune jurisprudence Cour de cassation exploitable remontee par l'API.")
+        else:
+            answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
 
 
 def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
@@ -2532,6 +2608,17 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Legifrance indisponible: {exc}")
 
+    if "legifrance_jurisprudence" in route["engines"] and legifrance is not None:
+        try:
+            client = legifrance.LegifranceClient()
+            merge_legifrance_result(
+                answer,
+                client.search_jurisprudence_sources(query, limit=3),
+                origin="legifrance_jurisprudence",
+            )
+        except Exception as exc:  # pragma: no cover - network and credential boundary.
+            answer["warnings"].append(f"Jurisprudence Legifrance indisponible: {exc}")
+
     return finalize_answer(answer, source_limit)
 
 
@@ -2570,14 +2657,20 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         parts = [str(source.get("document") or "Document local")]
         if source.get("page"):
             parts.append(f"page {source['page']}")
+        if source.get("decision_date"):
+            parts.append(str(source["decision_date"]))
+        if source.get("case_number"):
+            parts.append("pourvoi " + str(source["case_number"]))
         article = source.get("article") or source.get("article_or_section")
-        if article:
+        if article and source.get("source_layer") != "jurisprudence":
             parts.append(str(article))
         if source.get("source_layer_label"):
             parts.append(str(source["source_layer_label"]))
         if source.get("status"):
             parts.append(str(source["status"]))
         line = " | ".join(parts)
+        if source.get("principle_summary"):
+            line += " | principe: " + compact_text(source["principle_summary"])[:260]
         if source.get("excerpt"):
             line += " | extrait: " + compact_text(source["excerpt"])[:260]
         return line
@@ -2666,6 +2759,7 @@ def diagnose() -> dict[str, Any]:
         "paie_control": status["paie_control"],
         "veille_juridique": status["veille_juridique"],
         "legifrance_code_travail": status["legifrance_code_travail"],
+        "legifrance_jurisprudence": status["legifrance_jurisprudence"],
         "corpus_local_configured": source_config.exists(),
         "source_config_path": str(source_config),
         "local_index_ignored": local_index_ignored,
@@ -2689,6 +2783,7 @@ def format_diagnose_text(report: dict[str, Any]) -> str:
         f"Module paie : {report['paie_control']['reason']}",
         f"Veille juridique : {report['veille_juridique']['reason']}",
         f"Legifrance Code du travail : {report['legifrance_code_travail']['reason']}",
+        f"Legifrance jurisprudence : {report['legifrance_jurisprudence']['reason']}",
         f"Corpus local configure : {'oui' if report['corpus_local_configured'] else 'non'}",
         f"local-index/ ignore par Git : {'oui' if report['local_index_ignored'] else 'non'}",
         "Modules connectes : " + ", ".join(report["connected_modules"]),
