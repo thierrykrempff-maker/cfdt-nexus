@@ -28,6 +28,11 @@ try:
 except ImportError:  # pragma: no cover - diagnosed at runtime.
     legifrance = None
 
+try:
+    import judilibre_connector as judilibre
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    judilibre = None
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -1250,7 +1255,10 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         source.get("chamber"),
         source.get("decision_date"),
         source.get("case_number"),
+        source.get("summary"),
+        source.get("resume_court"),
         source.get("principle_summary"),
+        source.get("judilibre_id"),
     ]
     return {
         "document": source.get("document"),
@@ -1281,8 +1289,12 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "decision_date": source.get("decision_date"),
         "case_number": source.get("case_number"),
         "theme": source.get("theme"),
+        "summary": source.get("summary"),
+        "resume_court": source.get("resume_court"),
         "principle_summary": source.get("principle_summary"),
         "solution": source.get("solution"),
+        "judilibre_id": source.get("judilibre_id"),
+        "decision_text_length": source.get("decision_text_length"),
         "retrieved_at": source.get("retrieved_at"),
         "url": source.get("url"),
         "excerpt": excerpt,
@@ -1315,8 +1327,11 @@ def source_context(source: dict[str, Any]) -> str:
                 source.get("decision_date"),
                 source.get("case_number"),
                 source.get("theme"),
+                source.get("summary"),
+                source.get("resume_court"),
                 source.get("principle_summary"),
                 source.get("solution"),
+                source.get("judilibre_id"),
                 source.get("url"),
                 source.get("excerpt"),
                 " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
@@ -1408,7 +1423,7 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 6
     if source.get("origin") == "legifrance_code_travail":
         score += 4
-    if source.get("origin") == "legifrance_jurisprudence":
+    if source.get("origin") == "judilibre_jurisprudence":
         score += 4
     if source.get("origin") == "bible_accords" and route.get("engines") == ["bible_accords"]:
         score += 4
@@ -1683,6 +1698,29 @@ def needs_jurisprudence(query: str, domains: list[str], intents: list[str]) -> b
     return bool(re.search(r"jurisprudence|cour de cassation|arret|pourvoi|decision", text))
 
 
+def judilibre_status_from_env() -> dict[str, Any]:
+    if judilibre is None:
+        return {
+            "detected": False,
+            "available": False,
+            "reason": "connecteur JUDILIBRE absent",
+        }
+    config = judilibre.JudilibreConfig.from_env()
+    return {
+        "detected": True,
+        "available": config.configured,
+        "missing_variables": config.missing_variables,
+        "api_base_url": config.api_base_url,
+        "cache_dir": str(config.cache_dir),
+        "cache_ignored_by_git": "local-index" in config.cache_dir.parts,
+        "reason": (
+            "connecteur JUDILIBRE configure"
+            if config.configured
+            else "connecteur JUDILIBRE non configure: secrets attendus en variables d'environnement"
+        ),
+    }
+
+
 def engine_status() -> dict[str, dict[str, Any]]:
     chunks_path = bible.INDEX_DIR / "chunks.private.jsonl"
     chunks = bible.read_jsonl(chunks_path) if chunks_path.exists() else []
@@ -1691,6 +1729,7 @@ def engine_status() -> dict[str, dict[str, Any]]:
         "available": False,
         "reason": "connecteur Legifrance absent",
     }
+    judilibre_status = judilibre_status_from_env()
     return {
         "bible_accords": {
             "available": bool(chunks),
@@ -1732,13 +1771,13 @@ def engine_status() -> dict[str, dict[str, Any]]:
                 else "connecteur Legifrance non configure: secrets attendus en variables d'environnement"
             ),
         },
-        "legifrance_jurisprudence": {
-            **legifrance_status,
-            "path": str(SCRIPT_DIR / "legifrance_connector.py"),
+        "judilibre_jurisprudence": {
+            **judilibre_status,
+            "path": str(SCRIPT_DIR / "judilibre_connector.py"),
             "reason": (
-                "connecteur Legifrance configure pour la recherche JURI"
-                if legifrance_status.get("available")
-                else "connecteur Legifrance non configure: jurisprudence non alimentee"
+                "connecteur JUDILIBRE configure"
+                if judilibre_status.get("available")
+                else "connecteur JUDILIBRE non configure: jurisprudence non alimentee"
             ),
         },
     }
@@ -1783,11 +1822,11 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 "Aucun article n'est invente."
             )
     if needs_jurisprudence(query, domains, intents):
-        if status["legifrance_jurisprudence"]["available"]:
-            engines.append("legifrance_jurisprudence")
+        if status["judilibre_jurisprudence"]["available"]:
+            engines.append("judilibre_jurisprudence")
         else:
             warnings.append(
-                "Jurisprudence non alimentee : connecteur Legifrance non configure ou indisponible. "
+                "Jurisprudence non alimentee : connecteur JUDILIBRE non configure ou indisponible. "
                 "Aucune decision n'est inventee."
             )
 
@@ -1818,11 +1857,11 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                     "status": "connected",
                 }
             )
-        elif engine == "legifrance_jurisprudence":
+        elif engine == "judilibre_jurisprudence":
             plan.append(
                 {
                     "engine": engine,
-                    "action": "rechercher des decisions Cour de cassation chambre sociale via l'API officielle Legifrance",
+                    "action": "rechercher des decisions Cour de cassation via l'API officielle JUDILIBRE",
                     "status": "connected",
                 }
             )
@@ -2532,10 +2571,39 @@ def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any], orig
     for warning in result.get("warnings", []):
         answer["warnings"].append("Legifrance: " + str(warning))
     if result.get("available") and not result.get("sources"):
-        if origin == "legifrance_jurisprudence":
-            answer["warnings"].append("Legifrance: aucune jurisprudence Cour de cassation exploitable remontee par l'API.")
-        else:
-            answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
+        answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
+
+
+def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
+    text = normalize(query)
+    domains = set(route.get("domains", []))
+    if "cse" in domains or "droit_syndical" in domains or re.search(r"\bcse\b|reunion|delegation|mandat", text):
+        return "CSE temps de reunion", "CSE et temps de reunion"
+    if "classification_carriere" in domains or re.search(r"classification|coefficient|fonctions? reelles?|fiche de poste", text):
+        return "classification fonctions reelles", "Classification et fonctions reelles"
+    if "astreinte" in domains or "astreinte" in text:
+        return "astreinte repos", "Astreinte et repos"
+    if re.search(r"prime|salaire variable|remuneration variable|variable", text):
+        return "prime salaire variable", "Prime et salaire variable"
+    if "paie_remuneration" in domains or re.search(r"heures? supplementaires?|majoration|bulletin|paie", text):
+        return "heures supplementaires", "Heures supplementaires"
+    if "temps_travail" in domains or re.search(r"temps de travail|travail effectif|repos", text):
+        return "temps de travail effectif", "Temps de travail effectif"
+    return query, "Jurisprudence utile"
+
+
+def merge_judilibre_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    for source in result.get("sources", [])[:3]:
+        answer["sources"].append(normalize_source(source, "judilibre_jurisprudence"))
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("JUDILIBRE: " + str(warning))
+    if result.get("available") and not result.get("sources"):
+        answer["warnings"].append("JUDILIBRE: aucune decision exploitable remontee par l'API.")
+    if result.get("sources"):
+        answer["warnings"].append(
+            "Jurisprudence: les decisions citees eclairent l'interpretation ; elles ne remplacent pas "
+            "les accords d'entreprise, la convention collective ni le Code du travail applicable."
+        )
 
 
 def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
@@ -2608,16 +2676,13 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Legifrance indisponible: {exc}")
 
-    if "legifrance_jurisprudence" in route["engines"] and legifrance is not None:
+    if "judilibre_jurisprudence" in route["engines"] and judilibre is not None:
         try:
-            client = legifrance.LegifranceClient()
-            merge_legifrance_result(
-                answer,
-                client.search_jurisprudence_sources(query, limit=3),
-                origin="legifrance_jurisprudence",
-            )
+            client = judilibre.JudilibreClient()
+            search_query, theme = judilibre_query_for_route(query, route)
+            merge_judilibre_result(answer, client.search_sources(search_query, limit=3, theme=theme))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
-            answer["warnings"].append(f"Jurisprudence Legifrance indisponible: {exc}")
+            answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {exc}")
 
     return finalize_answer(answer, source_limit)
 
@@ -2654,7 +2719,13 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         return [f"- {formatter(value)}" for value in values]
 
     def source_line(source: dict[str, Any]) -> str:
-        parts = [str(source.get("document") or "Document local")]
+        document = str(source.get("document") or "Document local")
+        parts = [document]
+        if source.get("source_layer") == "jurisprudence":
+            for key in ("juridiction", "jurisdiction", "chamber"):
+                value = str(source.get(key) or "").strip()
+                if value and value.lower() not in document.lower() and value not in parts:
+                    parts.append(value)
         if source.get("page"):
             parts.append(f"page {source['page']}")
         if source.get("decision_date"):
@@ -2759,7 +2830,7 @@ def diagnose() -> dict[str, Any]:
         "paie_control": status["paie_control"],
         "veille_juridique": status["veille_juridique"],
         "legifrance_code_travail": status["legifrance_code_travail"],
-        "legifrance_jurisprudence": status["legifrance_jurisprudence"],
+        "judilibre_jurisprudence": status["judilibre_jurisprudence"],
         "corpus_local_configured": source_config.exists(),
         "source_config_path": str(source_config),
         "local_index_ignored": local_index_ignored,
@@ -2783,7 +2854,7 @@ def format_diagnose_text(report: dict[str, Any]) -> str:
         f"Module paie : {report['paie_control']['reason']}",
         f"Veille juridique : {report['veille_juridique']['reason']}",
         f"Legifrance Code du travail : {report['legifrance_code_travail']['reason']}",
-        f"Legifrance jurisprudence : {report['legifrance_jurisprudence']['reason']}",
+        f"JUDILIBRE jurisprudence : {report['judilibre_jurisprudence']['reason']}",
         f"Corpus local configure : {'oui' if report['corpus_local_configured'] else 'non'}",
         f"local-index/ ignore par Git : {'oui' if report['local_index_ignored'] else 'non'}",
         "Modules connectes : " + ", ".join(report["connected_modules"]),
