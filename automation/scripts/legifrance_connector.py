@@ -490,14 +490,22 @@ class LegifranceClient:
                     try:
                         sources.append(self.article_source(str(article_id), candidate))
                     except LegifranceError as exc:
-                        fallback = source_from_search_hit(candidate)
-                        if fallback:
-                            warnings.append(str(exc))
-                            sources.append(fallback)
-                    if len(sources) >= limit:
+                        warnings.append(str(exc))
+                    usable_sources = [source for source in dedupe_hits(sources) if is_usable_code_source(source)]
+                    if len(usable_sources) >= limit:
                         break
-                if len(sources) >= limit:
+                usable_sources = [source for source in dedupe_hits(sources) if is_usable_code_source(source)]
+                if len(usable_sources) >= limit:
                     break
+            usable_sources = []
+            for source in dedupe_hits(sources):
+                quality_warning = code_source_quality_warning(source)
+                if quality_warning:
+                    article = source.get("article") or source.get("article_or_section") or source.get("official_id")
+                    warnings.append(f"source Code du travail ignoree ({article}): {quality_warning}")
+                    continue
+                usable_sources.append(source)
+            sources = usable_sources[: max(1, limit)]
             if not hits:
                 warnings.append("Mini-index Code du travail V1: aucun article cible selectionne pour cette question.")
             if is_cse_meeting_query(query):
@@ -505,6 +513,7 @@ class LegifranceClient:
                     "Mini-index Code du travail V1: aucun article CSE specifique n'est encore valide ; "
                     "les articles remontes portent sur temps de travail et repos."
                 )
+            warnings = list(dict.fromkeys(warnings))
             return {
                 "available": True,
                 "sources": sources,
@@ -1392,6 +1401,27 @@ def normalize_article_source(payload: Any, requested_id: str, search_hit: dict[s
         "ranking_reasons": ranking_reasons,
         "source_quality_warning": warning,
     }
+
+
+def code_source_quality_warning(source: dict[str, Any]) -> str | None:
+    article = str(source.get("article") or source.get("article_or_section") or "").strip()
+    official_id = str(source.get("official_id") or source.get("legifrance_id") or "").strip()
+    etat = str(source.get("etat") or "").strip()
+    excerpt = strip_markup(source.get("excerpt") or "")
+    normalized_excerpt = normalize_text(excerpt)
+    if not article:
+        return "article absent"
+    if not official_id:
+        return "identifiant officiel Legifrance absent"
+    if not etat:
+        return "etat de vigueur absent"
+    if len(normalized_excerpt) < 40 or normalized_excerpt in {"code du travail", normalize_text(article)}:
+        return "extrait utile absent"
+    return None
+
+
+def is_usable_code_source(source: dict[str, Any]) -> bool:
+    return code_source_quality_warning(source) is None
 
 
 def source_from_search_hit(hit: dict[str, Any]) -> dict[str, Any] | None:

@@ -2611,7 +2611,7 @@ def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, s
     text = normalize(query)
     domains = set(route.get("domains", []))
     if "disciplinaire" in domains or re.search(r"sanction|procedure disciplinaire|entretien disciplinaire", text):
-        return "sanction disciplinaire procedure preuve", "Discipline sanction et preuve"
+        return "sanction disciplinaire faute preuve entretien prealable", "Discipline sanction et preuve"
     if "cse" in domains and re.search(r"reorganisation|suppression de postes?|changement .*horaires?|modification .*taches?|consultation", text):
         return "CSE consultation reorganisation", "CSE information consultation reorganisation"
     if "droit_syndical" in domains or re.search(r"\bcse\b|reunion|delegation|mandat", text):
@@ -2629,14 +2629,138 @@ def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, s
     return query, "Jurisprudence utile"
 
 
+def has_any_term(text: str, terms: list[str]) -> bool:
+    return any(term in text for term in terms)
+
+
+def judilibre_relevance_context(source: dict[str, Any]) -> str:
+    return normalize(
+        " ".join(
+            str(part)
+            for part in [
+                source.get("document"),
+                source.get("juridiction"),
+                source.get("chamber"),
+                source.get("decision_date"),
+                source.get("case_number"),
+                source.get("summary"),
+                source.get("resume_court"),
+                source.get("principle_summary"),
+                source.get("solution"),
+                source.get("excerpt"),
+                source.get("source_quality_warning"),
+                " ".join(str(item) for item in source.get("ranking_reasons", []) if item),
+            ]
+            if part
+        )
+    )
+
+
+def judilibre_quality_warning(source: dict[str, Any], route: dict[str, Any]) -> str | None:
+    official_id = str(source.get("official_id") or source.get("judilibre_id") or source.get("chunk_id") or "").strip()
+    if not official_id:
+        return "identifiant officiel JUDILIBRE absent"
+    excerpt = normalize(str(source.get("excerpt") or ""))
+    summary = normalize(str(source.get("summary") or source.get("resume_court") or source.get("principle_summary") or ""))
+    if len(excerpt) < 80 and len(summary) < 40:
+        return "extrait ou resume insuffisant pour comparer les faits"
+
+    context = judilibre_relevance_context(source)
+    domains = set(route.get("domains", []))
+    query = normalize(route.get("query", ""))
+
+    if "disciplinaire" in domains or re.search(r"sanction|procedure disciplinaire|entretien disciplinaire", query):
+        discipline_markers = [
+            has_any_term(context, ["sanction", "disciplinaire", "mise a pied", "avertissement"]),
+            has_any_term(context, ["faute", "grief", "manquement"]),
+            has_any_term(context, ["procedure", "entretien prealable", "convocation"]),
+            "licenciement" in context,
+        ]
+        if "sanction disciplinaire" in context or "procedure disciplinaire" in context or sum(discipline_markers) >= 2:
+            return None
+        return "decision eloignee du sujet discipline/sanction"
+
+    if "cse" in domains and re.search(
+        r"reorganisation|suppression de postes?|changement .*horaires?|modification .*taches?|consultation",
+        query,
+    ):
+        if has_any_term(
+            context,
+            [
+                "cse",
+                "comite social",
+                "consultation",
+                "information consultation",
+                "reorganisation",
+                "suppression de poste",
+                "organisation de l entreprise",
+                "marche generale",
+            ],
+        ):
+            return None
+        return "decision eloignee du sujet CSE/reorganisation"
+
+    if "droit_syndical" in domains or ("cse" in domains and re.search(r"\bcse\b|reunion|delegation|mandat", query)):
+        if has_any_term(context, ["cse", "comite social", "reunion", "mandat", "delegation", "representant"]):
+            return None
+        return "decision eloignee du sujet CSE/mandat"
+
+    if "classification_carriere" in domains:
+        if has_any_term(context, ["classification", "coefficient", "qualification", "fonctions", "emploi occupe"]):
+            return None
+        return "decision eloignee du sujet classification"
+
+    if "astreinte" in domains or "astreinte" in query:
+        if "astreinte" in context:
+            return None
+        if "repos" in context and has_any_term(context, ["intervention", "temps de travail effectif"]):
+            return None
+        if "paie_remuneration" in domains and has_any_term(
+            context,
+            ["heures supplementaires", "majoration", "repos compensateur", "salaire", "remuneration"],
+        ):
+            return None
+        return "decision eloignee du sujet astreinte/repos"
+
+    if "paie_remuneration" in domains or re.search(r"prime|majoration|bulletin|heures? supplementaires?", query):
+        if has_any_term(
+            context,
+            ["heures supplementaires", "prime", "salaire", "remuneration", "majoration", "bulletin", "variable"],
+        ):
+            return None
+        return "decision eloignee du sujet paie/remuneration"
+
+    if "temps_travail" in domains or re.search(r"temps de travail|repos|duree", query):
+        if has_any_term(context, ["temps de travail", "travail effectif", "repos", "duree du travail", "heures supplementaires"]):
+            return None
+        return "decision eloignee du sujet temps de travail"
+
+    return None
+
+
 def merge_judilibre_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
-    for source in result.get("sources", [])[:3]:
-        answer["sources"].append(normalize_source(source, "judilibre_jurisprudence"))
+    route = answer.get("route", {})
+    accepted_count = 0
+    rejected_count = 0
+    for source in result.get("sources", [])[:6]:
+        normalized = normalize_source(source, "judilibre_jurisprudence")
+        quality_warning = judilibre_quality_warning(normalized, route)
+        if quality_warning:
+            rejected_count += 1
+            continue
+        answer["sources"].append(normalized)
+        accepted_count += 1
+        if accepted_count >= 3:
+            break
     for warning in result.get("warnings", []):
         answer["warnings"].append("JUDILIBRE: " + str(warning))
-    if result.get("available") and not result.get("sources"):
+    if rejected_count:
+        answer["warnings"].append(
+            f"JUDILIBRE: {rejected_count} decision(s) ecartee(s) car le theme ou l'extrait etait trop eloigne du dossier."
+        )
+    if result.get("available") and not accepted_count:
         answer["warnings"].append("JUDILIBRE: aucune decision exploitable remontee par l'API.")
-    if result.get("sources"):
+    if accepted_count:
         answer["warnings"].append(
             "Jurisprudence: les decisions citees eclairent l'interpretation ; elles ne remplacent pas "
             "les accords d'entreprise, la convention collective ni le Code du travail applicable."
