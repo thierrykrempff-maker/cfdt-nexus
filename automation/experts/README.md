@@ -13,6 +13,16 @@ Cette zone accueille les experts metier appeles apres le routage Assistant DS.
 
 `juriste_travail.py` reste le socle juriste, renforce en V2.1.
 
+Depuis le contrat `agents/juriste/EXPERT_JURISTE_CFDT_NEXUS_V1.md`, l'expert
+juriste porte aussi une doctrine de reponse plus complete :
+
+- reponse claire a la question posee ;
+- sources analysees par couche juridique ;
+- niveau de certitude separe entre regle certaine, interpretation, hypothese et information manquante ;
+- strategie de defense du salarie avec position probable de la direction et contre-arguments ;
+- pieces utiles a recuperer ;
+- action progressive avant tout contentieux.
+
 L'expert juriste :
 
 - consomme la sortie validee du routeur V1.2 ;

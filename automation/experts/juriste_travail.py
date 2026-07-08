@@ -38,6 +38,17 @@ JURISTE_KEYWORDS = [
     "droits",
 ]
 
+JURISTE_PROMPT_VERSION = "EXPERT_JURISTE_CFDT_NEXUS_V1"
+JURISTE_PROMPT_CONTRACT = "agents/juriste/EXPERT_JURISTE_CFDT_NEXUS_V1.md"
+
+SOURCE_LAYER_ORDER = [
+    "accord_entreprise",
+    "convention_collective",
+    "code_travail",
+    "jurisprudence",
+    "pratique_officielle",
+]
+
 PURE_PAY_CONTROL_KEYWORDS = [
     "bulletin",
     "paie",
@@ -139,6 +150,60 @@ def established_points(answer: dict[str, Any]) -> list[str]:
     return points
 
 
+def source_layers_analysis(answer: dict[str, Any]) -> list[dict[str, Any]]:
+    layers = answer.get("source_layers", [])
+    by_id = {str(layer.get("id")): layer for layer in layers if isinstance(layer, dict)}
+    result: list[dict[str, Any]] = []
+    for layer_id in SOURCE_LAYER_ORDER:
+        layer = by_id.get(layer_id)
+        if not layer:
+            result.append(
+                {
+                    "source_layer": layer_id,
+                    "status": "absent",
+                    "summary": "Aucune source pertinente validee n'a ete trouvee dans cette couche.",
+                    "sources": [],
+                }
+            )
+            continue
+        sources = layer.get("sources", []) if isinstance(layer.get("sources"), list) else []
+        labels = [source_label_for_layer(source) for source in sources if isinstance(source, dict)]
+        status = layer.get("status") or ("present" if labels else "absent")
+        result.append(
+            {
+                "source_layer": layer_id,
+                "label": layer.get("label") or layer.get("title") or layer_id,
+                "status": status,
+                "summary": layer_summary(layer, labels),
+                "sources": labels[:5],
+            }
+        )
+    return result
+
+
+def source_label_for_layer(source: dict[str, Any]) -> str:
+    parts = [str(source.get("document") or "Document")]
+    page = source.get("page")
+    if page:
+        parts.append(f"page {page}")
+    article = source.get("article") or source.get("article_or_section")
+    if article:
+        parts.append(str(article))
+    excerpt = source.get("excerpt")
+    if excerpt:
+        parts.append("extrait: " + str(excerpt)[:220])
+    return " | ".join(parts)
+
+
+def layer_summary(layer: dict[str, Any], labels: list[str]) -> str:
+    if labels:
+        return f"{len(labels)} source(s) remontee(s) par Nexus pour cette couche."
+    absent = layer.get("absent_message")
+    if absent:
+        return str(absent)
+    return "Aucune source pertinente validee n'a ete trouvee dans cette couche."
+
+
 def depends_on_local_texts(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
@@ -173,6 +238,17 @@ def depends_on_local_texts(answer: dict[str, Any]) -> list[str]:
     return unique(items, limit=10)
 
 
+def certainty_level(established: list[str], reasoning: list[str], missing: list[str]) -> dict[str, list[str]]:
+    interpretations = [item for item in reasoning if normalize(item).startswith("interpretation")]
+    hypotheses = [item for item in reasoning if normalize(item).startswith("hypothese")]
+    return {
+        "regle_certaine": [item for item in established if normalize(item).startswith("regle certaine")],
+        "interpretation_juridique": interpretations,
+        "hypothese": hypotheses,
+        "information_manquante": unique(missing, limit=8),
+    }
+
+
 def legal_reasoning(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
@@ -201,6 +277,156 @@ def legal_reasoning(answer: dict[str, Any]) -> list[str]:
         "Regle certaine: Nexus ne peut raisonner que sur les sources locales retrouvees.",
         "Information manquante: faits exacts et texte applicable a la situation.",
     ]
+
+
+def defense_strategy(answer: dict[str, Any]) -> dict[str, list[str] | str]:
+    domains = route_domains(answer)
+    query = normalize(answer.get("query", ""))
+    if "droit_syndical" in domains and "reunion" in query:
+        return {
+            "argument_principal": (
+                "Qualifier juridiquement la participation comme temps lie au mandat ou a une convocation CSE, "
+                "puis en deduire le traitement temps/repos applicable."
+            ),
+            "arguments_complementaires": [
+                "Verifier si la reunion est convoquee par l'employeur ou rattachee a l'exercice normal du mandat.",
+                "Comparer le traitement applique aux autres elus ou participants dans une situation comparable.",
+                "Controler la trace du temps dans les compteurs, le planning et les documents CSE.",
+            ],
+            "position_probable_direction": (
+                "La direction peut soutenir que la presence pendant un repos releve de l'organisation personnelle "
+                "du salarie ou que seul un credit d'heures est mobilisable."
+            ),
+            "contre_arguments": [
+                "Demander la base ecrite de cette position et son articulation avec le mandat.",
+                "Rappeler que le traitement depend du titre de participation et de la source applicable, pas seulement du jour de repos.",
+            ],
+        }
+    if {"temps_travail", "astreinte"}.issubset(domains):
+        return {
+            "argument_principal": (
+                "Distinguer l'astreinte, l'intervention effective, le repos interrompu et les consequences paie pour "
+                "eviter qu'un seul libelle masque plusieurs droits."
+            ),
+            "arguments_complementaires": [
+                "Rapprocher les heures reelles d'appel, d'intervention, de trajet eventuel et de reprise du poste.",
+                "Verifier les contreparties d'astreinte, le paiement de l'intervention et le compteur de repos.",
+                "Controler si les sources Code du travail et accords locaux imposent un repos minimal ou une regularisation.",
+            ],
+            "position_probable_direction": (
+                "La direction peut soutenir que l'accord d'astreinte prevoit la contrepartie, que la reprise etait "
+                "operationnellement necessaire ou que la paie a deja integre l'intervention."
+            ),
+            "contre_arguments": [
+                "Demander la ligne de calcul et la source exacte appliquee.",
+                "Comparer la trace de paie avec le pointage et les releves d'intervention.",
+                "Separarer la compensation d'astreinte du paiement du temps d'intervention et du respect du repos.",
+            ],
+        }
+    if "classification_carriere" in domains:
+        return {
+            "argument_principal": (
+                "Objectiver l'ecart entre les fonctions reellement exercees et la classification actuelle, puis le "
+                "rattacher aux criteres applicables."
+            ),
+            "arguments_complementaires": [
+                "Comparer fiche de poste, missions reelles, autonomie, technicite, responsabilites et coefficient.",
+                "Reunir des exemples concrets de missions exercees durablement.",
+                "Verifier les dispositions de la convention collective et les usages ou accords locaux pertinents.",
+            ],
+            "position_probable_direction": (
+                "La direction peut soutenir que les taches invoquees sont ponctuelles, deja incluses dans le poste "
+                "ou insuffisantes pour justifier un autre coefficient."
+            ),
+            "contre_arguments": [
+                "Produire une chronologie et des preuves de regularite des missions.",
+                "Demander les criteres objectifs retenus pour le coefficient actuel.",
+                "Comparer avec des postes ou fonctions similaires lorsque des elements de comparaison existent.",
+            ],
+        }
+    return {
+        "argument_principal": "Qualifier les faits et les rattacher aux sources Nexus reellement remontees.",
+        "arguments_complementaires": [
+            "Verifier le champ d'application des textes cites.",
+            "Ne conclure qu'apres controle des pieces indispensables.",
+        ],
+        "position_probable_direction": "La direction peut contester les faits, le champ du texte ou la portee de l'interpretation.",
+        "contre_arguments": ["Demander une position ecrite et la source precise appliquee par la direction."],
+    }
+
+
+def evidence_documents(answer: dict[str, Any]) -> list[str]:
+    domains = route_domains(answer)
+    query = normalize(answer.get("query", ""))
+    pieces = ["Chronologie precise des faits et dates concernees."]
+    if "droit_syndical" in domains or "reunion" in query:
+        pieces.extend(
+            [
+                "Convocation ou ordre du jour de la reunion CSE.",
+                "Element etablissant le mandat ou le titre de participation du salarie.",
+                "Planning 5x8 et identification du repos concerne.",
+                "Trace du temps: compteur, credit d'heures, pointage ou recapitulatif.",
+            ]
+        )
+    if "astreinte" in domains:
+        pieces.extend(
+            [
+                "Accord ou consigne d'astreinte applicable a la periode.",
+                "Releve d'appel ou d'intervention avec heures de debut et de fin.",
+                "Planning de reprise du poste et compteur de repos.",
+                "Bulletin de paie et recapitulatif des astreintes de la periode.",
+            ]
+        )
+    if "paie_remuneration" in domains:
+        pieces.extend(
+            [
+                "Bulletin de paie de la periode contestee.",
+                "Pointage, compteur d'heures et detail des majorations appliquees.",
+            ]
+        )
+    if "classification_carriere" in domains:
+        pieces.extend(
+            [
+                "Contrat de travail et avenants.",
+                "Fiche de poste actuelle et ancienne fiche si elle existe.",
+                "Coefficient, emploi repere et classification actuellement retenus.",
+                "Preuves des fonctions reellement exercees: mails, consignes, comptes rendus, organigramme.",
+                "Elements de comparaison avec des fonctions ou postes similaires si disponibles.",
+            ]
+        )
+    pieces.extend(str(item) for item in answer.get("documents_to_request", []))
+    return unique(pieces, limit=12)
+
+
+def recommended_action(answer: dict[str, Any]) -> list[str]:
+    domains = route_domains(answer)
+    query = normalize(answer.get("query", ""))
+    actions = ["Niveau 1: verifier les faits et securiser les preuves avant toute conclusion."]
+    if "classification_carriere" in domains:
+        actions.extend(
+            [
+                "Niveau 2: construire un tableau fonctions reelles / criteres de classification / preuves.",
+                "Niveau 3: demander a la direction les criteres justifiant le coefficient actuel et un reexamen motive.",
+            ]
+        )
+    elif {"temps_travail", "astreinte"}.issubset(domains):
+        actions.extend(
+            [
+                "Niveau 2: demander la regle appliquee pour l'intervention, le repos et la paie.",
+                "Niveau 3: solliciter une regularisation ecrite si le pointage, le repos ou le bulletin ne correspondent pas aux sources.",
+            ]
+        )
+    elif "droit_syndical" in domains or "reunion" in query:
+        actions.extend(
+            [
+                "Niveau 2: demander la base de traitement du temps de reunion et sa trace dans les compteurs.",
+                "Niveau 3: porter une question en CSE si le traitement local est incertain ou incoherent.",
+            ]
+        )
+    else:
+        actions.append("Niveau 2: demander a la direction la source et la justification ecrite de sa position.")
+    actions.append("Niveau 4: envisager un appui juridique specialise seulement si le dossier est documente et que le blocage persiste.")
+    return unique(actions, limit=6)
 
 
 def vigilance_points(answer: dict[str, Any]) -> list[str]:
@@ -305,6 +531,8 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
         return {
             "active": False,
             "name": "Expert Juriste droit du travail V0 renforce",
+            "prompt_version": JURISTE_PROMPT_VERSION,
+            "prompt_contract": JURISTE_PROMPT_CONTRACT,
             "reason": "Question hors perimetre juriste pour cette orchestration.",
         }
 
@@ -316,24 +544,37 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
     risks = vigilance_points(answer)
     position = proposed_position(answer)
     expert_limits = limits(answer)
+    pieces = evidence_documents(answer)
+    action = recommended_action(answer)
+    strategy = defense_strategy(answer)
+    certainty = certainty_level(established, reasoning, depends)
+    layers = source_layers_analysis(answer)
 
     return {
         "active": True,
         "name": "Expert Juriste droit du travail V0 renforce",
+        "prompt_version": JURISTE_PROMPT_VERSION,
+        "prompt_contract": JURISTE_PROMPT_CONTRACT,
         "response_courte": response,
         "reponse_courte": response,
         "qualification_juridique_situation": qualification(answer),
+        "sources_par_couche": layers,
         "ce_qui_est_certain": established,
         "ce_qui_est_etabli_par_sources": established,
         "ce_qui_depend_des_textes_locaux": depends,
         "ce_qui_depend_accord_statut_element_manquant": depends,
+        "niveau_de_certitude_detaille": certainty,
         "sources_a_verifier": sources,
         "sources_utilisees": sources,
+        "pieces_a_recuperer": pieces,
         "raisonnement_juridique_prudent": reasoning,
         "analyse_et_raisonnement": reasoning,
         "risques_points_vigilance": risks,
+        "strategie_de_defense": strategy,
+        "action_conseillee": action,
         "position_de_travail_proposee": position,
         "questions_a_poser_direction": direction_questions(answer),
+        "questions_a_poser": direction_questions(answer),
         "niveau_de_confiance": answer.get("confidence", "a verifier"),
         "limites": expert_limits,
     }

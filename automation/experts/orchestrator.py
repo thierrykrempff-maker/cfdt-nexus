@@ -103,7 +103,7 @@ def build_documents(answer: dict[str, Any], juriste: dict[str, Any], paie_expert
     values: list[str] = []
     values.extend(str(item) for item in answer.get("documents_to_request", []))
     if juriste.get("active"):
-        values.extend(str(item) for item in juriste.get("sources_a_verifier", []))
+        values.extend(str(item) for item in juriste.get("pieces_a_recuperer", []))
     if paie_expert.get("active"):
         values.extend(str(item) for item in paie_expert.get("documents_necessaires", []))
     return unique(values, limit=14)

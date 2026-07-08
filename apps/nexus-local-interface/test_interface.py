@@ -135,6 +135,10 @@ def main() -> None:
         assert juriste_payload["expert_paie"]["active"] is False
         assert "automation/experts/juriste_travail.py: enrich" in juriste_payload["analysis_report"]["generated_from"]
         assert "automation/experts/paie.py: enrich" not in juriste_payload["analysis_report"]["generated_from"]
+        assert juriste_payload["expert_juriste"]["prompt_version"] == "EXPERT_JURISTE_CFDT_NEXUS_V1"
+        assert juriste_payload["expert_juriste"]["strategie_de_defense"]["argument_principal"]
+        assert juriste_payload["expert_juriste"]["niveau_de_certitude_detaille"]["information_manquante"]
+        assert juriste_payload["expert_juriste"]["pieces_a_recuperer"]
         assert "classification" in normalize(juriste_payload["expert_juriste"]["qualification_juridique_situation"])
         assert "Regle certaine" in " ".join(juriste_payload["expert_juriste"]["analyse_et_raisonnement"])
         assert "classification_carriere" in report_section(juriste_payload["analysis_report"], "domaines")["items"]
