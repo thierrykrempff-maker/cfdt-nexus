@@ -43,6 +43,39 @@ BUSINESS_MODE_SCENARIOS = {
     },
 }
 
+CSE_V12_SCENARIOS = {
+    "reorganisation_atelier": {
+        "query": "La direction annonce une reorganisation d'un atelier avec deux suppressions de postes, modification des taches et changement d'horaires. Quels sont les droits du CSE et comment preparer la reunion ?",
+        "expected_position": "information-consultation",
+        "required_terms": ["suppressions", "horaires", "taches", "PV"],
+    },
+    "changement_mineur": {
+        "query": "La direction annonce au CSE un simple changement mineur sans impact collectif. Quels sont les droits du CSE ?",
+        "expected_position": "consultation non automatique",
+        "required_terms": ["absence d'impact", "information"],
+    },
+    "horaires_collectif": {
+        "query": "La direction veut un changement d'horaires collectif dans un atelier. Quels sont les droits du CSE ?",
+        "expected_position": "information-consultation",
+        "required_terms": ["horaires", "planning"],
+    },
+    "impact_sante_securite": {
+        "query": "La direction presente un projet avec impact sante-securite important et fatigue accrue. Comment preparer le CSE ?",
+        "expected_position": "information-consultation",
+        "required_terms": ["sante", "securite", "expertise"],
+    },
+    "fermeture_activite": {
+        "query": "La direction annonce la fermeture d'une activite avec transfert de charge. Quels sont les droits du CSE ?",
+        "expected_position": "information-consultation",
+        "required_terms": ["fermeture", "charge"],
+    },
+    "transfert_taches": {
+        "query": "La direction transfere des taches entre equipes sans suppression de postes. Quels documents demander au CSE ?",
+        "expected_position": "a qualifier",
+        "required_terms": ["taches", "charge"],
+    },
+}
+
 
 def normalize(value: object) -> str:
     text = str(value or "").casefold()
@@ -290,6 +323,42 @@ def main() -> None:
             elif scenario_id == "defense_paie_collective":
                 assert payload["expert_paie"]["active"] is True
                 assert "majoration" in normalize(" ".join(payload["expert_paie"]["elements_du_bulletin_concernes"]))
+
+        for scenario_id, scenario in CSE_V12_SCENARIOS.items():
+            payload = post_json(
+                f"http://127.0.0.1:{port}/api/analyze",
+                {"query": scenario["query"], "source_limit": 10},
+            )
+            analysis = assert_business_mode_payload(payload, "CSE_CSSCT")
+            juriste = payload["expert_juriste"]
+            conclusion_text = normalize(
+                " ".join(
+                    [
+                        juriste["conclusion_provisoire_juridique"]["position"],
+                        juriste["conclusion_provisoire_juridique"]["pourquoi"],
+                        juriste["response_courte"],
+                        analysis["information_ou_consultation_eventuelle"],
+                    ]
+                )
+            )
+            assert normalize(scenario["expected_position"]) in conclusion_text
+            full_cse_text = normalize(json.dumps(analysis, ensure_ascii=False))
+            for term in scenario["required_terms"]:
+                assert normalize(term) in full_cse_text, (scenario_id, term)
+            source_text = normalize(" ".join(source["document"] for source in payload["answer"]["sources"]))
+            for forbidden_source_term in [
+                "teletravail",
+                "pee",
+                "plan epargne",
+                "interessement",
+                "participation",
+                "restauration",
+                "pre retraite",
+                "preretraite",
+            ]:
+                assert forbidden_source_term not in source_text, (scenario_id, forbidden_source_term)
+            if scenario_id == "changement_mineur":
+                assert "consultation obligatoire non deduite automatiquement" in conclusion_text
 
         print("Interface locale: socle juridique V1 + scenarios V2.1 OK")
     finally:

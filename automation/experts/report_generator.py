@@ -201,6 +201,15 @@ def business_mode_items(orchestration: dict[str, Any], juriste: dict[str, Any]) 
             or "Analyse metier a completer."
         )
         values.append(f"{label}: {headline}")
+        for row in as_list(analysis.get("analyse_contradictoire"))[:2]:
+            if not isinstance(row, dict):
+                continue
+            values.append(
+                f"{label} - Contradictoire: argument salarie/representants: "
+                f"{row.get('argument_salarie_representants')}"
+            )
+            values.append(f"{label} - Contradictoire: argument direction: {row.get('argument_probable_direction')}")
+            values.append(f"{label} - Contradictoire: preuve necessaire: {row.get('preuve_necessaire')}")
         if mode == "DEFENSE_SALARIE":
             fields = [
                 ("Qualification", "qualification_juridique"),
@@ -223,8 +232,19 @@ def business_mode_items(orchestration: dict[str, Any], juriste: dict[str, Any]) 
         elif mode == "CSE_CSSCT":
             fields = [
                 ("Nature juridique", "nature_juridique_du_sujet"),
+                ("Qualification du projet", "qualification_du_projet"),
+                ("Droits probables du CSE", "droits_probables_du_cse"),
+                ("Points a confirmer", "points_necessitant_confirmation"),
                 ("Documents manquants", "documents_manquants"),
+                ("Suppressions de postes", "analyse_suppressions_postes"),
+                ("Changement horaires", "analyse_changement_horaires"),
+                ("Modification taches", "analyse_modification_taches"),
+                ("Charge de travail", "impacts_charge_travail"),
+                ("Sante securite", "impacts_sante_securite_risques"),
+                ("Delais", "delais_a_verifier"),
                 ("Questions prioritaires", "questions_prioritaires"),
+                ("Reponses direction", "reponses_probables_direction"),
+                ("Contre-arguments", "relances_et_contre_arguments"),
                 ("Consequences salaries", "consequences_salaries"),
                 ("Points PV", "points_pv"),
                 ("Action immediate", "action_immediate_recommandee"),
@@ -234,15 +254,6 @@ def business_mode_items(orchestration: dict[str, Any], juriste: dict[str, Any]) 
         for title, key in fields:
             for item in as_list(analysis.get(key))[:4]:
                 values.append(f"{label} - {title}: {item}")
-        for row in as_list(analysis.get("analyse_contradictoire"))[:2]:
-            if not isinstance(row, dict):
-                continue
-            values.append(
-                f"{label} - Contradictoire: argument salarie/representants: "
-                f"{row.get('argument_salarie_representants')}"
-            )
-            values.append(f"{label} - Contradictoire: argument direction: {row.get('argument_probable_direction')}")
-            values.append(f"{label} - Contradictoire: preuve necessaire: {row.get('preuve_necessaire')}")
     return text_items(values, limit=28)
 
 

@@ -46,6 +46,7 @@ DEFAULT_CACHE_TTL_SECONDS = 24 * 60 * 60
 CODE_DU_TRAVAIL_LEGITEXT = "LEGITEXT000006072050"
 CODE_DU_TRAVAIL_LABEL = "Code du travail"
 JURISPRUDENCE_LABEL = "Jurisprudence Cour de cassation"
+TRANSIENT_HTTP_STATUS = {500, 502, 503, 504}
 
 CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
     {
@@ -90,11 +91,39 @@ CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
         "keywords": ["cse", "consultation", "reorganisation", "organisation du travail", "emploi"],
     },
     {
+        "topic": "cse_consultation_decision_employeur",
+        "article": "L2312-14",
+        "article_id": None,
+        "search_query": "Article L2312-14 Code du travail decisions employeur consultation CSE",
+        "keywords": ["cse", "consultation", "decision employeur", "organisation", "conditions de travail"],
+    },
+    {
         "topic": "cse_avis_information",
         "article": "L2312-15",
         "article_id": None,
         "search_query": "Article L2312-15 Code du travail CSE avis informations delai examen",
         "keywords": ["cse", "consultation", "avis", "documents", "informations", "delai"],
+    },
+    {
+        "topic": "cse_bdes_information",
+        "article": "L2312-18",
+        "article_id": None,
+        "search_query": "Article L2312-18 Code du travail informations base donnees economiques sociales environnementales CSE",
+        "keywords": ["cse", "documents", "informations", "bdes", "bdese", "emploi", "organisation"],
+    },
+    {
+        "topic": "cse_expertise_projet_important",
+        "article": "L2315-94",
+        "article_id": None,
+        "search_query": "Article L2315-94 Code du travail expertise CSE projet important conditions sante securite conditions travail",
+        "keywords": ["cse", "expertise", "sante", "securite", "conditions de travail", "projet important"],
+    },
+    {
+        "topic": "cse_delai_consultation",
+        "article": "R2312-6",
+        "article_id": None,
+        "search_query": "Article R2312-6 Code du travail delai consultation CSE",
+        "keywords": ["cse", "delai", "consultation", "avis", "expertise"],
     },
     {
         "topic": "astreinte_definition",
@@ -233,6 +262,19 @@ class LegifranceConfigurationError(LegifranceError):
 class LegifranceAPIError(LegifranceError):
     """Raised when PISTE / Legifrance returns an unusable response."""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        endpoint: str | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.endpoint = endpoint
+        self.payload = payload or {}
+
 
 @dataclass(frozen=True)
 class LegifranceConfig:
@@ -326,6 +368,7 @@ def status_from_env() -> dict[str, Any]:
 class LegifranceClient:
     def __init__(self, config: LegifranceConfig | None = None) -> None:
         self.config = config or LegifranceConfig.from_env()
+        self.cache_fallback_warnings: list[str] = []
 
     def ensure_configured(self) -> None:
         if not self.config.configured:
@@ -412,7 +455,17 @@ class LegifranceClient:
             return cached
 
         payload = build_search_payload(cleaned_query, limit)
-        response = self._post_json(self.config.search_endpoint, payload)
+        try:
+            response = self._post_json(self.config.search_endpoint, payload)
+        except LegifranceAPIError as exc:
+            stale = self._read_response_cache(cache_key, include_expired=True)
+            if stale is not None and exc.status_code in TRANSIENT_HTTP_STATUS:
+                self.cache_fallback_warnings.append(
+                    "Legifrance cache utilise apres erreur transitoire sur recherche article: "
+                    f"HTTP {exc.status_code}, endpoint {self.config.endpoint_url(self.config.search_endpoint)}."
+                )
+                return stale
+            raise
         hits = extract_article_hits(response)
         deduped = dedupe_hits(hits)[: max(1, limit)]
         self._write_response_cache(cache_key, deduped)
@@ -445,7 +498,17 @@ class LegifranceClient:
         if cached is not None:
             return merge_search_context(cached, search_hit)
 
-        response = self._post_json(self.config.article_endpoint, {"id": cleaned_id})
+        try:
+            response = self._post_json(self.config.article_endpoint, {"id": cleaned_id})
+        except LegifranceAPIError as exc:
+            stale = self._read_response_cache(cache_key, include_expired=True)
+            if stale is not None and exc.status_code in TRANSIENT_HTTP_STATUS:
+                self.cache_fallback_warnings.append(
+                    "Legifrance cache article utilise apres erreur transitoire getArticle: "
+                    f"HTTP {exc.status_code}, endpoint {self.config.endpoint_url(self.config.article_endpoint)}, article {cleaned_id}."
+                )
+                return merge_search_context(stale, search_hit)
+            raise
         current_id = current_version_id(response)
         if current_id and current_id != cleaned_id:
             response = self._post_json(self.config.article_endpoint, {"id": current_id})
@@ -513,6 +576,7 @@ class LegifranceClient:
                     "Mini-index Code du travail V1: aucun article CSE specifique n'est encore valide ; "
                     "les articles remontes portent sur temps de travail et repos."
                 )
+            warnings.extend(self.cache_fallback_warnings)
             warnings = list(dict.fromkeys(warnings))
             return {
                 "available": True,
@@ -640,25 +704,45 @@ class LegifranceClient:
     def _post_json(self, endpoint: str, payload: dict[str, Any]) -> dict[str, Any]:
         token = self.authenticate()
         data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        request = urllib.request.Request(
-            self.config.endpoint_url(endpoint),
-            data=data,
-            headers={
-                "Authorization": f"{token.get('token_type') or 'Bearer'} {token['access_token']}",
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:  # noqa: S310
-                return json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            raise LegifranceAPIError(f"API Legifrance refuse: HTTP {exc.code} {exc.reason}.") from exc
-        except urllib.error.URLError as exc:
-            raise LegifranceAPIError(f"API Legifrance indisponible: {safe_reason(exc)}.") from exc
-        except json.JSONDecodeError as exc:
-            raise LegifranceAPIError("API Legifrance: reponse JSON illisible.") from exc
+        url = self.config.endpoint_url(endpoint)
+        attempts = 2
+        for attempt in range(attempts):
+            try:
+                request = urllib.request.Request(
+                    url,
+                    data=data,
+                    headers={
+                        "Authorization": f"{token.get('token_type') or 'Bearer'} {token['access_token']}",
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    method="POST",
+                )
+                with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:  # noqa: S310
+                    return json.loads(response.read().decode("utf-8"))
+            except urllib.error.HTTPError as exc:
+                if exc.code in TRANSIENT_HTTP_STATUS and attempt + 1 < attempts:
+                    time.sleep(0.4)
+                    continue
+                raise LegifranceAPIError(
+                    f"API Legifrance refuse: HTTP {exc.code} {exc.reason}.",
+                    status_code=exc.code,
+                    endpoint=url,
+                    payload=safe_api_payload(payload),
+                ) from exc
+            except urllib.error.URLError as exc:
+                raise LegifranceAPIError(
+                    f"API Legifrance indisponible: {safe_reason(exc)}.",
+                    endpoint=url,
+                    payload=safe_api_payload(payload),
+                ) from exc
+            except json.JSONDecodeError as exc:
+                raise LegifranceAPIError(
+                    "API Legifrance: reponse JSON illisible.",
+                    endpoint=url,
+                    payload=safe_api_payload(payload),
+                ) from exc
+        raise LegifranceAPIError("API Legifrance: reponse absente.", endpoint=url, payload=safe_api_payload(payload))
 
     def _read_token_cache(self) -> dict[str, Any] | None:
         return read_json_file(self.token_cache_path)
@@ -670,12 +754,12 @@ class LegifranceClient:
         raw = json.dumps({"kind": kind, "payload": payload}, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
-    def _read_response_cache(self, key: str) -> Any | None:
+    def _read_response_cache(self, key: str, include_expired: bool = False) -> Any | None:
         cache = read_json_file(self.response_cache_path) or {}
         item = cache.get(key)
         if not item:
             return None
-        if float(item.get("expires_at", 0)) <= time.time():
+        if not include_expired and float(item.get("expires_at", 0)) <= time.time():
             return None
         return item.get("value")
 
@@ -692,6 +776,22 @@ class LegifranceClient:
 def safe_reason(exc: urllib.error.URLError) -> str:
     reason = getattr(exc, "reason", exc)
     return str(reason).replace("\n", " ")[:240]
+
+
+def safe_api_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    if "id" in payload:
+        return {"id": payload.get("id")}
+    recherche = payload.get("recherche")
+    if isinstance(recherche, dict):
+        return {
+            "fond": payload.get("fond"),
+            "pageNumber": recherche.get("pageNumber"),
+            "pageSize": recherche.get("pageSize"),
+            "sort": recherche.get("sort"),
+            "filtres": recherche.get("filtres"),
+            "champs": recherche.get("champs"),
+        }
+    return {}
 
 
 def read_json_file(path: Path) -> Any | None:
@@ -799,15 +899,30 @@ def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
             "consultation",
             "information consultation",
             "suppression de poste",
+            "suppression de postes",
+            "effectifs",
             "changement des horaires",
             "changement d horaires",
             "modification des taches",
+            "transfert de taches",
+            "fermeture",
+            "conditions de travail",
+            "sante",
+            "securite",
+            "expertise",
             "documents",
+            "delai",
             "pv",
         ]
     ):
         add("L2312-8", "CSE: information-consultation sur l'organisation et la marche generale", 99)
+        add("L2312-14", "CSE: consultation avant certaines decisions de l'employeur", 97)
         add("L2312-15", "CSE: informations et delai d'examen suffisants", 95)
+        add("L2312-18", "CSE: informations mises a disposition pour l'analyse", 88)
+        if any(term in text for term in ["sante", "securite", "conditions de travail", "risque", "expertise", "fermeture"]):
+            add("L2315-94", "CSE: expertise possible si projet important et conditions legales reunies", 90)
+        if any(term in text for term in ["delai", "avis", "consultation", "expertise"]):
+            add("R2312-6", "CSE: delai de consultation a verifier", 84)
     if "astreinte" in text:
         add("L3121-9", "astreinte: definition legale", 100)
         add("L3121-10", "astreinte: intervention et temps de travail effectif", 96)

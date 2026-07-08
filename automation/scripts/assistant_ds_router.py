@@ -317,6 +317,22 @@ DOMAIN_SOURCE_PENALTIES: dict[str, list[tuple[str, int]]] = {
         ("paie", -25),
         ("remuneration", -25),
     ],
+    "cse": [
+        ("teletravail", -90),
+        ("cet", -45),
+        ("forfait jours", -45),
+        ("pee", -70),
+        ("plan epargne", -70),
+        ("epargne", -55),
+        ("pre retraite", -45),
+        ("preretraite", -45),
+        ("depart en preretraite", -45),
+        ("depart retraite", -40),
+        ("interessement", -60),
+        ("participation", -60),
+        ("restauration", -60),
+        ("prime", -35),
+    ],
 }
 
 DOMAIN_ORDER = [
@@ -1424,6 +1440,17 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 28
     if "droit_syndical" in domains and any(term in document for term in ["droit syndical", "cse", "rp", "dialogue social"]):
         score += 28
+    if "cse" in domains and any(
+        term in context
+        for term in [
+            "mise en place du cse",
+            "accord sur la mise en place du cse",
+            "comite social",
+            "fonctionnement du cse",
+            "information consultation",
+        ]
+    ):
+        score += 34
     if source.get("source_layer") == "code_travail" and any(
         domain in domains
         for domain in [
@@ -1494,7 +1521,9 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
     minimum_sources = min(3, limit)
     if len(selected) < minimum_sources:
         selected_keys = {source_key(source) for source in selected}
-        for source in ranked + skipped_noise:
+        for source in ranked:
+            if is_contextual_noise_source(source, route):
+                continue
             key = source_key(source)
             if key in selected_keys:
                 continue

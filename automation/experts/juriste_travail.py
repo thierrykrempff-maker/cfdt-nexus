@@ -149,6 +149,10 @@ def detect_business_modes(answer: dict[str, Any]) -> list[str]:
                 "information consultation",
                 "reorganisation",
                 "suppression de postes",
+                "droits du cse",
+                "changement mineur",
+                "transfert de taches",
+                "fermeture",
                 "changement d horaires",
                 "documents demander",
                 "questions poser",
@@ -167,6 +171,10 @@ def detect_business_modes(answer: dict[str, Any]) -> list[str]:
             "information consultation",
             "reorganisation",
             "suppression de postes",
+            "droits du cse",
+            "changement mineur",
+            "transfert de taches",
+            "fermeture",
             "changement d horaires",
             "documents demander",
             "questions poser",
@@ -1099,6 +1107,98 @@ def facts_from_question(answer: dict[str, Any]) -> list[str]:
     return unique(facts, limit=8)
 
 
+def cse_project_signals(answer: dict[str, Any]) -> dict[str, bool]:
+    query = normalize(answer.get("query", ""))
+    no_suppression = has_any(query, ["sans suppression de postes", "sans suppression poste", "aucune suppression de postes"])
+    return {
+        "suppression_postes": (not no_suppression)
+        and has_any(query, ["suppression de postes", "suppressions de postes", "suppression poste", "supprimer des postes"]),
+        "modification_taches": has_any(query, ["modification des taches", "modification de taches", "taches", "transfert de taches"]),
+        "changement_horaires": has_any(query, ["changement d horaires", "changement d'horaires", "modification horaires", "horaires"]),
+        "sante_securite": has_any(query, ["sante", "securite", "risque", "fatigue", "conditions de travail", "duerp", "accident"]),
+        "fermeture_activite": has_any(query, ["fermeture", "arreter l activite", "arret d activite", "fermer une activite"]),
+        "transfert_taches": has_any(query, ["transfert de taches", "transferer des taches", "polyvalence", "repartition des taches"]),
+        "collectif": has_any(query, ["collectif", "plusieurs salaries", "atelier", "equipe", "equipes"]),
+        "mineur": has_any(query, ["simple changement mineur", "changement mineur", "sans impact collectif", "sans impact majeur", "ajustement mineur"]),
+    }
+
+
+def cse_project_is_major(answer: dict[str, Any]) -> bool:
+    signals = cse_project_signals(answer)
+    if signals["mineur"]:
+        return False
+    strong = ["suppression_postes", "sante_securite", "fermeture_activite"]
+    if any(signals[key] for key in strong):
+        return True
+    if signals["changement_horaires"] and signals["collectif"]:
+        return True
+    return sum(1 for key, value in signals.items() if value and key not in {"mineur", "collectif"}) >= 2
+
+
+def cse_consultation_assessment(answer: dict[str, Any]) -> str:
+    signals = cse_project_signals(answer)
+    if signals["mineur"]:
+        return (
+            "Consultation obligatoire non deduite automatiquement: si le changement est reellement mineur, sans impact collectif "
+            "sur effectifs, horaires, taches, charge ou conditions de travail, le CSE peut surtout demander l'information utile "
+            "et faire tracer l'absence d'impact."
+        )
+    if cse_project_is_major(answer):
+        return (
+            "Information-consultation a exiger ou a qualifier tres serieusement: "
+            f"{cse_project_qualification(answer)} Le CSE peut demander les documents et delais necessaires "
+            "pour rendre un avis utile si la consultation est juridiquement requise."
+        )
+    return (
+        "Information-consultation a qualifier: le CSE doit demander les effets concrets du projet avant de conclure au niveau "
+        "d'obligation applicable."
+    )
+
+
+def cse_project_qualification(answer: dict[str, Any]) -> str:
+    signals = cse_project_signals(answer)
+    parts = []
+    if signals["fermeture_activite"]:
+        parts.append("fermeture ou arret d'activite")
+    if signals["suppression_postes"]:
+        parts.append("modification des effectifs / suppression de postes")
+    if signals["changement_horaires"]:
+        parts.append("changement collectif d'horaires")
+    if signals["modification_taches"] or signals["transfert_taches"]:
+        parts.append("modification ou transfert de taches")
+    if signals["sante_securite"]:
+        parts.append("impact possible sante-securite et conditions de travail")
+    if signals["mineur"]:
+        parts.append("changement presente comme mineur")
+    if not parts:
+        parts.append("projet d'organisation a qualifier par ses impacts reels")
+    return "Projet CSE: " + ", ".join(parts) + "."
+
+
+def cse_rights_probable(answer: dict[str, Any]) -> list[str]:
+    rights = [
+        "Demander une information complete, precise et exploitable avant la reunion ou avant avis.",
+        "Demander les consequences concretes du projet sur emploi, horaires, taches, charge, competences et remuneration.",
+        "Faire inscrire au proces-verbal les documents demandes, les reponses obtenues, les reserves et les engagements de suivi.",
+    ]
+    if cse_project_is_major(answer):
+        rights.insert(0, "Exiger que la direction qualifie formellement le point: simple information ou consultation du CSE.")
+        rights.append("Demander un delai utile d'examen et verifier les conditions d'un recours a expertise si le projet est important et touche les conditions de travail ou la sante-securite.")
+    else:
+        rights.append("Ne pas conclure automatiquement a une consultation obligatoire si les impacts collectifs sont absents ou non etablis.")
+    return unique(rights, limit=8)
+
+
+def cse_confirmation_points(answer: dict[str, Any]) -> list[str]:
+    return [
+        "La direction qualifie-t-elle le point comme information simple ou consultation avec avis ?",
+        "Combien de postes, salaries, equipes et regimes horaires sont concernes ?",
+        "Les changements modifient-ils la charge, les competences, la polyvalence, la securite ou la remuneration ?",
+        "Quels documents ont ete remis et a quelle date pour apprecier le delai utile ?",
+        "La direction a-t-elle analyse les risques professionnels et les alternatives au projet ?",
+    ]
+
+
 def fact_application(answer: dict[str, Any], selection: dict[str, list[dict[str, Any]]]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
@@ -1137,7 +1237,8 @@ def fact_application(answer: dict[str, Any], selection: dict[str, list[dict[str,
     if MODE_CSE in detect_business_modes(answer):
         applications.extend(
             [
-                "Application aux faits: suppression de postes, changement d'horaires et modification des taches justifient de demander les impacts precis avant de se prononcer.",
+                "Application aux faits: " + cse_consultation_assessment(answer),
+                "Application aux faits: " + cse_project_qualification(answer),
                 "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV.",
             ]
         )
@@ -1159,11 +1260,26 @@ def provisional_legal_conclusion(answer: dict[str, Any]) -> dict[str, str]:
             ),
         }
     if MODE_CSE in modes:
+        assessment = cse_consultation_assessment(answer)
+        if cse_project_signals(answer)["mineur"]:
+            return {
+                "position": "incertaine: consultation non automatique",
+                "pourquoi": (
+                    "si le changement est reellement mineur et sans impact collectif etabli, Nexus ne conclut pas a une consultation obligatoire; "
+                    "le CSE doit toutefois demander les elements permettant de verifier cette absence d'impact."
+                ),
+            }
+        if not cse_project_is_major(answer):
+            return {
+                "position": "incertaine: information-consultation a qualifier",
+                "pourquoi": (
+                    f"{assessment} Le CSE doit exiger les impacts concrets avant de conclure au niveau d'obligation applicable."
+                ),
+            }
         return {
-            "position": "favorable a une exigence d'information complete",
+            "position": "favorable a une exigence d'information-consultation documentee",
             "pourquoi": (
-                "le CSE dispose d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position sur une reorganisation "
-                "touchant postes, horaires ou taches."
+                f"{assessment} Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position."
             ),
         }
     if "astreinte" in domains:
@@ -1204,10 +1320,21 @@ def argued_short_response(answer: dict[str, Any], conclusion: dict[str, str]) ->
             "La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre "
             "analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites."
         )
-    if conclusion.get("position") == "favorable a une exigence d'information complete":
+    if conclusion.get("position") == "incertaine: consultation non automatique":
         return (
-            "Le CSE dispose d'un angle solide pour refuser une discussion superficielle: suppression de postes, horaires et taches exigent documents, impacts, "
-            "delais utiles et reponses tracees. La premiere action est une demande ecrite de pieces et de questions a inscrire au PV."
+            "Nexus ne qualifie pas automatiquement ce changement de consultation obligatoire: si la modification est vraiment mineure et sans impact collectif, "
+            "le CSE doit surtout exiger les elements qui le prouvent. La premiere action est de demander par ecrit ce qui change, qui est concerne et pourquoi la direction estime l'impact nul."
+        )
+    if conclusion.get("position") == "incertaine: information-consultation a qualifier":
+        return (
+            "La qualification CSE reste a trancher par les impacts reels: le CSE ne doit pas accepter une presentation orale ou incomplete. "
+            "La premiere action est de demander les documents qui montrent qui est concerne, quelles taches changent, quelle charge est transferee et si les conditions de travail sont modifiees."
+        )
+    if str(conclusion.get("position") or "").startswith("favorable a une exigence d'information-consultation"):
+        qualification = cse_project_qualification(answer)
+        return (
+            "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: "
+            f"{qualification} La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion."
         )
     if "astreinte" in domains:
         return (
@@ -1508,34 +1635,87 @@ def cse_mode_analysis(
     action: list[str],
 ) -> dict[str, Any]:
     docs_received = source_briefs(answer, limit=5)
+    signals = cse_project_signals(answer)
     return {
         "mode": MODE_CSE,
         "nature_juridique_du_sujet": qualification(answer),
-        "information_ou_consultation_eventuelle": (
-            "A verifier selon l'objet exact, les impacts sur l'emploi, l'organisation, les horaires et la sante-securite."
-        ),
+        "qualification_du_projet": cse_project_qualification(answer),
+        "droits_probables_du_cse": cse_rights_probable(answer),
+        "points_necessitant_confirmation": cse_confirmation_points(answer),
+        "information_ou_consultation_eventuelle": cse_consultation_assessment(answer),
         "documents_recus": docs_received or ["Aucun document CSE transmis dans les donnees Nexus."],
         "documents_manquants": unique(
             [
                 "Note de presentation du projet.",
                 "Organigrammes et effectifs avant/apres.",
-                "Planning cible et horaires compares.",
+                *(
+                    ["Liste des postes supprimes ou postes impactes, avec emplois, equipes et consequences individuelles/collectives."]
+                    if signals["suppression_postes"]
+                    else ["Tableau des effectifs et equipes concernees, meme en l'absence de suppression annoncee."]
+                ),
+                *(
+                    ["Fiches de poste actuelles et fiches cibles apres modification des taches."]
+                    if signals["modification_taches"] or signals["transfert_taches"]
+                    else []
+                ),
+                *(["Planning cible et horaires compares."] if signals["changement_horaires"] else []),
                 "Calendrier de mise en oeuvre.",
+                "Evaluation de la charge avant/apres et repartition des taches restantes.",
                 "Analyse des impacts charge de travail, sante, securite et competences.",
                 "Mesures d'accompagnement et alternatives etudiees.",
                 *pieces[:4],
             ],
             limit=12,
         ),
+        "analyse_suppressions_postes": [
+            (
+                "Deux suppressions de postes constituent un impact collectif a documenter: postes vises, motifs, redistribution "
+                "des activites, consequences sur charge, competences et eventuelles mesures d'accompagnement."
+            )
+            if signals["suppression_postes"]
+            else "Aucune suppression de poste n'est etablie dans la question; verifier les effectifs avant/apres."
+        ],
+        "analyse_changement_horaires": [
+            (
+                "Le changement d'horaires doit etre compare aux horaires actuels: amplitudes, cycles, repos, nuits, astreintes, "
+                "contraintes vie personnelle et effets paie."
+            )
+            if signals["changement_horaires"]
+            else "Aucun changement d'horaires n'est etabli; demander le planning cible si la direction evoque une adaptation."
+        ],
+        "analyse_modification_taches": [
+            (
+                "La modification des taches doit etre traduite en fiches de poste cible, competences attendues, formations, "
+                "polyvalence imposee et charge transferee."
+            )
+            if signals["modification_taches"] or signals["transfert_taches"]
+            else "Aucune modification de taches n'est etablie; demander une matrice activites actuelles / activites futures."
+        ],
+        "impacts_charge_travail": [
+            "Demander une mesure avant/apres: volumes, nombre d'interventions, heures supplementaires, retards, priorites abandonnees et charge par equipe.",
+            "Verifier si les taches des postes supprimes sont absorbees par les salaries restants sans moyens supplementaires.",
+        ],
+        "impacts_sante_securite_risques": [
+            "Verifier fatigue, travail isole, gestes critiques, coactivite, formation, habilitations, risques d'erreur et mise a jour du DUERP.",
+            "Si le projet modifie fortement les conditions de travail ou la sante-securite, verifier les conditions legales d'une expertise CSE.",
+        ],
         "delais_a_verifier": [
             "Date de remise des documents.",
             "Date de reunion et delai utile d'analyse.",
             "Existence d'une consultation formelle et echeance eventuelle d'avis.",
+            "Point de depart du delai de consultation seulement apres information suffisante, a verifier juridiquement.",
         ],
         "questions_prioritaires": unique(
             [
                 "Quel est l'objectif precis du projet et quelles alternatives ont ete etudiees ?",
+                "La direction qualifie-t-elle ce point comme information simple ou consultation avec avis ?",
+                *(
+                    ["Pourquoi les postes sont-ils supprimes et comment leurs taches seront-elles reprises ?"]
+                    if signals["suppression_postes"]
+                    else []
+                ),
                 "Quels postes, horaires, charges et competences changent concretement ?",
+                *(["Quels horaires actuels et cibles sont compares, equipe par equipe ?"] if signals["changement_horaires"] else []),
                 "Quels risques sante-securite et fatigue ont ete evalues ?",
                 "Quels indicateurs permettront de suivre les effets apres mise en oeuvre ?",
                 *[str(item) for item in answer.get("questions_to_ask", [])[:6]],
@@ -1543,13 +1723,15 @@ def cse_mode_analysis(
             limit=12,
         ),
         "reponses_probables_direction": [
-            "La direction peut presenter le projet comme necessaire a l'organisation, a la competitivite ou a la continuite d'activite.",
-            "Elle peut minimiser les impacts en les presentant comme simples ajustements d'horaires ou d'effectifs.",
+            "Simple adaptation d'organisation relevant du pouvoir de direction.",
+            "Pas d'impact majeur car les taches seraient redistribuees ou les horaires resteraient compatibles avec l'activite.",
+            "Suppression de postes justifiee par la charge, la productivite, la continuite d'activite ou une baisse d'activite.",
         ],
         "relances_et_contre_arguments": [
-            "Demander les donnees factuelles qui justifient le projet.",
+            "Comparer l'affirmation d'impact limite aux effets concrets: effectifs, horaires, taches, charge, securite, competences et risques.",
+            "Demander les donnees factuelles qui justifient le projet et les alternatives etudiees.",
             "Exiger le detail des impacts par atelier, metier, equipe et regime horaire.",
-            "Demander une reponse ecrite lorsque les documents ou chiffres manquent.",
+            "Demander une reponse ecrite lorsque les documents ou chiffres manquent et faire acter cette absence au PV.",
         ],
         "consequences_salaries": [
             "Effets possibles sur charge, fatigue, repos, vie personnelle, competence, emploi et remuneration.",
@@ -1573,15 +1755,17 @@ def cse_mode_analysis(
         "points_pv": [
             "Documents demandes et non remis.",
             "Reponses precises de la direction.",
-            "Engagements, echeances, indicateurs et reserves des elus.",
+            "Position de la direction sur information simple ou consultation.",
+            "Impacts reconnus ou contestes sur postes, horaires, taches, charge et sante-securite.",
+            "Engagements, echeances, indicateurs de suivi et reserves des elus.",
         ],
         "strategie_progressive": action,
         "action_immediate_recommandee": immediate_action_for_mode(MODE_CSE, answer),
         "analyse_contradictoire": contradictory_matrix(
-            "Les representants peuvent demander une information complete, loyale et exploitable avant toute position.",
-            "La direction peut soutenir que les documents fournis suffisent ou que le projet releve de son pouvoir d'organisation.",
-            "Relancer sur les impacts concrets, les donnees manquantes, les risques et les engagements a tracer au PV.",
-            "Note projet, effectifs avant/apres, planning cible, analyse des risques et calendrier.",
+            "Le projet modifie plusieurs dimensions de l'organisation; ses impacts doivent etre documentes avant que le CSE puisse rendre un avis utile si une consultation est juridiquement requise.",
+            "La direction peut soutenir qu'il s'agit d'une simple adaptation d'organisation relevant du pouvoir de direction, sans impact majeur.",
+            "Comparer cette affirmation aux effets concrets: effectifs, horaires, taches, charge, securite, competences necessaires et risques.",
+            "Organigramme avant/apres, effectifs, fiches de poste, horaires, charge mesuree, absenteisme, heures supplementaires, incidents, accidents, analyse des risques et calendrier.",
             risks[0] if risks else "Risque: avis ou discussion CSE fonde sur des informations incompletes.",
         ),
     }
