@@ -112,8 +112,41 @@ def juriste_section(juriste: dict[str, Any]) -> list[dict[str, Any]]:
         {"title": "Reponse courte Juriste", "items": as_list(juriste.get("response_courte"))},
         {"title": "Qualification juridique", "items": as_list(juriste.get("qualification_juridique_situation"))},
         {"title": "Analyse et raisonnement", "items": juriste.get("analyse_et_raisonnement", [])},
+        {"title": "Analyse contradictoire et retour contentieux", "items": litigation_items(juriste)},
         {"title": "Risques et vigilance", "items": juriste.get("risques_points_vigilance", [])},
     ]
+
+
+def litigation_items(juriste: dict[str, Any]) -> list[str]:
+    values: list[str] = []
+    for row in juriste.get("analyse_contradictoire_contentieux", []) or []:
+        if not isinstance(row, dict):
+            continue
+        decision = row.get("decision") or "Decision contentieuse"
+        values.append(f"{decision} - statut procedural: {row.get('statut_procedural') or 'non renseigne'}")
+        for label, key in [
+            ("Argumentation salarie", "argumentation_salarie"),
+            ("Argumentation employeur", "argumentation_employeur"),
+        ]:
+            for item in as_list(row.get(key))[:3]:
+                values.append(f"{label}: {item}")
+        judge = row.get("raisonnement_du_juge") or {}
+        if isinstance(judge, dict):
+            for item in as_list(judge.get("regle_appliquee"))[:2]:
+                values.append(f"Raisonnement du juge: {item}")
+            for item in as_list(judge.get("preuves_determinantes"))[:2]:
+                values.append(f"Preuves determinantes: {item}")
+        lessons = row.get("enseignements_dossier_nexus") or {}
+        if isinstance(lessons, dict):
+            for item in as_list(lessons.get("arguments_reutilisables"))[:2]:
+                values.append(f"Argument reutilisable: {item}")
+            for item in as_list(lessons.get("arguments_adverses_a_anticiper"))[:2]:
+                values.append(f"Argument adverse a anticiper: {item}")
+            for item in as_list(lessons.get("faiblesses_a_eviter"))[:2]:
+                values.append(f"Faiblesse a eviter: {item}")
+        if row.get("source_quality_warning"):
+            values.append(f"Limite source: {row['source_quality_warning']}")
+    return text_items(values, limit=18)
 
 
 def paie_section(paie_expert: dict[str, Any]) -> list[dict[str, Any]]:

@@ -20,6 +20,7 @@ juriste porte aussi une doctrine de reponse plus complete :
 - sources analysees par couche juridique ;
 - niveau de certitude separe entre regle certaine, interpretation, hypothese et information manquante ;
 - strategie de defense du salarie avec position probable de la direction et contre-arguments ;
+- analyse contradictoire des decisions ou dossiers contentieux reellement remontes ;
 - pieces utiles a recuperer ;
 - action progressive avant tout contentieux.
 

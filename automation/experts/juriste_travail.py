@@ -46,6 +46,7 @@ SOURCE_LAYER_ORDER = [
     "convention_collective",
     "code_travail",
     "jurisprudence",
+    "prudhommes",
     "pratique_officielle",
 ]
 
@@ -355,6 +356,163 @@ def defense_strategy(answer: dict[str, Any]) -> dict[str, list[str] | str]:
     }
 
 
+def litigation_sources(answer: dict[str, Any]) -> list[dict[str, Any]]:
+    sources = []
+    for source in answer.get("sources", []):
+        if not isinstance(source, dict):
+            continue
+        layer = normalize(source.get("source_layer") or source.get("document_type"))
+        document = normalize(source.get("document"))
+        if layer in {"jurisprudence", "prudhommes"} or "cour de cassation" in document or "prud" in document:
+            sources.append(source)
+    return sources[:3]
+
+
+def first_source_value(source: dict[str, Any], keys: list[str]) -> Any:
+    for key in keys:
+        value = source.get(key)
+        if value:
+            return value
+    return None
+
+
+def as_text_list(value: Any, fallback: str) -> list[str]:
+    if isinstance(value, list):
+        return unique(str(item) for item in value if item)
+    if isinstance(value, tuple):
+        return unique(str(item) for item in value if item)
+    if value:
+        return [str(value)]
+    return [fallback]
+
+
+def decision_reference(source: dict[str, Any]) -> str:
+    parts = [
+        source.get("juridiction") or source.get("document"),
+        source.get("chamber"),
+        source.get("decision_date"),
+        f"pourvoi {source.get('case_number')}" if source.get("case_number") else None,
+        source.get("official_id"),
+    ]
+    return " | ".join(str(part) for part in parts if part)
+
+
+def procedural_status(source: dict[str, Any]) -> str:
+    value = first_source_value(
+        source,
+        [
+            "procedural_status",
+            "etat_procedure",
+            "appeal_status",
+            "pourvoi_status",
+            "decision_status",
+        ],
+    )
+    if value:
+        return str(value)
+    if source.get("source_layer") == "prudhommes":
+        return "Information non disponible dans Nexus: verifier appel, confirmation, infirmation ou cassation."
+    return "Information non disponible dans les metadonnees Nexus."
+
+
+def adversarial_litigation_analysis(answer: dict[str, Any], strategy: dict[str, Any]) -> list[dict[str, Any]]:
+    analyses: list[dict[str, Any]] = []
+    for source in litigation_sources(answer):
+        employee_args = first_source_value(
+            source,
+            ["argumentation_salarie", "arguments_salarie", "demandes_salarie", "employee_arguments", "claimant_arguments"],
+        )
+        employer_args = first_source_value(
+            source,
+            ["argumentation_employeur", "arguments_employeur", "defense_employeur", "employer_arguments", "defendant_arguments"],
+        )
+        judge_reasoning = first_source_value(
+            source,
+            ["raisonnement_juge", "motifs", "principle_summary", "summary", "resume_court", "solution", "excerpt"],
+        )
+        facts = first_source_value(source, ["faits", "facts", "faits_etablis"])
+        proof = first_source_value(source, ["preuves_determinantes", "proof", "evidence", "elements_preuve"])
+        result = first_source_value(source, ["resultat", "solution", "decision_type", "publication"])
+        analyses.append(
+            {
+                "decision": decision_reference(source),
+                "source_layer": source.get("source_layer"),
+                "statut_procedural": procedural_status(source),
+                "argumentation_salarie": as_text_list(
+                    employee_args,
+                    "Non disponible dans les donnees Nexus: ne pas reconstituer l'argument du salarie sans lecture de la decision complete.",
+                ),
+                "argumentation_employeur": as_text_list(
+                    employer_args,
+                    "Non disponible dans les donnees Nexus: anticiper la contradiction via la strategie de defense, sans l'attribuer a cette decision.",
+                ),
+                "raisonnement_du_juge": {
+                    "faits_etablis": as_text_list(
+                        facts,
+                        "Faits etablis non isoles dans les metadonnees Nexus: verifier le texte complet.",
+                    ),
+                    "regle_appliquee": as_text_list(
+                        judge_reasoning,
+                        "Regle ou motif non isole dans les metadonnees Nexus.",
+                    ),
+                    "preuves_determinantes": as_text_list(
+                        proof,
+                        "Preuves determinantes non identifiees automatiquement par Nexus.",
+                    ),
+                    "resultat": as_text_list(result, "Resultat procedural non isole dans les metadonnees Nexus."),
+                },
+                "enseignements_dossier_nexus": {
+                    "ressemblances": litigation_similarity(answer, source),
+                    "differences_importantes": [
+                        "Comparer les faits reels du dossier avec les faits de la decision avant reutilisation.",
+                        "Verifier si la decision porte sur le meme type de contrat, d'organisation du travail et de preuve.",
+                    ],
+                    "arguments_reutilisables": reusable_litigation_arguments(source),
+                    "arguments_adverses_a_anticiper": as_text_list(
+                        strategy.get("position_probable_direction"),
+                        "Aucun argument adverse specifique n'a ete extrait.",
+                    ),
+                    "preuves_qui_font_la_difference": [
+                        "Chronologie precise.",
+                        "Pieces contemporaines: planning, pointage, bulletin, consignes, mails ou comptes rendus selon le sujet.",
+                    ],
+                    "faiblesses_a_eviter": [
+                        "Presenter une proximite de mots comme une proximite juridique.",
+                        "Transformer l'argument d'une partie en regle de droit.",
+                        "Utiliser une decision isolee sans verifier sa portee et son historique procedural.",
+                    ],
+                },
+                "source_quality_warning": source.get("source_quality_warning"),
+            }
+        )
+    return analyses
+
+
+def litigation_similarity(answer: dict[str, Any], source: dict[str, Any]) -> list[str]:
+    domains = [domain for domain in answer.get("route", {}).get("domains", []) if domain != "bible_accords"]
+    theme = source.get("theme") or source.get("document")
+    values = []
+    if domains:
+        values.append("Meme zone d'analyse Nexus: " + ", ".join(str(domain) for domain in domains[:4]) + ".")
+    if theme:
+        values.append("Theme ou document rapproche: " + str(theme)[:220])
+    if source.get("query"):
+        values.append("Decision remontee par recherche: " + str(source["query"])[:220])
+    return values or ["Ressemblance non qualifiee automatiquement: verifier les faits de la decision."]
+
+
+def reusable_litigation_arguments(source: dict[str, Any]) -> list[str]:
+    values = []
+    for key in ["principle_summary", "summary", "resume_court", "solution", "excerpt"]:
+        value = source.get(key)
+        if value:
+            values.append("A verifier et reformuler comme argument: " + str(value)[:420])
+            break
+    if not values:
+        values.append("Aucun argument reutilisable n'est extrait automatiquement de cette source.")
+    return values
+
+
 def evidence_documents(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
@@ -547,6 +705,7 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
     pieces = evidence_documents(answer)
     action = recommended_action(answer)
     strategy = defense_strategy(answer)
+    litigation_analysis = adversarial_litigation_analysis(answer, strategy)
     certainty = certainty_level(established, reasoning, depends)
     layers = source_layers_analysis(answer)
 
@@ -571,6 +730,7 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
         "analyse_et_raisonnement": reasoning,
         "risques_points_vigilance": risks,
         "strategie_de_defense": strategy,
+        "analyse_contradictoire_contentieux": litigation_analysis,
         "action_conseillee": action,
         "position_de_travail_proposee": position,
         "questions_a_poser_direction": direction_questions(answer),

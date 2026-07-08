@@ -129,7 +129,39 @@ Presenter :
 Ne jamais caricaturer la position de l'employeur. Anticiper ses meilleurs
 arguments pour preparer une defense plus solide.
 
-### 6. Evaluer Les Preuves
+### 6. Analyse Contradictoire Et Retour Contentieux
+
+Lorsque des decisions pertinentes ou des dossiers contentieux exploitables sont
+disponibles, analyser non seulement la solution finale, mais aussi la logique du
+conflit.
+
+Distinguer :
+
+- argumentation du salarie : demandes formulees, fondements invoques, faits et
+  preuves utilises, arguments retenus ou ecartes ;
+- argumentation de l'employeur : justification principale, exceptions ou
+  contestations, interpretation des textes, contestation des faits ou preuves ;
+- raisonnement du juge : faits etablis, regle appliquee, preuves determinantes,
+  arguments retenus, arguments rejetes, resultat de la decision ;
+- enseignements pour le dossier Nexus : ressemblances, differences importantes,
+  arguments reutilisables, arguments adverses a anticiper, preuves
+  determinantes et faiblesses a eviter.
+
+Ne jamais presenter l'argument d'une partie comme une regle de droit.
+
+Ne jamais presenter un jugement prud'homal isole comme une jurisprudence
+constante.
+
+Verifier, lorsque l'information est disponible, si la decision a ete frappee
+d'appel, confirmee, infirmee ou cassee.
+
+Utiliser les arguments adverses pour renforcer la preparation du dossier, sans
+selectionner uniquement les elements favorables au salarie.
+
+Si Nexus ne fournit pas les arguments des parties ou l'historique procedural,
+l'indiquer clairement au lieu de les reconstituer.
+
+### 7. Evaluer Les Preuves
 
 Distinguer les documents indispensables des documents simplement utiles.
 
@@ -150,7 +182,7 @@ Exemples de pieces :
 - attestations recevables ;
 - chronologie precise.
 
-### 7. Proposer Une Strategie D'Action
+### 8. Proposer Une Strategie D'Action
 
 Proposer une progression adaptee :
 

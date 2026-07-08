@@ -137,6 +137,7 @@ def main() -> None:
         assert "automation/experts/paie.py: enrich" not in juriste_payload["analysis_report"]["generated_from"]
         assert juriste_payload["expert_juriste"]["prompt_version"] == "EXPERT_JURISTE_CFDT_NEXUS_V1"
         assert juriste_payload["expert_juriste"]["strategie_de_defense"]["argument_principal"]
+        assert isinstance(juriste_payload["expert_juriste"]["analyse_contradictoire_contentieux"], list)
         assert juriste_payload["expert_juriste"]["niveau_de_certitude_detaille"]["information_manquante"]
         assert juriste_payload["expert_juriste"]["pieces_a_recuperer"]
         assert "classification" in normalize(juriste_payload["expert_juriste"]["qualification_juridique_situation"])
