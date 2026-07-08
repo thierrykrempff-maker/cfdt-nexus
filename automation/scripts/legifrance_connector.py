@@ -52,7 +52,49 @@ CODE_TRAVAIL_MINI_INDEX: list[dict[str, Any]] = [
         "topic": "temps_travail_effectif",
         "article": "L3121-1",
         "article_id": "LEGIARTI000033020517",
-        "keywords": ["temps de travail", "travail effectif", "intervention", "reunion", "cse"],
+        "keywords": ["temps de travail", "travail effectif", "intervention", "reunion"],
+    },
+    {
+        "topic": "discipline_definition_sanction",
+        "article": "L1331-1",
+        "article_id": None,
+        "search_query": "Article L1331-1 Code du travail sanction disciplinaire",
+        "keywords": ["sanction", "disciplinaire", "procedure disciplinaire", "faits reproches"],
+    },
+    {
+        "topic": "discipline_information_griefs",
+        "article": "L1332-1",
+        "article_id": None,
+        "search_query": "Article L1332-1 Code du travail griefs sanction disciplinaire",
+        "keywords": ["sanction", "disciplinaire", "griefs", "procedure disciplinaire"],
+    },
+    {
+        "topic": "discipline_entretien_prealable",
+        "article": "L1332-2",
+        "article_id": None,
+        "search_query": "Article L1332-2 Code du travail entretien sanction disciplinaire",
+        "keywords": ["sanction", "disciplinaire", "entretien", "convocation", "procedure disciplinaire"],
+    },
+    {
+        "topic": "discipline_prescription_faits",
+        "article": "L1332-4",
+        "article_id": None,
+        "search_query": "Article L1332-4 Code du travail sanction disciplinaire deux mois",
+        "keywords": ["sanction", "disciplinaire", "prescription", "deux mois", "faits reproches"],
+    },
+    {
+        "topic": "cse_attributions_generales",
+        "article": "L2312-8",
+        "article_id": None,
+        "search_query": "Article L2312-8 Code du travail CSE organisation gestion marche generale entreprise",
+        "keywords": ["cse", "consultation", "reorganisation", "organisation du travail", "emploi"],
+    },
+    {
+        "topic": "cse_avis_information",
+        "article": "L2312-15",
+        "article_id": None,
+        "search_query": "Article L2312-15 Code du travail CSE avis informations delai examen",
+        "keywords": ["cse", "consultation", "avis", "documents", "informations", "delai"],
     },
     {
         "topic": "astreinte_definition",
@@ -418,16 +460,42 @@ class LegifranceClient:
             sources: list[dict[str, Any]] = []
             warnings: list[str] = []
             for hit in hits:
-                article_id = hit.get("official_id")
-                if not article_id:
-                    continue
-                try:
-                    sources.append(self.article_source(str(article_id), hit))
-                except LegifranceError as exc:
-                    fallback = source_from_search_hit(hit)
-                    if fallback:
-                        warnings.append(str(exc))
-                        sources.append(fallback)
+                candidate_hits = [hit]
+                if not hit.get("official_id") and hit.get("search_query"):
+                    resolved_hits = self.search_article_hits(str(hit["search_query"]), limit=3)
+                    article = normalize_text(hit.get("article"))
+                    exact_hits = [
+                        {
+                            **resolved,
+                            "topic": hit.get("topic"),
+                            "reason": hit.get("reason"),
+                        }
+                        for resolved in resolved_hits
+                        if article and article in normalize_text(resolved.get("article"))
+                    ]
+                    candidate_hits = exact_hits or [
+                        {
+                            **resolved,
+                            "topic": hit.get("topic"),
+                            "reason": hit.get("reason"),
+                        }
+                        for resolved in resolved_hits[:1]
+                    ]
+                    if not candidate_hits:
+                        warnings.append(f"article {hit.get('article')} non resolu par la recherche officielle.")
+                for candidate in candidate_hits:
+                    article_id = candidate.get("official_id")
+                    if not article_id:
+                        continue
+                    try:
+                        sources.append(self.article_source(str(article_id), candidate))
+                    except LegifranceError as exc:
+                        fallback = source_from_search_hit(candidate)
+                        if fallback:
+                            warnings.append(str(exc))
+                            sources.append(fallback)
+                    if len(sources) >= limit:
+                        break
                 if len(sources) >= limit:
                     break
             if not hits:
@@ -698,17 +766,39 @@ def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
             if item["article"] == article:
                 selected.append(
                     {
-                        "official_id": item["article_id"],
+                        "official_id": item.get("article_id"),
                         "article": item["article"],
                         "title": CODE_DU_TRAVAIL_LABEL,
                         "excerpt": "",
                         "score": score,
                         "topic": item["topic"],
                         "reason": reason,
+                        "search_query": item.get("search_query"),
                     }
                 )
                 return
 
+    if any(term in text for term in ["sanction", "disciplinaire", "procedure disciplinaire", "entretien disciplinaire"]):
+        add("L1331-1", "disciplinaire: definition de la sanction", 98)
+        add("L1332-1", "disciplinaire: information ecrite des griefs", 96)
+        add("L1332-2", "disciplinaire: procedure et entretien", 94)
+        add("L1332-4", "disciplinaire: delai pour engager les poursuites", 86)
+    if re.search(r"\bcse\b|comite social economique", text) and any(
+        term in text
+        for term in [
+            "reorganisation",
+            "consultation",
+            "information consultation",
+            "suppression de poste",
+            "changement des horaires",
+            "changement d horaires",
+            "modification des taches",
+            "documents",
+            "pv",
+        ]
+    ):
+        add("L2312-8", "CSE: information-consultation sur l'organisation et la marche generale", 99)
+        add("L2312-15", "CSE: informations et delai d'examen suffisants", 95)
     if "astreinte" in text:
         add("L3121-9", "astreinte: definition legale", 100)
         add("L3121-10", "astreinte: intervention et temps de travail effectif", 96)
@@ -725,7 +815,7 @@ def mini_index_hits(query: str, limit: int) -> list[dict[str, Any]]:
         add("L3132-27", "dimanche: repos compensateur et majoration", 94)
     if any(term in text for term in ["heure supplementaire", "heures supplementaires", "majoration", "paie", "bulletin"]):
         add("L3121-28", "heures supplementaires et majoration", 84)
-    if any(term in text for term in ["temps de travail", "travail effectif", "intervention", "reunion", "cse"]):
+    if any(term in text for term in ["temps de travail", "travail effectif", "intervention", "reunion"]):
         add("L3121-1", "temps de travail effectif", 82)
     if is_cse_meeting_query(query):
         add("L3121-1", "CSE pendant repos: qualifier le temps de travail", 90)
@@ -1348,10 +1438,16 @@ def dedupe_hits(hits: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     seen: set[str] = set()
     for hit in hits:
-        official_id = str(hit.get("official_id") or "")
-        if not official_id or official_id in seen:
+        key = str(
+            hit.get("official_id")
+            or hit.get("article")
+            or hit.get("search_query")
+            or hit.get("topic")
+            or ""
+        )
+        if not key or key in seen:
             continue
-        seen.add(official_id)
+        seen.add(key)
         result.append(hit)
     return result
 
