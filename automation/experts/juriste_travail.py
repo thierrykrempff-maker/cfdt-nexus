@@ -336,6 +336,185 @@ def layer_summary(layer: dict[str, Any], labels: list[str]) -> str:
     return "Aucune source pertinente validee n'a ete trouvee dans cette couche."
 
 
+def source_context_text(source: dict[str, Any]) -> str:
+    return normalize(
+        " ".join(
+            str(part)
+            for part in [
+                source.get("document"),
+                source.get("document_type"),
+                source.get("source_layer"),
+                source.get("source_layer_label"),
+                source.get("article"),
+                source.get("article_or_section"),
+                source.get("location"),
+                source.get("excerpt"),
+                source.get("summary"),
+                source.get("resume_court"),
+                source.get("principle_summary"),
+                source.get("theme"),
+                source.get("ranking_reasons"),
+            ]
+            if part
+        )
+    )
+
+
+def legal_terms_for_answer(answer: dict[str, Any]) -> list[str]:
+    domains = route_domains(answer)
+    query = normalize(answer.get("query", ""))
+    terms: list[str] = []
+    if "astreinte" in domains or "astreinte" in query:
+        terms.extend(
+            [
+                "astreinte",
+                "intervention",
+                "temps de travail effectif",
+                "repos",
+                "reprise",
+                "contrepartie",
+                "l3121-9",
+                "l3121-10",
+                "l3121-11",
+                "l3131",
+                "nuit",
+                "majoration",
+            ]
+        )
+    if "temps_travail" in domains:
+        terms.extend(["temps de travail", "travail effectif", "repos", "horaire", "duree", "5x8", "35 h"])
+    if "paie_remuneration" in domains:
+        terms.extend(["paie", "bulletin", "majoration", "prime", "salaire", "heures supplementaires", "nuit", "dimanche"])
+    if "disciplinaire" in domains:
+        terms.extend(["sanction", "disciplinaire", "faute", "procedure", "entretien", "grief", "reglement interieur"])
+    if "classification_carriere" in domains:
+        terms.extend(["classification", "coefficient", "fonctions", "fiche de poste", "qualification", "emploi"])
+    if "cse" in domains:
+        terms.extend(["cse", "consultation", "information", "reorganisation", "suppression de poste", "horaires", "pv"])
+    if "cssct_securite" in domains:
+        terms.extend(["cssct", "sante", "securite", "risque", "fatigue", "conditions de travail"])
+    if not terms:
+        terms.extend([domain for domain in domains if domain != "bible_accords"])
+    return unique(terms, limit=30)
+
+
+def source_relevance_score(answer: dict[str, Any], source: dict[str, Any]) -> tuple[int, list[str]]:
+    context = source_context_text(source)
+    layer = normalize(source.get("source_layer") or source.get("document_type"))
+    document = normalize(source.get("document"))
+    terms = legal_terms_for_answer(answer)
+    score = 0
+    reasons: list[str] = []
+    for term in terms:
+        normalized = normalize(term)
+        if normalized and normalized in context:
+            score += 8
+            reasons.append(f"terme utile: {term}")
+    if layer == "code_travail":
+        score += 20
+        reasons.append("source normative Code du travail")
+    elif layer in {"accord_entreprise", "convention_collective"}:
+        score += 16
+        reasons.append("source collective applicable au socle Nexus")
+    elif layer == "jurisprudence":
+        score += 14
+        reasons.append("decision officielle utile pour l'interpretation")
+    elif layer in {"pratique_officielle", "pratique"}:
+        score += 4
+        reasons.append("source explicative ou pratique")
+
+    domains = route_domains(answer)
+    if "disciplinaire" in domains and has_any(context, ["reglement interieur", "sanction", "disciplinaire", "l1331", "l1332"]):
+        score += 28
+        reasons.append("cible directement la procedure ou sanction disciplinaire")
+    if "astreinte" in domains and has_any(context, ["astreinte", "l3121-9", "l3121-10", "l3121-11"]):
+        score += 30
+        reasons.append("cible directement l'astreinte ou l'intervention")
+    if "temps_travail" in domains and has_any(context, ["repos", "travail effectif", "temps de travail", "l3131", "l3132"]):
+        score += 18
+        reasons.append("cible le temps de travail ou le repos")
+    if "classification_carriere" in domains and has_any(context, ["classification", "coefficient", "fonctions", "emploi"]):
+        score += 28
+        reasons.append("cible directement la classification")
+    if "cse" in domains and has_any(context, ["cse", "consultation", "information", "reorganisation", "pv"]):
+        score += 24
+        reasons.append("cible directement le sujet CSE")
+    if "paie_remuneration" in domains and has_any(context, ["majoration", "bulletin", "prime", "salaire", "heures supplementaires"]):
+        score += 18
+        reasons.append("utile pour le controle paie")
+
+    if "disciplinaire" in domains and "cse" in document and not has_any(context, ["sanction", "disciplinaire", "faute"]):
+        score -= 40
+        reasons.append("source CSE non determinante pour une sanction individuelle")
+    if "cse" in domains and not has_any(context, ["cse", "consultation", "information consultation", "reorganisation", "pv"]):
+        if score >= 42:
+            score = 35
+            reasons.append("utile pour le contexte d'impact, mais non determinante sur les droits CSE")
+    if "teletravail" in document and not has_any(answer.get("query", ""), ["teletravail", "travail a distance"]):
+        score -= 35
+        reasons.append("document lexicalement proche mais hors sujet probable")
+    if not source.get("excerpt") and layer not in {"code_travail", "jurisprudence"}:
+        score -= 4
+        reasons.append("extrait absent ou faible")
+    return score, unique(reasons, limit=5)
+
+
+def source_selection(answer: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    buckets = {
+        "source_principale": [],
+        "source_complementaire": [],
+        "source_contextuelle": [],
+        "source_ecartee": [],
+    }
+    for source in answer.get("sources", []):
+        if not isinstance(source, dict):
+            continue
+        score, reasons = source_relevance_score(answer, source)
+        label = source_label_for_layer(source)
+        selected = {
+            "source": label,
+            "source_layer": source.get("source_layer"),
+            "article": source.get("article") or source.get("article_or_section"),
+            "role_score": score,
+            "raison": "; ".join(reasons) or "Source conservee comme contexte documentaire.",
+            "extrait": str(source.get("excerpt") or "")[:420],
+            "decision_id": source.get("judilibre_id") or source.get("official_id"),
+            "source_ref": source,
+        }
+        if score >= 42:
+            buckets["source_principale"].append(selected)
+        elif score >= 24:
+            buckets["source_complementaire"].append(selected)
+        elif score >= 10:
+            buckets["source_contextuelle"].append(selected)
+        else:
+            selected["raison"] = selected["raison"] + " Source non determinante pour le raisonnement juridique."
+            buckets["source_ecartee"].append(selected)
+    for key, values in buckets.items():
+        buckets[key] = sorted(values, key=lambda item: int(item.get("role_score") or 0), reverse=True)[:8]
+    return buckets
+
+
+def selected_source_refs(selection: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    refs = []
+    for key in ["source_principale", "source_complementaire"]:
+        for item in selection.get(key, []):
+            source = item.get("source_ref")
+            if isinstance(source, dict):
+                refs.append(source)
+    return refs
+
+
+def public_source_selection(selection: dict[str, list[dict[str, Any]]]) -> dict[str, list[dict[str, Any]]]:
+    public: dict[str, list[dict[str, Any]]] = {}
+    for key, values in selection.items():
+        public[key] = [
+            {name: value for name, value in item.items() if name != "source_ref"}
+            for item in values
+        ]
+    return public
+
+
 def depends_on_local_texts(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
@@ -381,61 +560,157 @@ def certainty_level(established: list[str], reasoning: list[str], missing: list[
     }
 
 
-def legal_reasoning(answer: dict[str, Any]) -> list[str]:
+def legal_reasoning(answer: dict[str, Any], selection: dict[str, list[dict[str, Any]]] | None = None) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
     primary_mode = primary_business_mode(answer)
+    if selection is None:
+        selection = source_selection(answer)
+    rules = applicable_rules(answer, selection)
+    applications = fact_application(answer, selection)
+    conclusion = provisional_legal_conclusion(answer)
+    argued = [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        *[f"Regle applicable: {rule}" for rule in rules[:5]],
+        *applications[:5],
+        f"Conclusion provisoire: {conclusion['position']} - {conclusion['pourquoi']}",
+    ]
     if primary_mode == MODE_NEGOCIATION:
-        return [
+        return unique(
+            [
+                *argued,
             "Regle certaine: un projet d'accord doit etre compare aux droits existants et aux normes superieures avant position syndicale.",
             "Interpretation: une reduction du repos ou une modification d'horaires constitue un point de vigilance fort pour les salaries.",
             "Hypothese: le projet peut etre negociable seulement si les garanties, contreparties, perimetres et suivis sont ecrits et controles.",
             "Information manquante: texte complet du projet, droits actuels, categories concernees, justification direction et impacts chiffrables.",
-        ]
+            ],
+            limit=12,
+        )
     if primary_mode == MODE_CSE:
-        return [
+        return unique(
+            [
+                *argued,
             "Regle certaine: un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
             "Interpretation: une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets.",
             "Hypothese: les enjeux sante-securite deviennent prioritaires si les horaires, charges, effectifs ou conditions de travail sont modifies.",
             "Information manquante: note projet, calendrier, effectifs avant/apres, horaires cibles, analyse des risques et consequences par categorie.",
-        ]
+            ],
+            limit=12,
+        )
     if primary_mode == MODE_DEFENSE and "disciplinaire" in domains:
-        return [
+        return unique(
+            [
+                *argued,
             "Regle certaine: une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
             "Interpretation: une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident.",
             "Hypothese: la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
             "Information manquante: convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur.",
-        ]
+            ],
+            limit=12,
+        )
     if "droit_syndical" in domains and "reunion" in query:
-        return [
+        return unique(
+            [
+                *argued,
             "Regle certaine: la question doit etre qualifiee comme exercice d'un mandat ou participation CSE avant d'etre traitee comme sujet de repos.",
             "Interpretation: le traitement du temps depend de la nature de la reunion et du role exact du salarie.",
             "Hypothese: si la participation est liee au mandat, le temps ne se traite pas comme une simple initiative personnelle.",
             "Information manquante: texte local ou conventionnel fixant le traitement lorsque la reunion tombe sur un repos 5x8.",
-        ]
+            ],
+            limit=12,
+        )
     if {"temps_travail", "astreinte"}.issubset(domains):
-        return [
+        return unique(
+            [
+                *argued,
             "Regle certaine: l'intervention d'astreinte, le repos et la paie doivent etre controles separement.",
             "Interpretation: la reprise apres intervention ne peut etre appreciee qu'avec les heures reelles de fin et de reprise.",
             "Hypothese: les temps annexes ne sont a retenir que si la source applicable les integre.",
             "Information manquante: accord d'astreinte applicable, pointage, compteur et bulletin de la periode.",
-        ]
+            ],
+            limit=12,
+        )
     if "classification_carriere" in domains:
-        return [
+        return unique(
+            [
+                *argued,
             "Regle certaine: une demande de classification suppose une comparaison entre classement actuel et fonctions reelles.",
             "Interpretation: l'ecart doit etre rattache a des criteres objectifs du texte applicable, pas seulement a un ressenti.",
             "Hypothese: des fonctions depassant durablement la fiche de poste peuvent justifier une demande de reexamen motivee.",
             "Information manquante: criteres conventionnels, coefficient actuel et preuves des missions exercees.",
-        ]
-    return [
-        "Regle certaine: Nexus ne peut raisonner que sur les sources locales retrouvees.",
-        "Information manquante: faits exacts et texte applicable a la situation.",
-    ]
+            ],
+            limit=12,
+        )
+    return unique(
+        [
+            *argued,
+            "Regle certaine: Nexus ne peut raisonner que sur les sources locales retrouvees.",
+            "Information manquante: faits exacts et texte applicable a la situation.",
+        ],
+        limit=10,
+    )
 
 
 def defense_strategy(answer: dict[str, Any]) -> dict[str, list[str] | str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    modes = set(detect_business_modes(answer))
+    if MODE_NEGOCIATION in modes:
+        return {
+            "argument_principal": (
+                "Refuser de raisonner sur une signature tant que le projet n'est pas compare aux droits actuels, "
+                "aux normes superieures et aux impacts concrets pour les salaries."
+            ),
+            "arguments_complementaires": [
+                "Exiger un tableau avant/apres des droits modifies.",
+                "Demander le perimetre exact, les categories concernees, les garanties de repos et les contreparties.",
+                "Conditionner la discussion a un suivi CSE/CSSCT et a une clause de revoyure.",
+            ],
+            "position_probable_direction": (
+                "La direction peut soutenir que la reduction du repos ou la souplesse proposee est necessaire a la continuite d'activite."
+            ),
+            "contre_arguments": [
+                "Demander la preuve du besoin operationnel et les alternatives etudiees.",
+                "Rappeler qu'une perte de protection doit etre strictement encadree, compensee et controlable.",
+            ],
+        }
+    if MODE_CSE in modes:
+        return {
+            "argument_principal": (
+                "Obtenir une information complete et loyale avant toute discussion de fond sur la reorganisation."
+            ),
+            "arguments_complementaires": [
+                "Demander les impacts sur emploi, horaires, charge, competences, remuneration et sante-securite.",
+                "Faire inscrire au proces-verbal les documents demandes, reponses donnees et reserves des elus.",
+                "Relancer par ecrit si les donnees restent incompletes.",
+            ],
+            "position_probable_direction": (
+                "La direction peut soutenir que le projet releve de son pouvoir d'organisation ou que les informations transmises suffisent."
+            ),
+            "contre_arguments": [
+                "Ramener la discussion aux impacts concrets pour les salaries et aux documents manquants.",
+                "Demander des indicateurs de suivi et des engagements dates.",
+            ],
+        }
+    if "disciplinaire" in domains:
+        return {
+            "argument_principal": (
+                "Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, "
+                "des consignes claires et une sanction proportionnee."
+            ),
+            "arguments_complementaires": [
+                "Verifier si la procedure, les delais et les droits de defense ont ete respectes.",
+                "Documenter le contexte de l'erreur: formation, urgence, charge, effectifs, consignes contradictoires.",
+                "Comparer la reaction de la direction avec les pratiques anterieures pour des faits comparables.",
+            ],
+            "position_probable_direction": (
+                "La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage."
+            ),
+            "contre_arguments": [
+                "Demander les preuves exactes et la consigne applicable au moment des faits.",
+                "Rappeler qu'une erreur ne suffit pas sans faute et proportionnalite demontrees.",
+            ],
+        }
     if "droit_syndical" in domains and "reunion" in query:
         return {
             "argument_principal": (
@@ -509,9 +784,10 @@ def defense_strategy(answer: dict[str, Any]) -> dict[str, list[str] | str]:
     }
 
 
-def litigation_sources(answer: dict[str, Any]) -> list[dict[str, Any]]:
+def litigation_sources(answer: dict[str, Any], selection: dict[str, list[dict[str, Any]]] | None = None) -> list[dict[str, Any]]:
+    candidate_sources = selected_source_refs(selection) if selection else answer.get("sources", [])
     sources = []
-    for source in answer.get("sources", []):
+    for source in candidate_sources:
         if not isinstance(source, dict):
             continue
         layer = normalize(source.get("source_layer") or source.get("document_type"))
@@ -568,9 +844,81 @@ def procedural_status(source: dict[str, Any]) -> str:
     return "Information non disponible dans les metadonnees Nexus."
 
 
-def adversarial_litigation_analysis(answer: dict[str, Any], strategy: dict[str, Any]) -> list[dict[str, Any]]:
+def jurisprudence_question_for_answer(answer: dict[str, Any]) -> str:
+    domains = route_domains(answer)
+    if "astreinte" in domains:
+        return "Dans quelles conditions une intervention d'astreinte affecte-t-elle le temps de travail, le repos et les droits associes ?"
+    if "disciplinaire" in domains:
+        return "La faute reprochee et la procedure suffisent-elles a justifier une sanction proportionnee ?"
+    if "classification_carriere" in domains:
+        return "Les fonctions reellement exercees justifient-elles une classification differente ?"
+    if "cse" in domains:
+        return "Quels droits d'information/consultation ou de preuve sont utiles pour le dossier collectif ?"
+    return "Quelle interpretation la decision peut-elle apporter au dossier Nexus ?"
+
+
+def jurisprudence_use_for_defense(answer: dict[str, Any], source: dict[str, Any]) -> str:
+    domains = route_domains(answer)
+    excerpt = str(source.get("summary") or source.get("resume_court") or source.get("principle_summary") or source.get("excerpt") or "")
+    if "astreinte" in domains:
+        return (
+            "La decision est utile seulement si ses faits portent aussi sur astreinte, intervention, repos ou temps de travail effectif. "
+            "Elle sert alors a argumenter la separation entre disponibilite, intervention et consequences temps/paie."
+        )
+    if "disciplinaire" in domains:
+        return (
+            "La decision peut aider a discuter la preuve de la faute, la procedure ou la proportionnalite, sans transformer l'argument d'une partie en regle."
+        )
+    if "classification_carriere" in domains:
+        return "La decision peut aider a comparer fonctions reelles, criteres de classement et preuves retenues."
+    if "cse" in domains:
+        return "La decision peut aider a anticiper la discussion sur information, consultation ou preuve des impacts collectifs."
+    return "Apport a verifier a partir de l'extrait et du texte complet avant reutilisation."
+
+
+def retained_jurisprudence_analysis(
+    answer: dict[str, Any],
+    selection: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
     analyses: list[dict[str, Any]] = []
-    for source in litigation_sources(answer):
+    for source in litigation_sources(answer, selection):
+        excerpt = str(
+            source.get("summary")
+            or source.get("resume_court")
+            or source.get("principle_summary")
+            or source.get("solution")
+            or source.get("excerpt")
+            or ""
+        )
+        analyses.append(
+            {
+                "decision": decision_reference(source),
+                "question_juridique": jurisprudence_question_for_answer(answer),
+                "faits_pertinents": (
+                    "Faits isoles par Nexus: " + str(first_source_value(source, ["faits", "facts", "faits_etablis"]))
+                    if first_source_value(source, ["faits", "facts", "faits_etablis"])
+                    else "Nexus ne dispose pas de faits detailles isoles; comparer avec prudence a partir de l'extrait."
+                ),
+                "solution": excerpt[:700] if excerpt else "Solution non isolee dans les metadonnees Nexus.",
+                "ressemblance_avec_dossier": litigation_similarity(answer, source),
+                "difference_a_verifier": [
+                    "Verifier si les horaires, la preuve, le statut du salarie et la source applicable sont comparables.",
+                    "Verifier la portee procedurale de la decision et son eventuelle confirmation, infirmation ou cassation.",
+                ],
+                "apport_reel_a_la_defense": jurisprudence_use_for_defense(answer, source),
+                "statut_procedural": procedural_status(source),
+            }
+        )
+    return analyses
+
+
+def adversarial_litigation_analysis(
+    answer: dict[str, Any],
+    strategy: dict[str, Any],
+    selection: dict[str, list[dict[str, Any]]] | None = None,
+) -> list[dict[str, Any]]:
+    analyses: list[dict[str, Any]] = []
+    for source in litigation_sources(answer, selection):
         employee_args = first_source_value(
             source,
             ["argumentation_salarie", "arguments_salarie", "demandes_salarie", "employee_arguments", "claimant_arguments"],
@@ -682,7 +1030,40 @@ def missing_facts(answer: dict[str, Any], depends: list[str]) -> list[str]:
     return unique(values, limit=10)
 
 
-def applicable_rules(answer: dict[str, Any]) -> list[str]:
+def source_rule_statement(source: dict[str, Any], answer: dict[str, Any]) -> str:
+    domains = route_domains(answer)
+    label = source_label_for_layer(source)
+    context = source_context_text(source)
+    excerpt = str(source.get("excerpt") or "").strip()
+    suffix = f" Extrait utile: {excerpt[:260]}" if excerpt else ""
+    if "astreinte" in domains and has_any(context, ["l3121-9", "astreinte"]):
+        return (
+            f"{label}: la source sert a distinguer la periode d'astreinte de l'intervention effective "
+            f"et a verifier les contreparties applicables.{suffix}"
+        )
+    if "astreinte" in domains and has_any(context, ["l3121-10", "intervention", "temps de travail effectif"]):
+        return (
+            f"{label}: la source sert a qualifier l'intervention comme temps a traiter distinctement de la simple disponibilite d'astreinte.{suffix}"
+        )
+    if "temps_travail" in domains and has_any(context, ["repos", "l3131", "l3132", "travail effectif", "temps de travail"]):
+        return f"{label}: la source encadre le temps de travail, le repos ou la reprise apres interruption.{suffix}"
+    if "paie_remuneration" in domains and has_any(context, ["majoration", "bulletin", "prime", "salaire", "heures supplementaires"]):
+        return f"{label}: la source aide a controler la rubrique paie, les majorations ou les contreparties dues.{suffix}"
+    if "disciplinaire" in domains and has_any(context, ["sanction", "disciplinaire", "reglement interieur", "l1331", "l1332"]):
+        return f"{label}: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite.{suffix}"
+    if "classification_carriere" in domains and has_any(context, ["classification", "coefficient", "fonctions", "emploi"]):
+        return f"{label}: la source sert a comparer les fonctions reelles, l'emploi ou le coefficient applicable.{suffix}"
+    if "cse" in domains and has_any(context, ["cse", "consultation", "information", "reorganisation"]):
+        return f"{label}: la source sert a qualifier l'information/consultation et les documents CSE attendus.{suffix}"
+    return f"{label}: source retenue pour completer le raisonnement juridique Nexus.{suffix}"
+
+
+def applicable_rules(answer: dict[str, Any], selection: dict[str, list[dict[str, Any]]] | None = None) -> list[str]:
+    if selection is None:
+        selection = source_selection(answer)
+    selected_refs = selected_source_refs(selection)
+    if selected_refs:
+        return unique((source_rule_statement(source, answer) for source in selected_refs), limit=8)
     values = []
     for layer in source_layers_analysis(answer):
         label = layer.get("label") or layer.get("source_layer")
@@ -693,6 +1074,247 @@ def applicable_rules(answer: dict[str, Any]) -> list[str]:
     if not values:
         values.append("Aucune source applicable distincte n'est suffisante pour conclure sans verification.")
     return unique(values, limit=8)
+
+
+def facts_from_question(answer: dict[str, Any]) -> list[str]:
+    domains = route_domains(answer)
+    query = normalize(answer.get("query", ""))
+    facts: list[str] = []
+    if "astreinte" in domains:
+        facts.append("Le salarie est place en astreinte et une intervention effective est indiquee.")
+    if "nuit" in query:
+        facts.append("L'intervention est signalee comme intervenue la nuit.")
+    if "repos" in query and has_any(query, ["interrompu", "reprend", "reprise"]):
+        facts.append("Le repos est presente comme interrompu avant une reprise du poste.")
+    if "paie_remuneration" in domains:
+        facts.append("Le bulletin ou les compteurs paie sont contestes ou a controler.")
+    if "disciplinaire" in domains:
+        facts.append("La direction reproche une erreur ou un non-respect de procedure au salarie.")
+    if "classification_carriere" in domains:
+        facts.append("Le salarie invoque un ecart entre fonctions reelles et classification ou fiche de poste.")
+    if "cse" in domains:
+        facts.append("La direction presente un projet collectif au CSE avec impacts possibles sur emploi, horaires ou organisation.")
+    if not facts:
+        facts.append("Les faits connus sont ceux de la question; ils doivent etre completes par les pieces du dossier.")
+    return unique(facts, limit=8)
+
+
+def fact_application(answer: dict[str, Any], selection: dict[str, list[dict[str, Any]]]) -> list[str]:
+    domains = route_domains(answer)
+    query = normalize(answer.get("query", ""))
+    applications: list[str] = []
+    if "astreinte" in domains:
+        applications.extend(
+            [
+                "Application aux faits: la disponibilite d'astreinte et l'intervention ne doivent pas etre confondues; l'intervention declenche un traitement propre en temps et en paie.",
+                "Application aux faits: si l'intervention de nuit a interrompu le repos, il faut recalculer le repos a partir de la fin reelle d'intervention et verifier la base permettant la reprise du poste.",
+                "Application aux faits: l'indemnite ou contrepartie d'astreinte ne suffit pas a solder le dossier si du temps d'intervention, des majorations ou une recuperation restent dus.",
+            ]
+        )
+        if not any(item.get("source_layer") == "code_travail" for item in selection.get("source_principale", []) + selection.get("source_complementaire", [])):
+            applications.append("Limite d'application: aucun article Code du travail exploitable n'est disponible dans cette reponse; la position repose donc surtout sur les sources locales et la methode de controle.")
+    if "disciplinaire" in domains:
+        applications.extend(
+            [
+                "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+                "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+            ]
+        )
+    if "classification_carriere" in domains:
+        applications.extend(
+            [
+                "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+                "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+            ]
+        )
+    if MODE_NEGOCIATION in detect_business_modes(answer) or has_any(query, ["reduire le repos", "repos a 9 heures", "repos à 9 heures"]):
+        applications.extend(
+            [
+                "Application aux faits: reduire le repos a 9 heures est un signal de perte de garantie; la delegation doit exiger la base juridique, les cas limites, les compensations et le suivi.",
+                "Application aux faits: le projet ne doit pas etre negocie seulement comme une souplesse d'organisation mais comme une modification des protections temps de travail/repos.",
+            ]
+        )
+    if MODE_CSE in detect_business_modes(answer):
+        applications.extend(
+            [
+                "Application aux faits: suppression de postes, changement d'horaires et modification des taches justifient de demander les impacts precis avant de se prononcer.",
+                "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV.",
+            ]
+        )
+    if not applications:
+        applications.append("Application aux faits: les sources retenues doivent etre rapprochees des dates, pieces et personnes concernees avant conclusion definitive.")
+    return unique(applications, limit=8)
+
+
+def provisional_legal_conclusion(answer: dict[str, Any]) -> dict[str, str]:
+    domains = route_domains(answer)
+    modes = set(detect_business_modes(answer))
+    query = normalize(answer.get("query", ""))
+    if MODE_NEGOCIATION in modes or has_any(query, ["repos a 9 heures", "repos à 9 heures", "reduire le repos"]):
+        return {
+            "position": "plutot defavorable en l'etat",
+            "pourquoi": (
+                "un projet qui reduit le repos est une perte potentielle de protection; il ne devrait etre discute qu'avec base juridique, perimetre strict, "
+                "contreparties, suivi et garanties ecrites. La decision de signature reste politique et syndicale."
+            ),
+        }
+    if MODE_CSE in modes:
+        return {
+            "position": "favorable a une exigence d'information complete",
+            "pourquoi": (
+                "le CSE dispose d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position sur une reorganisation "
+                "touchant postes, horaires ou taches."
+            ),
+        }
+    if "astreinte" in domains:
+        return {
+            "position": "plutot favorable au salarie",
+            "pourquoi": (
+                "si les releves confirment une intervention de nuit suivie d'une reprise sans repos suffisant ou sans paiement distinct, "
+                "le meilleur angle est de separer astreinte, intervention, repos et bulletin. La conclusion exacte reste incertaine sur les montants "
+                "tant que l'accord, les horaires et le bulletin ne sont pas rapproches."
+            ),
+        }
+    if "disciplinaire" in domains:
+        return {
+            "position": "plutot favorable a une defense",
+            "pourquoi": (
+                "une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou "
+                "la proportionnalite sont discutables."
+            ),
+        }
+    if "classification_carriere" in domains:
+        return {
+            "position": "plutot favorable si les fonctions sont durables et prouvees",
+            "pourquoi": (
+                "la demande peut etre defendable lorsque les fonctions reellement exercees excedent objectivement le classement actuel; elle devient faible "
+                "si les faits restent ponctuels ou non rattaches aux criteres conventionnels."
+            ),
+        }
+    return {
+        "position": "incertaine",
+        "pourquoi": "les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires.",
+    }
+
+
+def argued_short_response(answer: dict[str, Any], conclusion: dict[str, str]) -> str:
+    domains = route_domains(answer)
+    if conclusion.get("position") == "plutot defavorable en l'etat":
+        return (
+            "La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre "
+            "analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites."
+        )
+    if conclusion.get("position") == "favorable a une exigence d'information complete":
+        return (
+            "Le CSE dispose d'un angle solide pour refuser une discussion superficielle: suppression de postes, horaires et taches exigent documents, impacts, "
+            "delais utiles et reponses tracees. La premiere action est une demande ecrite de pieces et de questions a inscrire au PV."
+        )
+    if "astreinte" in domains:
+        return (
+            "La position provisoire est plutot favorable au salarie: une astreinte n'est pas la meme chose que l'intervention realisee pendant l'astreinte. "
+            "L'intervention doit etre isolee, tracee et controlee comme du temps a traiter en paie; si elle interrompt le repos puis que le salarie reprend "
+            "son poste, la regularite de la reprise et du compteur repos devient le point central. Le premier acte concret est de rapprocher releve "
+            "d'intervention, planning de reprise, accord d'astreinte, compteur et bulletin."
+        )
+    if "disciplinaire" in domains:
+        return (
+            "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire "
+            "et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute."
+        )
+    if "classification_carriere" in domains:
+        return (
+            "La contestation est juridiquement defendable si les fonctions reellement exercees depassent durablement la fiche de poste et correspondent aux "
+            "criteres d'un classement superieur. Le meilleur argument est un tableau fonctions reelles / criteres / preuves."
+        )
+    return short_response(answer)
+
+
+def defense_argumentation_detail(answer: dict[str, Any], strategy: dict[str, Any]) -> dict[str, Any]:
+    domains = route_domains(answer)
+    modes = set(detect_business_modes(answer))
+    proof = "Chronologie precise et piece contemporaine directement liee au fait."
+    weakness = "Le dossier reste fragile si les faits ou la source applicable ne sont pas prouves."
+    tipping = "Une piece datee, objective et concordante peut faire basculer l'analyse."
+    if MODE_NEGOCIATION in modes:
+        proof = "Projet complet, tableau avant/apres, justification operationnelle, categories concernees et impacts repos/paie."
+        weakness = "La faiblesse principale serait de negocier sur un texte incomplet ou sans chiffrage des impacts."
+        tipping = "La preuve qui fait basculer: demonstration que la reduction de repos cree une perte de protection non compensee ou non conforme."
+    elif MODE_CSE in modes:
+        proof = "Note projet, effectifs avant/apres, planning cible, impacts par metier, analyse de risques et calendrier."
+        weakness = "La faiblesse principale serait une discussion CSE sans documents suffisants ni delai utile."
+        tipping = "La preuve qui fait basculer: impacts concrets sur postes, horaires, charge ou sante non documentes par la direction."
+    elif "astreinte" in domains:
+        proof = "Releve d'appel/intervention, heure de fin, planning de reprise, compteur repos et bulletin detaille."
+        weakness = "La faiblesse principale serait l'absence de trace horaire ou une clause d'accord prevoyant une derogation encadree."
+        tipping = "La preuve qui fait basculer: intervention de nuit tracee, reprise imposee et absence de repos ou de paiement distinct."
+    elif "disciplinaire" in domains:
+        proof = "Convocation, griefs ecrits, preuves direction, consignes applicables, formation et elements de contexte."
+        weakness = "La faiblesse serait une faute clairement prouvee, grave, repetee ou precedee de consignes non ambigues."
+        tipping = "La preuve qui fait basculer: absence de formation/consigne claire, pression d'organisation ou incoherence des griefs."
+    elif "classification_carriere" in domains:
+        proof = "Fiche de poste, missions reelles datees, preuves de responsabilite/autonomie et comparaison avec criteres de classification."
+        weakness = "La faiblesse serait le caractere ponctuel ou non prouve des fonctions invoquees."
+        tipping = "La preuve qui fait basculer: missions superieures exercees regulierement et reconnues dans des ecrits."
+    return {
+        "argument_principal_salarie": strategy.get("argument_principal"),
+        "arguments_complementaires": strategy.get("arguments_complementaires", []),
+        "argument_probable_employeur": strategy.get("position_probable_direction"),
+        "reponse_argument_employeur": strategy.get("contre_arguments", []),
+        "faiblesse_du_dossier": weakness,
+        "preuve_pouvant_faire_basculer": tipping,
+        "preuve_prioritaire": proof,
+    }
+
+
+def ordered_action_strategy(answer: dict[str, Any], pieces: list[str], action: list[str]) -> list[str]:
+    domains = route_domains(answer)
+    modes = set(detect_business_modes(answer))
+    if MODE_NEGOCIATION in modes:
+        return [
+            "Action immediate: demander le projet d'accord complet et un tableau droits actuels / droits proposes.",
+            "Demande ecrite: exiger la base juridique de la reduction du repos, le perimetre et les categories concernees.",
+            "Pieces a securiser: accord actuel, projet, plannings, impacts repos/paie, justification operationnelle et alternatives.",
+            "Intervention DS/CSE: consulter les salaries concernes et demander un suivi CSE/CSSCT si les impacts sont collectifs.",
+            "Contestation: refuser une lecture trop generale si les clauses sont vagues, non controlees ou moins protectrices.",
+            "Escalade eventuelle: appui juridique avant signature si le texte touche au repos, a la sante ou a des garanties imperatives.",
+        ]
+    if MODE_CSE in modes:
+        return [
+            "Action immediate: demander par ecrit les documents manquants avant la reunion ou en debut de seance.",
+            "Demande ecrite: obtenir impacts emploi, horaires, charge, competences, calendrier et mesures d'accompagnement.",
+            "Pieces a securiser: note projet, organigrammes avant/apres, planning cible, analyse de risques et indicateurs de suivi.",
+            "Intervention DS/CSE: poser les questions prioritaires et faire inscrire reponses, reserves et engagements au PV.",
+            "Contestation: demander report ou relance si les informations ne permettent pas une discussion utile.",
+            "Escalade eventuelle: solliciter appui juridique ou expertise selon l'ampleur et les impacts du projet.",
+        ]
+    if "astreinte" in domains:
+        return [
+            "Action immediate: figer la chronologie appel/intervention/fin/reprise et demander le releve d'intervention.",
+            "Demande ecrite: demander a la direction la disposition d'accord appliquee, le traitement repos et le detail de paie.",
+            "Pieces a securiser: planning, pointage, compteur repos, bulletin, recapitulatif astreinte et preuve de l'appel.",
+            "Intervention DS/CSE: porter le sujet si plusieurs salaries ou une pratique de reprise apres intervention sont concernes.",
+            "Contestation: demander correction du bulletin ou regularisation du repos si les traces contredisent le traitement applique.",
+            "Escalade eventuelle: solliciter appui juridique si la direction refuse d'expliquer la base appliquee ou maintient une pratique a risque.",
+        ]
+    if "disciplinaire" in domains:
+        return [
+            "Action immediate: ne pas repondre a chaud; reconstituer les faits et demander les preuves reprochees.",
+            "Demande ecrite: demander griefs precis, procedure suivie, consignes et preuves.",
+            "Pieces a securiser: formation, habilitations, modes operatoires, contexte de charge, mails et temoignages utiles.",
+            "Intervention DS/CSE si pertinente: alerter sur consignes ou organisation si l'erreur vient du systeme de travail.",
+            "Contestation: contester la sanction si preuve, procedure ou proportionnalite sont insuffisantes.",
+            "Escalade eventuelle: appui juridique en cas de sanction lourde ou de risque licenciement.",
+        ]
+    if "classification_carriere" in domains:
+        return [
+            "Action immediate: etablir un tableau des fonctions reellement exercees avec dates et preuves.",
+            "Demande ecrite: demander les criteres retenus pour le coefficient actuel et un reexamen motive.",
+            "Pieces a securiser: fiche de poste, organigramme, consignes, mails, comptes rendus et comparaisons internes.",
+            "Intervention DS/CSE si pertinente: traiter les ecarts collectifs ou les emplois mal classes.",
+            "Contestation: formuler une demande argumentee de classification ou rappel si les criteres sont remplis.",
+            "Escalade eventuelle: appui juridique si refus non motive ou enjeu financier significatif.",
+        ]
+    return action
 
 
 def split_evidence(pieces: list[str]) -> tuple[list[str], list[str]]:
@@ -1287,22 +1909,30 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
             "reason": "Question hors perimetre juriste pour cette orchestration.",
         }
 
-    response = short_response(answer)
+    selection = source_selection(answer)
+    conclusion = provisional_legal_conclusion(answer)
+    response = argued_short_response(answer, conclusion)
     established = established_points(answer)
     depends = depends_on_local_texts(answer)
-    reasoning = legal_reasoning(answer)
+    reasoning = legal_reasoning(answer, selection)
     sources = source_documents(answer)
     risks = vigilance_points(answer)
     position = proposed_position(answer)
     expert_limits = limits(answer)
     pieces = evidence_documents(answer)
-    action = recommended_action(answer)
+    action = ordered_action_strategy(answer, pieces, recommended_action(answer))
     strategy = defense_strategy(answer)
-    litigation_analysis = adversarial_litigation_analysis(answer, strategy)
+    argumentation_detail = defense_argumentation_detail(answer, strategy)
+    litigation_analysis = adversarial_litigation_analysis(answer, strategy, selection)
+    retained_jurisprudence = retained_jurisprudence_analysis(answer, selection)
     certainty = certainty_level(established, reasoning, depends)
     layers = source_layers_analysis(answer)
     modes = detect_business_modes(answer)
     business_analysis = build_business_mode_analysis(answer, established, depends, strategy, pieces, risks, action)
+    rules = applicable_rules(answer, selection)
+    application = fact_application(answer, selection)
+    known_facts = facts_from_question(answer)
+    public_selection = public_source_selection(selection)
 
     return {
         "active": True,
@@ -1314,6 +1944,25 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
         "response_courte": response,
         "reponse_courte": response,
         "qualification_juridique_situation": qualification(answer),
+        "selection_juridique_sources": public_selection,
+        "sources_retenues_principales": public_selection.get("source_principale", []),
+        "sources_retenues_complementaires": public_selection.get("source_complementaire", []),
+        "sources_contextuelles": public_selection.get("source_contextuelle", []),
+        "sources_ecartees": public_selection.get("source_ecartee", []),
+        "faits_connus": known_facts,
+        "regle_applicable": rules,
+        "application_aux_faits": application,
+        "conclusion_provisoire_juridique": conclusion,
+        "argumentation_de_defense": argumentation_detail,
+        "strategie_action_ordonnee": action,
+        "jurisprudence_retenue_analysee": retained_jurisprudence,
+        "reponse_juridique_argumentee": {
+            "regle_applicable": rules,
+            "application_aux_faits": application,
+            "conclusion_provisoire": conclusion,
+            "argumentation_de_defense": argumentation_detail,
+            "strategie_action": action,
+        },
         "analyse_metier": business_analysis,
         "sources_par_couche": layers,
         "ce_qui_est_certain": established,

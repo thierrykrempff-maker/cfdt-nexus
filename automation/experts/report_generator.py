@@ -31,6 +31,69 @@ def text_items(values: Iterable[Any], limit: int | None = None) -> list[str]:
     return unique((str(value).strip() for value in values if str(value or "").strip()), limit=limit)
 
 
+def source_selection_items(selection: dict[str, Any]) -> list[str]:
+    labels = [
+        ("source_principale", "Source principale"),
+        ("source_complementaire", "Source complementaire"),
+        ("source_contextuelle", "Source contextuelle"),
+        ("source_ecartee", "Source ecartee"),
+    ]
+    values: list[str] = []
+    for key, label in labels:
+        for item in as_list(selection.get(key))[:5]:
+            if not isinstance(item, dict):
+                continue
+            source = item.get("source") or "Source"
+            reason = item.get("raison") or "raison non detaillee"
+            values.append(f"{label}: {source} - {reason}")
+    return text_items(values, limit=20)
+
+
+def conclusion_items(conclusion: dict[str, Any] | Any) -> list[str]:
+    if not isinstance(conclusion, dict):
+        return as_list(conclusion)
+    values = []
+    if conclusion.get("position"):
+        values.append("Position probable: " + str(conclusion["position"]))
+    if conclusion.get("pourquoi"):
+        values.append("Pourquoi: " + str(conclusion["pourquoi"]))
+    return values
+
+
+def defense_argument_items(argumentation: dict[str, Any] | Any) -> list[str]:
+    if not isinstance(argumentation, dict):
+        return as_list(argumentation)
+    values = []
+    mapping = [
+        ("Argument principal salarie", "argument_principal_salarie"),
+        ("Arguments complementaires", "arguments_complementaires"),
+        ("Argument probable employeur", "argument_probable_employeur"),
+        ("Reponse a l'employeur", "reponse_argument_employeur"),
+        ("Faiblesse du dossier", "faiblesse_du_dossier"),
+        ("Preuve decisive", "preuve_pouvant_faire_basculer"),
+        ("Preuve prioritaire", "preuve_prioritaire"),
+    ]
+    for label, key in mapping:
+        for item in as_list(argumentation.get(key))[:4]:
+            values.append(f"{label}: {item}")
+    return text_items(values, limit=18)
+
+
+def jurisprudence_analysis_items(items: list[dict[str, Any]] | Any) -> list[str]:
+    values: list[str] = []
+    for item in as_list(items):
+        if not isinstance(item, dict):
+            values.append(str(item))
+            continue
+        decision = item.get("decision") or "Decision"
+        values.append(f"{decision} - question: {item.get('question_juridique')}")
+        values.append(f"{decision} - solution/apport: {item.get('solution')}")
+        values.append(f"{decision} - apport defense: {item.get('apport_reel_a_la_defense')}")
+        for diff in as_list(item.get("difference_a_verifier"))[:2]:
+            values.append(f"{decision} - difference a verifier: {diff}")
+    return text_items(values, limit=18)
+
+
 def strip_known_prefix(value: Any) -> str:
     text = str(value or "").strip()
     return re.sub(r"^(Regle certaine|Interpretation|Hypothese|Information manquante|Risque)\s*:\s*", "", text)
@@ -188,7 +251,14 @@ def juriste_section(juriste: dict[str, Any]) -> list[dict[str, Any]]:
         return []
     return [
         {"title": "Reponse courte Juriste", "items": as_list(juriste.get("response_courte"))},
+        {"title": "Selection juridique des sources", "items": source_selection_items(juriste.get("selection_juridique_sources", {}))},
         {"title": "Qualification juridique", "items": as_list(juriste.get("qualification_juridique_situation"))},
+        {"title": "Regle applicable", "items": juriste.get("regle_applicable", [])},
+        {"title": "Application aux faits", "items": juriste.get("application_aux_faits", [])},
+        {"title": "Conclusion provisoire juridique", "items": conclusion_items(juriste.get("conclusion_provisoire_juridique"))},
+        {"title": "Argumentation de defense", "items": defense_argument_items(juriste.get("argumentation_de_defense"))},
+        {"title": "Strategie d'action", "items": juriste.get("strategie_action_ordonnee", [])},
+        {"title": "Jurisprudence retenue", "items": jurisprudence_analysis_items(juriste.get("jurisprudence_retenue_analysee", []))},
         {"title": "Analyse et raisonnement", "items": juriste.get("analyse_et_raisonnement", [])},
         {"title": "Analyse contradictoire et retour contentieux", "items": litigation_items(juriste)},
         {"title": "Risques et vigilance", "items": juriste.get("risques_points_vigilance", [])},

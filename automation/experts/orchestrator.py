@@ -26,6 +26,16 @@ def active_experts(experts: dict[str, dict[str, Any]]) -> list[str]:
 def build_synthesis(answer: dict[str, Any], juriste: dict[str, Any], paie_expert: dict[str, Any]) -> str:
     domains = route_domains(answer)
     primary_mode = juriste.get("mode_metier_principal")
+    argued = juriste.get("response_courte") or juriste.get("reponse_courte")
+    conclusion = juriste.get("conclusion_provisoire_juridique") or {}
+    if argued and conclusion.get("position") and juriste.get("active"):
+        if paie_expert.get("active"):
+            return (
+                f"{argued} Cote droit du travail, Nexus qualifie repos, astreinte et intervention; cote paie, "
+                "il controle ensuite le bulletin et les compteurs sans inventer de calcul. "
+                f"Conclusion provisoire: {conclusion.get('position')}."
+            )
+        return f"{argued} Conclusion provisoire: {conclusion.get('position')}."
     if primary_mode == "NEGOCIATION_ACCORD":
         return (
             "Nexus traite la demande comme une preparation de negociation d'accord : comparer le projet aux droits actuels, "
@@ -70,6 +80,9 @@ def build_synthesis(answer: dict[str, Any], juriste: dict[str, Any], paie_expert
 
 def build_position(answer: dict[str, Any], juriste: dict[str, Any], paie_expert: dict[str, Any]) -> str:
     if juriste.get("active"):
+        conclusion = juriste.get("conclusion_provisoire_juridique") or {}
+        if conclusion.get("position") and conclusion.get("pourquoi"):
+            return f"Position juridique probable: {conclusion['position']}. {conclusion['pourquoi']}"
         return juriste.get("position_de_travail_proposee") or answer.get("working_position", "")
     if paie_expert.get("active") and paie_expert.get("niveau_de_confiance") == "faible":
         return (

@@ -143,6 +143,13 @@ def assert_business_mode_payload(payload: dict[str, object], expected_mode: str)
     assert orchestration["mode_metier_principal"] == expected_mode
     assert expected_mode in juriste["modes_metier"]
     assert expected_mode in orchestration["modes_metier"]
+    assert juriste["reponse_juridique_argumentee"]["regle_applicable"]
+    assert juriste["reponse_juridique_argumentee"]["application_aux_faits"]
+    assert juriste["conclusion_provisoire_juridique"]["position"]
+    assert juriste["argumentation_de_defense"]["argument_principal_salarie"]
+    assert juriste["strategie_action_ordonnee"]
+    assert "source_principale" in juriste["selection_juridique_sources"]
+    assert "source_ecartee" in juriste["selection_juridique_sources"]
     assert orchestration["analyse_metier"]
     matching = [item for item in orchestration["analyse_metier"] if item.get("mode") == expected_mode]
     assert matching
