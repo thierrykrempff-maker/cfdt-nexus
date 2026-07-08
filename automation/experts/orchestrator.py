@@ -25,6 +25,22 @@ def active_experts(experts: dict[str, dict[str, Any]]) -> list[str]:
 
 def build_synthesis(answer: dict[str, Any], juriste: dict[str, Any], paie_expert: dict[str, Any]) -> str:
     domains = route_domains(answer)
+    primary_mode = juriste.get("mode_metier_principal")
+    if primary_mode == "NEGOCIATION_ACCORD":
+        return (
+            "Nexus traite la demande comme une preparation de negociation d'accord : comparer le projet aux droits actuels, "
+            "identifier pertes, garanties, risques et contre-propositions, puis laisser la decision de signature au delegue syndical."
+        )
+    if primary_mode == "CSE_CSSCT":
+        return (
+            "Nexus traite la demande comme un dossier CSE/CSSCT : obtenir les documents utiles, verifier l'information ou consultation, "
+            "preparer les questions, les relances et les points a faire acter au proces-verbal."
+        )
+    if primary_mode == "DEFENSE_SALARIE" and "disciplinaire" in domains:
+        return (
+            "Nexus traite la demande comme une defense disciplinaire : securiser les faits, les preuves, la procedure, le contexte "
+            "de l'erreur et la proportionnalite avant toute conclusion."
+        )
     if juriste.get("active") and paie_expert.get("active") and "astreinte" in domains:
         return (
             "Nexus retient une situation mixte : cote droit du travail, il faut qualifier l'astreinte, "
@@ -143,9 +159,12 @@ def orchestrate(answer: dict[str, Any]) -> dict[str, Any]:
     orchestration = {
         "question_posee": answer.get("query", ""),
         "domaines_detectes": [domain for domain in answer.get("route", {}).get("domains", []) if domain != "bible_accords"],
+        "mode_metier_principal": juriste.get("mode_metier_principal"),
+        "modes_metier": juriste.get("modes_metier", []),
         "experts_mobilises": mobilized,
         "reponse_synthetique_nexus": build_synthesis(answer, juriste, paie_expert),
         "position_de_travail": build_position(answer, juriste, paie_expert),
+        "analyse_metier": juriste.get("analyse_metier", []),
         "analyse_par_expertise": build_analysis_by_expertise(juriste, paie_expert),
         "sources": answer.get("sources", []),
         "source_layers": answer.get("source_layers", []),

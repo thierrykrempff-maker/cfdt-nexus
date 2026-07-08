@@ -15,7 +15,10 @@ from .utils import has_any, normalize, route_domains, source_documents, unique
 
 JURISTE_DOMAINS = {
     "cse",
+    "cssct_securite",
     "droit_syndical",
+    "disciplinaire",
+    "inaptitude_reclassement",
     "temps_travail",
     "astreinte",
     "classification_carriere",
@@ -36,10 +39,23 @@ JURISTE_KEYWORDS = [
     "accord",
     "contester",
     "droits",
+    "defense",
+    "sanction",
+    "disciplinaire",
+    "reorganisation",
+    "consultation",
+    "negociation",
+    "signer",
+    "cssct",
 ]
 
 JURISTE_PROMPT_VERSION = "EXPERT_JURISTE_CFDT_NEXUS_V1"
 JURISTE_PROMPT_CONTRACT = "agents/juriste/EXPERT_JURISTE_CFDT_NEXUS_V1.md"
+
+MODE_DEFENSE = "DEFENSE_SALARIE"
+MODE_NEGOCIATION = "NEGOCIATION_ACCORD"
+MODE_CSE = "CSE_CSSCT"
+BUSINESS_MODE_ORDER = [MODE_NEGOCIATION, MODE_CSE, MODE_DEFENSE]
 
 SOURCE_LAYER_ORDER = [
     "accord_entreprise",
@@ -98,10 +114,118 @@ def applies(answer: dict[str, Any]) -> bool:
     return has_any(query, JURISTE_KEYWORDS)
 
 
+def route_intents(answer: dict[str, Any]) -> set[str]:
+    route = answer.get("route", {})
+    return {str(intent) for intent in route.get("intents", [])}
+
+
+def detect_business_modes(answer: dict[str, Any]) -> list[str]:
+    domains = route_domains(answer)
+    intents = route_intents(answer)
+    query = normalize(answer.get("query", ""))
+    modes: list[str] = []
+    if "preparer_negociation" in intents or has_any(
+        query,
+        [
+            "projet d accord",
+            "projet accord",
+            "accord reduisant",
+            "avenant",
+            "negociation",
+            "avant de signer",
+            "signature",
+            "signer",
+            "contre proposition",
+            "contre-proposition",
+        ],
+    ):
+        modes.append(MODE_NEGOCIATION)
+    cse_collective_signal = "cssct_securite" in domains or (
+        "cse" in domains
+        and has_any(
+            query,
+            [
+                "consultation",
+                "information consultation",
+                "reorganisation",
+                "suppression de postes",
+                "changement d horaires",
+                "documents demander",
+                "questions poser",
+                "ordre du jour",
+                "point cse",
+                "proces verbal",
+                "pv",
+            ],
+        )
+    )
+    if cse_collective_signal or "preparer_cse" in intents or "preparer_cssct" in intents or has_any(
+        query,
+        [
+            "cssct",
+            "consultation",
+            "information consultation",
+            "reorganisation",
+            "suppression de postes",
+            "changement d horaires",
+            "documents demander",
+            "questions poser",
+            "ordre du jour",
+            "point cse",
+            "proces verbal",
+            "pv",
+        ],
+    ):
+        modes.append(MODE_CSE)
+    if domains & {"disciplinaire", "classification_carriere", "inaptitude_reclassement"} or "analyser_situation_individuelle" in intents or has_any(
+        query,
+        [
+            "defense",
+            "defendre",
+            "sanction",
+            "disciplinaire",
+            "erreur de manipulation",
+            "contester",
+            "plusieurs salaries",
+            "mal calcule",
+            "construire le dossier",
+            "dossier salarie",
+        ],
+    ):
+        modes.append(MODE_DEFENSE)
+    if not modes and applies(answer):
+        modes.append(MODE_DEFENSE)
+    return [mode for mode in BUSINESS_MODE_ORDER if mode in set(modes)]
+
+
+def primary_business_mode(answer: dict[str, Any]) -> str | None:
+    modes = detect_business_modes(answer)
+    return modes[0] if modes else None
+
+
 def short_response(answer: dict[str, Any]) -> str:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
     router_short = answer.get("short_answer")
+    primary_mode = primary_business_mode(answer)
+    if primary_mode == MODE_NEGOCIATION:
+        return (
+            "Avant toute signature, Nexus doit comparer le projet avec les droits existants, mesurer les pertes "
+            "ou garanties pour les salaries, identifier les clauses a securiser et preparer une position de "
+            "negociation. La decision politique de signer reste au delegue syndical."
+        )
+    if primary_mode == MODE_CSE:
+        return (
+            "Le dossier doit etre traite comme un point CSE/CSSCT a documenter: demander les pieces utiles, "
+            "verifier s'il s'agit d'une information ou consultation, preparer les questions et faire tracer les "
+            "engagements ou reserves au proces-verbal."
+        )
+    if primary_mode == MODE_DEFENSE and "disciplinaire" in domains:
+        return (
+            "La defense doit partir des faits precis reproches, des preuves communiquees, du respect de la procedure "
+            "et de la proportionnalite de la sanction eventuelle. A ce stade, il faut securiser le dossier avant "
+            "toute position definitive."
+        )
     if "droit_syndical" in domains and "reunion" in query and "repos" in query:
         return (
             "La question releve d'abord du mandat CSE et de la qualification du temps de reunion. "
@@ -124,6 +248,13 @@ def short_response(answer: dict[str, Any]) -> str:
 def qualification(answer: dict[str, Any]) -> str:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    primary_mode = primary_business_mode(answer)
+    if primary_mode == MODE_NEGOCIATION:
+        return "Projet d'accord ou d'avenant a analyser avant position syndicale, avec comparaison droits actuels / modifications proposees."
+    if primary_mode == MODE_CSE:
+        return "Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries."
+    if primary_mode == MODE_DEFENSE and "disciplinaire" in domains:
+        return "Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite."
     if "droit_syndical" in domains and "reunion" in query:
         return "Situation d'exercice d'un mandat ou de participation CSE, avec incidence possible sur le temps de travail ou le repos."
     if {"temps_travail", "astreinte"}.issubset(domains):
@@ -253,6 +384,28 @@ def certainty_level(established: list[str], reasoning: list[str], missing: list[
 def legal_reasoning(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    primary_mode = primary_business_mode(answer)
+    if primary_mode == MODE_NEGOCIATION:
+        return [
+            "Regle certaine: un projet d'accord doit etre compare aux droits existants et aux normes superieures avant position syndicale.",
+            "Interpretation: une reduction du repos ou une modification d'horaires constitue un point de vigilance fort pour les salaries.",
+            "Hypothese: le projet peut etre negociable seulement si les garanties, contreparties, perimetres et suivis sont ecrits et controles.",
+            "Information manquante: texte complet du projet, droits actuels, categories concernees, justification direction et impacts chiffrables.",
+        ]
+    if primary_mode == MODE_CSE:
+        return [
+            "Regle certaine: un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
+            "Interpretation: une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets.",
+            "Hypothese: les enjeux sante-securite deviennent prioritaires si les horaires, charges, effectifs ou conditions de travail sont modifies.",
+            "Information manquante: note projet, calendrier, effectifs avant/apres, horaires cibles, analyse des risques et consequences par categorie.",
+        ]
+    if primary_mode == MODE_DEFENSE and "disciplinaire" in domains:
+        return [
+            "Regle certaine: une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
+            "Interpretation: une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident.",
+            "Hypothese: la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+            "Information manquante: convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur.",
+        ]
     if "droit_syndical" in domains and "reunion" in query:
         return [
             "Regle certaine: la question doit etre qualifiee comme exercice d'un mandat ou participation CSE avant d'etre traitee comme sujet de repos.",
@@ -513,10 +666,350 @@ def reusable_litigation_arguments(source: dict[str, Any]) -> list[str]:
     return values
 
 
+def source_briefs(answer: dict[str, Any], limit: int = 5) -> list[str]:
+    return source_documents(answer, limit=limit)
+
+
+def findings(answer: dict[str, Any], limit: int | None = None) -> list[str]:
+    return unique((str(item) for item in answer.get("findings", []) if item), limit=limit)
+
+
+def missing_facts(answer: dict[str, Any], depends: list[str]) -> list[str]:
+    values = list(depends)
+    if not answer.get("documents_to_request"):
+        values.append("Information manquante: documents du dossier non encore fournis ou non identifies par Nexus.")
+    values.extend(str(item) for item in answer.get("questions_to_ask", [])[:4])
+    return unique(values, limit=10)
+
+
+def applicable_rules(answer: dict[str, Any]) -> list[str]:
+    values = []
+    for layer in source_layers_analysis(answer):
+        label = layer.get("label") or layer.get("source_layer")
+        if layer.get("status") == "present":
+            values.append(f"{label}: {layer.get('summary')}")
+        elif layer.get("source_layer") in {"code_travail", "jurisprudence", "prudhommes"}:
+            values.append(f"{label or layer.get('source_layer')}: {layer.get('summary')}")
+    if not values:
+        values.append("Aucune source applicable distincte n'est suffisante pour conclure sans verification.")
+    return unique(values, limit=8)
+
+
+def split_evidence(pieces: list[str]) -> tuple[list[str], list[str]]:
+    indispensables = pieces[:5] or ["Chronologie precise et pieces directement liees aux faits."]
+    useful = pieces[5:10] or ["Elements de comparaison et contexte organisationnel si disponibles."]
+    return indispensables, useful
+
+
+def immediate_action_for_mode(mode: str, answer: dict[str, Any]) -> str:
+    if mode == MODE_NEGOCIATION:
+        return "Demander le projet d'accord complet, un tableau avant/apres et les impacts par categorie avant toute position."
+    if mode == MODE_CSE:
+        return "Demander par ecrit les documents manquants et preparer les questions prioritaires a faire inscrire au PV."
+    if mode == MODE_DEFENSE and "disciplinaire" in route_domains(answer):
+        return "Recuperer la convocation, les faits reproches, les preuves et construire une chronologie avant l'entretien ou la reponse."
+    return "Securiser les faits et les pieces, puis demander a la direction la source appliquee et sa justification ecrite."
+
+
+def contradictory_matrix(
+    representative_argument: str,
+    direction_argument: str,
+    counter_argument: str,
+    proof: str,
+    risk: str,
+) -> list[dict[str, str]]:
+    return [
+        {
+            "argument_salarie_representants": representative_argument,
+            "argument_probable_direction": direction_argument,
+            "contre_argument": counter_argument,
+            "preuve_necessaire": proof,
+            "risque_ou_faiblesse": risk,
+        }
+    ]
+
+
+def project_modifications(answer: dict[str, Any]) -> list[str]:
+    query = normalize(answer.get("query", ""))
+    values = []
+    if has_any(query, ["reduisant le repos", "reduction du repos"]):
+        values.append("Projet signale: reduction du repos entre deux periodes de travail.")
+    if has_any(query, ["changement d horaires", "changement d'horaires", "horaires"]):
+        values.append("Projet signale: changement d'horaires ou d'organisation du travail.")
+    if has_any(query, ["suppression de postes", "supprimer des postes"]):
+        values.append("Projet signale: suppression ou modification de postes.")
+    if has_any(query, ["astreinte"]):
+        values.append("Projet ou dossier lie au regime d'astreinte et a ses contreparties.")
+    if not values:
+        values.append("Modification proposee a obtenir dans un projet ecrit complet avant analyse definitive.")
+    return unique(values, limit=6)
+
+
+def likely_categories(answer: dict[str, Any]) -> list[str]:
+    query = normalize(answer.get("query", ""))
+    categories = []
+    if has_any(query, ["atelier", "postes", "horaires", "5x8", "travail poste"]):
+        categories.extend(["salaries de l'atelier concerne", "personnel poste ou soumis aux nouveaux horaires"])
+    if has_any(query, ["astreinte"]):
+        categories.extend(["salaries integres au dispositif d'astreinte", "services amenes a intervenir hors poste"])
+    if has_any(query, ["sanction", "disciplinaire", "erreur de manipulation"]):
+        categories.append("salarie vise par la procedure et eventuels salaries exposes a la meme consigne")
+    if not categories:
+        categories.append("categories concernees a identifier dans le projet ou les pieces transmises")
+    return unique(categories, limit=6)
+
+
+def negotiation_recommendation(answer: dict[str, Any]) -> str:
+    query = normalize(answer.get("query", ""))
+    if has_any(query, ["reduisant le repos", "reduction du repos"]):
+        return "defavorable en l'etat sur le plan juridique/social, sauf demonstration de conformite, garanties ecrites et contreparties suffisantes."
+    if not answer.get("sources"):
+        return "informations insuffisantes."
+    return "negociable sous conditions, sous reserve du projet ecrit complet et de la comparaison avec les droits actuels."
+
+
+def defense_mode_analysis(
+    answer: dict[str, Any],
+    established: list[str],
+    depends: list[str],
+    strategy: dict[str, Any],
+    pieces: list[str],
+    risks: list[str],
+    action: list[str],
+) -> dict[str, Any]:
+    indispensables, utiles = split_evidence(pieces)
+    return {
+        "mode": MODE_DEFENSE,
+        "reponse_claire": short_response(answer),
+        "qualification_juridique": qualification(answer),
+        "faits_etablis": unique([*findings(answer, limit=6), *established[:4]], limit=10),
+        "faits_manquants": missing_facts(answer, depends),
+        "regle_applicable": applicable_rules(answer),
+        "meilleur_argument_salarie": strategy.get("argument_principal"),
+        "arguments_complementaires": strategy.get("arguments_complementaires", []),
+        "position_probable_employeur": strategy.get("position_probable_direction"),
+        "contre_arguments": strategy.get("contre_arguments", []),
+        "preuves_indispensables": indispensables,
+        "pieces_utiles": utiles,
+        "risques_du_dossier": risks,
+        "strategie_progressive": action,
+        "action_immediate_recommandee": immediate_action_for_mode(MODE_DEFENSE, answer),
+        "analyse_contradictoire": contradictory_matrix(
+            str(strategy.get("argument_principal") or "Argument salarie a construire a partir des faits."),
+            str(strategy.get("position_probable_direction") or "Position direction a confirmer par ecrit."),
+            "; ".join(str(item) for item in strategy.get("contre_arguments", [])[:2]),
+            indispensables[0],
+            risks[0] if risks else "Risque: dossier insuffisamment documente.",
+        ),
+    }
+
+
+def negotiation_mode_analysis(
+    answer: dict[str, Any],
+    strategy: dict[str, Any],
+    pieces: list[str],
+    risks: list[str],
+    action: list[str],
+) -> dict[str, Any]:
+    modifications = project_modifications(answer)
+    current_rights = source_briefs(answer, limit=5)
+    return {
+        "mode": MODE_NEGOCIATION,
+        "objet_reel_du_projet": modifications,
+        "comparaison_avec_accord_existant": current_rights or ["Accord existant a identifier et comparer article par article."],
+        "droits_actuels": applicable_rules(answer),
+        "modifications_proposees": modifications,
+        "gains_possibles": [
+            "Clarification ecrite des garanties et du perimetre.",
+            "Contreparties negociees, suivi CSE/CSSCT et clause de revoyure si le projet est maintenu.",
+        ],
+        "pertes_de_droits": [
+            "Reduction possible du repos ou de la protection actuelle si le projet abaisse les garanties existantes.",
+            "Risque de banalisation d'une exception si les conditions ne sont pas strictement encadrees.",
+        ],
+        "risques_juridiques": [
+            "Non-conformite avec les normes superieures si le repos minimal ou les garanties imperatives ne sont pas respectes.",
+            "Clause ambigue ou insuffisamment delimitee rendant l'application contestable.",
+        ],
+        "risques_pratiques_salaries": [
+            "Fatigue, desorganisation familiale, erreurs operationnelles, tensions d'effectifs ou perte de recuperation.",
+            "Difficulte de controle si les compteurs, plannings et exceptions ne sont pas tracables.",
+        ],
+        "categories_salaries_concernees": likely_categories(answer),
+        "clauses_ambigues": ["Perimetre, duree, exceptions, repos, contreparties, suivi et sanctions en cas de non-respect."],
+        "clauses_a_securiser": [
+            "Champ d'application precis.",
+            "Garantie de repos et modalites de recuperation.",
+            "Contreparties et methode de controle.",
+            "Clause de suivi CSE/CSSCT et clause de revoyure.",
+        ],
+        "position_probable_direction": "La direction peut invoquer la continuite d'activite, la flexibilite ou la necessite operationnelle.",
+        "arguments_negociation": [
+            "Exiger la demonstration factuelle du besoin.",
+            "Comparer le projet aux droits actuels et aux normes superieures.",
+            "Conditionner toute evolution a des garanties ecrites, mesurables et controlables.",
+        ],
+        "contre_propositions": [
+            "Phase test limitee dans le temps.",
+            "Volontariat ou perimetre strict si juridiquement possible.",
+            "Repos compensateur/contrepartie renforces et suivi anonymise partage au CSE.",
+        ],
+        "points_non_negociables_vigilance": [
+            "Respect des normes imperatives de repos et de sante-securite.",
+            "Pas de signature sans projet complet, impacts, categories concernees et modalites de suivi.",
+        ],
+        "questions_avant_signature": [
+            "Quel est le besoin operationnel documente ?",
+            "Quels droits actuels sont modifies, article par article ?",
+            "Quelles categories de salaries sont concernees et avec quelles garanties ?",
+            "Comment les repos, compteurs et contreparties seront-ils controles ?",
+            "Quelles conditions minimales doivent etre reunies avant toute signature ?",
+        ],
+        "recommandation": negotiation_recommendation(answer),
+        "strategie_progressive": action,
+        "action_immediate_recommandee": immediate_action_for_mode(MODE_NEGOCIATION, answer),
+        "analyse_contradictoire": contradictory_matrix(
+            "Les representants peuvent soutenir qu'aucune reduction de garantie ne doit etre signee sans besoin prouve, compensation et controle.",
+            "La direction peut soutenir que l'accord est necessaire pour l'organisation du travail ou la continuite d'activite.",
+            "Demander la preuve du besoin, le tableau avant/apres, les impacts salaries et les garanties ecrites.",
+            pieces[0] if pieces else "Projet d'accord complet et tableau comparatif avant/apres.",
+            risks[0] if risks else "Risque: signer un texte trop vague ou moins protecteur que les garanties existantes.",
+        ),
+    }
+
+
+def cse_mode_analysis(
+    answer: dict[str, Any],
+    strategy: dict[str, Any],
+    pieces: list[str],
+    risks: list[str],
+    action: list[str],
+) -> dict[str, Any]:
+    docs_received = source_briefs(answer, limit=5)
+    return {
+        "mode": MODE_CSE,
+        "nature_juridique_du_sujet": qualification(answer),
+        "information_ou_consultation_eventuelle": (
+            "A verifier selon l'objet exact, les impacts sur l'emploi, l'organisation, les horaires et la sante-securite."
+        ),
+        "documents_recus": docs_received or ["Aucun document CSE transmis dans les donnees Nexus."],
+        "documents_manquants": unique(
+            [
+                "Note de presentation du projet.",
+                "Organigrammes et effectifs avant/apres.",
+                "Planning cible et horaires compares.",
+                "Calendrier de mise en oeuvre.",
+                "Analyse des impacts charge de travail, sante, securite et competences.",
+                "Mesures d'accompagnement et alternatives etudiees.",
+                *pieces[:4],
+            ],
+            limit=12,
+        ),
+        "delais_a_verifier": [
+            "Date de remise des documents.",
+            "Date de reunion et delai utile d'analyse.",
+            "Existence d'une consultation formelle et echeance eventuelle d'avis.",
+        ],
+        "questions_prioritaires": unique(
+            [
+                "Quel est l'objectif precis du projet et quelles alternatives ont ete etudiees ?",
+                "Quels postes, horaires, charges et competences changent concretement ?",
+                "Quels risques sante-securite et fatigue ont ete evalues ?",
+                "Quels indicateurs permettront de suivre les effets apres mise en oeuvre ?",
+                *[str(item) for item in answer.get("questions_to_ask", [])[:6]],
+            ],
+            limit=12,
+        ),
+        "reponses_probables_direction": [
+            "La direction peut presenter le projet comme necessaire a l'organisation, a la competitivite ou a la continuite d'activite.",
+            "Elle peut minimiser les impacts en les presentant comme simples ajustements d'horaires ou d'effectifs.",
+        ],
+        "relances_et_contre_arguments": [
+            "Demander les donnees factuelles qui justifient le projet.",
+            "Exiger le detail des impacts par atelier, metier, equipe et regime horaire.",
+            "Demander une reponse ecrite lorsque les documents ou chiffres manquent.",
+        ],
+        "consequences_salaries": [
+            "Effets possibles sur charge, fatigue, repos, vie personnelle, competence, emploi et remuneration.",
+            "Risque de transfert de charge ou de perte de reperes si le projet est insuffisamment encadre.",
+        ],
+        "enjeux_sante_securite": [
+            "A verifier en priorite si les horaires, effectifs, charges, nuits, astreintes ou postes sensibles changent.",
+            "Demander DUERP, analyse de risques et avis des acteurs prevention si necessaire.",
+        ],
+        "donnees_indicateurs_a_demander": [
+            "Effectifs avant/apres par equipe.",
+            "Absenteisme, accidents/incidents, heures supplementaires, astreintes, formations, charge et polyvalence.",
+            "Suivi des compteurs temps/repos et alertes fatigue.",
+        ],
+        "action_possible_apres_reunion": [
+            "Relance ecrite des documents manquants.",
+            "Question complementaire CSE ou CSSCT.",
+            "Demande de suivi a une date determinee.",
+            "Reserve ou point de desaccord a faire acter au PV.",
+        ],
+        "points_pv": [
+            "Documents demandes et non remis.",
+            "Reponses precises de la direction.",
+            "Engagements, echeances, indicateurs et reserves des elus.",
+        ],
+        "strategie_progressive": action,
+        "action_immediate_recommandee": immediate_action_for_mode(MODE_CSE, answer),
+        "analyse_contradictoire": contradictory_matrix(
+            "Les representants peuvent demander une information complete, loyale et exploitable avant toute position.",
+            "La direction peut soutenir que les documents fournis suffisent ou que le projet releve de son pouvoir d'organisation.",
+            "Relancer sur les impacts concrets, les donnees manquantes, les risques et les engagements a tracer au PV.",
+            "Note projet, effectifs avant/apres, planning cible, analyse des risques et calendrier.",
+            risks[0] if risks else "Risque: avis ou discussion CSE fonde sur des informations incompletes.",
+        ),
+    }
+
+
+def build_business_mode_analysis(
+    answer: dict[str, Any],
+    established: list[str],
+    depends: list[str],
+    strategy: dict[str, Any],
+    pieces: list[str],
+    risks: list[str],
+    action: list[str],
+) -> list[dict[str, Any]]:
+    result = []
+    for mode in detect_business_modes(answer):
+        if mode == MODE_DEFENSE:
+            result.append(defense_mode_analysis(answer, established, depends, strategy, pieces, risks, action))
+        elif mode == MODE_NEGOCIATION:
+            result.append(negotiation_mode_analysis(answer, strategy, pieces, risks, action))
+        elif mode == MODE_CSE:
+            result.append(cse_mode_analysis(answer, strategy, pieces, risks, action))
+    return result
+
+
 def evidence_documents(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    modes = set(detect_business_modes(answer))
     pieces = ["Chronologie precise des faits et dates concernees."]
+    if MODE_NEGOCIATION in modes:
+        pieces.extend(
+            [
+                "Projet d'accord ou d'avenant complet en version modifiable et signee/proposee.",
+                "Tableau comparatif droits actuels / modifications proposees.",
+                "Justification operationnelle du projet et alternatives etudiees.",
+                "Liste des categories de salaries concernees.",
+                "Simulation des impacts sur repos, horaires, paie, compteurs et organisation.",
+            ]
+        )
+    if MODE_CSE in modes:
+        pieces.extend(
+            [
+                "Note de presentation CSE du projet.",
+                "Organigrammes, effectifs et postes avant/apres.",
+                "Plannings et horaires actuels/cibles.",
+                "Analyse des impacts sante, securite, charge et competences.",
+                "Calendrier de mise en oeuvre et mesures d'accompagnement.",
+            ]
+        )
     if "droit_syndical" in domains or "reunion" in query:
         pieces.extend(
             [
@@ -552,6 +1045,17 @@ def evidence_documents(answer: dict[str, Any]) -> list[str]:
                 "Elements de comparaison avec des fonctions ou postes similaires si disponibles.",
             ]
         )
+    if "disciplinaire" in domains:
+        pieces.extend(
+            [
+                "Convocation et eventuelle notification de sanction.",
+                "Pieces permettant de verifier la procedure disciplinaire et les delais.",
+                "Faits reproches dates et decrits precisement.",
+                "Preuves communiquees par la direction.",
+                "Consignes, modes operatoires, formations et habilitations lies a l'erreur reprochee.",
+                "Elements de contexte: charge, urgence, effectifs, panne, consignes contradictoires.",
+            ]
+        )
     pieces.extend(str(item) for item in answer.get("documents_to_request", []))
     return unique(pieces, limit=12)
 
@@ -559,12 +1063,36 @@ def evidence_documents(answer: dict[str, Any]) -> list[str]:
 def recommended_action(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    modes = set(detect_business_modes(answer))
     actions = ["Niveau 1: verifier les faits et securiser les preuves avant toute conclusion."]
-    if "classification_carriere" in domains:
+    if MODE_NEGOCIATION in modes:
+        actions.extend(
+            [
+                "Niveau 2: exiger le projet complet et le tableau avant/apres avant toute position.",
+                "Niveau 3: preparer les conditions minimales, contre-propositions et points non negociables.",
+                "Niveau 4: consulter les salaries concernes et demander un suivi CSE/CSSCT si les impacts sont collectifs.",
+            ]
+        )
+    elif MODE_CSE in modes:
+        actions.extend(
+            [
+                "Niveau 2: demander les documents manquants par ecrit avant ou pendant la reunion.",
+                "Niveau 3: poser les questions prioritaires et faire acter les reponses, reserves et engagements au PV.",
+                "Niveau 4: prevoir une relance ou un point de suivi CSE/CSSCT apres la reunion.",
+            ]
+        )
+    elif "classification_carriere" in domains:
         actions.extend(
             [
                 "Niveau 2: construire un tableau fonctions reelles / criteres de classification / preuves.",
                 "Niveau 3: demander a la direction les criteres justifiant le coefficient actuel et un reexamen motive.",
+            ]
+        )
+    elif "disciplinaire" in domains:
+        actions.extend(
+            [
+                "Niveau 2: construire la chronologie et demander les preuves communiquees par la direction.",
+                "Niveau 3: preparer les observations du salarie sur faits, contexte, procedure et proportionnalite.",
             ]
         )
     elif {"temps_travail", "astreinte"}.issubset(domains):
@@ -590,7 +1118,29 @@ def recommended_action(answer: dict[str, Any]) -> list[str]:
 def vigilance_points(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    modes = set(detect_business_modes(answer))
     points: list[str] = []
+    if MODE_NEGOCIATION in modes:
+        points.extend(
+            [
+                "Risque: negocier un texte avant d'avoir le tableau complet des droits actuels et des droits modifies.",
+                "Risque: accepter une clause vague sur le repos, les horaires, les contreparties ou le suivi.",
+            ]
+        )
+    if MODE_CSE in modes:
+        points.extend(
+            [
+                "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+                "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+            ]
+        )
+    if "disciplinaire" in domains:
+        points.extend(
+            [
+                "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+                "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles.",
+            ]
+        )
     if "droit_syndical" in domains and "reunion" in query:
         points.extend(
             [
@@ -620,6 +1170,22 @@ def vigilance_points(answer: dict[str, Any]) -> list[str]:
 def proposed_position(answer: dict[str, Any]) -> str:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    primary_mode = primary_business_mode(answer)
+    if primary_mode == MODE_NEGOCIATION:
+        return (
+            "Position de travail: ne pas raisonner en signature/non-signature a ce stade ; demander le projet complet, "
+            "comparer les droits actuels et exiger des garanties ecrites avant toute position syndicale."
+        )
+    if primary_mode == MODE_CSE:
+        return (
+            "Position de travail: traiter le point comme un dossier CSE/CSSCT a documenter, obtenir les pieces manquantes, "
+            "poser les questions prioritaires et faire inscrire les engagements ou reserves au PV."
+        )
+    if primary_mode == MODE_DEFENSE and "disciplinaire" in domains:
+        return (
+            "Position de travail: construire la defense sur faits, preuves, procedure, contexte de l'erreur et proportionnalite "
+            "avant d'accepter la qualification disciplinaire de la direction."
+        )
     if "droit_syndical" in domains and "reunion" in query:
         return (
             "Position de travail: demander la qualification de la reunion, le statut du salarie et le texte de traitement "
@@ -641,7 +1207,34 @@ def proposed_position(answer: dict[str, Any]) -> str:
 def direction_questions(answer: dict[str, Any]) -> list[str]:
     domains = route_domains(answer)
     query = normalize(answer.get("query", ""))
+    modes = set(detect_business_modes(answer))
     questions: list[str] = []
+    if MODE_NEGOCIATION in modes:
+        questions.extend(
+            [
+                "Quel besoin precis justifie le projet d'accord ou d'avenant ?",
+                "Quel tableau compare les droits actuels et les modifications proposees ?",
+                "Quelles categories de salaries sont concernees et avec quelles garanties ?",
+                "Quelles contreparties, controles et clauses de revoyure sont proposes ?",
+            ]
+        )
+    if MODE_CSE in modes:
+        questions.extend(
+            [
+                "S'agit-il d'une information simple ou d'une consultation du CSE ?",
+                "Quels documents justifient le projet et ses impacts sur emploi, horaires, charge et sante-securite ?",
+                "Quels indicateurs seront suivis apres mise en oeuvre ?",
+                "Quelles reponses la direction accepte-t-elle de faire inscrire au proces-verbal ?",
+            ]
+        )
+    if "disciplinaire" in domains:
+        questions.extend(
+            [
+                "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+                "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+                "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+            ]
+        )
     if "droit_syndical" in domains and "reunion" in query:
         questions.extend(
             [
@@ -708,15 +1301,20 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
     litigation_analysis = adversarial_litigation_analysis(answer, strategy)
     certainty = certainty_level(established, reasoning, depends)
     layers = source_layers_analysis(answer)
+    modes = detect_business_modes(answer)
+    business_analysis = build_business_mode_analysis(answer, established, depends, strategy, pieces, risks, action)
 
     return {
         "active": True,
         "name": "Expert Juriste droit du travail V0 renforce",
         "prompt_version": JURISTE_PROMPT_VERSION,
         "prompt_contract": JURISTE_PROMPT_CONTRACT,
+        "modes_metier": modes,
+        "mode_metier_principal": modes[0] if modes else None,
         "response_courte": response,
         "reponse_courte": response,
         "qualification_juridique_situation": qualification(answer),
+        "analyse_metier": business_analysis,
         "sources_par_couche": layers,
         "ce_qui_est_certain": established,
         "ce_qui_est_etabli_par_sources": established,

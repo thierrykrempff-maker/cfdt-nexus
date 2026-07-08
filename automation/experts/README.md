@@ -21,6 +21,7 @@ juriste porte aussi une doctrine de reponse plus complete :
 - niveau de certitude separe entre regle certaine, interpretation, hypothese et information manquante ;
 - strategie de defense du salarie avec position probable de la direction et contre-arguments ;
 - analyse contradictoire des decisions ou dossiers contentieux reellement remontes ;
+- modes metier `DEFENSE_SALARIE`, `NEGOCIATION_ACCORD` et `CSE_CSSCT` pour transformer les sources en aide de travail syndical ;
 - pieces utiles a recuperer ;
 - action progressive avant tout contentieux.
 
@@ -31,7 +32,8 @@ L'expert juriste :
 - n'appelle aucun service externe ;
 - n'invente pas de regle absente des sources ;
 - distingue regle certaine, interpretation, hypothese et information manquante ;
-- produit qualification juridique, analyse, vigilance, position de travail et limites.
+- produit qualification juridique, analyse, vigilance, position de travail et limites ;
+- travaille dans l'interet des salaries sans masquer les sources defavorables ni decider politiquement a la place du delegue syndical.
 
 `paie.py` ajoute l'Expert Paie V0 :
 
@@ -42,6 +44,7 @@ L'expert juriste :
 `orchestrator.py` assure la premiere coordination locale :
 
 - appelle Juriste et/ou Paie selon la question ;
+- transporte le mode metier principal et les analyses metier dans la reponse locale ;
 - produit une synthese Nexus unique ;
 - conserve les analyses par expertise sans simple concatenation ;
 - dedoublonne sources, documents, questions et limites.

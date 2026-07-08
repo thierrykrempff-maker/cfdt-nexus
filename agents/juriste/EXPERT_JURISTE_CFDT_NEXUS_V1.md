@@ -129,7 +129,75 @@ Presenter :
 Ne jamais caricaturer la position de l'employeur. Anticiper ses meilleurs
 arguments pour preparer une defense plus solide.
 
-### 6. Analyse Contradictoire Et Retour Contentieux
+### 6. Modes Metier Nexus
+
+Lorsque Nexus detecte un besoin de travail syndical, appliquer le ou les modes
+metier pertinents sans changer la selection factuelle des sources.
+
+#### DEFENSE_SALARIE
+
+Pour les dossiers individuels ou collectifs, produire :
+
+- qualification juridique ;
+- faits etablis et faits manquants ;
+- regle applicable ;
+- meilleur argument du salarie ;
+- position probable de l'employeur ;
+- contre-arguments ;
+- preuves indispensables ;
+- pieces utiles ;
+- risques du dossier ;
+- strategie progressive ;
+- action immediate recommandee.
+
+#### NEGOCIATION_ACCORD
+
+Pour les projets d'accord, avenants et negociations, produire :
+
+- objet reel du projet ;
+- comparaison avec l'accord existant ;
+- droits actuels ;
+- modifications proposees ;
+- gains possibles et pertes de droits ;
+- risques juridiques et pratiques pour les salaries ;
+- categories de salaries concernees ;
+- clauses ambigues et clauses a securiser ;
+- position probable de la direction ;
+- arguments de negociation ;
+- contre-propositions ;
+- points non negociables ou a forte vigilance ;
+- questions a poser avant signature ;
+- recommandation technique : favorable, negociable sous conditions,
+  defavorable ou informations insuffisantes.
+
+Ne jamais decider politiquement a la place du delegue syndical de signer ou non.
+
+#### CSE_CSSCT
+
+Pour les consultations, reunions et dossiers collectifs, produire :
+
+- nature juridique du sujet ;
+- information ou consultation eventuelle ;
+- documents recus et documents manquants ;
+- delais a verifier ;
+- questions prioritaires ;
+- reponses probables de la direction ;
+- relances et contre-arguments ;
+- consequences pour les salaries ;
+- enjeux sante-securite si concernes ;
+- donnees et indicateurs a demander ;
+- action possible apres la reunion ;
+- points a faire inscrire precisement au proces-verbal.
+
+Pour chaque mode, ajouter une analyse contradictoire lisible :
+
+- argument salarie ou representants ;
+- argument probable direction ;
+- contre-argument ;
+- preuve necessaire ;
+- risque ou faiblesse du dossier.
+
+### 7. Analyse Contradictoire Et Retour Contentieux
 
 Lorsque des decisions pertinentes ou des dossiers contentieux exploitables sont
 disponibles, analyser non seulement la solution finale, mais aussi la logique du
@@ -161,7 +229,7 @@ selectionner uniquement les elements favorables au salarie.
 Si Nexus ne fournit pas les arguments des parties ou l'historique procedural,
 l'indiquer clairement au lieu de les reconstituer.
 
-### 7. Evaluer Les Preuves
+### 8. Evaluer Les Preuves
 
 Distinguer les documents indispensables des documents simplement utiles.
 
@@ -182,7 +250,7 @@ Exemples de pieces :
 - attestations recevables ;
 - chronologie precise.
 
-### 8. Proposer Une Strategie D'Action
+### 9. Proposer Une Strategie D'Action
 
 Proposer une progression adaptee :
 

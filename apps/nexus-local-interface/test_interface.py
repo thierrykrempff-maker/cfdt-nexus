@@ -24,6 +24,25 @@ V21_SCENARIOS = {
     "question_incomplete": "Ma prime est fausse.",
 }
 
+BUSINESS_MODE_SCENARIOS = {
+    "defense_sanction": {
+        "query": "Un salarié risque une sanction après une erreur de manipulation. Comment préparer sa défense ?",
+        "expected_mode": "DEFENSE_SALARIE",
+    },
+    "negociation_repos": {
+        "query": "La direction propose un accord réduisant le repos entre deux périodes de travail. Que faut-il analyser avant de signer ?",
+        "expected_mode": "NEGOCIATION_ACCORD",
+    },
+    "cse_reorganisation": {
+        "query": "La direction présente au CSE une réorganisation d’atelier avec suppression de postes et changement d’horaires. Quels documents demander et quelles questions poser ?",
+        "expected_mode": "CSE_CSSCT",
+    },
+    "defense_paie_collective": {
+        "query": "Plusieurs salariés pensent que les majorations d’astreinte sont mal calculées. Comment construire le dossier ?",
+        "expected_mode": "DEFENSE_SALARIE",
+    },
+}
+
 
 def normalize(value: object) -> str:
     text = str(value or "").casefold()
@@ -66,6 +85,8 @@ def assert_base_payload(payload: dict[str, object]) -> None:
     assert "CFDT_NEXUS_SALARY_ANALYSIS_V22" not in report["markdown"]
     assert report_section(report, "sources")["items"]
     assert report_section(report, "source_layers")["items"]
+    assert report_section(report, "modes_metier")["items"]
+    assert report_section(report, "analyse_metier")["items"]
     assert report_section(report, "synthese")["items"][0] == orchestration["reponse_synthetique_nexus"]
     assert "source_layers" in orchestration
     for source in answer["sources"]:
@@ -87,7 +108,13 @@ def assert_base_payload(payload: dict[str, object]) -> None:
     else:
         assert layers["code_travail"]["status"] == "absent"
         assert "Code du travail absent" in layers["code_travail"]["absent_message"]
-    assert layers["jurisprudence"]["status"] == "absent"
+    if layers["jurisprudence"]["status"] == "present":
+        assert layer_sources(answer, "jurisprudence")
+        for source in layer_sources(answer, "jurisprudence"):
+            assert source["source_layer"] == "jurisprudence"
+            assert source.get("excerpt")
+    else:
+        assert layers["jurisprudence"]["status"] == "absent"
     assert layers["prudhommes"]["status"] == "absent"
 
 
@@ -104,6 +131,28 @@ def source_layers(answer: dict[str, object]) -> dict[str, dict[str, object]]:
 
 def layer_sources(answer: dict[str, object], layer_id: str) -> list[dict[str, object]]:
     return source_layers(answer)[layer_id]["sources"]
+
+
+def assert_business_mode_payload(payload: dict[str, object], expected_mode: str) -> dict[str, object]:
+    assert_base_payload(payload)
+    juriste = payload["expert_juriste"]
+    orchestration = payload["orchestration"]
+    report = payload["analysis_report"]
+    assert juriste["active"] is True
+    assert juriste["mode_metier_principal"] == expected_mode
+    assert orchestration["mode_metier_principal"] == expected_mode
+    assert expected_mode in juriste["modes_metier"]
+    assert expected_mode in orchestration["modes_metier"]
+    assert orchestration["analyse_metier"]
+    matching = [item for item in orchestration["analyse_metier"] if item.get("mode") == expected_mode]
+    assert matching
+    analysis = matching[0]
+    assert analysis["analyse_contradictoire"]
+    assert analysis["action_immediate_recommandee"]
+    assert analysis["strategie_progressive"]
+    assert "Mode principal" in " ".join(report_section(report, "modes_metier")["items"])
+    assert "Contradictoire" in " ".join(report_section(report, "analyse_metier")["items"])
+    return analysis
 
 
 def main() -> None:
@@ -209,6 +258,27 @@ def main() -> None:
         assert any("35 h" in normalize(source["document"]) or "5x8" in normalize(source["document"]) for source in mixed_accords)
         assert layer_sources(mixed_answer, "convention_collective")
         assert any(source.get("excerpt") for source in mixed_answer["sources"])
+
+        for scenario_id, scenario in BUSINESS_MODE_SCENARIOS.items():
+            payload = post_json(
+                f"http://127.0.0.1:{port}/api/analyze",
+                {"query": scenario["query"], "source_limit": 8},
+            )
+            analysis = assert_business_mode_payload(payload, scenario["expected_mode"])
+            if scenario_id == "defense_sanction":
+                assert "disciplinaire" in normalize(analysis["qualification_juridique"])
+                assert "procedure" in normalize(" ".join(analysis["preuves_indispensables"]))
+            elif scenario_id == "negociation_repos":
+                assert analysis["recommandation"]
+                assert "repos" in normalize(" ".join(analysis["modifications_proposees"]))
+                assert "signature" in normalize(" ".join(analysis["questions_avant_signature"]))
+            elif scenario_id == "cse_reorganisation":
+                assert analysis["documents_manquants"]
+                assert analysis["questions_prioritaires"]
+                assert analysis["points_pv"]
+            elif scenario_id == "defense_paie_collective":
+                assert payload["expert_paie"]["active"] is True
+                assert "majoration" in normalize(" ".join(payload["expert_paie"]["elements_du_bulletin_concernes"]))
 
         print("Interface locale: socle juridique V1 + scenarios V2.1 OK")
     finally:

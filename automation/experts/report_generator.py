@@ -10,6 +10,12 @@ from .utils import normalize, source_label, unique
 
 REPORT_VERSION = "2.2"
 
+MODE_LABELS = {
+    "DEFENSE_SALARIE": "Defense salarie",
+    "NEGOCIATION_ACCORD": "Negociation accord",
+    "CSE_CSSCT": "CSE/CSSCT",
+}
+
 
 def as_list(value: Any) -> list[Any]:
     if value is None:
@@ -103,6 +109,78 @@ def source_layer_items(answer: dict[str, Any]) -> list[str]:
         else:
             values.append(f"{label}: {layer.get('absent_message') or 'Aucune source remontee.'}")
     return text_items(values)
+
+
+def business_mode_summary(orchestration: dict[str, Any], juriste: dict[str, Any]) -> list[str]:
+    modes = orchestration.get("modes_metier") or juriste.get("modes_metier") or []
+    primary = orchestration.get("mode_metier_principal") or juriste.get("mode_metier_principal")
+    values: list[str] = []
+    if primary:
+        values.append(f"Mode principal: {MODE_LABELS.get(str(primary), str(primary))}")
+    if modes:
+        labels = [MODE_LABELS.get(str(mode), str(mode)) for mode in modes]
+        values.append("Modes mobilises: " + ", ".join(labels))
+    return text_items(values)
+
+
+def business_mode_items(orchestration: dict[str, Any], juriste: dict[str, Any]) -> list[str]:
+    analyses = orchestration.get("analyse_metier") or juriste.get("analyse_metier") or []
+    values: list[str] = []
+    for analysis in analyses:
+        if not isinstance(analysis, dict):
+            continue
+        mode = str(analysis.get("mode") or "mode")
+        label = MODE_LABELS.get(mode, mode)
+        headline = (
+            analysis.get("reponse_claire")
+            or analysis.get("nature_juridique_du_sujet")
+            or analysis.get("recommandation")
+            or "Analyse metier a completer."
+        )
+        values.append(f"{label}: {headline}")
+        if mode == "DEFENSE_SALARIE":
+            fields = [
+                ("Qualification", "qualification_juridique"),
+                ("Meilleur argument salarie", "meilleur_argument_salarie"),
+                ("Position probable employeur", "position_probable_employeur"),
+                ("Preuves indispensables", "preuves_indispensables"),
+                ("Risques", "risques_du_dossier"),
+                ("Action immediate", "action_immediate_recommandee"),
+            ]
+        elif mode == "NEGOCIATION_ACCORD":
+            fields = [
+                ("Objet du projet", "objet_reel_du_projet"),
+                ("Modifications proposees", "modifications_proposees"),
+                ("Pertes de droits", "pertes_de_droits"),
+                ("Clauses a securiser", "clauses_a_securiser"),
+                ("Arguments de negociation", "arguments_negociation"),
+                ("Recommandation", "recommandation"),
+                ("Action immediate", "action_immediate_recommandee"),
+            ]
+        elif mode == "CSE_CSSCT":
+            fields = [
+                ("Nature juridique", "nature_juridique_du_sujet"),
+                ("Documents manquants", "documents_manquants"),
+                ("Questions prioritaires", "questions_prioritaires"),
+                ("Consequences salaries", "consequences_salaries"),
+                ("Points PV", "points_pv"),
+                ("Action immediate", "action_immediate_recommandee"),
+            ]
+        else:
+            fields = []
+        for title, key in fields:
+            for item in as_list(analysis.get(key))[:4]:
+                values.append(f"{label} - {title}: {item}")
+        for row in as_list(analysis.get("analyse_contradictoire"))[:2]:
+            if not isinstance(row, dict):
+                continue
+            values.append(
+                f"{label} - Contradictoire: argument salarie/representants: "
+                f"{row.get('argument_salarie_representants')}"
+            )
+            values.append(f"{label} - Contradictoire: argument direction: {row.get('argument_probable_direction')}")
+            values.append(f"{label} - Contradictoire: preuve necessaire: {row.get('preuve_necessaire')}")
+    return text_items(values, limit=28)
 
 
 def juriste_section(juriste: dict[str, Any]) -> list[dict[str, Any]]:
@@ -222,7 +300,9 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
         section("resume", "Resume du probleme", answer.get("understanding") or orchestration.get("reponse_synthetique_nexus")),
         section("domaines", "Domaines detectes", domains),
         section("experts", "Experts reellement mobilises", experts),
+        section("modes_metier", "Modes metier detectes", business_mode_summary(orchestration, juriste)),
         section("synthese", "Synthese Nexus", orchestration.get("reponse_synthetique_nexus")),
+        section("analyse_metier", "Analyse metier Defense / Negociation / CSE", business_mode_items(orchestration, juriste)),
         section("points_etablis", "Points etablis", collected["points_etablis"]),
         section("interpretations", "Interpretations", collected["interpretations"]),
         section("hypotheses", "Hypotheses", collected["hypotheses"]),
@@ -250,6 +330,7 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
             "source_count": len(answer.get("sources", [])),
             "juriste_active": active(juriste),
             "paie_active": active(paie_expert),
+            "mode_metier_principal": orchestration.get("mode_metier_principal") or juriste.get("mode_metier_principal"),
         },
         "generated_from": generated_from(juriste, paie_expert),
         "sections": sections,
