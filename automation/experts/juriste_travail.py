@@ -2202,7 +2202,10 @@ def direction_questions(answer: dict[str, Any]) -> list[str]:
             ]
         )
     if "paie_remuneration" in domains:
-        questions.append("Ou apparait l'intervention sur le bulletin, le compteur ou le recapitulatif paie ?")
+        if "astreinte" in domains:
+            questions.append("Ou apparait l'intervention sur le bulletin, le compteur ou le recapitulatif paie ?")
+        else:
+            questions.append("Ou apparait la rubrique contestee sur le bulletin ou le recapitulatif paie ?")
     if "classification_carriere" in domains:
         questions.extend(
             [

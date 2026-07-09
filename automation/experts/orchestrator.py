@@ -23,6 +23,28 @@ def active_experts(experts: dict[str, dict[str, Any]]) -> list[str]:
     return [expert["name"] for expert in experts.values() if expert.get("active")]
 
 
+def mixed_juriste_paie_synthesis(answer: dict[str, Any], argued: str, conclusion: dict[str, Any]) -> str:
+    domains = route_domains(answer)
+    position = conclusion.get("position")
+    if "astreinte" in domains:
+        return (
+            f"{argued} Cote droit du travail, Nexus qualifie l'astreinte, l'intervention, le repos et la reprise; "
+            "cote paie, il controle ensuite le bulletin et les compteurs sans inventer de calcul. "
+            f"Conclusion provisoire: {position}."
+        )
+    if "paie_remuneration" in domains:
+        return (
+            f"{argued} Cote droit du travail, Nexus cadre la creance salariale, la preuve et la source applicable; "
+            "cote paie, il controle ensuite les rubriques, bases, taux, periodes et montants sans inventer de calcul. "
+            f"Conclusion provisoire: {position}."
+        )
+    return (
+        f"{argued} Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, "
+        "il ne chiffre rien sans donnees verifiees. "
+        f"Conclusion provisoire: {position}."
+    )
+
+
 def build_synthesis(answer: dict[str, Any], juriste: dict[str, Any], paie_expert: dict[str, Any]) -> str:
     domains = route_domains(answer)
     primary_mode = juriste.get("mode_metier_principal")
@@ -30,11 +52,7 @@ def build_synthesis(answer: dict[str, Any], juriste: dict[str, Any], paie_expert
     conclusion = juriste.get("conclusion_provisoire_juridique") or {}
     if argued and conclusion.get("position") and juriste.get("active"):
         if paie_expert.get("active"):
-            return (
-                f"{argued} Cote droit du travail, Nexus qualifie repos, astreinte et intervention; cote paie, "
-                "il controle ensuite le bulletin et les compteurs sans inventer de calcul. "
-                f"Conclusion provisoire: {conclusion.get('position')}."
-            )
+            return mixed_juriste_paie_synthesis(answer, argued, conclusion)
         return f"{argued} Conclusion provisoire: {conclusion.get('position')}."
     if primary_mode == "NEGOCIATION_ACCORD":
         return (

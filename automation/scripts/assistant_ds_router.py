@@ -1120,6 +1120,17 @@ def normalize(value: str) -> str:
     return bible.normalize(value or "")
 
 
+def explicit_astreinte_exclusion(query: str) -> bool:
+    text = normalize(query)
+    return bool(
+        re.search(
+            r"\b(sans|pas d|aucune|hors|non)\s+astreinte\b|"
+            r"\bsans\s+intervention\s+d\s+astreinte\b",
+            text,
+        )
+    )
+
+
 def match_patterns(text: str, patterns: list[str]) -> list[str]:
     return [pattern for pattern in patterns if re.search(pattern, text)]
 
@@ -1480,9 +1491,9 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
                 for key in ["document", "title", "summary", "excerpt", "source_officielle", "official_origin"]
             )
         )
-        if "astreinte" in query and "astreinte" in practice_body:
+        if "astreinte" in query and not explicit_astreinte_exclusion(query) and "astreinte" in practice_body:
             score += 18
-        elif "astreinte" in query:
+        elif "astreinte" in query and not explicit_astreinte_exclusion(query):
             score -= 35
         if "cse" in query and "cse" not in practice_body and "comite social" not in practice_body:
             score -= 18
@@ -1738,6 +1749,10 @@ def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
         scores["droit_syndical"] = max(scores.get("droit_syndical", 0), 4)
         scores["cse"] = max(scores.get("cse", 0), 2)
         reasons.append("La demande articule reunion CSE, mandat et temps de travail individuel.")
+
+    if explicit_astreinte_exclusion(query):
+        scores.pop("astreinte", None)
+        reasons.append("La demande exclut explicitement l'astreinte.")
 
     domains = [domain for domain in DOMAIN_ORDER if scores.get(domain)]
     if "droit_syndical" in domains and not re.search(
@@ -2361,11 +2376,15 @@ def default_questions(route: dict[str, Any]) -> list[str]:
                 "Quel est le libelle exact de la prime ou de la rubrique contestee ?",
                 "Quelle periode de paie est concernee ?",
                 "Quel montant a ete verse et quel montant est attendu ?",
-                "Quelles heures d'intervention ont ete payees, majorees ou recuperees ?",
-                "Quelle regle de majoration nuit, dimanche ou jour ferie a ete appliquee ?",
-                "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
             ]
         )
+        if "astreinte" in domains:
+            questions.append("Quelles heures d'intervention ont ete payees, majorees ou recuperees ?")
+        elif "temps_travail" in domains or re.search(r"heures?|nuit|dimanche|jour ferie|majoration", query):
+            questions.append("Quelles heures ont ete effectuees, validees, payees, majorees ou recuperees ?")
+        if re.search(r"nuit|dimanche|jour ferie|majoration", query):
+            questions.append("Quelle regle de majoration nuit, dimanche ou jour ferie a ete appliquee ?")
+        questions.append("Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?")
     if "cssct_securite" in domains:
         questions.extend(
             [
@@ -2660,7 +2679,7 @@ def response_depth(route: dict[str, Any]) -> str:
         return "multi_domain"
     if "preparer_cse" in intents:
         return "preparation_cse"
-    if "question_simple" in intents and route.get("engines") == ["bible_accords"]:
+    if "question_simple" in intents and simple_bible_only(list(intents), list(domains), route.get("query", "")):
         return "question_simple"
     if "analyser_situation_individuelle" in intents:
         return "situation_individuelle"
@@ -2877,7 +2896,7 @@ def cdtn_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
     domains = set(route.get("domains", []))
     if "disciplinaire" in domains or re.search(r"sanction|entretien disciplinaire|procedure disciplinaire", text):
         return "sanction disciplinaire entretien prealable", "Sanction disciplinaire"
-    if "astreinte" in domains or "astreinte" in text:
+    if "astreinte" in domains or ("astreinte" in text and not explicit_astreinte_exclusion(query)):
         if "repos" in text or "reprend" in text or "intervention" in text:
             return "astreinte repos intervention", "Astreinte et repos"
         return "astreinte salarie", "Astreinte"
@@ -2931,7 +2950,7 @@ def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, s
         return "CSE temps de reunion", "CSE et temps de reunion"
     if "classification_carriere" in domains or re.search(r"classification|coefficient|fonctions? reelles?|fiche de poste", text):
         return "classification fonctions reelles", "Classification et fonctions reelles"
-    if "astreinte" in domains or "astreinte" in text:
+    if "astreinte" in domains or ("astreinte" in text and not explicit_astreinte_exclusion(query)):
         return "astreinte repos", "Astreinte et repos"
     if re.search(r"prime|salaire variable|remuneration variable|variable", text):
         return "prime salaire variable", "Prime et salaire variable"
@@ -3023,7 +3042,7 @@ def judilibre_quality_warning(source: dict[str, Any], route: dict[str, Any]) -> 
             return None
         return "decision eloignee du sujet classification"
 
-    if "astreinte" in domains or "astreinte" in query:
+    if "astreinte" in domains or ("astreinte" in query and not explicit_astreinte_exclusion(query)):
         if "astreinte" in context:
             return None
         if "repos" in context and has_any_term(context, ["intervention", "temps de travail effectif"]):

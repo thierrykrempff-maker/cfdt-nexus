@@ -62,11 +62,24 @@ def is_incomplete_prime_query(answer: dict[str, Any]) -> bool:
     )
 
 
+def excludes_astreinte(answer: dict[str, Any]) -> bool:
+    query = normalize(answer.get("query", ""))
+    return has_any(query, ["sans astreinte", "pas d astreinte", "aucune astreinte", "hors astreinte", "non astreinte"])
+
+
+def is_astreinte_context(answer: dict[str, Any]) -> bool:
+    if excludes_astreinte(answer):
+        return False
+    domains = route_domains(answer)
+    query = answer.get("query", "")
+    return "astreinte" in domains or has_any(query, ["astreinte"])
+
+
 def object_of_control(answer: dict[str, Any]) -> str:
     query = answer.get("query", "")
     if is_incomplete_prime_query(answer):
         return "Controle d'une prime non identifiee : Nexus doit d'abord connaitre le libelle, la periode et la regle applicable."
-    if has_any(query, ["astreinte", "intervention"]):
+    if is_astreinte_context(answer):
         return "Controle paie d'une intervention pendant astreinte, avec heures, majorations, recuperation et compteurs."
     if has_any(query, ["nuit", "dimanche", "jour ferie", "majoration"]):
         return "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin."
@@ -88,7 +101,7 @@ def bulletin_elements(answer: dict[str, Any]) -> list[str]:
         elements.extend(["heures du dimanche", "majoration dimanche", "base et taux appliques"])
     if has_any(query, ["jour ferie", "jours feries"]):
         elements.extend(["heures de jour ferie", "majoration jour ferie", "repos ou recuperation associee"])
-    if has_any(query, ["astreinte", "intervention"]):
+    if is_astreinte_context(answer):
         elements.extend(
             [
                 "indemnite ou prime d'astreinte",
@@ -122,7 +135,7 @@ def data_needed(answer: dict[str, Any]) -> list[str]:
         "regle locale applicable a la rubrique controlee",
         "taux ou montant applique sur le bulletin",
     ]
-    if has_any(query, ["nuit", "dimanche", "jour ferie", "astreinte", "intervention"]):
+    if has_any(query, ["nuit", "dimanche", "jour ferie"]) or is_astreinte_context(answer):
         values.extend(
             [
                 "heure de debut et de fin de chaque sequence",
@@ -130,7 +143,7 @@ def data_needed(answer: dict[str, Any]) -> list[str]:
                 "detail des majorations ou recuperations appliquees",
             ]
         )
-    if has_any(query, ["astreinte", "intervention"]):
+    if is_astreinte_context(answer):
         values.extend(
             [
                 "declenchement de l'astreinte",
@@ -155,7 +168,7 @@ def control_method(answer: dict[str, Any]) -> list[str]:
     ]
     if has_any(query, ["nuit", "dimanche", "jour ferie"]):
         steps.insert(2, "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.")
-    if has_any(query, ["astreinte", "intervention"]):
+    if is_astreinte_context(answer):
         steps.insert(2, "Separarer indemnite d'astreinte, temps d'intervention, majorations et recuperations.")
     if is_incomplete_prime_query(answer):
         steps.insert(0, "Demander d'abord quelle prime est visee et sur quel bulletin elle apparait.")
@@ -176,7 +189,7 @@ def potential_anomalies(answer: dict[str, Any]) -> list[str]:
         anomalies.append("majoration dimanche absente ou calculee sur une mauvaise base")
     if has_any(query, ["jour ferie"]):
         anomalies.append("traitement jour ferie confondu avec dimanche, nuit ou recuperation")
-    if has_any(query, ["astreinte", "intervention"]):
+    if is_astreinte_context(answer):
         anomalies.extend(
             [
                 "intervention d'astreinte payee sans coherence avec le declenchement et les horaires",
