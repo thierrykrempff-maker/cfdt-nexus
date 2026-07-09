@@ -48,6 +48,15 @@ CSE_V12_SCENARIOS = {
         "query": "La direction annonce une reorganisation d'un atelier avec deux suppressions de postes, modification des taches et changement d'horaires. Quels sont les droits du CSE et comment preparer la reunion ?",
         "expected_position": "information-consultation",
         "required_terms": ["suppressions", "horaires", "taches", "PV"],
+        "requires_primary_sources": True,
+        "forbidden_terms": [
+            "statut du participant",
+            "qualite du participant",
+            "base de convocation",
+            "base de participation",
+            "traitement du temps de reunion pendant un repos",
+            "repos 5x8",
+        ],
     },
     "changement_mineur": {
         "query": "La direction annonce au CSE un simple changement mineur sans impact collectif. Quels sont les droits du CSE ?",
@@ -331,6 +340,7 @@ def main() -> None:
             )
             analysis = assert_business_mode_payload(payload, "CSE_CSSCT")
             juriste = payload["expert_juriste"]
+            source_selection = juriste["selection_juridique_sources"]
             conclusion_text = normalize(
                 " ".join(
                     [
@@ -345,6 +355,11 @@ def main() -> None:
             full_cse_text = normalize(json.dumps(analysis, ensure_ascii=False))
             for term in scenario["required_terms"]:
                 assert normalize(term) in full_cse_text, (scenario_id, term)
+            payload_text = normalize(json.dumps(payload, ensure_ascii=False))
+            for term in scenario.get("forbidden_terms", []):
+                assert normalize(term) not in payload_text, (scenario_id, term)
+            if scenario.get("requires_primary_sources"):
+                assert source_selection["source_principale"], scenario_id
             source_text = normalize(" ".join(source["document"] for source in payload["answer"]["sources"]))
             for forbidden_source_term in [
                 "teletravail",

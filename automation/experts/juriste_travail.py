@@ -454,7 +454,25 @@ def source_relevance_score(answer: dict[str, Any], source: dict[str, Any]) -> tu
     if "disciplinaire" in domains and "cse" in document and not has_any(context, ["sanction", "disciplinaire", "faute"]):
         score -= 40
         reasons.append("source CSE non determinante pour une sanction individuelle")
-    if "cse" in domains and not has_any(context, ["cse", "consultation", "information consultation", "reorganisation", "pv"]):
+    if "cse" in domains and not has_any(
+        context,
+        [
+            "cse",
+            "consultation",
+            "information consultation",
+            "reorganisation",
+            "restructuration",
+            "organisation du travail",
+            "organisation",
+            "effectif",
+            "poste",
+            "tache",
+            "horaire",
+            "charge",
+            "conditions de travail",
+            "pv",
+        ],
+    ):
         if score >= 42:
             score = 35
             reasons.append("utile pour le contexte d'impact, mais non determinante sur les droits CSE")
@@ -530,7 +548,7 @@ def depends_on_local_texts(answer: dict[str, Any]) -> list[str]:
         "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
         "Information manquante: articulation entre accord local, convention collective et norme superieure applicable.",
     ]
-    if "droit_syndical" in domains or "reunion" in query:
+    if "droit_syndical" in domains and "reunion" in query:
         items.extend(
             [
                 "Information manquante: statut exact du participant a la reunion CSE.",
@@ -1816,7 +1834,7 @@ def evidence_documents(answer: dict[str, Any]) -> list[str]:
                 "Calendrier de mise en oeuvre et mesures d'accompagnement.",
             ]
         )
-    if "droit_syndical" in domains or "reunion" in query:
+    if "droit_syndical" in domains and "reunion" in query:
         pieces.extend(
             [
                 "Convocation ou ordre du jour de la reunion CSE.",
@@ -1908,7 +1926,7 @@ def recommended_action(answer: dict[str, Any]) -> list[str]:
                 "Niveau 3: solliciter une regularisation ecrite si le pointage, le repos ou le bulletin ne correspondent pas aux sources.",
             ]
         )
-    elif "droit_syndical" in domains or "reunion" in query:
+    elif "droit_syndical" in domains and "reunion" in query:
         actions.extend(
             [
                 "Niveau 2: demander la base de traitement du temps de reunion et sa trace dans les compteurs.",
