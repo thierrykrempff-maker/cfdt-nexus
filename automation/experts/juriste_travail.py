@@ -482,6 +482,9 @@ def source_relevance_score(answer: dict[str, Any], source: dict[str, Any]) -> tu
     if not source.get("excerpt") and layer not in {"code_travail", "jurisprudence"}:
         score -= 4
         reasons.append("extrait absent ou faible")
+    if layer == "pratique_officielle" and score >= 24:
+        score = 23
+        reasons.append("aide explicative officielle conservee comme contexte, pas comme regle opposable")
     return score, unique(reasons, limit=5)
 
 
@@ -1062,6 +1065,11 @@ def source_rule_statement(source: dict[str, Any], answer: dict[str, Any]) -> str
     context = source_context_text(source)
     excerpt = str(source.get("excerpt") or "").strip()
     suffix = f" Extrait utile: {excerpt[:260]}" if excerpt else ""
+    if normalize(source.get("source_layer")) == "pratique_officielle":
+        return (
+            f"{label}: source officielle d'explication pratique utile pour reformuler ou orienter les demarches, "
+            f"mais elle ne remplace pas les sources juridiques opposables.{suffix}"
+        )
     if "astreinte" in domains and has_any(context, ["l3121-9", "astreinte"]):
         return (
             f"{label}: la source sert a distinguer la periode d'astreinte de l'intervention effective "

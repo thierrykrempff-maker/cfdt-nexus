@@ -33,6 +33,11 @@ try:
 except ImportError:  # pragma: no cover - diagnosed at runtime.
     judilibre = None
 
+try:
+    import cdtn_connector as cdtn
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    cdtn = None
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -63,6 +68,7 @@ SOURCE_LAYER_ORDER = [
     "code_travail",
     "jurisprudence",
     "prudhommes",
+    "pratique_officielle",
     "pratique",
     "autre",
 ]
@@ -73,6 +79,7 @@ SOURCE_LAYER_LABELS = {
     "code_travail": "Code du travail",
     "jurisprudence": "Jurisprudence",
     "prudhommes": "Prud'hommes",
+    "pratique_officielle": "Explication pratique officielle",
     "pratique": "Points pratiques",
     "autre": "Autres sources",
 }
@@ -81,6 +88,7 @@ SOURCE_LAYER_ABSENT_MESSAGES = {
     "code_travail": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
     "jurisprudence": "Jurisprudence absente du socle documentaire local actuel.",
     "prudhommes": "Decisions prud'homales absentes du socle documentaire local actuel.",
+    "pratique_officielle": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
     "pratique": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
 }
 
@@ -1256,6 +1264,8 @@ def source_layer_for_source(source: dict[str, Any]) -> str:
         return "jurisprudence"
     if "prudhom" in doc_type and ("decision" in doc_type or "jugement" in doc_type):
         return "prudhommes"
+    if "pratique_officielle" in doc_type or "explication pratique officielle" in document:
+        return "pratique_officielle"
     if any(marker in document for marker in ["bulletin", "guide", "calendrier", "horaires", "annexe", "communication", "kit pedagogique"]):
         return "pratique"
     return "autre"
@@ -1295,6 +1305,10 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         source.get("resume_court"),
         source.get("principle_summary"),
         source.get("judilibre_id"),
+        source.get("source_officielle"),
+        source.get("official_origin"),
+        source.get("content_type"),
+        source.get("url_or_id"),
     ]
     return {
         "document": source.get("document"),
@@ -1333,6 +1347,16 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "decision_text_length": source.get("decision_text_length"),
         "retrieved_at": source.get("retrieved_at"),
         "url": source.get("url"),
+        "url_or_id": source.get("url_or_id") or source.get("url"),
+        "title": source.get("title"),
+        "source_officielle": source.get("source_officielle"),
+        "official_origin": source.get("official_origin"),
+        "content_type": source.get("content_type"),
+        "updated_at": source.get("updated_at"),
+        "full_content_available": source.get("full_content_available"),
+        "content_access": source.get("content_access"),
+        "complementarity_with_legifrance": source.get("complementarity_with_legifrance"),
+        "contradiction_risk": source.get("contradiction_risk"),
         "excerpt": excerpt,
         "chunk_id": source.get("chunk_id"),
         "ranking_reasons": ranking_reasons[:8],
@@ -1403,6 +1427,8 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
     query = normalize(route.get("query", ""))
     context = source_context(source)
     base = source_base_score(source) * 0.08
+    if source.get("source_layer") == "pratique_officielle":
+        base = min(source_base_score(source) * 0.01, 8)
     score = base
 
     query_hits = [token for token in significant_tokens(query) if token in significant_tokens(context)]
@@ -1422,6 +1448,23 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
                 score += penalty
 
     document = normalize(str(source.get("document") or ""))
+    if source.get("source_layer") == "pratique_officielle":
+        practice_body = normalize(
+            " ".join(
+                str(source.get(key) or "")
+                for key in ["document", "title", "summary", "excerpt", "source_officielle", "official_origin"]
+            )
+        )
+        if "astreinte" in query and "astreinte" in practice_body:
+            score += 18
+        elif "astreinte" in query:
+            score -= 35
+        if "cse" in query and "cse" not in practice_body and "comite social" not in practice_body:
+            score -= 18
+        if "prime" in query and not any(term in practice_body for term in ["prime", "salaire", "remuneration", "bulletin"]):
+            score -= 16
+        if "modeles de documents" in document or "modele de lettre" in context:
+            score -= 18
     if "astreinte" in domains and "accord astreinte" in document:
         score += 45
     if "temps_travail" in domains and ("5x8" in document or "35 h" in document or "35h" in document):
@@ -1472,6 +1515,10 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 4
     if source.get("origin") == "judilibre_jurisprudence":
         score += 4
+    if source.get("origin") == "cdtn_pratique_officielle":
+        score += 3
+    if source.get("source_layer") == "pratique_officielle":
+        score += 6
     if source.get("origin") == "bible_accords" and route.get("engines") == ["bible_accords"]:
         score += 4
 
@@ -1532,7 +1579,8 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             if len(selected) >= minimum_sources:
                 break
 
-    for required_layer in ["code_travail", "jurisprudence"]:
+    protected_layers = {"code_travail", "jurisprudence", "convention_collective"}
+    for required_layer in ["convention_collective", "code_travail", "jurisprudence"]:
         if any(source.get("source_layer") == required_layer for source in ranked) and not any(
             source.get("source_layer") == required_layer for source in selected
         ):
@@ -1540,15 +1588,47 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             if len(selected) < limit:
                 selected.append(layer_source)
             elif selected:
+                preferred_replace_layers = {"pratique_officielle", "pratique", "autre"}
                 replace_at = next(
                     (
                         index
                         for index in range(len(selected) - 1, -1, -1)
-                        if selected[index].get("source_layer") not in {"code_travail", "jurisprudence"}
+                        if selected[index].get("source_layer") in preferred_replace_layers
                     ),
-                    len(selected) - 1,
+                    None,
                 )
+                if replace_at is None:
+                    replace_at = next(
+                        (
+                            index
+                            for index in range(len(selected) - 1, -1, -1)
+                            if selected[index].get("source_layer") not in protected_layers
+                        ),
+                        len(selected) - 1,
+                    )
                 selected[replace_at] = layer_source
+
+    practice_sources = [source for source in ranked if source.get("source_layer") == "pratique_officielle"]
+    selected_keys = {source_key(source) for source in selected}
+    for practice_source in practice_sources[:2]:
+        key = source_key(practice_source)
+        if key in selected_keys:
+            continue
+        if len(selected) < limit:
+            selected.append(practice_source)
+            selected_keys.add(key)
+            continue
+        replace_at = next(
+            (
+                index
+                for index in range(len(selected) - 1, -1, -1)
+                if selected[index].get("source_layer") in {"pratique", "autre"}
+            ),
+            None,
+        )
+        if replace_at is not None:
+            selected[replace_at] = practice_source
+            selected_keys.add(key)
 
     return [clean_source(source) for source in selected[:limit]]
 
@@ -1760,6 +1840,41 @@ def needs_jurisprudence(query: str, domains: list[str], intents: list[str]) -> b
     return bool(re.search(r"jurisprudence|cour de cassation|arret|pourvoi|decision", text))
 
 
+def needs_pratique_officielle(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    practical_domains = {
+        "disciplinaire",
+        "temps_travail",
+        "astreinte",
+        "paie_remuneration",
+        "conges_payes",
+        "cse",
+        "inaptitude_reclassement",
+        "classification_carriere",
+    }
+    if any(domain in domains for domain in practical_domains):
+        return True
+    if any(
+        intent in intents
+        for intent in [
+            "analyser_situation_individuelle",
+            "analyser_paie",
+            "preparer_cse",
+            "preparer_negociation",
+            "construire_argumentaire",
+            "demander_documents",
+        ]
+    ):
+        return True
+    return bool(
+        re.search(
+            r"sanction|entretien|heures? supplementaires?|astreinte|repos|prime|salaire|"
+            r"conges?|rupture|harcelement|accident du travail|cse|reorganisation",
+            text,
+        )
+    )
+
+
 def judilibre_status_from_env() -> dict[str, Any]:
     if judilibre is None:
         return {
@@ -1783,6 +1898,24 @@ def judilibre_status_from_env() -> dict[str, Any]:
     }
 
 
+def cdtn_status_from_env() -> dict[str, Any]:
+    if cdtn is None:
+        return {
+            "detected": False,
+            "available": False,
+            "reason": "connecteur Code du travail numerique absent",
+        }
+    config = cdtn.CdtnConfig.from_env()
+    return {
+        "detected": True,
+        "available": True,
+        "api_base_url": config.api_base_url,
+        "cache_dir": str(config.cache_dir),
+        "cache_ignored_by_git": "local-index" in config.cache_dir.parts,
+        "reason": "connecteur Code du travail numerique configure: acces public sans secret",
+    }
+
+
 def engine_status() -> dict[str, dict[str, Any]]:
     chunks_path = bible.INDEX_DIR / "chunks.private.jsonl"
     chunks = bible.read_jsonl(chunks_path) if chunks_path.exists() else []
@@ -1792,6 +1925,7 @@ def engine_status() -> dict[str, dict[str, Any]]:
         "reason": "connecteur Legifrance absent",
     }
     judilibre_status = judilibre_status_from_env()
+    cdtn_status = cdtn_status_from_env()
     return {
         "bible_accords": {
             "available": bool(chunks),
@@ -1842,6 +1976,10 @@ def engine_status() -> dict[str, dict[str, Any]]:
                 else "connecteur JUDILIBRE non configure: jurisprudence non alimentee"
             ),
         },
+        "pratique_officielle": {
+            **cdtn_status,
+            "path": str(SCRIPT_DIR / "cdtn_connector.py"),
+        },
     }
 
 
@@ -1891,6 +2029,13 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 "Jurisprudence non alimentee : connecteur JUDILIBRE non configure ou indisponible. "
                 "Aucune decision n'est inventee."
             )
+    if needs_pratique_officielle(query, domains, intents):
+        if status["pratique_officielle"]["available"]:
+            engines.append("pratique_officielle")
+        else:
+            warnings.append(
+                "Explication pratique officielle non alimentee : connecteur Code du travail numerique indisponible."
+            )
 
     engines = dedupe(engines)
     plan = []
@@ -1924,6 +2069,14 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 {
                     "engine": engine,
                     "action": "rechercher des decisions Cour de cassation via l'API officielle JUDILIBRE",
+                    "status": "connected",
+                }
+            )
+        elif engine == "pratique_officielle":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher 1 ou 2 contenus explicatifs officiels via le Code du travail numerique",
                     "status": "connected",
                 }
             )
@@ -2686,6 +2839,54 @@ def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any], orig
         answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
 
 
+def cdtn_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
+    text = normalize(query)
+    domains = set(route.get("domains", []))
+    if "disciplinaire" in domains or re.search(r"sanction|entretien disciplinaire|procedure disciplinaire", text):
+        return "sanction disciplinaire entretien prealable", "Sanction disciplinaire"
+    if "astreinte" in domains or "astreinte" in text:
+        if "repos" in text or "reprend" in text or "intervention" in text:
+            return "astreinte repos intervention", "Astreinte et repos"
+        return "astreinte salarie", "Astreinte"
+    if "paie_remuneration" in domains and re.search(r"heures? supplementaires?|majoration|bulletin", text):
+        return "heures supplementaires majoration bulletin", "Heures supplementaires"
+    if "paie_remuneration" in domains and re.search(r"prime|salaire|remuneration", text):
+        return "prime remuneration salaire bulletin", "Salaire et primes"
+    if "conges_payes" in domains or "conge" in text:
+        return "conges payes salarie", "Conges"
+    if "cse" in domains and re.search(r"reorganisation|suppression de postes?|changement .*horaires?|consultation", text):
+        return "CSE reorganisation consultation conditions de travail", "CSE et reorganisation"
+    if "cse" in domains:
+        return "CSE droits consultation", "Droits du CSE"
+    if "inaptitude_reclassement" in domains:
+        return "inaptitude reclassement salarie", "Inaptitude et reclassement"
+    if "classification_carriere" in domains:
+        return "classification convention collective emploi qualification", "Classification professionnelle"
+    if "temps_travail" in domains and re.search(r"dimanche|repos hebdomadaire", text):
+        return "travail dimanche repos compensateur", "Travail du dimanche"
+    if "temps_travail" in domains and "repos" in text:
+        return "repos quotidien temps de travail", "Repos quotidien"
+    if re.search(r"rupture|licenciement|demission", text):
+        return "rupture contrat travail salarie", "Rupture du contrat"
+    if re.search(r"harcelement|accident du travail", text):
+        return query, "Sante au travail"
+    return query, "Explication pratique officielle"
+
+
+def merge_cdtn_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    accepted_count = 0
+    for source in result.get("sources", [])[:2]:
+        normalized = normalize_source(source, "cdtn_pratique_officielle")
+        if normalized.get("source_layer") != "pratique_officielle":
+            continue
+        answer["sources"].append(normalized)
+        accepted_count += 1
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("Pratique officielle: " + str(warning))
+    if result.get("available") and not accepted_count:
+        answer["warnings"].append("Pratique officielle: aucun contenu explicatif officiel pertinent retenu.")
+
+
 def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
     text = normalize(query)
     domains = set(route.get("domains", []))
@@ -2924,6 +3125,14 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {exc}")
 
+    if "pratique_officielle" in route["engines"] and cdtn is not None:
+        try:
+            client = cdtn.CdtnClient()
+            search_query, theme = cdtn_query_for_route(query, route)
+            merge_cdtn_result(answer, client.search_sources(search_query, limit=2, theme=theme))
+        except Exception as exc:  # pragma: no cover - public network boundary.
+            answer["warnings"].append(f"Pratique officielle indisponible: {exc}")
+
     return finalize_answer(answer, source_limit)
 
 
@@ -2999,6 +3208,26 @@ def format_answer_text(answer: dict[str, Any]) -> str:
                 lines.append(f"{label} : {layer.get('absent_message') or 'Aucune source remontee.'}")
         return lines
 
+    def pratique_officielle_lines() -> list[str]:
+        sources = [
+            source
+            for source in answer.get("sources", [])
+            if isinstance(source, dict) and source.get("source_layer") == "pratique_officielle"
+        ][:2]
+        lines = ["", "EXPLICATION PRATIQUE OFFICIELLE :"]
+        if not sources:
+            lines.append("- Aucune explication pratique officielle pertinente retenue.")
+            return lines
+        for source in sources:
+            title = source.get("title") or source.get("document") or "Explication pratique officielle"
+            organism = source.get("source_officielle") or source.get("official_origin") or "Code du travail numerique"
+            reference = source.get("url_or_id") or source.get("url") or source.get("official_id") or "reference non fournie"
+            excerpt = compact_text(source.get("excerpt") or source.get("summary") or "")[:360]
+            lines.append(f"- {title} | {organism} | {reference}")
+            if excerpt:
+                lines.append(f"  En pratique: {excerpt}")
+        return lines
+
     def grouped_lines(section: str, key: str, fallback: list[str]) -> list[str]:
         if not answer.get("issue_groups"):
             return ["", section, *list_or_dash(fallback)]
@@ -3029,6 +3258,7 @@ def format_answer_text(answer: dict[str, Any]) -> str:
         answer["working_position"],
     ]
     lines.extend(source_layer_lines())
+    lines.extend(pratique_officielle_lines())
     lines.extend(grouped_lines("Ce qu'il faut verifier :", "findings", answer["findings"]))
     lines.extend(grouped_lines("Documents a recuperer :", "documents", answer["documents_to_request"]))
     lines.extend(grouped_lines("Questions a poser :", "questions", answer["questions_to_ask"]))
@@ -3071,6 +3301,7 @@ def diagnose() -> dict[str, Any]:
         "veille_juridique": status["veille_juridique"],
         "legifrance_code_travail": status["legifrance_code_travail"],
         "judilibre_jurisprudence": status["judilibre_jurisprudence"],
+        "pratique_officielle": status["pratique_officielle"],
         "corpus_local_configured": source_config.exists(),
         "source_config_path": str(source_config),
         "local_index_ignored": local_index_ignored,
@@ -3095,6 +3326,7 @@ def format_diagnose_text(report: dict[str, Any]) -> str:
         f"Veille juridique : {report['veille_juridique']['reason']}",
         f"Legifrance Code du travail : {report['legifrance_code_travail']['reason']}",
         f"JUDILIBRE jurisprudence : {report['judilibre_jurisprudence']['reason']}",
+        f"Pratique officielle CDTN : {report['pratique_officielle']['reason']}",
         f"Corpus local configure : {'oui' if report['corpus_local_configured'] else 'non'}",
         f"local-index/ ignore par Git : {'oui' if report['local_index_ignored'] else 'non'}",
         "Modules connectes : " + ", ".join(report["connected_modules"]),

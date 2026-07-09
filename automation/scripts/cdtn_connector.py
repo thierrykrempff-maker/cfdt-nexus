@@ -247,9 +247,11 @@ class CdtnClient:
             if source_key not in accepted_sources:
                 continue
             normalized.append(normalize_hit(hit, cleaned_query, theme, self.config.api_base_url))
-            if len(dedupe_sources(normalized)) >= max(1, limit):
-                break
-        normalized = dedupe_sources(normalized)[: max(1, limit)]
+        normalized = sorted(
+            dedupe_sources(normalized),
+            key=lambda source: practical_relevance_score(source, cleaned_query, theme),
+            reverse=True,
+        )[: max(1, limit)]
         warnings = endpoint_warnings(normalized, include_orientation)
         return {
             "available": True,
@@ -514,6 +516,67 @@ def assess_result(query: str, sources: list[dict[str, Any]]) -> dict[str, Any]:
         "contradiction_risk": "maitrise si affichee comme couche pratique distincte",
         "topic_gap": topic_gap,
     }
+
+
+def practical_relevance_score(source: dict[str, Any], query: str, theme: str | None = None) -> float:
+    title = normalize_text(source.get("title") or source.get("document"))
+    summary = normalize_text(source.get("summary") or source.get("excerpt"))
+    source_key = normalize_text(source.get("source_key"))
+    text = f"{title} {summary}"
+    terms = topic_terms(query, theme)
+    score = float(source.get("score") or 0) / 1000
+    for term in terms:
+        if term in title:
+            score += 12
+        elif term in summary:
+            score += 5
+    if source_key in {"fiches_service_public", "fiches_ministere_travail", "contributions"}:
+        score += 2
+    if "modeles de documents" in title or "modele de lettre" in summary:
+        score -= 18
+    if "astreinte" in normalize_text(query) and "astreinte" not in text:
+        score -= 10
+    if "cse" in normalize_text(query) and "cse" not in text and "comite social" not in text:
+        score -= 10
+    if "prime" in normalize_text(query) and not any(term in text for term in ["prime", "salaire", "remuneration", "bulletin"]):
+        score -= 8
+    return score
+
+
+def topic_terms(query: str, theme: str | None = None) -> list[str]:
+    raw_terms = re.split(r"[^a-zA-Z0-9]+", normalize_text(f"{query} {theme or ''}"))
+    stopwords = {
+        "a",
+        "au",
+        "aux",
+        "de",
+        "des",
+        "du",
+        "et",
+        "la",
+        "le",
+        "les",
+        "un",
+        "une",
+        "en",
+        "mon",
+        "ma",
+        "mes",
+        "je",
+        "j",
+        "qui",
+        "que",
+        "dans",
+        "pour",
+        "avec",
+        "travail",
+        "salarie",
+    }
+    return [
+        term
+        for term in dict.fromkeys(raw_terms)
+        if len(term) >= 4 and term not in stopwords
+    ][:10]
 
 
 def average_score(sources: list[dict[str, Any]]) -> float | None:

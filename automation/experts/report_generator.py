@@ -152,6 +152,10 @@ def source_items(answer: dict[str, Any], orchestration: dict[str, Any]) -> list[
                 parts.append(f"recupere le {source['retrieved_at']}")
             if source.get("source_quality_warning"):
                 parts.append(str(source["source_quality_warning"]))
+            if source.get("source_officielle"):
+                parts.append(f"organisme {source['source_officielle']}")
+            if source.get("url_or_id"):
+                parts.append(f"url/id {source['url_or_id']}")
             if source.get("excerpt"):
                 parts.append("extrait: " + str(source["excerpt"]))
             values.append(" | ".join(parts))
@@ -172,6 +176,32 @@ def source_layer_items(answer: dict[str, Any]) -> list[str]:
         else:
             values.append(f"{label}: {layer.get('absent_message') or 'Aucune source remontee.'}")
     return text_items(values)
+
+
+def pratique_officielle_items(answer: dict[str, Any]) -> list[str]:
+    values: list[str] = []
+    sources = [
+        source
+        for source in answer.get("sources", [])
+        if isinstance(source, dict) and source.get("source_layer") == "pratique_officielle"
+    ][:2]
+    for source in sources:
+        title = source.get("title") or source.get("document") or "Explication pratique officielle"
+        organism = source.get("source_officielle") or source.get("official_origin") or "Code du travail numerique"
+        updated = source.get("updated_at") or "date de mise a jour non fournie par /api/presearch"
+        reference = source.get("url_or_id") or source.get("url") or source.get("official_id") or "identifiant non fourni"
+        excerpt = str(source.get("excerpt") or source.get("summary") or "").strip()
+        warning = source.get("source_quality_warning") or (
+            "Contenu utilise comme explication pratique, sans remplacer accords, convention, Code du travail ni jurisprudence."
+        )
+        values.append(f"{title} - organisme: {organism}.")
+        values.append(f"{title} - mise a jour: {updated}; URL ou identifiant: {reference}.")
+        if excerpt:
+            values.append(f"En pratique, la source officielle explique que: {excerpt[:520]}")
+        values.append(f"Limite: {warning}")
+    if not values:
+        values.append("Aucune explication pratique officielle pertinente n'a ete retenue pour cette question.")
+    return text_items(values, limit=10)
 
 
 def business_mode_summary(orchestration: dict[str, Any], juriste: dict[str, Any]) -> list[str]:
@@ -392,6 +422,7 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
         section("questions_direction", "Questions a poser a la direction", collected["questions_direction"]),
         section("position", "Position de travail", orchestration.get("position_de_travail") or answer.get("working_position")),
         section("conclusion", "Conclusion provisoire", provisional_conclusion(orchestration)),
+        section("pratique_officielle", "EXPLICATION PRATIQUE OFFICIELLE", pratique_officielle_items(answer)),
         section("source_layers", "Sources par niveau juridique", source_layer_items(answer)),
         section("sources", "Sources reellement remontees par Nexus", source_items(answer, orchestration)),
         section("confiance", "Niveau de confiance", orchestration.get("niveau_de_confiance") or answer.get("confidence")),
@@ -402,6 +433,7 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
         "juriste": juriste_section(juriste),
         "paie": paie_section(paie_expert),
     }
+    flow = generated_from(answer, juriste, paie_expert)
     report = {
         "version": REPORT_VERSION,
         "title": title,
@@ -413,7 +445,7 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
             "paie_active": active(paie_expert),
             "mode_metier_principal": orchestration.get("mode_metier_principal") or juriste.get("mode_metier_principal"),
         },
-        "generated_from": generated_from(juriste, paie_expert),
+        "generated_from": flow,
         "sections": sections,
         "expert_sections": expert_sections,
     }
@@ -421,12 +453,17 @@ def build_report(payload: dict[str, Any]) -> dict[str, Any]:
     return report
 
 
-def generated_from(juriste: dict[str, Any], paie_expert: dict[str, Any]) -> list[str]:
+def generated_from(answer: dict[str, Any], juriste: dict[str, Any], paie_expert: dict[str, Any]) -> list[str]:
     steps = [
         "apps/nexus-local-interface/server.py: analyze_question",
         "automation/scripts/assistant_ds_router.py: ask --format json",
-        "automation/experts/orchestrator.py: orchestrate",
     ]
+    if any(
+        isinstance(source, dict) and source.get("source_layer") == "pratique_officielle"
+        for source in answer.get("sources", [])
+    ):
+        steps.append("automation/scripts/cdtn_connector.py: search_sources")
+    steps.append("automation/experts/orchestrator.py: orchestrate")
     if active(juriste):
         steps.append("automation/experts/juriste_travail.py: enrich")
     if active(paie_expert):
