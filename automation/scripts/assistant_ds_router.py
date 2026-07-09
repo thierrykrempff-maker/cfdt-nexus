@@ -2005,6 +2005,7 @@ def understanding_for(route: dict[str, Any]) -> str:
 
 def default_documents(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
+    query = normalize(route.get("query", ""))
     documents: list[str] = []
     if "classification_carriere" in domains:
         documents.extend(
@@ -2039,7 +2040,11 @@ def default_documents(route: dict[str, Any]) -> list[str]:
                 "parametrage logiciel et periode a controler",
             ]
         )
-    if "temps_travail" in domains and "preparer_cse" in route["intents"]:
+    if (
+        "temps_travail" in domains
+        and "preparer_cse" in route["intents"]
+        and re.search(r"reduction du repos|reduire le repos|reduisant le repos|repos entre|repos a 9|repos 9|derogation .*repos", query)
+    ):
         documents.extend(
             [
                 "projet ecrit complet",
@@ -2048,6 +2053,15 @@ def default_documents(route: dict[str, Any]) -> list[str]:
                 "planning actuel et planning projete",
                 "evaluation des impacts fatigue et sante",
                 "garanties de prevention, compensation et suivi",
+            ]
+        )
+    elif "temps_travail" in domains and "preparer_cse" in route["intents"]:
+        documents.extend(
+            [
+                "projet ecrit complet",
+                "tableau comparatif avant/apres de l'organisation",
+                "planning actuel et planning projete",
+                "analyse d'impact sur effectifs, horaires, charge et conditions de travail",
             ]
         )
     if "astreinte" in domains:
@@ -2100,6 +2114,7 @@ def default_documents(route: dict[str, Any]) -> list[str]:
 
 def default_questions(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
+    query = normalize(route.get("query", ""))
     questions: list[str] = []
     if "classification_carriere" in domains:
         questions.extend(
@@ -2125,13 +2140,25 @@ def default_questions(route: dict[str, Any]) -> list[str]:
                 "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
             ]
         )
-    if "temps_travail" in domains and "preparer_cse" in route["intents"]:
+    if (
+        "temps_travail" in domains
+        and "preparer_cse" in route["intents"]
+        and re.search(r"reduction du repos|reduire le repos|reduisant le repos|repos entre|repos a 9|repos 9|derogation .*repos", query)
+    ):
         questions.extend(
             [
                 "Quelle base juridique ou conventionnelle autoriserait la reduction du repos ?",
                 "Quelle comparaison avant/apres des horaires et repos est communiquee au CSE ?",
                 "Quels impacts fatigue, travail de nuit et securite ont ete evalues ?",
                 "Quelles garanties de prevention, compensation et suivi sont proposees ?",
+            ]
+        )
+    elif "temps_travail" in domains and "preparer_cse" in route["intents"]:
+        questions.extend(
+            [
+                "Quelle comparaison avant/apres de l'organisation et des horaires est communiquee au CSE ?",
+                "Quels impacts sur effectifs, charge, competences et conditions de travail ont ete evalues ?",
+                "Quelles mesures d'accompagnement, de prevention et de suivi sont proposees ?",
             ]
         )
     if "astreinte" in domains:
@@ -2178,6 +2205,7 @@ def default_questions(route: dict[str, Any]) -> list[str]:
 def default_findings(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
     intents = set(route["intents"])
+    query = normalize(route.get("query", ""))
     findings: list[str] = []
 
     if mandate_meeting_query(route.get("query", "")):
@@ -2248,12 +2276,24 @@ def default_findings(route: dict[str, Any]) -> list[str]:
                 "Aucun calcul fiable ne peut etre produit sans bulletin et regle applicable.",
             ]
         )
-    elif "temps_travail" in domains and "preparer_cse" in intents:
+    elif (
+        "temps_travail" in domains
+        and "preparer_cse" in intents
+        and re.search(r"reduction du repos|reduire le repos|reduisant le repos|repos entre|repos a 9|repos 9|derogation .*repos", query)
+    ):
         findings.extend(
             [
                 "Verifier la regle de repos applicable et les derogations eventuelles.",
                 "Comparer la situation actuelle et le projet poste par poste ou cycle par cycle.",
                 "Evaluer les impacts fatigue, travail de nuit, securite et compensations.",
+            ]
+        )
+    elif "temps_travail" in domains and "preparer_cse" in intents:
+        findings.extend(
+            [
+                "Comparer la situation actuelle et le projet poste par poste, equipe par equipe ou horaire par horaire.",
+                "Evaluer les impacts sur effectifs, charge, competences, organisation du travail et conditions de travail.",
+                "Demander les indicateurs et mesures de suivi avant toute position CSE.",
             ]
         )
     elif "temps_travail" in domains:
@@ -2299,11 +2339,21 @@ def build_working_position(route: dict[str, Any], findings: list[str], engine_re
             "Objectiver l'ecart entre la classification actuelle et les fonctions reellement exercees "
             "avant de demander un reexamen motive du coefficient."
         )
-    if "temps_travail" in domains and "preparer_cse" in intents:
+    if (
+        "temps_travail" in domains
+        and "preparer_cse" in intents
+        and re.search(r"reduction du repos|reduire le repos|reduisant le repos|repos entre|repos a 9|repos 9|derogation .*repos", normalize(route.get("query", "")))
+    ):
         return (
             "Ne pas accepter une reduction du repos sans projet ecrit, base juridique precise, "
             "comparaison avant/apres, evaluation des impacts sur la fatigue et garanties de prevention "
             "et de compensation."
+        )
+    if "temps_travail" in domains and "preparer_cse" in intents:
+        return (
+            "Ne pas traiter la reorganisation comme un simple ajustement d'horaires: demander le projet ecrit, "
+            "le comparatif avant/apres, les impacts sur effectifs, taches, charge et conditions de travail, "
+            "puis faire acter les reponses et reserves au proces-verbal."
         )
     if "inaptitude_reclassement" in domains:
         return (
