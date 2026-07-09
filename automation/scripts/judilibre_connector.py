@@ -44,6 +44,8 @@ DEFAULT_TIMEOUT_SECONDS = 20
 DEFAULT_CACHE_TTL_SECONDS = 24 * 60 * 60
 DEFAULT_SCOPE = "openid"
 JUDILIBRE_LABEL = "JUDILIBRE"
+DEFENSE_DEFAULT_LIMIT = 2
+DEFENSE_MIN_SCORE = 34
 
 SCENARIOS: list[dict[str, str]] = [
     {"id": "astreinte_repos", "query": "astreinte repos", "theme": "Astreinte et repos"},
@@ -255,6 +257,10 @@ class JudilibreClient:
         cached = self._read_response_cache(cache_key)
         if cached is not None:
             return cached
+        if not self.config.configured:
+            cached_by_query = self._find_cached_search_by_query(cleaned_query)
+            if cached_by_query is not None:
+                return cached_by_query[:page_size]
 
         payload = self._get_json("/search", {"query": cleaned_query, "page_size": page_size})
         hits = payload.get("results") if isinstance(payload, dict) else []
@@ -279,36 +285,50 @@ class JudilibreClient:
         self._write_response_cache(cache_key, source)
         return source
 
-    def search_sources(self, query: str, limit: int = 3, theme: str | None = None) -> dict[str, Any]:
+    def search_sources(self, query: str, limit: int = DEFENSE_DEFAULT_LIMIT, theme: str | None = None) -> dict[str, Any]:
         try:
-            hits = self.search_decision_hits(query, limit=max(limit, 3))
-            sources: list[dict[str, Any]] = []
+            retention_limit = max(1, min(limit, DEFENSE_DEFAULT_LIMIT))
+            hits = self.search_decision_hits(query, limit=max(retention_limit * 4, 6))
+            candidates: list[dict[str, Any]] = []
             warnings: list[str] = []
             for hit in hits:
                 if theme and not hit.get("theme"):
                     hit["theme"] = theme
                 try:
-                    sources.append(self.decision_source(str(hit["official_id"]), hit))
+                    candidates.append(self.decision_source(str(hit["official_id"]), hit))
                 except JudilibreError as exc:
                     warnings.append(str(exc))
-                    sources.append(hit)
-                if len(sources) >= limit:
-                    break
+                    candidates.append(hit)
             if not hits:
                 warnings.append("JUDILIBRE: aucune decision remontee pour cette recherche.")
+            selected = select_defense_decisions(candidates, query, theme, retention_limit)
+            if any(source.get("cache_stale") for source in candidates):
+                warnings.append(
+                    "JUDILIBRE: decisions issues du cache local officiel car l'API n'est pas configuree dans ce processus."
+                )
+            if candidates and not selected["retained"]:
+                warnings.append("JUDILIBRE: aucune decision juridiquement assez proche n'a ete retenue.")
             return {
                 "available": True,
-                "sources": sources,
+                "sources": selected["retained"],
+                "rejected_sources": selected["rejected"],
+                "candidate_count": len(candidates),
                 "warnings": warnings,
                 "search_hits": len(hits),
+                "query": query,
+                "theme": theme,
                 "endpoints": self.used_endpoints(),
             }
         except JudilibreError as exc:
             return {
                 "available": False,
                 "sources": [],
+                "rejected_sources": [],
+                "candidate_count": 0,
                 "warnings": [str(exc)],
                 "search_hits": 0,
+                "query": query,
+                "theme": theme,
                 "endpoints": self.used_endpoints(),
             }
 
@@ -384,8 +404,10 @@ class JudilibreClient:
         if not item:
             return None
         if float(item.get("expires_at", 0)) <= time.time():
-            return None
-        return item.get("value")
+            if self.config.configured:
+                return None
+            return mark_stale_cache(item.get("value"), item)
+        return mark_fresh_cache(item.get("value"), item)
 
     def _write_response_cache(self, key: str, value: Any) -> None:
         cache = read_json_file(self.response_cache_path) or {}
@@ -395,6 +417,29 @@ class JudilibreClient:
             "value": value,
         }
         write_json_file(self.response_cache_path, cache)
+
+    def _find_cached_search_by_query(self, query: str) -> list[dict[str, Any]] | None:
+        cache = read_json_file(self.response_cache_path) or {}
+        normalized_query = normalize_text(query)
+        matches: list[tuple[str, list[dict[str, Any]]]] = []
+        for item in cache.values():
+            value = item.get("value") if isinstance(item, dict) else None
+            if not isinstance(value, list):
+                continue
+            first_query = None
+            for entry in value:
+                if isinstance(entry, dict) and entry.get("query"):
+                    first_query = entry.get("query")
+                    break
+            if normalize_text(first_query) != normalized_query:
+                continue
+            marked = mark_stale_cache(value, item)
+            if isinstance(marked, list):
+                matches.append((str(item.get("stored_at") or ""), marked))
+        if not matches:
+            return None
+        matches.sort(key=lambda row: row[0], reverse=True)
+        return matches[0][1]
 
 
 def normalize_search_hit(hit: dict[str, Any], query: str) -> dict[str, Any]:
@@ -479,6 +524,398 @@ def merge_search_context(source: dict[str, Any], search_hit: dict[str, Any] | No
     if not merged.get("ranking_reasons"):
         merged["ranking_reasons"] = search_hit.get("ranking_reasons", [])
     return merged
+
+
+def mark_fresh_cache(value: Any, item: dict[str, Any]) -> Any:
+    return mark_cache_value(value, item, stale=False)
+
+
+def mark_stale_cache(value: Any, item: dict[str, Any]) -> Any:
+    return mark_cache_value(value, item, stale=True)
+
+
+def mark_cache_value(value: Any, item: dict[str, Any], stale: bool) -> Any:
+    stored_at = item.get("stored_at")
+    if isinstance(value, list):
+        return [mark_cache_value(entry, item, stale) if isinstance(entry, dict) else entry for entry in value]
+    if isinstance(value, dict):
+        marked = dict(value)
+        marked["cache_stale"] = stale
+        marked["cache_stored_at"] = stored_at
+        marked["cache_source"] = "local-index/judilibre/responses.private.json"
+        return marked
+    return value
+
+
+def select_defense_decisions(
+    candidates: list[dict[str, Any]],
+    query: str,
+    theme: str | None,
+    limit: int,
+) -> dict[str, list[dict[str, Any]]]:
+    scored: list[dict[str, Any]] = []
+    for index, source in enumerate(candidates, start=1):
+        audit = defense_relevance(source, query, theme)
+        scored.append(enrich_decision_for_defense(source, audit, index))
+
+    scored = sorted(
+        scored,
+        key=lambda item: (
+            float(item.get("jurisprudence_relevance_score") or 0),
+            str(item.get("decision_date") or ""),
+        ),
+        reverse=True,
+    )
+    retained: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for source in scored:
+        official_id = str(source.get("official_id") or source.get("judilibre_id") or "").strip()
+        if official_id and official_id in seen:
+            source["exclusion_reason"] = "doublon de decision deja retenue ou analysee"
+            rejected.append(safe_rejected_source(source))
+            continue
+        if source.get("defense_retained") and len(retained) < limit:
+            retained.append(source)
+            if official_id:
+                seen.add(official_id)
+        else:
+            if not source.get("exclusion_reason"):
+                source["exclusion_reason"] = (
+                    "decision moins utile que les decisions retenues pour cette question"
+                    if len(retained) >= limit
+                    else "pertinence metier insuffisante"
+                )
+            rejected.append(safe_rejected_source(source))
+    return {"retained": retained, "rejected": rejected}
+
+
+def defense_relevance(source: dict[str, Any], query: str, theme: str | None) -> dict[str, Any]:
+    profile = query_profile(query, theme)
+    text = decision_context_text(source)
+    title = normalize_text(source.get("document"))
+    summary_text = normalize_text(
+        " ".join(
+            str(source.get(key) or "")
+            for key in ["summary", "resume_court", "principle_summary", "solution", "excerpt", "theme"]
+        )
+    )
+    score = 0
+    reasons: list[str] = []
+    limits: list[str] = []
+
+    notion_hits = [term for term in profile["notions"] if term in text]
+    fact_hits = [term for term in profile["facts"] if term in text]
+    dispute_hits = [term for term in profile["litige"] if term in text]
+    if notion_hits:
+        score += min(28, len(notion_hits) * 9)
+        reasons.append("meme notion juridique: " + ", ".join(notion_hits[:4]))
+    if fact_hits:
+        score += min(22, len(fact_hits) * 7)
+        reasons.append("faits proches: " + ", ".join(fact_hits[:4]))
+    if dispute_hits:
+        score += min(18, len(dispute_hits) * 6)
+        reasons.append("type de litige proche: " + ", ".join(dispute_hits[:3]))
+    if profile["core"] and any(term in title or term in summary_text for term in profile["core"]):
+        score += 12
+        reasons.append("question juridique proche du coeur du dossier")
+
+    chamber = normalize_text(source.get("chamber"))
+    if "social" in chamber:
+        score += 8
+        reasons.append("chambre sociale")
+    else:
+        limits.append("chambre non sociale ou non determinee")
+
+    case_number = clean_text_value(source.get("case_number"))
+    if case_number:
+        score += 6
+        reasons.append("numero de pourvoi present")
+    else:
+        limits.append("numero de pourvoi absent")
+
+    year = decision_year(source.get("decision_date"))
+    if year is None:
+        limits.append("date non determinee")
+    elif year >= 2010:
+        score += 6
+        reasons.append(f"decision recente ou encore utile a verifier: {year}")
+    elif year >= 2000:
+        score += 2
+        limits.append(f"decision ancienne a contextualiser: {year}")
+    else:
+        score -= 4
+        limits.append(f"decision tres ancienne a justifier avant utilisation: {year}")
+
+    if has_exploitable_solution(source):
+        score += 10
+        reasons.append("solution ou resume exploitable")
+    else:
+        score -= 12
+        limits.append("solution non identifiable dans les donnees disponibles")
+
+    if source.get("decision_text_length"):
+        score += 5
+        reasons.append("texte complet recupere")
+    else:
+        limits.append("texte complet non disponible dans cette reponse")
+
+    official_id = clean_text_value(source.get("official_id") or source.get("judilibre_id"))
+    if not official_id:
+        score -= 20
+        limits.append("identifiant officiel absent")
+
+    retained = score >= DEFENSE_MIN_SCORE and bool(official_id) and has_exploitable_solution(source)
+    exclusion = None if retained else "; ".join(limits[:3]) or "pertinence metier insuffisante"
+    return {
+        "score": round(score, 2),
+        "retained": retained,
+        "reasons": unique_text(reasons, limit=8),
+        "limits": unique_text(limits, limit=8),
+        "exclusion_reason": exclusion,
+        "profile": profile,
+    }
+
+
+def enrich_decision_for_defense(source: dict[str, Any], audit: dict[str, Any], candidate_rank: int) -> dict[str, Any]:
+    enriched = dict(source)
+    profile = audit.get("profile") or {}
+    excerpt = short_excerpt(
+        source.get("summary")
+        or source.get("resume_court")
+        or source.get("principle_summary")
+        or source.get("solution")
+        or source.get("excerpt"),
+        700,
+    )
+    non_determined = "non determine a partir des donnees disponibles"
+    enriched.update(
+        {
+            "candidate_rank": candidate_rank,
+            "jurisprudence_relevance_score": audit["score"],
+            "defense_retained": audit["retained"],
+            "selection_reasons": audit["reasons"],
+            "selection_limits": audit["limits"],
+            "exclusion_reason": audit["exclusion_reason"],
+            "question_juridique": profile.get("question") or non_determined,
+            "faits_utiles": source.get("faits_utiles") or non_determined,
+            "position_salarie_representants": source.get("position_salarie_representants") or non_determined,
+            "position_employeur": source.get("position_employeur") or non_determined,
+            "solution_retenue": decision_solution_text(source, excerpt) or non_determined,
+            "principe_apport_utile": excerpt or non_determined,
+            "ressemblance_avec_dossier": defense_similarity(profile, audit),
+            "difference_avec_dossier": defense_differences(audit),
+            "utilite_defense": defense_use(profile, audit),
+            "limite_utilisation": defense_limit(source, audit),
+        }
+    )
+    ranking = list(enriched.get("ranking_reasons") or [])
+    ranking.extend(audit["reasons"])
+    if audit["limits"]:
+        ranking.append("Limites selection: " + "; ".join(audit["limits"][:3]))
+    enriched["ranking_reasons"] = unique_text(ranking, limit=10)
+    return enriched
+
+
+def safe_rejected_source(source: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "official_id": source.get("official_id") or source.get("judilibre_id"),
+        "document": source.get("document"),
+        "juridiction": source.get("juridiction"),
+        "chamber": source.get("chamber"),
+        "decision_date": source.get("decision_date"),
+        "case_number": source.get("case_number"),
+        "theme": source.get("theme"),
+        "jurisprudence_relevance_score": source.get("jurisprudence_relevance_score"),
+        "exclusion_reason": source.get("exclusion_reason"),
+        "selection_reasons": source.get("selection_reasons", []),
+    }
+
+
+def decision_solution_text(source: dict[str, Any], excerpt: str | None) -> str | None:
+    solution = clean_text_value(source.get("solution"))
+    if solution and len(solution) > 30:
+        return solution
+    if solution and excerpt:
+        return f"{solution}: {excerpt}"
+    return solution or excerpt
+
+
+def query_profile(query: str, theme: str | None = None) -> dict[str, Any]:
+    text = normalize_text(f"{query} {theme or ''}")
+    profiles = [
+        (
+            "astreinte",
+            {
+                "question": "Effets d'une intervention d'astreinte sur le repos, le temps de travail et la remuneration.",
+                "core": ["astreinte"],
+                "notions": ["astreinte", "intervention", "temps de travail effectif", "repos"],
+                "facts": ["nuit", "intervention", "repos", "reprise", "appel"],
+                "litige": ["salaire", "remuneration", "heures supplementaires", "repos compensateur"],
+            },
+        ),
+        (
+            "sanction",
+            {
+                "question": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+                "core": ["sanction", "disciplinaire", "faute"],
+                "notions": ["sanction", "disciplinaire", "faute", "procedure", "entretien prealable"],
+                "facts": ["erreur", "formation", "consigne", "procedure", "preuve"],
+                "litige": ["licenciement", "mise a pied", "avertissement", "grief"],
+            },
+        ),
+        (
+            "classification",
+            {
+                "question": "Comparaison entre fonctions reellement exercees, qualification et classification applicable.",
+                "core": ["classification", "qualification", "fonctions"],
+                "notions": ["classification", "coefficient", "qualification", "fonctions", "emploi"],
+                "facts": ["fonctions", "responsabilite", "autonomie", "fiche de poste", "emploi occupe"],
+                "litige": ["rappel de salaire", "classification", "coefficient"],
+            },
+        ),
+        (
+            "cse",
+            {
+                "question": "Droits d'information-consultation du CSE et preuve des impacts collectifs.",
+                "core": ["cse", "consultation", "information"],
+                "notions": ["cse", "comite social", "consultation", "information", "reorganisation"],
+                "facts": ["suppression de poste", "horaires", "conditions de travail", "reorganisation", "effectif"],
+                "litige": ["consultation", "expertise", "entrave", "information"],
+            },
+        ),
+        (
+            "prime",
+            {
+                "question": "Droit au paiement d'une prime, d'une remuneration variable ou d'heures dues.",
+                "core": ["prime", "salaire", "remuneration", "heures supplementaires"],
+                "notions": ["prime", "salaire", "remuneration", "variable", "heures supplementaires", "majoration"],
+                "facts": ["bulletin", "objectif", "temps de travail", "pointage", "paiement"],
+                "litige": ["rappel de salaire", "paiement", "creance salariale"],
+            },
+        ),
+    ]
+    for marker, profile in profiles:
+        if marker in text or any(term in text for term in profile["core"]):
+            return profile
+    terms = significant_terms(text)
+    return {
+        "question": "Portee utile de la decision pour le dossier Nexus.",
+        "core": terms[:4],
+        "notions": terms[:6],
+        "facts": terms[:6],
+        "litige": terms[:4],
+    }
+
+
+def decision_context_text(source: dict[str, Any]) -> str:
+    return normalize_text(
+        " ".join(
+            str(source.get(key) or "")
+            for key in [
+                "document",
+                "theme",
+                "summary",
+                "resume_court",
+                "principle_summary",
+                "solution",
+                "excerpt",
+                "decision_type",
+                "publication",
+                "chamber",
+                "query",
+            ]
+        )
+    )
+
+
+def has_exploitable_solution(source: dict[str, Any]) -> bool:
+    marker = "resume officiel non fourni"
+    values = [
+        clean_text_value(source.get("solution")),
+        clean_text_value(source.get("summary")),
+        clean_text_value(source.get("resume_court")),
+        clean_text_value(source.get("principle_summary")),
+        clean_text_value(source.get("excerpt")),
+    ]
+    return any(value and len(value) >= 80 and marker not in normalize_text(value) for value in values)
+
+
+def decision_year(value: Any) -> int | None:
+    match = re.search(r"(19|20)\d{2}", str(value or ""))
+    return int(match.group(0)) if match else None
+
+
+def defense_similarity(profile: dict[str, Any], audit: dict[str, Any]) -> list[str]:
+    values = []
+    if audit.get("reasons"):
+        values.extend(str(reason) for reason in audit["reasons"][:3])
+    if not values and profile.get("question"):
+        values.append("Question rapprochee: " + str(profile["question"]))
+    return values or ["non determine a partir des donnees disponibles"]
+
+
+def defense_differences(audit: dict[str, Any]) -> list[str]:
+    values = list(audit.get("limits") or [])
+    values.append("Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation.")
+    return unique_text(values, limit=5)
+
+
+def defense_use(profile: dict[str, Any], audit: dict[str, Any]) -> str:
+    question = str(profile.get("question") or "le dossier")
+    if audit.get("retained"):
+        return (
+            "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur "
+            + question
+        )
+    return "Decision non retenue comme appui principal de defense."
+
+
+def defense_limit(source: dict[str, Any], audit: dict[str, Any]) -> str:
+    limits = list(audit.get("limits") or [])
+    if source.get("cache_stale"):
+        limits.append("decision lue depuis le cache local: verifier la version live JUDILIBRE avant production externe")
+    if not limits:
+        limits.append("decision isolee: ne pas la presenter comme jurisprudence constante sans verification complementaire")
+    return "; ".join(unique_text(limits, limit=4))
+
+
+def significant_terms(text: str) -> list[str]:
+    stopwords = {
+        "avec",
+        "dans",
+        "pour",
+        "apres",
+        "avant",
+        "comme",
+        "comment",
+        "quels",
+        "quelle",
+        "salari",
+        "salarie",
+        "employeur",
+        "direction",
+        "travail",
+    }
+    terms = re.split(r"[^a-z0-9]+", normalize_text(text))
+    return [term for term in dict.fromkeys(terms) if len(term) >= 4 and term not in stopwords]
+
+
+def unique_text(values: Iterable[Any], limit: int | None = None) -> list[str]:
+    result: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        text = str(value or "").strip()
+        if not text:
+            continue
+        key = normalize_text(text)
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(text)
+        if limit is not None and len(result) >= limit:
+            break
+    return result
 
 
 def excerpt_from_hit(hit: dict[str, Any]) -> str:
@@ -624,6 +1061,9 @@ def safe_source_sample(source: dict[str, Any]) -> dict[str, Any]:
         "decision_date": source.get("decision_date"),
         "case_number": source.get("case_number"),
         "official_id": source.get("official_id"),
+        "jurisprudence_relevance_score": source.get("jurisprudence_relevance_score"),
+        "selection_reasons": source.get("selection_reasons", []),
+        "limite_utilisation": source.get("limite_utilisation"),
         "decision_text_length": source.get("decision_text_length"),
         "retrieved_at": source.get("retrieved_at"),
     }
@@ -663,10 +1103,40 @@ def format_text(payload: dict[str, Any]) -> str:
             "Decision test : "
             + " | ".join(str(value) for value in source.values() if value not in (None, ""))
         )
+    if payload.get("query"):
+        lines.append(f"Requete : {payload['query']}")
+        lines.append(f"Candidats : {payload.get('candidate_count', 0)}")
+        lines.append(f"Decisions retenues : {payload.get('source_count', 0)}")
+        for source in payload.get("sources", [])[:2]:
+            lines.append(
+                "- retenue : "
+                + " | ".join(
+                    str(value)
+                    for value in [
+                        source.get("official_id"),
+                        source.get("document"),
+                        source.get("jurisprudence_relevance_score"),
+                    ]
+                    if value not in (None, "")
+                )
+            )
+        for source in payload.get("rejected_sources", [])[:4]:
+            lines.append(
+                "- ecartee : "
+                + " | ".join(
+                    str(value)
+                    for value in [
+                        source.get("official_id"),
+                        source.get("jurisprudence_relevance_score"),
+                        source.get("exclusion_reason"),
+                    ]
+                    if value not in (None, "")
+                )
+            )
     if payload.get("scenario_results"):
         for row in payload["scenario_results"]:
             lines.append(
-                f"- {row['id']} : {row['source_count']} decision(s), "
+                f"- {row['id']} : {row.get('candidate_count', 0)} candidat(s), {row['source_count']} decision(s), "
                 + ", ".join(item.get("official_id") or "id absent" for item in row.get("sources", [])[:2])
             )
     return "\n".join(lines)
@@ -674,10 +1144,14 @@ def format_text(payload: dict[str, Any]) -> str:
 
 def command_diagnose(_args: argparse.Namespace) -> dict[str, Any]:
     config = JudilibreConfig.from_env()
+    cache_path = config.cache_dir / "responses.private.json"
+    cache_available = cache_path.exists() and cache_path.stat().st_size > 0
     return {
-        "ok": config.configured,
+        "ok": config.configured or cache_available,
         "configuration": safe_configuration(config),
         "endpoints": JudilibreClient(config).used_endpoints(),
+        "cache_available": cache_available,
+        "api_configured": config.configured,
         "notice": "Aucun secret ni token n'est affiche par cette commande.",
     }
 
@@ -723,8 +1197,10 @@ def command_search(args: argparse.Namespace) -> dict[str, Any]:
         "configuration": safe_configuration(client.config),
         "endpoints": client.used_endpoints(),
         "query": args.query,
+        "candidate_count": result.get("candidate_count", 0),
         "source_count": len(result.get("sources", [])),
         "sources": result.get("sources", []),
+        "rejected_sources": result.get("rejected_sources", []),
         "warnings": result.get("warnings", []),
     }
 
@@ -760,8 +1236,10 @@ def command_run_scenarios(args: argparse.Namespace) -> dict[str, Any]:
                 "query": scenario["query"],
                 "theme": scenario["theme"],
                 "ok": bool(result.get("available") and sources),
+                "candidate_count": result.get("candidate_count", 0),
                 "source_count": len(sources),
                 "sources": [safe_source_sample(source) for source in sources[: args.limit]],
+                "rejected_sources": result.get("rejected_sources", []),
                 "warnings": result.get("warnings", []),
             }
         )

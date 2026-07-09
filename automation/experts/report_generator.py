@@ -67,8 +67,11 @@ def defense_argument_items(argumentation: dict[str, Any] | Any) -> list[str]:
     mapping = [
         ("Argument principal salarie", "argument_principal_salarie"),
         ("Arguments complementaires", "arguments_complementaires"),
+        ("Appui jurisprudentiel", "appui_jurisprudentiel"),
         ("Argument probable employeur", "argument_probable_employeur"),
+        ("Argument employeur sur jurisprudence", "argument_probable_employeur_jurisprudence"),
         ("Reponse a l'employeur", "reponse_argument_employeur"),
+        ("Contre-argument jurisprudence", "contre_argument_jurisprudence"),
         ("Faiblesse du dossier", "faiblesse_du_dossier"),
         ("Preuve decisive", "preuve_pouvant_faire_basculer"),
         ("Preuve prioritaire", "preuve_prioritaire"),
@@ -86,12 +89,32 @@ def jurisprudence_analysis_items(items: list[dict[str, Any]] | Any) -> list[str]
             values.append(str(item))
             continue
         decision = item.get("decision") or "Decision"
+        meta = " | ".join(
+            str(value)
+            for value in [
+                item.get("juridiction"),
+                item.get("chambre"),
+                item.get("date"),
+                "pourvoi " + str(item.get("numero_pourvoi")) if item.get("numero_pourvoi") else None,
+            ]
+            if value
+        )
+        if meta:
+            values.append(f"{decision} - identification: {meta}")
         values.append(f"{decision} - question: {item.get('question_juridique')}")
+        values.append(f"{decision} - faits utiles: {item.get('faits_utiles')}")
+        values.append(f"{decision} - position salarie/representants: {item.get('position_salarie_representants')}")
+        values.append(f"{decision} - position employeur: {item.get('position_employeur')}")
         values.append(f"{decision} - solution/apport: {item.get('solution')}")
+        values.append(f"{decision} - principe/apport utile: {item.get('principe_ou_apport_utile')}")
         values.append(f"{decision} - apport defense: {item.get('apport_reel_a_la_defense')}")
-        for diff in as_list(item.get("difference_a_verifier"))[:2]:
+        for resemblance in as_list(item.get("ressemblance_avec_dossier"))[:2]:
+            values.append(f"{decision} - ressemblance dossier: {resemblance}")
+        for diff in as_list(item.get("difference_avec_dossier") or item.get("difference_a_verifier"))[:2]:
             values.append(f"{decision} - difference a verifier: {diff}")
-    return text_items(values, limit=18)
+        if item.get("limite_utilisation"):
+            values.append(f"{decision} - limite: {item.get('limite_utilisation')}")
+    return text_items(values, limit=36)
 
 
 def strip_known_prefix(value: Any) -> str:

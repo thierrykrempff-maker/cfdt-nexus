@@ -107,6 +107,17 @@ def is_pure_pay_control(answer: dict[str, Any]) -> bool:
 def applies(answer: dict[str, Any]) -> bool:
     domains = route_domains(answer)
     query = answer.get("query", "")
+    has_jurisprudence = any(
+        isinstance(source, dict) and normalize(source.get("source_layer")) == "jurisprudence"
+        for source in answer.get("sources", [])
+    )
+    if is_pure_pay_control(answer) and not has_any(
+        query,
+        ["defendre", "defense", "contester", "contestation", "construire le dossier", "construire", "argument"],
+    ):
+        return False
+    if has_jurisprudence:
+        return True
     if is_pure_pay_control(answer):
         return False
     if domains & JURISTE_DOMAINS:
@@ -360,6 +371,12 @@ def source_context_text(source: dict[str, Any]) -> str:
                 source.get("summary"),
                 source.get("resume_court"),
                 source.get("principle_summary"),
+                source.get("question_juridique"),
+                source.get("solution_retenue"),
+                source.get("principe_apport_utile"),
+                source.get("utilite_defense"),
+                source.get("selection_reasons"),
+                source.get("selection_limits"),
                 source.get("theme"),
                 source.get("ranking_reasons"),
             ]
@@ -427,6 +444,9 @@ def source_relevance_score(answer: dict[str, Any], source: dict[str, Any]) -> tu
     elif layer == "jurisprudence":
         score += 14
         reasons.append("decision officielle utile pour l'interpretation")
+        if source.get("jurisprudence_relevance_score") is not None:
+            score += min(24, int(float(source.get("jurisprudence_relevance_score") or 0) / 3))
+            reasons.append("score JUDILIBRE defense pris en compte")
     elif layer in {"pratique_officielle", "pratique"}:
         score += 4
         reasons.append("source explicative ou pratique")
@@ -911,6 +931,7 @@ def retained_jurisprudence_analysis(
 ) -> list[dict[str, Any]]:
     analyses: list[dict[str, Any]] = []
     for source in litigation_sources(answer, selection):
+        non_determined = "non determine a partir des donnees disponibles"
         excerpt = str(
             source.get("summary")
             or source.get("resume_court")
@@ -922,19 +943,32 @@ def retained_jurisprudence_analysis(
         analyses.append(
             {
                 "decision": decision_reference(source),
-                "question_juridique": jurisprudence_question_for_answer(answer),
-                "faits_pertinents": (
-                    "Faits isoles par Nexus: " + str(first_source_value(source, ["faits", "facts", "faits_etablis"]))
-                    if first_source_value(source, ["faits", "facts", "faits_etablis"])
-                    else "Nexus ne dispose pas de faits detailles isoles; comparer avec prudence a partir de l'extrait."
+                "juridiction": source.get("juridiction") or non_determined,
+                "chambre": source.get("chamber") or non_determined,
+                "date": source.get("decision_date") or non_determined,
+                "numero_pourvoi": source.get("case_number") or non_determined,
+                "question_juridique": source.get("question_juridique") or jurisprudence_question_for_answer(answer),
+                "faits_utiles": source.get("faits_utiles") or non_determined,
+                "position_salarie_representants": source.get("position_salarie_representants") or non_determined,
+                "position_employeur": source.get("position_employeur") or non_determined,
+                "solution": source.get("solution_retenue") or excerpt[:700] or non_determined,
+                "principe_ou_apport_utile": source.get("principe_apport_utile") or excerpt[:700] or non_determined,
+                "ressemblance_avec_dossier": as_text_list(
+                    source.get("ressemblance_avec_dossier"),
+                    "non determine a partir des donnees disponibles",
                 ),
-                "solution": excerpt[:700] if excerpt else "Solution non isolee dans les metadonnees Nexus.",
-                "ressemblance_avec_dossier": litigation_similarity(answer, source),
-                "difference_a_verifier": [
-                    "Verifier si les horaires, la preuve, le statut du salarie et la source applicable sont comparables.",
-                    "Verifier la portee procedurale de la decision et son eventuelle confirmation, infirmation ou cassation.",
-                ],
-                "apport_reel_a_la_defense": jurisprudence_use_for_defense(answer, source),
+                "difference_avec_dossier": as_text_list(
+                    source.get("difference_avec_dossier"),
+                    "Comparer les faits exacts avant utilisation.",
+                ),
+                "difference_a_verifier": as_text_list(
+                    source.get("difference_avec_dossier"),
+                    "Verifier si les faits, preuves et textes applicables sont comparables.",
+                ),
+                "apport_reel_a_la_defense": source.get("utilite_defense") or jurisprudence_use_for_defense(answer, source),
+                "limite_utilisation": source.get("limite_utilisation") or source.get("source_quality_warning") or non_determined,
+                "score_pertinence_defense": source.get("jurisprudence_relevance_score"),
+                "raisons_selection": source.get("selection_reasons", []),
                 "statut_procedural": procedural_status(source),
             }
         )
@@ -950,19 +984,43 @@ def adversarial_litigation_analysis(
     for source in litigation_sources(answer, selection):
         employee_args = first_source_value(
             source,
-            ["argumentation_salarie", "arguments_salarie", "demandes_salarie", "employee_arguments", "claimant_arguments"],
+            [
+                "position_salarie_representants",
+                "argumentation_salarie",
+                "arguments_salarie",
+                "demandes_salarie",
+                "employee_arguments",
+                "claimant_arguments",
+            ],
         )
         employer_args = first_source_value(
             source,
-            ["argumentation_employeur", "arguments_employeur", "defense_employeur", "employer_arguments", "defendant_arguments"],
+            [
+                "position_employeur",
+                "argumentation_employeur",
+                "arguments_employeur",
+                "defense_employeur",
+                "employer_arguments",
+                "defendant_arguments",
+            ],
         )
         judge_reasoning = first_source_value(
             source,
-            ["raisonnement_juge", "motifs", "principle_summary", "summary", "resume_court", "solution", "excerpt"],
+            [
+                "solution_retenue",
+                "principe_apport_utile",
+                "raisonnement_juge",
+                "motifs",
+                "principle_summary",
+                "summary",
+                "resume_court",
+                "solution",
+                "excerpt",
+            ],
         )
-        facts = first_source_value(source, ["faits", "facts", "faits_etablis"])
+        facts = first_source_value(source, ["faits_utiles", "faits", "facts", "faits_etablis"])
         proof = first_source_value(source, ["preuves_determinantes", "proof", "evidence", "elements_preuve"])
-        result = first_source_value(source, ["resultat", "solution", "decision_type", "publication"])
+        result = first_source_value(source, ["solution_retenue", "resultat", "solution", "decision_type", "publication"])
         analyses.append(
             {
                 "decision": decision_reference(source),
@@ -1069,6 +1127,13 @@ def source_rule_statement(source: dict[str, Any], answer: dict[str, Any]) -> str
         return (
             f"{label}: source officielle d'explication pratique utile pour reformuler ou orienter les demarches, "
             f"mais elle ne remplace pas les sources juridiques opposables.{suffix}"
+        )
+    if normalize(source.get("source_layer")) == "jurisprudence":
+        apport = source.get("principe_apport_utile") or source.get("solution_retenue") or source.get("summary") or source.get("excerpt")
+        return (
+            f"{label}: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; "
+            f"elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables."
+            + (f" Apport: {str(apport)[:260]}" if apport else suffix)
         )
     if "astreinte" in domains and has_any(context, ["l3121-9", "astreinte"]):
         return (
@@ -1333,6 +1398,14 @@ def provisional_legal_conclusion(answer: dict[str, Any]) -> dict[str, str]:
                 "si les faits restent ponctuels ou non rattaches aux criteres conventionnels."
             ),
         }
+    if "paie_remuneration" in domains:
+        return {
+            "position": "incertaine mais defendable si les traces confirment la creance",
+            "pourquoi": (
+                "une demande de rappel de salaire, prime ou heures supplementaires repose d'abord sur les traces de temps, objectifs, bulletins et regles applicables; "
+                "les decisions retenues servent seulement d'appui de comparaison sur la preuve et le paiement."
+            ),
+        }
     return {
         "position": "incertaine",
         "pourquoi": "les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires.",
@@ -1379,6 +1452,11 @@ def argued_short_response(answer: dict[str, Any], conclusion: dict[str, str]) ->
             "La contestation est juridiquement defendable si les fonctions reellement exercees depassent durablement la fiche de poste et correspondent aux "
             "criteres d'un classement superieur. Le meilleur argument est un tableau fonctions reelles / criteres / preuves."
         )
+    if "paie_remuneration" in domains:
+        return (
+            "Le dossier paie est defendable si le salarie peut rapprocher une regle applicable, des traces fiables et le bulletin conteste. "
+            "Le meilleur argument est de presenter un tableau periode / heures ou prime dues / montant verse / source appliquee, puis d'utiliser la jurisprudence seulement comme appui de comparaison sur la preuve et le paiement."
+        )
     return short_response(answer)
 
 
@@ -1408,14 +1486,55 @@ def defense_argumentation_detail(answer: dict[str, Any], strategy: dict[str, Any
         proof = "Fiche de poste, missions reelles datees, preuves de responsabilite/autonomie et comparaison avec criteres de classification."
         weakness = "La faiblesse serait le caractere ponctuel ou non prouve des fonctions invoquees."
         tipping = "La preuve qui fait basculer: missions superieures exercees regulierement et reconnues dans des ecrits."
+    jurisprudence_support = jurisprudence_defense_support(answer)
     return {
         "argument_principal_salarie": strategy.get("argument_principal"),
         "arguments_complementaires": strategy.get("arguments_complementaires", []),
+        "appui_jurisprudentiel": jurisprudence_support["appui"],
         "argument_probable_employeur": strategy.get("position_probable_direction"),
+        "argument_probable_employeur_jurisprudence": jurisprudence_support["argument_direction"],
         "reponse_argument_employeur": strategy.get("contre_arguments", []),
+        "contre_argument_jurisprudence": jurisprudence_support["contre_argument"],
         "faiblesse_du_dossier": weakness,
         "preuve_pouvant_faire_basculer": tipping,
         "preuve_prioritaire": proof,
+    }
+
+
+def jurisprudence_defense_support(answer: dict[str, Any]) -> dict[str, list[str]]:
+    sources = [
+        source
+        for source in answer.get("sources", [])
+        if isinstance(source, dict) and normalize(source.get("source_layer")) == "jurisprudence"
+    ][:2]
+    appui: list[str] = []
+    argument_direction: list[str] = []
+    contre_argument: list[str] = []
+    for source in sources:
+        decision = decision_reference(source) or "Decision JUDILIBRE"
+        apport = source.get("utilite_defense") or source.get("principe_apport_utile") or source.get("solution_retenue")
+        if apport:
+            appui.append(f"Dans cette decision ({decision}), l'appui utile est: {str(apport)[:520]}")
+        else:
+            appui.append(f"Dans cette decision ({decision}), l'apport reste a verifier dans le texte complet.")
+        differences = as_text_list(
+            source.get("difference_avec_dossier"),
+            "La direction peut soutenir que les faits, les preuves ou le texte applicable different du dossier Nexus.",
+        )
+        argument_direction.extend(f"{decision}: {item}" for item in differences[:2])
+        contre_argument.append(
+            f"{decision}: utiliser la decision seulement comme comparaison factuelle et juridique, en la reliant aux pieces du dossier."
+        )
+    if not appui:
+        appui.append("Aucun appui jurisprudentiel suffisamment pertinent n'a ete retenu par Nexus pour cette question.")
+    if not argument_direction:
+        argument_direction.append("Aucun argument direction specifique issu d'une decision retenue n'est disponible.")
+    if not contre_argument:
+        contre_argument.append("Ne pas presenter une decision isolee comme jurisprudence constante.")
+    return {
+        "appui": unique(appui, limit=4),
+        "argument_direction": unique(argument_direction, limit=4),
+        "contre_argument": unique(contre_argument, limit=4),
     }
 
 

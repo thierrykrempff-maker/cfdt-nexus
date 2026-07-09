@@ -1305,6 +1305,13 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         source.get("resume_court"),
         source.get("principle_summary"),
         source.get("judilibre_id"),
+        source.get("question_juridique"),
+        source.get("solution_retenue"),
+        source.get("principe_apport_utile"),
+        source.get("utilite_defense"),
+        source.get("selection_reasons"),
+        source.get("selection_limits"),
+        source.get("exclusion_reason"),
         source.get("source_officielle"),
         source.get("official_origin"),
         source.get("content_type"),
@@ -1345,6 +1352,24 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "solution": source.get("solution"),
         "judilibre_id": source.get("judilibre_id"),
         "decision_text_length": source.get("decision_text_length"),
+        "candidate_rank": source.get("candidate_rank"),
+        "jurisprudence_relevance_score": source.get("jurisprudence_relevance_score"),
+        "defense_retained": source.get("defense_retained"),
+        "selection_reasons": source.get("selection_reasons", []),
+        "selection_limits": source.get("selection_limits", []),
+        "exclusion_reason": source.get("exclusion_reason"),
+        "question_juridique": source.get("question_juridique"),
+        "faits_utiles": source.get("faits_utiles"),
+        "position_salarie_representants": source.get("position_salarie_representants"),
+        "position_employeur": source.get("position_employeur"),
+        "solution_retenue": source.get("solution_retenue"),
+        "principe_apport_utile": source.get("principe_apport_utile"),
+        "ressemblance_avec_dossier": source.get("ressemblance_avec_dossier", []),
+        "difference_avec_dossier": source.get("difference_avec_dossier", []),
+        "utilite_defense": source.get("utilite_defense"),
+        "limite_utilisation": source.get("limite_utilisation"),
+        "cache_stale": source.get("cache_stale"),
+        "cache_stored_at": source.get("cache_stored_at"),
         "retrieved_at": source.get("retrieved_at"),
         "url": source.get("url"),
         "url_or_id": source.get("url_or_id") or source.get("url"),
@@ -1883,9 +1908,14 @@ def judilibre_status_from_env() -> dict[str, Any]:
             "reason": "connecteur JUDILIBRE absent",
         }
     config = judilibre.JudilibreConfig.from_env()
+    cache_path = config.cache_dir / "responses.private.json"
+    cache_available = cache_path.exists() and cache_path.stat().st_size > 0
+    available = config.configured or cache_available
     return {
         "detected": True,
-        "available": config.configured,
+        "available": available,
+        "api_configured": config.configured,
+        "cache_available": cache_available,
         "missing_variables": config.missing_variables,
         "api_base_url": config.api_base_url,
         "cache_dir": str(config.cache_dir),
@@ -1893,6 +1923,8 @@ def judilibre_status_from_env() -> dict[str, Any]:
         "reason": (
             "connecteur JUDILIBRE configure"
             if config.configured
+            else "connecteur JUDILIBRE non configure mais cache local officiel disponible"
+            if cache_available
             else "connecteur JUDILIBRE non configure: secrets attendus en variables d'environnement"
         ),
     }
@@ -1970,7 +2002,8 @@ def engine_status() -> dict[str, dict[str, Any]]:
         "judilibre_jurisprudence": {
             **judilibre_status,
             "path": str(SCRIPT_DIR / "judilibre_connector.py"),
-            "reason": (
+            "reason": judilibre_status.get("reason")
+            or (
                 "connecteur JUDILIBRE configure"
                 if judilibre_status.get("available")
                 else "connecteur JUDILIBRE non configure: jurisprudence non alimentee"
@@ -3022,21 +3055,53 @@ def merge_judilibre_result(answer: dict[str, Any], result: dict[str, Any]) -> No
     route = answer.get("route", {})
     accepted_count = 0
     rejected_count = 0
-    for source in result.get("sources", [])[:6]:
+    audit_row = {
+        "query": result.get("query"),
+        "theme": result.get("theme"),
+        "candidate_count": result.get("candidate_count") or result.get("search_hits") or 0,
+        "retained": [],
+        "rejected": result.get("rejected_sources", []),
+    }
+    for source in result.get("sources", [])[:2]:
         normalized = normalize_source(source, "judilibre_jurisprudence")
         quality_warning = judilibre_quality_warning(normalized, route)
-        if quality_warning:
+        relevance_score = float(normalized.get("jurisprudence_relevance_score") or 0)
+        if quality_warning and relevance_score < 45:
             rejected_count += 1
+            audit_row["rejected"].append(
+                {
+                    "official_id": normalized.get("official_id") or normalized.get("judilibre_id"),
+                    "document": normalized.get("document"),
+                    "jurisprudence_relevance_score": relevance_score,
+                    "exclusion_reason": quality_warning,
+                }
+            )
             continue
+        if quality_warning:
+            normalized["source_quality_warning"] = " ".join(
+                str(item)
+                for item in [normalized.get("source_quality_warning"), quality_warning]
+                if item
+            )
         answer["sources"].append(normalized)
+        audit_row["retained"].append(
+            {
+                "official_id": normalized.get("official_id") or normalized.get("judilibre_id"),
+                "document": normalized.get("document"),
+                "jurisprudence_relevance_score": normalized.get("jurisprudence_relevance_score"),
+                "selection_reasons": normalized.get("selection_reasons", []),
+            }
+        )
         accepted_count += 1
-        if accepted_count >= 3:
+        if accepted_count >= 2:
             break
+    answer.setdefault("jurisprudence_audit", []).append(audit_row)
     for warning in result.get("warnings", []):
         answer["warnings"].append("JUDILIBRE: " + str(warning))
-    if rejected_count:
+    rejected_total = rejected_count + len(result.get("rejected_sources", []))
+    if rejected_total:
         answer["warnings"].append(
-            f"JUDILIBRE: {rejected_count} decision(s) ecartee(s) car le theme ou l'extrait etait trop eloigne du dossier."
+            f"JUDILIBRE: {rejected_total} decision(s) ecartee(s) car la proximite juridique, les faits ou la portee etaient insuffisants."
         )
     if result.get("available") and not accepted_count:
         answer["warnings"].append("JUDILIBRE: aucune decision exploitable remontee par l'API.")
@@ -3091,6 +3156,7 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
         "findings": [],
         "documents_to_request": [],
         "questions_to_ask": [],
+        "jurisprudence_audit": [],
         "working_position": "",
         "next_action": "",
         "confidence": route["confidence"],
@@ -3121,7 +3187,7 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
         try:
             client = judilibre.JudilibreClient()
             search_query, theme = judilibre_query_for_route(query, route)
-            merge_judilibre_result(answer, client.search_sources(search_query, limit=3, theme=theme))
+            merge_judilibre_result(answer, client.search_sources(search_query, limit=2, theme=theme))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {exc}")
 
