@@ -9,6 +9,7 @@ import unicodedata
 import urllib.request
 
 from server import NexusHandler, ThreadingHTTPServer
+from experts import juriste_travail
 
 
 V2_QUESTIONS = [
@@ -18,6 +19,7 @@ V2_QUESTIONS = [
 ]
 
 V21_SCENARIOS = {
+    "classification_paie": "Un salarie pense etre mal classe car ses fonctions reelles depassent sa fiche de poste et il demande un rappel de salaire.",
     "juriste_seul": "Un salarié peut-il contester sa classification si les fonctions réellement exercées dépassent sa fiche de poste ?",
     "paie_seul": "Je pense qu’il manque des heures de nuit et une majoration dimanche sur mon bulletin. Que faut-il contrôler ?",
     "juriste_paie": "Un salarié d’astreinte intervient la nuit puis reprend son poste : repos et paie ?",
@@ -204,7 +206,46 @@ def assert_business_mode_payload(payload: dict[str, object], expected_mode: str)
     return analysis
 
 
+def assert_classification_jurisprudence_stays_complementary() -> None:
+    answer = {
+        "query": "classification rappel de salaire majoration bulletin",
+        "route": {"domains": ["classification_carriere", "paie_remuneration"]},
+        "sources": [
+            {
+                "document": "CCNIC IDCC 44 - classifications",
+                "source_layer": "convention_collective",
+                "document_type": "convention_collective",
+                "excerpt": "classification coefficient fonctions emploi grille conventionnelle",
+            },
+            {
+                "document": "Accord GEPP parcours professionnels",
+                "source_layer": "accord_entreprise",
+                "document_type": "accord_entreprise",
+                "excerpt": "classification emploi fonctions entretien parcours reexamen comparaison interne",
+            },
+            {
+                "document": "Cour de cassation - classification et rappel de salaire",
+                "source_layer": "jurisprudence",
+                "document_type": "jurisprudence",
+                "excerpt": "classification coefficient fonctions emploi majoration bulletin prime salaire heures supplementaires",
+                "jurisprudence_relevance_score": 72,
+            },
+        ],
+    }
+    selection = juriste_travail.source_selection(answer)
+    principal_layers = [item["source_layer"] for item in selection["source_principale"]]
+    complementary_layers = [item["source_layer"] for item in selection["source_complementaire"]]
+    assert principal_layers
+    assert principal_layers[0] == "convention_collective"
+    assert "convention_collective" in principal_layers
+    assert "accord_entreprise" not in principal_layers
+    assert "jurisprudence" not in principal_layers
+    assert "accord_entreprise" in complementary_layers
+    assert "jurisprudence" in complementary_layers
+
+
 def main() -> None:
+    assert_classification_jurisprudence_stays_complementary()
     server = ThreadingHTTPServer(("127.0.0.1", 0), NexusHandler)
     port = server.server_address[1]
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -251,6 +292,44 @@ def main() -> None:
             assert source["idcc"] == "44"
             assert source["version"] == "septembre 2013"
             assert source["excerpt"]
+        classification_selection = juriste_payload["expert_juriste"]["selection_juridique_sources"]
+        principal_layers = [item["source_layer"] for item in classification_selection["source_principale"]]
+        complementary_layers = [item["source_layer"] for item in classification_selection["source_complementaire"]]
+        assert principal_layers
+        assert principal_layers[0] == "convention_collective"
+        assert "convention_collective" in principal_layers
+        assert "accord_entreprise" not in principal_layers
+        assert "accord_entreprise" in complementary_layers
+        assert "jurisprudence" not in principal_layers
+        classification_rules = normalize(
+            " ".join(juriste_payload["expert_juriste"]["reponse_juridique_argumentee"]["regle_applicable"])
+        )
+        assert "grille principale" in classification_rules
+        assert "accord d'entreprise" in classification_rules
+
+        classification_paie_payload = post_json(
+            f"http://127.0.0.1:{port}/api/analyze",
+            {"query": V21_SCENARIOS["classification_paie"], "source_limit": 8},
+        )
+        assert_base_payload(classification_paie_payload)
+        mixed_classification_domains = classification_paie_payload["answer"]["route"]["domains"]
+        assert "classification_carriere" in mixed_classification_domains
+        assert "paie_remuneration" in mixed_classification_domains
+        mixed_classification_selection = classification_paie_payload["expert_juriste"]["selection_juridique_sources"]
+        mixed_principal_layers = [
+            item["source_layer"] for item in mixed_classification_selection["source_principale"]
+        ]
+        mixed_complementary_layers = [
+            item["source_layer"] for item in mixed_classification_selection["source_complementaire"]
+        ]
+        assert mixed_principal_layers
+        assert mixed_principal_layers[0] == "convention_collective"
+        assert "convention_collective" in mixed_principal_layers
+        assert "accord_entreprise" not in mixed_principal_layers
+        assert "accord_entreprise" in mixed_complementary_layers
+        assert "jurisprudence" not in mixed_principal_layers
+        if layer_sources(classification_paie_payload["answer"], "jurisprudence"):
+            assert "jurisprudence" in mixed_complementary_layers
 
         paie_payload = post_json(
             f"http://127.0.0.1:{port}/api/analyze",
