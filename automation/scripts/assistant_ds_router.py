@@ -2843,6 +2843,15 @@ def build_short_answer(answer: dict[str, Any]) -> str:
             "La question est incomplete : Nexus doit d'abord connaitre le libelle exact de la prime, la periode, "
             "le montant verse, le montant attendu et le bulletin concerne. Sans ces elements, il ne faut pas conclure ni chiffrer."
         )
+    if "classification_carriere" in domains:
+        layers = {source.get("source_layer") for source in answer.get("sources", []) if isinstance(source, dict)}
+        if {"accord_entreprise", "convention_collective"}.issubset(layers):
+            return (
+                "Oui, une contestation de classification peut se travailler si les fonctions reellement exercees depassent "
+                "durablement la fiche de poste. Nexus doit d'abord comparer ces fonctions aux criteres de la convention "
+                "collective, puis utiliser les accords d'entreprise comme appui local sur le parcours, les entretiens, "
+                "les comparaisons internes ou la demande de reexamen."
+            )
     if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains):
         if "astreinte" in source_docs:
             return (

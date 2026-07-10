@@ -464,12 +464,24 @@ def source_relevance_score(answer: dict[str, Any], source: dict[str, Any]) -> tu
     if "classification_carriere" in domains and has_any(context, ["classification", "coefficient", "fonctions", "emploi"]):
         score += 28
         reasons.append("cible directement la classification")
+        if layer == "convention_collective":
+            score += 34
+            reasons.append("grille conventionnelle prioritaire pour les criteres de classification")
+        elif layer == "accord_entreprise":
+            score += 8
+            reasons.append("accord local utile en complement de la grille conventionnelle")
+        elif layer == "jurisprudence":
+            score = min(score, 41)
+            reasons.append("jurisprudence utile seulement pour l'interpretation, pas comme grille principale")
     if "cse" in domains and has_any(context, ["cse", "consultation", "information", "reorganisation", "pv"]):
         score += 24
         reasons.append("cible directement le sujet CSE")
     if "paie_remuneration" in domains and has_any(context, ["majoration", "bulletin", "prime", "salaire", "heures supplementaires"]):
         score += 18
         reasons.append("utile pour le controle paie")
+    if "classification_carriere" in domains and layer == "jurisprudence" and score >= 42:
+        score = 41
+        reasons.append("jurisprudence complementaire: ne remplace pas la grille de classification")
 
     if "disciplinaire" in domains and "cse" in document and not has_any(context, ["sanction", "disciplinaire", "faute"]):
         score -= 40
@@ -530,7 +542,11 @@ def source_selection(answer: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
             "decision_id": source.get("judilibre_id") or source.get("official_id"),
             "source_ref": source,
         }
-        if score >= 42:
+        force_complementary = (
+            "classification_carriere" in route_domains(answer)
+            and normalize(source.get("source_layer")) in {"accord_entreprise", "jurisprudence"}
+        )
+        if score >= 42 and not force_complementary:
             buckets["source_principale"].append(selected)
         elif score >= 24:
             buckets["source_complementaire"].append(selected)
@@ -1151,6 +1167,17 @@ def source_rule_statement(source: dict[str, Any], answer: dict[str, Any]) -> str
     if "disciplinaire" in domains and has_any(context, ["sanction", "disciplinaire", "reglement interieur", "l1331", "l1332"]):
         return f"{label}: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite.{suffix}"
     if "classification_carriere" in domains and has_any(context, ["classification", "coefficient", "fonctions", "emploi"]):
+        layer = normalize(source.get("source_layer") or source.get("document_type"))
+        if layer == "convention_collective":
+            return (
+                f"{label}: la convention collective sert de grille principale pour comparer fonctions reelles, "
+                f"emploi, niveau ou coefficient applicable.{suffix}"
+            )
+        if layer == "accord_entreprise":
+            return (
+                f"{label}: l'accord d'entreprise sert a verifier les engagements locaux, parcours, entretiens, "
+                f"comparaisons internes ou modalites de reexamen, en complement de la grille conventionnelle.{suffix}"
+            )
         return f"{label}: la source sert a comparer les fonctions reelles, l'emploi ou le coefficient applicable.{suffix}"
     if "cse" in domains and has_any(context, ["cse", "consultation", "information", "reorganisation"]):
         return f"{label}: la source sert a qualifier l'information/consultation et les documents CSE attendus.{suffix}"
