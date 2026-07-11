@@ -343,6 +343,25 @@ DOMAIN_SOURCE_PENALTIES: dict[str, list[tuple[str, int]]] = {
     ],
 }
 
+LEGIFRANCE_QUERY_SYNONYMS: list[tuple[str, str]] = [
+    (r"heures? en plus", "heures supplementaires majoration"),
+    (r"pay(?:e|ee|ees|es)? .*heures? en plus|paiement .*heures? en plus", "remuneration heures supplementaires"),
+    (r"mise a pied|mettre a pied|mis a pied|suspension disciplinaire", "sanction disciplinaire"),
+    (r"temps de repos .*entre deux postes|repos .*entre deux postes", "repos quotidien onze heures"),
+    (r"changer .*coefficient|modifier .*coefficient", "classification conventionnelle coefficient"),
+    (r"prime panier", "prime panier indemnite panier"),
+]
+
+LEGIFRANCE_CONCEPT_TERMS: dict[str, list[str]] = {
+    "repos_quotidien": ["repos quotidien", "onze heures", "11 heures", "entre deux postes"],
+    "heures_supplementaires": ["heures supplementaires", "heures en plus"],
+    "discipline": ["sanction disciplinaire", "mise a pied", "mettre a pied", "mis a pied", "suspension disciplinaire", "disciplinaire", "entretien prealable"],
+    "classification": ["classification", "classification conventionnelle", "coefficient"],
+    "prime_panier": ["prime panier", "indemnite panier"],
+}
+
+LEGIFRANCE_WEAK_MATCH_TERMS = {"bulletin", "emploi", "fonction", "majoration", "paie", "poste", "prime", "remuneration", "salaire"}
+
 DOMAIN_ORDER = [
     "classification_carriere",
     "inaptitude_reclassement",
@@ -544,7 +563,8 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"\bsanction\b",
             r"entretien disciplinaire",
             r"\bavertissement\b",
-            r"mise a pied",
+            r"mise a pied|mettre a pied|mis a pied",
+            r"suspension disciplinaire",
             r"licenciement disciplinaire",
             r"\bconvoque\b",
             r"\bconvocation\b",
@@ -1397,6 +1417,7 @@ def normalize_source(source: dict[str, Any], origin: str) -> dict[str, Any]:
         "chunk_id": source.get("chunk_id"),
         "ranking_reasons": ranking_reasons[:8],
         "source_quality_warning": source.get("source_quality_warning"),
+        "legifrance_relevance_status": source.get("legifrance_relevance_status"),
         "_context": " ".join(str(part) for part in context_parts if part),
     }
 
@@ -1456,6 +1477,84 @@ def source_base_score(source: dict[str, Any]) -> float:
 def source_direct_relevance(source: dict[str, Any], domains: list[str]) -> int:
     context = source_context(source)
     return sum(weighted_term_score(context, DOMAIN_SOURCE_BOOSTS.get(domain, [])) for domain in domains)
+
+
+def expand_legifrance_query(query: str) -> str:
+    text = normalize(query)
+    additions = [replacement for pattern, replacement in LEGIFRANCE_QUERY_SYNONYMS if re.search(pattern, text)]
+    return " ".join([text, *additions])
+
+
+def legifrance_concepts(text: str) -> set[str]:
+    normalized = normalize(text)
+    return {
+        concept
+        for concept, terms in LEGIFRANCE_CONCEPT_TERMS.items()
+        if any(normalize(term) in normalized for term in terms)
+    }
+
+
+def legifrance_relevance_evaluation(source: dict[str, Any], route: dict[str, Any]) -> dict[str, Any]:
+    domains = business_domains(route)
+    query = expand_legifrance_query(route.get("query", ""))
+    context = source_context(source)
+    reasons: list[str] = []
+
+    if source.get("source_layer") != "code_travail":
+        return {
+            "accepted": False,
+            "score": 0,
+            "reasons": [],
+            "exclusion_reason": "source non rattachee a la couche Code du travail",
+        }
+
+    if source.get("source_quality_warning"):
+        reasons.append("avertissement technique: " + str(source["source_quality_warning"]))
+
+    shared_concepts = sorted(legifrance_concepts(query) & legifrance_concepts(context))
+    shared_terms = dedupe(
+        normalize(term)
+        for domain in domains
+        for term, _weight in DOMAIN_SOURCE_BOOSTS.get(domain, [])
+        if normalize(term) not in LEGIFRANCE_WEAK_MATCH_TERMS
+        and normalize(term) in query
+        and normalize(term) in context
+    )
+    score = 0
+    if shared_concepts:
+        concept_score = min(60, len(shared_concepts) * 40)
+        score += concept_score
+        reasons.append("concepts metier partages: " + ", ".join(shared_concepts) + f" (+{concept_score})")
+    if shared_terms:
+        term_score = min(36, len(shared_terms) * 12)
+        score += term_score
+        reasons.append("termes metier partages: " + ", ".join(shared_terms[:5]) + f" (+{term_score})")
+
+    try:
+        base_score = float(source.get("score") or source.get("match_score") or 0)
+    except (TypeError, ValueError):
+        base_score = 0
+    if base_score:
+        base_bonus = min(8, base_score * 0.05)
+        score += base_bonus
+        reasons.append(f"score connecteur pris en compte (+{round(base_bonus, 1)})")
+
+    has_business_match = bool(shared_concepts or shared_terms)
+    accepted = score >= 35 and has_business_match
+    return {
+        "accepted": accepted,
+        "score": round(score, 3),
+        "reasons": reasons,
+        "exclusion_reason": None if accepted else "pertinence insuffisante avec la question et les domaines detectes",
+    }
+
+
+def legifrance_source_is_retained(source: dict[str, Any]) -> bool:
+    if source.get("source_layer") != "code_travail":
+        return False
+    if source.get("origin") != "legifrance_code_travail":
+        return True
+    return source.get("legifrance_relevance_status") == "retained"
 
 
 def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> float:
@@ -1572,6 +1671,8 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
     unique: list[dict[str, Any]] = []
     seen: set[str] = set()
     for source in sources:
+        if source.get("origin") == "legifrance_code_travail" and not legifrance_source_is_retained(source):
+            continue
         key = source_key(source)
         if key and key in seen:
             continue
@@ -1617,10 +1718,13 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
 
     protected_layers = {"code_travail", "jurisprudence", "convention_collective"}
     for required_layer in ["convention_collective", "code_travail", "jurisprudence"]:
-        if any(source.get("source_layer") == required_layer for source in ranked) and not any(
+        layer_candidates = [source for source in ranked if source.get("source_layer") == required_layer]
+        if required_layer == "code_travail":
+            layer_candidates = [source for source in layer_candidates if legifrance_source_is_retained(source)]
+        if layer_candidates and not any(
             source.get("source_layer") == required_layer for source in selected
         ):
-            layer_source = next(source for source in ranked if source.get("source_layer") == required_layer)
+            layer_source = layer_candidates[0]
             if len(selected) < limit:
                 selected.append(layer_source)
             elif selected:
@@ -2892,12 +2996,69 @@ def merge_bridge_result(answer: dict[str, Any], report: dict[str, Any]) -> None:
 
 
 def merge_legifrance_result(answer: dict[str, Any], result: dict[str, Any], origin: str = "legifrance_code_travail") -> None:
-    for source in result.get("sources", [])[:5]:
-        answer["sources"].append(normalize_source(source, origin))
-    for warning in result.get("warnings", []):
-        answer["warnings"].append("Legifrance: " + str(warning))
-    if result.get("available") and not result.get("sources"):
+    route = answer.get("route", {})
+    raw_sources = result.get("sources", []) or []
+    raw_warnings = [str(warning) for warning in result.get("warnings", []) if warning]
+    audit_row = {
+        "attempted": True,
+        "available": bool(result.get("available")),
+        "sources_received": len(raw_sources),
+        "sources_retained": 0,
+        "rejected_sources": [],
+        "status": "retained",
+        "warnings": list(raw_warnings),
+        "error": result.get("error"),
+    }
+
+    if not result.get("available"):
+        audit_row["status"] = "api_error"
+        audit_row["error"] = audit_row["error"] or "; ".join(raw_warnings) or "connecteur Legifrance indisponible"
+        answer.setdefault("legifrance_audit", []).append(audit_row)
+        for warning in raw_warnings or [audit_row["error"]]:
+            answer["warnings"].append("Legifrance: " + str(warning))
+        return
+
+    if not raw_sources:
+        audit_row["status"] = "empty"
+        answer.setdefault("legifrance_audit", []).append(audit_row)
+        for warning in raw_warnings:
+            answer["warnings"].append("Legifrance: " + warning)
         answer["warnings"].append("Legifrance: aucun article du Code du travail exploitable remonte par l'API.")
+        return
+
+    accepted_count = 0
+    for source in raw_sources[:5]:
+        normalized = normalize_source(source, origin)
+        evaluation = legifrance_relevance_evaluation(normalized, route)
+        normalized["legifrance_relevance_status"] = "retained" if evaluation["accepted"] else "rejected"
+        if not evaluation["accepted"]:
+            audit_row["rejected_sources"].append(
+                {
+                    "official_id": normalized.get("official_id") or normalized.get("legifrance_id"),
+                    "article": normalized.get("article") or normalized.get("article_or_section"),
+                    "document": normalized.get("document"),
+                    "relevance_score": evaluation["score"],
+                    "exclusion_reason": evaluation["exclusion_reason"],
+                }
+            )
+            continue
+        answer["sources"].append(normalized)
+        accepted_count += 1
+
+    audit_row["sources_retained"] = accepted_count
+    if accepted_count:
+        audit_row["status"] = "retained"
+    else:
+        audit_row["status"] = "weak"
+        weak_warning = (
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent "
+            "pour appuyer juridiquement cette question."
+        )
+        audit_row["warnings"].append(weak_warning)
+        answer["warnings"].append(weak_warning)
+    answer.setdefault("legifrance_audit", []).append(audit_row)
+    for warning in raw_warnings:
+        answer["warnings"].append("Legifrance: " + warning)
 
 
 def cdtn_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
@@ -3184,12 +3345,27 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
         "findings": [],
         "documents_to_request": [],
         "questions_to_ask": [],
+        "legifrance_audit": [],
         "jurisprudence_audit": [],
         "working_position": "",
         "next_action": "",
         "confidence": route["confidence"],
         "warnings": list(route["warnings"]),
     }
+
+    if needs_code_travail(query, route.get("domains", []), route.get("intents", [])) and "legifrance_code_travail" not in route["engines"]:
+        answer["legifrance_audit"].append(
+            {
+                "attempted": False,
+                "available": False,
+                "sources_received": 0,
+                "sources_retained": 0,
+                "rejected_sources": [],
+                "status": "not_configured",
+                "warnings": ["connecteur Legifrance non configure ou indisponible"],
+                "error": "connecteur Legifrance non configure ou indisponible",
+            }
+        )
 
     if "bible_accords" in route["engines"]:
         try:
@@ -3209,7 +3385,20 @@ def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dic
             client = legifrance.LegifranceClient()
             merge_legifrance_result(answer, client.search_code_sources(query, limit=5))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
-            answer["warnings"].append(f"Legifrance indisponible: {exc}")
+            error = str(exc)
+            answer["legifrance_audit"].append(
+                {
+                    "attempted": True,
+                    "available": False,
+                    "sources_received": 0,
+                    "sources_retained": 0,
+                    "rejected_sources": [],
+                    "status": "api_error",
+                    "warnings": [error],
+                    "error": error,
+                }
+            )
+            answer["warnings"].append(f"Legifrance indisponible: {error}")
 
     if "judilibre_jurisprudence" in route["engines"] and judilibre is not None:
         try:
