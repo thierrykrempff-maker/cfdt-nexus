@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import re
+import socket
 import time
 import unicodedata
 import urllib.error
@@ -30,12 +31,22 @@ ENV_API_BASE_URL = "CFDT_NEXUS_PRATIQUE_OFFICIELLE_API_BASE_URL"
 ENV_TIMEOUT = "CFDT_NEXUS_PRATIQUE_OFFICIELLE_TIMEOUT"
 ENV_CACHE_DIR = "CFDT_NEXUS_PRATIQUE_OFFICIELLE_CACHE_DIR"
 ENV_CACHE_TTL = "CFDT_NEXUS_PRATIQUE_OFFICIELLE_CACHE_TTL_SECONDS"
+ENV_MAX_RESPONSE_BYTES = "CFDT_NEXUS_PRATIQUE_OFFICIELLE_MAX_RESPONSE_BYTES"
+ENV_ALLOW_LOCAL_TEST_BASE_URL = "CFDT_NEXUS_PRATIQUE_OFFICIELLE_ALLOW_LOCAL_TEST_BASE_URL"
 
 DEFAULT_API_BASE_URL = "https://code.travail.gouv.fr"
 DEFAULT_TIMEOUT_SECONDS = 20
 DEFAULT_CACHE_TTL_SECONDS = 24 * 60 * 60
+# 1 MB is intentionally generous for /api/presearch metadata while preventing
+# accidental parsing of an abnormal or unrelated payload.
+DEFAULT_MAX_RESPONSE_BYTES = 1_000_000
 PRESEARCH_ENDPOINT = "/api/presearch"
 SOURCE_LAYER = "pratique_officielle"
+OFFICIAL_API_HOST = "code.travail.gouv.fr"
+LOCAL_TEST_HOSTS = {"localhost", "127.0.0.1", "::1"}
+OFFICIAL_CONTENT_LICENSE = "Licence Ouverte Etalab 2.0"
+OFFICIAL_CONTENT_ATTRIBUTION = "Code du travail numérique – ministère du Travail"
+OFFICIAL_DISCLAIMER = "Nexus n'est pas cautionné par l'administration."
 
 OFFICIAL_SOURCES: dict[str, dict[str, str]] = {
     "fiches_service_public": {
@@ -84,29 +95,38 @@ class PratiqueOfficielleAPIError(PratiqueOfficielleError):
     """Raised when the public endpoint returns an unusable response."""
 
 
+class PratiqueOfficielleSecurityError(PratiqueOfficielleError):
+    """Raised when configuration would make an unofficial source look official."""
+
+
 @dataclass(frozen=True)
 class PratiqueOfficielleConfig:
     api_base_url: str = DEFAULT_API_BASE_URL
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS
     cache_dir: Path = ROOT / "local-index" / "pratique-officielle"
     cache_ttl_seconds: int = DEFAULT_CACHE_TTL_SECONDS
+    max_response_bytes: int = DEFAULT_MAX_RESPONSE_BYTES
+    allow_local_test_base_url: bool = False
 
     @classmethod
     def from_env(cls) -> "PratiqueOfficielleConfig":
         timeout = parse_int(os.environ.get(ENV_TIMEOUT), DEFAULT_TIMEOUT_SECONDS)
         cache_ttl = parse_int(os.environ.get(ENV_CACHE_TTL), DEFAULT_CACHE_TTL_SECONDS)
+        max_response_bytes = parse_int(os.environ.get(ENV_MAX_RESPONSE_BYTES), DEFAULT_MAX_RESPONSE_BYTES)
         cache_dir = Path(os.environ.get(ENV_CACHE_DIR) or ROOT / "local-index" / "pratique-officielle")
         return cls(
             api_base_url=(os.environ.get(ENV_API_BASE_URL) or DEFAULT_API_BASE_URL).strip().rstrip("/"),
             timeout_seconds=timeout,
             cache_dir=cache_dir,
             cache_ttl_seconds=cache_ttl,
+            max_response_bytes=max_response_bytes,
+            allow_local_test_base_url=parse_bool(os.environ.get(ENV_ALLOW_LOCAL_TEST_BASE_URL)),
         )
 
     def endpoint_url(self, endpoint: str, params: dict[str, str] | None = None) -> str:
         if not endpoint.startswith("/"):
             endpoint = "/" + endpoint
-        url = self.api_base_url + endpoint
+        url = self.api_base_url.rstrip("/") + endpoint
         if params:
             url += "?" + urllib.parse.urlencode(params)
         return url
@@ -115,8 +135,10 @@ class PratiqueOfficielleConfig:
 class PratiqueOfficielleClient:
     def __init__(self, config: PratiqueOfficielleConfig | None = None) -> None:
         self.config = config or PratiqueOfficielleConfig.from_env()
+        self.cache_warnings: list[str] = []
 
     def search_sources(self, query: str, limit: int = 5, theme: str | None = None) -> dict[str, Any]:
+        self.cache_warnings = []
         cleaned_query = compact_text(query)
         if not cleaned_query:
             return unavailable_result("Question vide: aucune recherche pratique officielle.")
@@ -141,7 +163,7 @@ class PratiqueOfficielleClient:
             if len(normalized) >= limit:
                 break
 
-        warnings = []
+        warnings = list(self.cache_warnings)
         if not normalized:
             warnings.append("Aucun contenu pratique officiel pertinent remonte par /api/presearch.")
         if normalized:
@@ -161,7 +183,10 @@ class PratiqueOfficielleClient:
         }
 
     def presearch(self, query: str) -> dict[str, Any]:
-        cache_key = stable_hash({"endpoint": PRESEARCH_ENDPOINT, "query": query})
+        validate_api_base_url(self.config.api_base_url, self.config.allow_local_test_base_url)
+        cache_key = stable_hash(
+            {"endpoint": PRESEARCH_ENDPOINT, "query": query, "api_base_url": self.config.api_base_url}
+        )
         cached = self.read_response_cache(cache_key)
         if cached is not None:
             return cached
@@ -171,20 +196,27 @@ class PratiqueOfficielleClient:
         try:
             with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:
                 status = getattr(response, "status", 200)
-                body = response.read().decode("utf-8", errors="replace")
+                body_bytes = read_limited_response(response, self.config.max_response_bytes)
         except urllib.error.HTTPError as exc:
             raise PratiqueOfficielleAPIError(f"HTTP {exc.code} sur {PRESEARCH_ENDPOINT}") from exc
         except urllib.error.URLError as exc:
             raise PratiqueOfficielleAPIError(f"Connexion impossible a {PRESEARCH_ENDPOINT}: {exc.reason}") from exc
-        except TimeoutError as exc:
+        except (TimeoutError, socket.timeout) as exc:
             raise PratiqueOfficielleAPIError(f"Timeout sur {PRESEARCH_ENDPOINT}") from exc
 
         if status >= 400:
             raise PratiqueOfficielleAPIError(f"HTTP {status} sur {PRESEARCH_ENDPOINT}")
+        if len(body_bytes) > self.config.max_response_bytes:
+            raise PratiqueOfficielleAPIError(
+                f"Reponse trop volumineuse sur {PRESEARCH_ENDPOINT}: limite {self.config.max_response_bytes} octets"
+            )
+        body = body_bytes.decode("utf-8", errors="replace")
         try:
             payload = json.loads(body)
         except json.JSONDecodeError as exc:
             raise PratiqueOfficielleAPIError("Reponse non JSON sur /api/presearch") from exc
+        if not isinstance(payload, dict):
+            raise PratiqueOfficielleAPIError("Reponse JSON sans objet racine exploitable sur /api/presearch")
 
         self.write_response_cache(cache_key, payload)
         return payload
@@ -194,19 +226,32 @@ class PratiqueOfficielleClient:
 
     def read_response_cache(self, cache_key: str) -> dict[str, Any] | None:
         path = self.response_cache_path(cache_key)
-        if not path.exists():
-            return None
-        if self.config.cache_ttl_seconds > 0 and time.time() - path.stat().st_mtime > self.config.cache_ttl_seconds:
-            return None
         try:
-            return json.loads(path.read_text(encoding="utf-8"))
+            if not path.exists():
+                return None
+            if self.config.cache_ttl_seconds > 0 and time.time() - path.stat().st_mtime > self.config.cache_ttl_seconds:
+                return None
+            payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
+            self.cache_warnings.append("Cache pratique officielle ignore: lecture impossible ou JSON invalide.")
             return None
+        if not isinstance(payload, dict):
+            self.cache_warnings.append("Cache pratique officielle ignore: structure JSON inattendue.")
+            return None
+        if "results" not in payload:
+            self.cache_warnings.append("Cache pratique officielle ignore: structure incomplete.")
+            return None
+        return payload
 
     def write_response_cache(self, cache_key: str, payload: dict[str, Any]) -> None:
         path = self.response_cache_path(cache_key)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp_path = path.with_suffix(path.suffix + ".tmp")
+            tmp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            tmp_path.replace(path)
+        except OSError:
+            self.cache_warnings.append("Cache pratique officielle non ecrit: dossier inaccessible ou erreur disque.")
 
 
 def normalize_hit(hit: dict[str, Any], query: str, theme: str | None) -> dict[str, Any]:
@@ -240,6 +285,9 @@ def normalize_hit(hit: dict[str, Any], query: str, theme: str | None) -> dict[st
         "source_layer_label": "Explication pratique officielle",
         "source_quality": source_meta["quality"],
         "source_quality_warning": quality_warning,
+        "license": OFFICIAL_CONTENT_LICENSE,
+        "attribution": OFFICIAL_CONTENT_ATTRIBUTION,
+        "official_disclaimer": OFFICIAL_DISCLAIMER,
         "updated_at": updated_at or None,
         "retrieved_at": utc_now(),
         "official_id": reference,
@@ -321,6 +369,79 @@ def parse_int(value: str | None, default: int) -> int:
     except (TypeError, ValueError):
         return default
     return parsed if parsed > 0 else default
+
+
+def parse_bool(value: str | None) -> bool:
+    return normalize_text(value) in {"1", "true", "yes", "oui", "on"}
+
+
+def validate_api_base_url(api_base_url: str, allow_local_test_base_url: bool = False) -> None:
+    parsed = urllib.parse.urlparse(api_base_url)
+    host = (parsed.hostname or "").lower()
+    try:
+        port = parsed.port
+    except ValueError as exc:
+        raise PratiqueOfficielleSecurityError("URL pratique officielle invalide: port incorrect.") from exc
+    has_clean_base = (
+        not parsed.username
+        and not parsed.password
+        and parsed.path in {"", "/"}
+        and not parsed.params
+        and not parsed.query
+        and not parsed.fragment
+    )
+    if parsed.scheme not in {"http", "https"} or not host or not has_clean_base:
+        raise PratiqueOfficielleSecurityError("URL pratique officielle invalide: scheme HTTP(S) et domaine requis.")
+    if parsed.scheme == "https" and host == OFFICIAL_API_HOST and port is None:
+        return
+    if allow_local_test_base_url and host in LOCAL_TEST_HOSTS:
+        return
+    raise PratiqueOfficielleSecurityError(
+        "Domaine pratique officielle non autorise: seul code.travail.gouv.fr est accepte "
+        "(localhost uniquement avec le mode test explicite)."
+    )
+
+
+def read_limited_response(response: Any, max_bytes: int) -> bytes:
+    header_value = response_header(response, "Content-Length")
+    if header_value:
+        try:
+            declared_size = int(header_value)
+        except ValueError:
+            declared_size = None
+        if declared_size is not None and declared_size > max_bytes:
+            raise PratiqueOfficielleAPIError(
+                f"Reponse trop volumineuse sur {PRESEARCH_ENDPOINT}: limite {max_bytes} octets"
+            )
+
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        remaining = max_bytes - total
+        read_size = 1 if remaining <= 0 else min(64 * 1024, remaining)
+        chunk = response.read(read_size)
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > max_bytes:
+            raise PratiqueOfficielleAPIError(
+                f"Reponse trop volumineuse sur {PRESEARCH_ENDPOINT}: limite {max_bytes} octets"
+            )
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+def response_header(response: Any, name: str) -> str | None:
+    if hasattr(response, "headers"):
+        value = response.headers.get(name)
+        if value is not None:
+            return str(value)
+    getheader = getattr(response, "getheader", None)
+    if callable(getheader):
+        value = getheader(name)
+        if value is not None:
+            return str(value)
+    return None
 
 
 def stable_hash(value: Any) -> str:

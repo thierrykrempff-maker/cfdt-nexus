@@ -41,6 +41,9 @@ Limite constatee : cet endpoint ne retourne pas le corps complet des fiches.
 Il donne une couche de recherche et de resume, utile pour orienter Nexus, mais
 pas suffisante seule pour citer un contenu detaille.
 
+Autre limite V1 : `/api/presearch` est une recherche courte. Nexus ne doit donc
+pas presenter ces resultats comme une source juridique complete ou opposable.
+
 ### Sources pratiques remontees par presearch
 
 Sources retenues pour le prototype :
@@ -65,6 +68,8 @@ ses contenus sont proposes sous Licence Ouverte Etalab 2.0.
 Contraintes pratiques a respecter :
 
 - mentionner la source ;
+- mentionner la licence : Licence Ouverte Etalab 2.0 ;
+- mentionner l'attribution : Code du travail numerique - ministere du Travail ;
 - mentionner l'URL et, si disponible, la date de mise a jour ;
 - ne pas laisser croire que Nexus est cautionne par l'administration ;
 - distinguer clairement cette couche d'aide pratique des sources juridiquement opposables.
@@ -82,9 +87,26 @@ Comportement :
 - appelle uniquement `GET https://code.travail.gouv.fr/api/presearch?q=...` ;
 - ne demande aucun secret ;
 - ne scrape pas les pages HTML ;
+- valide le domaine avant tout appel reseau ;
+- accepte en production uniquement l'URL de base exacte `https://code.travail.gouv.fr` ;
+- rejette les identifiants, mots de passe, ports explicites, chemins, query strings et fragments ;
+- rejette les domaines ressemblants comme `code.travail.gouv.fr.example.com`, `evil-code.travail.gouv.fr` ou `code-travail.gouv.fr` ;
+- accepte `localhost` / `127.0.0.1` / `::1` uniquement avec le mode de test explicite `allow_local_test_base_url` ;
+- rejette tous les autres hotes locaux, prives ou arbitraires ;
+- rejette toute URL arbitraire sans normaliser de source `pratique_officielle` ;
+- limite la reponse HTTP a 1 000 000 octets pendant la lecture, avant parsing JSON ;
 - filtre les sources pratiques officielles ;
 - normalise les resultats avec `source_layer: pratique_officielle` ;
 - stocke le cache dans `local-index/pratique-officielle/`, deja ignore par Git.
+
+Cache :
+
+- une entree expiree est ignoree ;
+- un JSON corrompu est ignore sans interrompre la recherche ;
+- une structure non objet, incomplete ou inattendue est ignoree ;
+- un dossier de cache inaccessible ne doit pas faire echouer une reponse reseau valide ;
+- l'ecriture se fait via fichier temporaire puis remplacement atomique lorsque possible ;
+- si l'ecriture echoue, Nexus conserve le resultat reseau mais ajoute un warning.
 
 Champs normalises :
 
@@ -96,7 +118,44 @@ Champs normalises :
 - `updated_at` si disponible ;
 - `official_id` / `reference` ;
 - `url` ;
+- `license` ;
+- `attribution` ;
+- `official_disclaimer` ;
 - `source_layer: pratique_officielle`.
+
+Champs fixes ajoutes aux resultats V1 :
+
+- `license: Licence Ouverte Etalab 2.0` ;
+- `attribution: Code du travail numerique - ministere du Travail` ;
+- `official_disclaimer: Nexus n'est pas cautionne par l'administration.`
+
+## Statut du composant
+
+Statut actuel : prototype securise et teste, non integre au routeur Nexus.
+
+Le connecteur peut etre execute localement et teste sans reseau reel via le
+fichier de tests dedie. Il ne doit pas etre branche au moteur tant que les
+garde-fous d'affichage et de hierarchie des sources ne sont pas valides.
+
+Tests couverts :
+
+- normalisation d'un resultat valide ;
+- conservation de `source_layer: pratique_officielle` ;
+- presence de `license` et `attribution` ;
+- rejet d'une source inconnue ;
+- reponse vide ;
+- JSON invalide ;
+- erreur reseau ;
+- timeout simule ;
+- cache miss, cache hit, cache expire et cache corrompu ;
+- cache contenant une structure invalide ou incomplete ;
+- cache inaccessible et echec d'ecriture ;
+- domaine officiel accepte ;
+- domaine non autorise rejete ;
+- localhost, 127.0.0.1 et ::1 acceptes uniquement en mode test explicite ;
+- HTTP 400, 404, 500, timeout et erreur reseau ;
+- Content-Length trop grand, Content-Length mensonger, absence de Content-Length et taille exacte ;
+- reponse trop volumineuse rejetee.
 
 ## Resultats des 4 themes
 
