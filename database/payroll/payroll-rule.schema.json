@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/payroll-rule.schema.json",
+  "title": "CFDT Nexus PayrollRule Catalog V1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog_id", "version", "scope", "rules"],
+  "properties": {
+    "catalog_id": { "type": "string" },
+    "version": { "type": "string" },
+    "scope": { "type": "string" },
+    "security_notice": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PayrollRule" }
+    }
+  },
+  "$defs": {
+    "FormulaValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value", "source", "status"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "source": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "to_verify", "historical"] }
+      }
+    },
+    "CalculationFormula": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expression", "source_refs", "sourced_values", "limitations"],
+      "properties": {
+        "expression": { "type": "string" },
+        "source_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sourced_values": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/FormulaValue" }
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "PayrollRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "title",
+        "description",
+        "source_layer",
+        "document_type",
+        "source_document",
+        "source_page",
+        "source_chunk_id",
+        "source_date",
+        "effective_date",
+        "end_date",
+        "supersedes",
+        "superseded_by",
+        "status",
+        "historical_only",
+        "confidentiality",
+        "confidence",
+        "payroll_topic",
+        "leave_topic",
+        "work_time_topic",
+        "employee_population",
+        "employment_category",
+        "work_schedule",
+        "site",
+        "conditions",
+        "exclusions",
+        "required_variables",
+        "calculation_formula",
+        "calculation_allowed",
+        "benefit_or_obligation",
+        "payroll_lines_to_check",
+        "kelio_counters",
+        "legal_priority",
+        "notes",
+        "validation_status"
+      ],
+      "properties": {
+        "rule_id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "source_layer": {
+          "type": "string",
+          "enum": [
+            "accord_entreprise",
+            "convention_collective",
+            "code_travail",
+            "jurisprudence",
+            "pratique_officielle",
+            "memoire_entreprise"
+          ]
+        },
+        "document_type": {
+          "type": "string",
+          "enum": [
+            "accord",
+            "avenant",
+            "decision_unilaterale",
+            "convention_collective",
+            "code_travail",
+            "jurisprudence",
+            "pratique_officielle",
+            "pv_cse",
+            "note_rh",
+            "historique",
+            "question_reponse_interne",
+            "presentation_bulletin",
+            "source_metier_a_rattacher"
+          ]
+        },
+        "source_document": { "type": "string" },
+        "source_page": { "type": ["integer", "null"] },
+        "source_chunk_id": { "type": ["string", "null"] },
+        "source_date": { "type": ["string", "null"] },
+        "effective_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "supersedes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "superseded_by": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "active", "expired", "superseded", "disputed", "to_verify"]
+        },
+        "historical_only": { "type": "boolean" },
+        "confidentiality": {
+          "type": "string",
+          "enum": ["public", "internal", "confidential", "private"]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "payroll_topic": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "salaire_base",
+              "anciennete",
+              "prime_poste",
+              "primes_abcd",
+              "heures_supplementaires",
+              "heures_exceptionnelles",
+              "nuit",
+              "dimanche",
+              "jour_ferie",
+              "rappel",
+              "maintien",
+              "astreinte",
+              "intervention",
+              "changement_roulement",
+              "degressivite",
+              "treizieme_mois",
+              "indemnite_kilometrique",
+              "maladie",
+              "prevoyance",
+              "conges_payes",
+              "indemnite_conges",
+              "classification",
+              "repos_compensateur"
+            ]
+          }
+        },
+        "leave_topic": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "acquisition_cp",
+              "prise_cp",
+              "fractionnement",
+              "report",
+              "ordre_depart",
+              "maladie_pendant_conges",
+              "evenement_familial",
+              "maternite",
+              "paternite",
+              "adoption",
+              "conge_naissance",
+              "rtt",
+              "cet",
+              "recuperation_jour_ferie",
+              "absence_maladie"
+            ]
+          }
+        },
+        "work_time_topic": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "jour",
+              "5x8",
+              "poste_continu",
+              "gn",
+              "polyolefines",
+              "roulement",
+              "repos",
+              "temps_releve",
+              "temps_poste",
+              "heures_supplementaires",
+              "astreinte"
+            ]
+          }
+        },
+        "employee_population": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "tous",
+              "personnel_jour",
+              "personnel_poste",
+              "poste_continu",
+              "ouvriers",
+              "employes",
+              "agents_maitrise",
+              "cadres",
+              "non_cadres",
+              "gn",
+              "polyolefines",
+              "remplaçants_poste"
+            ]
+          }
+        },
+        "employment_category": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["tous", "ouvriers", "employes", "agents_maitrise", "cadres", "non_cadres"]
+          }
+        },
+        "work_schedule": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["tous", "jour", "5x8", "poste_continu", "gn", "polyolefines", "roulement"]
+          }
+        },
+        "site": { "type": "string" },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "required_variables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "calculation_formula": { "$ref": "#/$defs/CalculationFormula" },
+        "calculation_allowed": { "type": "boolean" },
+        "benefit_or_obligation": {
+          "type": "string",
+          "enum": [
+            "droit_salarie",
+            "obligation_employeur",
+            "methode_calcul",
+            "compteur",
+            "presentation_bulletin",
+            "information",
+            "to_verify"
+          ]
+        },
+        "payroll_lines_to_check": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "kelio_counters": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "legal_priority": {
+          "type": "string",
+          "enum": ["opposable", "interpretative", "memory_only", "to_verify"]
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "validation_status": {
+          "type": "string",
+          "enum": ["draft", "source_to_attach", "human_review_required", "validated", "rejected"]
+        }
+      }
+    }
+  }
+}
