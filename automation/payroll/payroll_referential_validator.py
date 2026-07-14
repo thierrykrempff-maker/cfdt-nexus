@@ -62,6 +62,15 @@ OPPOSABLE_OR_TRACEABLE_SOURCES = {
     "note_rh",
     "presentation_bulletin",
 }
+KELIO_REQUIRED_TEXT_FIELDS = ("business_description",)
+KELIO_REQUIRED_LIST_FIELDS = (
+    "feed_conditions",
+    "decrease_conditions",
+    "documents_to_check",
+    "frequent_anomalies",
+    "control_points",
+    "synthetic_reading_examples",
+)
 
 SENSITIVE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("email", re.compile(r"\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b", re.IGNORECASE)),
@@ -333,6 +342,40 @@ def check_synthetic_fixture_guard(record: dict[str, Any], path_prefix: str) -> l
     return issues
 
 
+def check_kelio_documentation(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
+    issues: list[ReferentialIssue] = []
+    for field_name in KELIO_REQUIRED_TEXT_FIELDS:
+        value = record.get(field_name)
+        if not isinstance(value, str) or not value.strip():
+            issues.append(
+                ReferentialIssue(
+                    "missing_business_documentation",
+                    f"Kelio counter must document {field_name}.",
+                    f"{path_prefix}.{field_name}",
+                )
+            )
+    for field_name in KELIO_REQUIRED_LIST_FIELDS:
+        value = record.get(field_name)
+        if not isinstance(value, list) or not value:
+            issues.append(
+                ReferentialIssue(
+                    "missing_business_documentation",
+                    f"Kelio counter must provide at least one item in {field_name}.",
+                    f"{path_prefix}.{field_name}",
+                )
+            )
+            continue
+        if not any(item for item in value):
+            issues.append(
+                ReferentialIssue(
+                    "missing_business_documentation",
+                    f"Kelio counter documentation field is empty: {field_name}.",
+                    f"{path_prefix}.{field_name}",
+                )
+            )
+    return issues
+
+
 def check_calculation_gate(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
     if record.get("calculation_allowed") is not True:
         return []
@@ -443,6 +486,8 @@ def validate_catalog(
         errors.extend(check_sensitive_data(record, path_prefix))
         errors.extend(check_links(record, reference_index, path_prefix))
         errors.extend(check_calculation_gate(record, path_prefix))
+        if kind == "kelio":
+            errors.extend(check_kelio_documentation(record, path_prefix))
         if fixture_type == "synthetic_example":
             errors.extend(check_synthetic_fixture_guard(record, path_prefix))
 

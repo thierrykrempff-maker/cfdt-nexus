@@ -17,6 +17,16 @@
     }
   },
   "$defs": {
+    "SyntheticReadingExample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value", "interpretation"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "interpretation": { "type": "string" }
+      }
+    },
     "KelioCounter": {
       "type": "object",
       "additionalProperties": false,
@@ -25,6 +35,7 @@
         "counter_code",
         "label",
         "normalized_label",
+        "business_description",
         "data_role",
         "counter_type",
         "unit",
@@ -38,6 +49,13 @@
         "linked_variables",
         "linked_nibelis_rubric_ids",
         "reading_method",
+        "feed_conditions",
+        "decrease_conditions",
+        "documents_to_check",
+        "frequent_anomalies",
+        "control_points",
+        "synthetic_reading_examples",
+        "risk_level",
         "calculation_allowed",
         "validation_status",
         "confidence",
@@ -50,6 +68,7 @@
         "counter_code": { "type": "string" },
         "label": { "type": "string" },
         "normalized_label": { "type": "string" },
+        "business_description": { "type": "string" },
         "data_role": { "type": "string", "enum": ["source_data", "calculated_data", "controlled_data"] },
         "counter_type": {
           "type": "string",
@@ -61,8 +80,12 @@
             "on_call",
             "intervention",
             "sickness",
+            "absence",
             "schedule",
             "pointing",
+            "night_work",
+            "sunday_work",
+            "holiday",
             "other"
           ]
         },
@@ -104,6 +127,31 @@
           "type": "string",
           "enum": ["manual_capture", "export", "statement", "synthetic_fixture", "to_verify"]
         },
+        "feed_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "decrease_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "documents_to_check": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frequent_anomalies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "control_points": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "synthetic_reading_examples": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/SyntheticReadingExample" }
+        },
+        "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
         "calculation_allowed": { "type": "boolean" },
         "validation_status": {
           "type": "string",

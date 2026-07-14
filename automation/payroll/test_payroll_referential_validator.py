@@ -18,6 +18,37 @@ sys.path.insert(0, str(ROOT))
 from automation.payroll import payroll_referential_validator as validator  # noqa: E402
 
 
+EXPECTED_KELIO_CODES = {
+    "JR_SYN",
+    "RJFJ_SYN",
+    "RJFN_SYN",
+    "RCTP_SYN",
+    "RCTR_SYN",
+    "CP_SYN",
+    "HS_SYN",
+    "AST_SYN",
+    "INT_SYN",
+    "RC_SYN",
+    "RQ_SYN",
+    "RH_SYN",
+    "PNT_SYN",
+    "ABS_SYN",
+    "NUIT_SYN",
+    "DIM_SYN",
+    "FERIE_SYN",
+}
+
+KELIO_DOCUMENTATION_FIELDS = {
+    "business_description",
+    "feed_conditions",
+    "decrease_conditions",
+    "documents_to_check",
+    "frequent_anomalies",
+    "control_points",
+    "synthetic_reading_examples",
+}
+
+
 def cloned_catalog(kind: str) -> dict[str, Any]:
     return copy.deepcopy(validator.load_catalog(kind))
 
@@ -50,8 +81,60 @@ def test_all_example_referentials_validate() -> None:
     report = validator.validate_all()
     assert report["valid"], report
     assert report["reports"]["nibelis"]["records_count"] == 3
-    assert report["reports"]["kelio"]["records_count"] == 3
+    assert report["reports"]["kelio"]["records_count"] == 17
     assert report["reports"]["parameters"]["records_count"] == 3
+
+
+def test_kelio_referential_contains_required_counter_codes() -> None:
+    catalog = cloned_catalog("kelio")
+    codes = {counter["counter_code"] for counter in catalog["counters"]}
+    assert EXPECTED_KELIO_CODES <= codes
+    assert len(catalog["counters"]) == len(codes)
+
+
+def test_kelio_records_have_business_documentation() -> None:
+    catalog = cloned_catalog("kelio")
+    for counter in catalog["counters"]:
+        assert counter["business_description"].strip(), counter["counter_id"]
+        for field_name in KELIO_DOCUMENTATION_FIELDS - {"business_description"}:
+            assert counter[field_name], (counter["counter_id"], field_name)
+        assert counter["risk_level"] in {"low", "medium", "high"}
+
+
+def test_kelio_records_have_control_points_and_anomalies() -> None:
+    catalog = cloned_catalog("kelio")
+    for counter in catalog["counters"]:
+        assert len(counter["control_points"]) >= 3, counter["counter_id"]
+        assert len(counter["frequent_anomalies"]) >= 3, counter["counter_id"]
+        assert len(counter["documents_to_check"]) >= 2, counter["counter_id"]
+
+
+def test_kelio_referential_does_not_activate_calculation() -> None:
+    catalog = cloned_catalog("kelio")
+    assert all(counter["calculation_allowed"] is False for counter in catalog["counters"])
+    report = report_for("kelio", catalog)
+    assert report["valid"], report
+
+
+def test_reject_kelio_missing_business_documentation() -> None:
+    catalog = cloned_catalog("kelio")
+    catalog["counters"][0]["control_points"] = []
+    report = report_for("kelio", catalog)
+    assert_issue(report, "missing_business_documentation")
+
+
+def test_reject_kelio_synthetic_only_false_in_fixture() -> None:
+    catalog = cloned_catalog("kelio")
+    catalog["counters"][0]["synthetic_only"] = False
+    report = report_for("kelio", catalog)
+    assert_issue(report, "synthetic_fixture_not_marked")
+
+
+def test_kelio_links_to_existing_rules_and_variables_only() -> None:
+    catalog = cloned_catalog("kelio")
+    report = report_for("kelio", catalog)
+    assert report["valid"], report
+    assert_no_issue(report, "unknown_reference")
 
 
 def test_reject_unknown_catalog_root_field() -> None:
