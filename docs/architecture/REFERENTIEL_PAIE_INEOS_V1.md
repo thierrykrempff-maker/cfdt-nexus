@@ -350,6 +350,199 @@ Le LOT 4C prepare une future methode de controle :
 
 Tant que cette chaine n'est pas complete, `calculation_allowed` reste `false`.
 
+## LOT 4D - Referentiel des parametres de paie synthetiques
+
+Le LOT 4D enrichit le referentiel des parametres de paie.
+
+Objectif :
+
+- identifier les valeurs dont un calcul aurait besoin ;
+- documenter leur type, leur unite, leur periode et leur source ;
+- verifier les liens avec les regles, variables, compteurs Kelio et rubriques Nibelis ;
+- empecher toute utilisation d'une valeur fictive comme valeur INEOS ;
+- preparer une future validation humaine avant tout calcul.
+
+### Role d'un parametre de paie
+
+Un parametre est une valeur, un seuil, un taux, une date, une methode ou un plafond necessaire a l'interpretation d'une regle.
+
+Exemples :
+
+- seuil de declenchement d'heures supplementaires ;
+- niveau de majoration ;
+- valeur d'une astreinte ;
+- duree minimale de repos ;
+- methode de comparaison pour les conges payes ;
+- valeur kilometrique ;
+- date de regularisation.
+
+Un parametre ne remplace jamais la regle.
+
+### Regle, variable, compteur, rubrique et parametre
+
+Une regle de paie porte la logique metier.
+
+Exemple :
+
+```text
+PAY_HSUP_TRANCHES_001
+```
+
+Une variable est une information attendue par la regle.
+
+Exemple :
+
+```text
+heures_validees
+```
+
+Un compteur Kelio aide a verifier un fait de temps ou de planning.
+
+Exemple :
+
+```text
+KELIO_HS_SYN
+```
+
+Une rubrique Nibelis aide a identifier une ligne de bulletin.
+
+Exemple :
+
+```text
+NIB_RUB_HSUP_MAJ
+```
+
+Un parametre documente la valeur ou la methode qui pourrait etre necessaire.
+
+Exemple :
+
+```text
+PARAM_HSUP_MAJ_SYN
+```
+
+La chaine complete reste :
+
+```text
+source reelle -> parametre valide -> variable -> regle -> controle humain -> conclusion prudente
+```
+
+### Etats possibles d'une valeur
+
+Le champ `value_state` distingue :
+
+- `identified_value_unknown` : parametre identifie, valeur inconnue ;
+- `synthetic_test_value` : valeur fictive de test ;
+- `awaiting_source` : valeur en attente de source ;
+- `awaiting_human_validation` : valeur a verifier humainement ;
+- `structurally_checked_not_applicable` : structure controlee mais non applicable ;
+- `calculation_ready` : etat futur interdit dans les fixtures synthetiques.
+
+Dans les exemples LOT 4D, aucun parametre n'est `calculation_ready`.
+
+### Nature de la donnee
+
+Les champs `data_role` et `value_kind` permettent de distinguer :
+
+- donnee source ;
+- donnee saisie ;
+- donnee derivee ;
+- donnee controlee ;
+- donnee validee.
+
+Cette separation evite de confondre une valeur lue, une valeur recopiee, une methode et une valeur juridiquement utilisable.
+
+### Dates d'effet et de fin
+
+Chaque parametre porte :
+
+- `effective_date` ;
+- `end_date` ;
+- `application_period.start_date` ;
+- `application_period.end_date`.
+
+Le validateur refuse :
+
+- une date ISO invalide ;
+- une date de fin anterieure a la date d'effet ;
+- une periode d'application incoherente ;
+- deux parametres mutuellement exclusifs qui se chevauchent.
+
+### Cycle de validation humaine
+
+Un parametre futur ne pourra devenir exploitable que si les conditions suivantes sont reunies :
+
+- source identifiable ;
+- reference precise ;
+- date d'effet valide ;
+- valeur compatible avec le type, l'unite, la devise ou le pourcentage ;
+- `validation_status = human_validated` ;
+- `human_validation.status = validated` ;
+- `confidence = high` ;
+- `synthetic_only = false` ;
+- `value_state = calculation_ready` ;
+- validation par un role generique autorise, par exemple `expert_paie_humain`.
+
+Les fixtures synthetiques ne remplissent volontairement pas ces conditions.
+
+### Valeurs par defaut interdites
+
+Le LOT 4D interdit les valeurs de secours silencieuses.
+
+Un parametre peut exister sans valeur exploitable, mais il doit alors :
+
+- porter un etat clair comme `identified_value_unknown` ou `awaiting_source` ;
+- conserver `calculation_allowed = false` ;
+- lister les documents necessaires ;
+- expliquer le risque d'usage errone ;
+- ne pas utiliser `0`, `1`, `100` ou une autre valeur par defaut comme substitut.
+
+Le validateur refuse un parametre marque `is_fallback_value = true`.
+
+### Parametres couverts
+
+Le referentiel synthetique couvre 23 parametres :
+
+- durees mensuelle et hebdomadaire de reference ;
+- seuil et majoration heures supplementaires ;
+- majorations nuit, dimanche et jours feries ;
+- valorisation astreinte et intervention ;
+- repos quotidien et hebdomadaire ;
+- repos compensateur ;
+- conges payes ;
+- maintien maladie et subrogation ;
+- 13e mois ;
+- anciennete ;
+- indemnite kilometrique ;
+- panier repas ;
+- plafond interne fictif ;
+- date de regularisation ;
+- parametre informatif sans valeur exploitable.
+
+Tous les identifiants et codes finissent par `_SYN`.
+
+### Limites des parametres synthetiques
+
+Les parametres LOT 4D :
+
+- ne contiennent aucun bareme reel INEOS ;
+- ne contiennent aucun bulletin ;
+- ne contiennent aucune valeur individuelle ;
+- ne prouvent aucun droit ;
+- ne modifient pas le moteur de calcul ;
+- ne rendent aucune regle calculable.
+
+### Integration future de baremes reels
+
+Avant d'ajouter un bareme reel, il faudra :
+
+1. conserver la source hors GitHub si elle est interne ou confidentielle ;
+2. creer une entree locale privee ;
+3. renseigner la source, la reference et la date d'effet ;
+4. verifier les liens avec les regles, variables, Kelio et Nibelis ;
+5. faire valider humainement le parametre ;
+6. documenter les risques et limites ;
+7. activer `calculation_allowed` uniquement apres revue technique et metier.
+
 ## Parametres de paie
 
 Le schema parametre modelise une valeur, un seuil, un taux, une methode ou un composant de formule.
@@ -455,7 +648,8 @@ LOT 4C :
 
 LOT 4D :
 
-- structurer les parametres de paie ;
+- poursuivre la revue humaine des parametres synthetiques ;
+- preparer le stockage local prive des baremes reels ;
 - conserver `calculation_allowed = false` tant que la validation humaine et la source documentaire ne sont pas completes.
 
 ## Conclusion

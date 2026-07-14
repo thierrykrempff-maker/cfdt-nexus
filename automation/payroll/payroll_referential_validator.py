@@ -51,7 +51,7 @@ REFERENTIALS = {
     },
 }
 
-DATE_FIELDS = {"effective_date", "end_date", "validated_at"}
+DATE_FIELDS = {"effective_date", "end_date", "validated_at", "last_checked_at"}
 CALCULATION_VALIDATION_STATUS = "human_validated"
 CALCULATION_HUMAN_STATUS = "validated"
 CALCULATION_CONFIDENCE = "high"
@@ -78,6 +78,32 @@ NIBELIS_REQUIRED_LIST_FIELDS = (
     "control_points",
     "synthetic_reading_examples",
 )
+PARAMETER_REQUIRED_TEXT_FIELDS = ("business_description", "source_document")
+PARAMETER_REQUIRED_LIST_FIELDS = ("validation_documents", "misuse_risks")
+PARAMETER_ALLOWED_VALIDATORS = {
+    None,
+    "expert_paie_humain",
+    "referent_cfdt_humain",
+    "validateur_metier_humain",
+}
+PARAMETER_VALUE_UNKNOWN_STATES = {"identified_value_unknown", "awaiting_source"}
+PARAMETER_READY_STATE = "calculation_ready"
+PARAMETER_TYPE_UNITS = {
+    "rate": {"rate_percent"},
+    "amount": {"amount_eur"},
+    "threshold": {"hours", "days", "count", "km", "amount_eur"},
+    "date": {"date"},
+    "duration": {"hours", "days"},
+    "distance": {"km"},
+    "method": {"text", "none"},
+    "formula_component": {"amount_eur", "hours", "days", "rate_percent", "count", "km", "text"},
+    "ceiling": {"amount_eur", "hours", "days", "count", "km"},
+    "period": {"date", "text"},
+    "informational": {"text", "none"},
+    "other": {"amount_eur", "hours", "days", "rate_percent", "count", "date", "km", "text", "none"},
+}
+PARAMETER_NUMERIC_TYPES = {"amount", "threshold", "duration", "distance", "formula_component", "ceiling"}
+PARAMETER_METHOD_TYPES = {"method", "informational", "period", "date"}
 
 SENSITIVE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("email", re.compile(r"\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b", re.IGNORECASE)),
@@ -269,6 +295,36 @@ def check_dates(record: dict[str, Any], path_prefix: str) -> list[ReferentialIss
                     "invalid_date",
                     f"Invalid ISO date for human_validation.validated_at: {validated_at}",
                     f"{path_prefix}.human_validation.validated_at",
+                )
+            )
+    application_period = record.get("application_period")
+    if isinstance(application_period, dict):
+        start_date_value = application_period.get("start_date")
+        end_date_value = application_period.get("end_date")
+        if start_date_value is not None and isinstance(start_date_value, str) and parse_iso_date(start_date_value) is None:
+            issues.append(
+                ReferentialIssue(
+                    "invalid_date",
+                    f"Invalid ISO date for application_period.start_date: {start_date_value}",
+                    f"{path_prefix}.application_period.start_date",
+                )
+            )
+        if end_date_value is not None and isinstance(end_date_value, str) and parse_iso_date(end_date_value) is None:
+            issues.append(
+                ReferentialIssue(
+                    "invalid_date",
+                    f"Invalid ISO date for application_period.end_date: {end_date_value}",
+                    f"{path_prefix}.application_period.end_date",
+                )
+            )
+        start_date = parse_iso_date(start_date_value)
+        period_end_date = parse_iso_date(end_date_value)
+        if start_date and period_end_date and start_date > period_end_date:
+            issues.append(
+                ReferentialIssue(
+                    "application_period_start_after_end",
+                    "application_period.start_date must be earlier than or equal to application_period.end_date.",
+                    f"{path_prefix}.application_period.start_date",
                 )
             )
     return issues
@@ -465,6 +521,237 @@ def check_nibelis_business_rules(record: dict[str, Any], path_prefix: str) -> li
     return issues
 
 
+def check_parameter_documentation(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
+    return check_required_business_documentation(
+        record,
+        path_prefix,
+        label="Payroll parameter",
+        text_fields=PARAMETER_REQUIRED_TEXT_FIELDS,
+        list_fields=PARAMETER_REQUIRED_LIST_FIELDS,
+    )
+
+
+def check_parameter_value_rules(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
+    issues: list[ReferentialIssue] = []
+    parameter_id = record.get("parameter_id")
+    parameter_code = record.get("parameter_code")
+    if isinstance(parameter_id, str) and not parameter_id.endswith("_SYN"):
+        issues.append(
+            ReferentialIssue(
+                "synthetic_parameter_id_must_end_with_syn",
+                "Synthetic parameter identifiers must end with _SYN.",
+                f"{path_prefix}.parameter_id",
+            )
+        )
+    if isinstance(parameter_code, str) and not parameter_code.endswith("_SYN"):
+        issues.append(
+            ReferentialIssue(
+                "synthetic_parameter_code_must_end_with_syn",
+                "Synthetic parameter codes must end with _SYN.",
+                f"{path_prefix}.parameter_code",
+            )
+        )
+
+    verified_by = record.get("verified_by")
+    if verified_by not in PARAMETER_ALLOWED_VALIDATORS:
+        issues.append(
+            ReferentialIssue(
+                "parameter_validator_must_be_generic_role",
+                "verified_by must use a generic role, not a real person.",
+                f"{path_prefix}.verified_by",
+            )
+        )
+    human_validation = record.get("human_validation")
+    if isinstance(human_validation, dict) and human_validation.get("validator") not in PARAMETER_ALLOWED_VALIDATORS:
+        issues.append(
+            ReferentialIssue(
+                "parameter_validator_must_be_generic_role",
+                "human_validation.validator must use a generic role, not a real person.",
+                f"{path_prefix}.human_validation.validator",
+            )
+        )
+
+    parameter_type = record.get("parameter_type")
+    value_state = record.get("value_state")
+    value = record.get("value")
+
+    if not isinstance(value, dict):
+        return issues
+
+    unit = value.get("unit")
+    numeric_value = value.get("numeric_value")
+    percentage = value.get("percentage")
+    currency = value.get("currency")
+    raw = str(value.get("raw") or "").lower()
+
+    allowed_units = PARAMETER_TYPE_UNITS.get(str(parameter_type), set())
+    if allowed_units and unit not in allowed_units:
+        issues.append(
+            ReferentialIssue(
+                "parameter_unit_incompatible_with_type",
+                f"Unit {unit} is incompatible with parameter_type {parameter_type}.",
+                f"{path_prefix}.value.unit",
+            )
+        )
+
+    if currency is not None and unit != "amount_eur":
+        issues.append(
+            ReferentialIssue(
+                "parameter_currency_incompatible_with_unit",
+                "currency is only allowed when unit = amount_eur.",
+                f"{path_prefix}.value.currency",
+            )
+        )
+    if unit == "amount_eur" and numeric_value is not None and currency != "EUR":
+        issues.append(
+            ReferentialIssue(
+                "parameter_currency_required_for_amount",
+                "A numeric amount_eur parameter must declare currency = EUR.",
+                f"{path_prefix}.value.currency",
+            )
+        )
+
+    if percentage is not None and unit != "rate_percent":
+        issues.append(
+            ReferentialIssue(
+                "parameter_percentage_incompatible_with_unit",
+                "percentage is only allowed when unit = rate_percent.",
+                f"{path_prefix}.value.percentage",
+            )
+        )
+    if unit == "rate_percent" and percentage is None and numeric_value is not None:
+        issues.append(
+            ReferentialIssue(
+                "parameter_rate_without_percentage",
+                "A rate_percent parameter with a numeric value must declare percentage.",
+                f"{path_prefix}.value.percentage",
+            )
+        )
+    if isinstance(percentage, (int, float)) and not 0 <= float(percentage) <= 300:
+        issues.append(
+            ReferentialIssue(
+                "parameter_percentage_out_of_range",
+                "Percentage parameters must stay in a conservative 0..300 range.",
+                f"{path_prefix}.value.percentage",
+            )
+        )
+
+    if parameter_type == "rate" and unit == "rate_percent" and numeric_value is not None and percentage is not None:
+        if abs(float(numeric_value) - float(percentage)) > 0.00001:
+            issues.append(
+                ReferentialIssue(
+                    "parameter_rate_value_mismatch",
+                    "For rate parameters, numeric_value and percentage must match.",
+                    f"{path_prefix}.value.numeric_value",
+                )
+            )
+
+    if parameter_type in PARAMETER_NUMERIC_TYPES and unit not in {"text", "none", "date"} and value_state not in PARAMETER_VALUE_UNKNOWN_STATES:
+        if numeric_value is None:
+            issues.append(
+                ReferentialIssue(
+                    "parameter_numeric_value_missing",
+                    "Numeric parameter types require numeric_value unless the value is explicitly unknown.",
+                    f"{path_prefix}.value.numeric_value",
+                )
+            )
+    if parameter_type in PARAMETER_METHOD_TYPES and unit in {"text", "none", "date"} and parameter_type != "date" and numeric_value is not None:
+        issues.append(
+            ReferentialIssue(
+                "parameter_method_has_numeric_value",
+                "Method or informational parameters must not carry a numeric value.",
+                f"{path_prefix}.value.numeric_value",
+            )
+        )
+    if parameter_type == "date" and numeric_value is not None:
+        issues.append(
+            ReferentialIssue(
+                "parameter_date_has_numeric_value",
+                "Date parameters must store the date in raw, not numeric_value.",
+                f"{path_prefix}.value.numeric_value",
+            )
+        )
+
+    if value_state in PARAMETER_VALUE_UNKNOWN_STATES and (numeric_value is not None or percentage is not None):
+        issues.append(
+            ReferentialIssue(
+                "parameter_unknown_value_cannot_be_numeric",
+                "Unknown or awaiting-source parameters cannot carry an exploitable numeric value.",
+                f"{path_prefix}.value.numeric_value",
+            )
+        )
+    if value_state in PARAMETER_VALUE_UNKNOWN_STATES and record.get("calculation_allowed") is True:
+        issues.append(
+            ReferentialIssue(
+                "parameter_unknown_value_cannot_calculate",
+                "A parameter without a known value cannot be calculation_allowed.",
+                f"{path_prefix}.calculation_allowed",
+            )
+        )
+
+    if value.get("is_fallback_value") is True or "valeur par defaut" in raw or "default" in raw:
+        issues.append(
+            ReferentialIssue(
+                "parameter_fallback_value_forbidden",
+                "Fallback/default values are forbidden unless replaced by a sourced validated value.",
+                f"{path_prefix}.value.is_fallback_value",
+            )
+        )
+
+    claims_validated = (
+        record.get("validation_status") == CALCULATION_VALIDATION_STATUS
+        or record.get("confidence") == CALCULATION_CONFIDENCE
+        or value_state == PARAMETER_READY_STATE
+    )
+    if claims_validated:
+        if not isinstance(human_validation, dict) or human_validation.get("status") != CALCULATION_HUMAN_STATUS:
+            issues.append(
+                ReferentialIssue(
+                    "parameter_claims_validation_without_human_validation",
+                    "A validated/high-confidence/calculation-ready parameter requires human_validation.status = validated.",
+                    f"{path_prefix}.human_validation.status",
+                )
+            )
+
+    return issues
+
+
+def periods_overlap(left_start: date | None, left_end: date | None, right_start: date | None, right_end: date | None) -> bool:
+    if left_start is None or right_start is None:
+        return False
+    left_limit = left_end or date.max
+    right_limit = right_end or date.max
+    return left_start <= right_limit and right_start <= left_limit
+
+
+def check_parameter_exclusive_periods(records: list[Any], path_prefix: str) -> list[ReferentialIssue]:
+    issues: list[ReferentialIssue] = []
+    by_group: dict[str, list[tuple[int, dict[str, Any]]]] = {}
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            continue
+        group = record.get("mutually_exclusive_group")
+        if isinstance(group, str) and group.strip():
+            by_group.setdefault(group, []).append((index, record))
+
+    for group, grouped_records in by_group.items():
+        for left_position, (left_index, left_record) in enumerate(grouped_records):
+            left_start = parse_iso_date(left_record.get("effective_date"))
+            left_end = parse_iso_date(left_record.get("end_date"))
+            for right_index, right_record in grouped_records[left_position + 1 :]:
+                right_start = parse_iso_date(right_record.get("effective_date"))
+                right_end = parse_iso_date(right_record.get("end_date"))
+                if periods_overlap(left_start, left_end, right_start, right_end):
+                    issues.append(
+                        ReferentialIssue(
+                            "exclusive_parameters_overlap",
+                            f"Mutually exclusive parameters overlap in group {group}: {left_record.get('parameter_id')} / {right_record.get('parameter_id')}.",
+                            f"{path_prefix}[{right_index}].mutually_exclusive_group",
+                        )
+                    )
+    return issues
+
+
 def check_calculation_gate(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
     if record.get("calculation_allowed") is not True:
         return []
@@ -527,6 +814,14 @@ def check_calculation_gate(record: dict[str, Any], path_prefix: str) -> list[Ref
                 f"{path_prefix}.human_validation.status",
             )
         )
+    if "value_state" in record and record.get("value_state") != PARAMETER_READY_STATE:
+        issues.append(
+            ReferentialIssue(
+                "calculation_without_ready_parameter_state",
+                "calculation_allowed requires value_state = calculation_ready.",
+                f"{path_prefix}.value_state",
+            )
+        )
     return issues
 
 
@@ -565,6 +860,8 @@ def validate_catalog(
             issue_code="duplicate_code",
         )
     )
+    if kind == "parameters":
+        errors.extend(check_parameter_exclusive_periods(records, str(config["record_key"])))
 
     fixture_type = catalog.get("fixture_type") if isinstance(catalog, dict) else None
     for index, record in enumerate(records):
@@ -588,6 +885,9 @@ def validate_catalog(
         if kind == "nibelis":
             errors.extend(check_nibelis_documentation(record, path_prefix))
             errors.extend(check_nibelis_business_rules(record, path_prefix))
+        if kind == "parameters":
+            errors.extend(check_parameter_documentation(record, path_prefix))
+            errors.extend(check_parameter_value_rules(record, path_prefix))
         if fixture_type == "synthetic_example":
             errors.extend(check_synthetic_fixture_guard(record, path_prefix))
 

@@ -20,13 +20,30 @@
     "ParameterValue": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["raw", "numeric_value", "unit"],
+      "required": ["raw", "numeric_value", "unit", "currency", "percentage", "is_fallback_value"],
       "properties": {
         "raw": { "type": "string" },
         "numeric_value": { "type": ["number", "null"] },
         "unit": {
           "type": "string",
           "enum": ["amount_eur", "hours", "days", "rate_percent", "count", "date", "km", "text", "none"]
+        },
+        "currency": { "type": ["string", "null"], "enum": ["EUR", null] },
+        "percentage": { "type": ["number", "null"] },
+        "is_fallback_value": { "type": "boolean" }
+      }
+    },
+    "ApplicationPeriod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "start_date", "end_date", "notes"],
+      "properties": {
+        "label": { "type": "string" },
+        "start_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
         }
       }
     },
@@ -51,9 +68,15 @@
         "parameter_id",
         "parameter_code",
         "label",
+        "business_description",
         "data_role",
         "parameter_type",
+        "value_state",
+        "value_kind",
         "value",
+        "employee_population",
+        "work_schedule",
+        "application_period",
         "source_layer",
         "source_document",
         "source_reference",
@@ -69,6 +92,11 @@
         "human_validation",
         "confidence",
         "confidentiality",
+        "verified_by",
+        "last_checked_at",
+        "validation_documents",
+        "misuse_risks",
+        "mutually_exclusive_group",
         "synthetic_only",
         "notes"
       ],
@@ -76,12 +104,34 @@
         "parameter_id": { "type": "string" },
         "parameter_code": { "type": "string" },
         "label": { "type": "string" },
-        "data_role": { "type": "string", "enum": ["source_data", "calculated_data", "controlled_data"] },
+        "business_description": { "type": "string" },
+        "data_role": { "type": "string", "enum": ["source_data", "entered_data", "derived_data", "controlled_data", "validated_data"] },
         "parameter_type": {
           "type": "string",
-          "enum": ["rate", "amount", "threshold", "date", "duration", "distance", "method", "formula_component", "other"]
+          "enum": ["rate", "amount", "threshold", "date", "duration", "distance", "method", "formula_component", "ceiling", "period", "informational", "other"]
         },
+        "value_state": {
+          "type": "string",
+          "enum": [
+            "identified_value_unknown",
+            "synthetic_test_value",
+            "awaiting_source",
+            "awaiting_human_validation",
+            "structurally_checked_not_applicable",
+            "calculation_ready"
+          ]
+        },
+        "value_kind": { "type": "string", "enum": ["source_data", "entered_data", "derived_data", "controlled_data", "validated_data"] },
         "value": { "$ref": "#/$defs/ParameterValue" },
+        "employee_population": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "work_schedule": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "application_period": { "$ref": "#/$defs/ApplicationPeriod" },
         "source_layer": {
           "type": "string",
           "enum": [
@@ -123,6 +173,17 @@
         "human_validation": { "$ref": "#/$defs/HumanValidation" },
         "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
         "confidentiality": { "type": "string", "enum": ["public", "internal", "confidential", "private"] },
+        "verified_by": { "type": ["string", "null"] },
+        "last_checked_at": { "type": ["string", "null"] },
+        "validation_documents": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "misuse_risks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "mutually_exclusive_group": { "type": ["string", "null"] },
         "synthetic_only": { "type": "boolean" },
         "notes": {
           "type": "array",

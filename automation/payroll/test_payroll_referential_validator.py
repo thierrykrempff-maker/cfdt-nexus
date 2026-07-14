@@ -80,6 +80,44 @@ REQUIRED_NIBELIS_CATEGORIES = {
     "counter_information",
 }
 
+EXPECTED_PARAMETER_CODES = {
+    "DUREE_MENS_REF_SYN",
+    "DUREE_HEBDO_REF_SYN",
+    "HSUP_SEUIL_SYN",
+    "HSUP_MAJ_SYN",
+    "NUIT_MAJ_SYN",
+    "DIMANCHE_MAJ_SYN",
+    "FERIE_MAJ_SYN",
+    "ASTREINTE_VAL_SYN",
+    "INTERVENTION_VAL_SYN",
+    "REPOS_QUOT_MIN_SYN",
+    "REPOS_HEBDO_MIN_SYN",
+    "RC_PLAFOND_SYN",
+    "CP_ACQ_SYN",
+    "CP_INDEMNITE_METHODE_SYN",
+    "MALADIE_MAINTIEN_SYN",
+    "SUBROGATION_MODE_SYN",
+    "TREIZE_MOIS_MODE_SYN",
+    "ANCIENNETE_SEUIL_SYN",
+    "KM_VALEUR_SYN",
+    "PANIER_REPAS_SYN",
+    "PLAFOND_INTERNE_SYN",
+    "REGULARISATION_DATE_SYN",
+    "INFO_SANS_VALEUR_SYN",
+}
+
+REQUIRED_PARAMETER_TYPES = {
+    "amount",
+    "ceiling",
+    "date",
+    "duration",
+    "formula_component",
+    "informational",
+    "method",
+    "rate",
+    "threshold",
+}
+
 KELIO_DOCUMENTATION_FIELDS = {
     "business_description",
     "feed_conditions",
@@ -97,6 +135,12 @@ NIBELIS_DOCUMENTATION_FIELDS = {
     "frequent_anomalies",
     "control_points",
     "synthetic_reading_examples",
+}
+
+PARAMETER_DOCUMENTATION_FIELDS = {
+    "business_description",
+    "validation_documents",
+    "misuse_risks",
 }
 
 
@@ -140,7 +184,7 @@ def test_all_example_referentials_validate() -> None:
     assert report["valid"], report
     assert report["reports"]["nibelis"]["records_count"] == 26
     assert report["reports"]["kelio"]["records_count"] == 17
-    assert report["reports"]["parameters"]["records_count"] == 3
+    assert report["reports"]["parameters"]["records_count"] == 23
 
 
 def test_nibelis_referential_contains_required_synthetic_codes() -> None:
@@ -185,6 +229,63 @@ def test_nibelis_links_to_existing_rules_variables_and_kelio_only() -> None:
     assert "PAY_HSUP_TRANCHES_001" in linked_rule_ids
     assert "KELIO_HS_SYN" in linked_kelio_ids
     report = report_for("nibelis", catalog)
+    assert report["valid"], report
+    assert_no_issue(report, "unknown_reference")
+
+
+def test_parameter_referential_contains_required_synthetic_codes() -> None:
+    catalog = cloned_catalog("parameters")
+    codes = {parameter["parameter_code"] for parameter in catalog["parameters"]}
+    assert EXPECTED_PARAMETER_CODES == codes
+    assert len(catalog["parameters"]) >= 20
+    assert len(catalog["parameters"]) == len(codes)
+
+
+def test_parameter_referential_covers_required_types_and_states() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter_types = {parameter["parameter_type"] for parameter in catalog["parameters"]}
+    value_states = {parameter["value_state"] for parameter in catalog["parameters"]}
+    assert REQUIRED_PARAMETER_TYPES <= parameter_types
+    assert {
+        "identified_value_unknown",
+        "synthetic_test_value",
+        "awaiting_source",
+        "awaiting_human_validation",
+        "structurally_checked_not_applicable",
+    } <= value_states
+    assert "calculation_ready" not in value_states
+
+
+def test_parameter_records_have_business_documentation() -> None:
+    catalog = cloned_catalog("parameters")
+    for parameter in catalog["parameters"]:
+        assert parameter["parameter_id"].endswith("_SYN"), parameter["parameter_id"]
+        assert parameter["parameter_code"].endswith("_SYN"), parameter["parameter_code"]
+        for field_name in PARAMETER_DOCUMENTATION_FIELDS:
+            assert parameter[field_name], (parameter["parameter_id"], field_name)
+        assert parameter["verified_by"] == "expert_paie_humain"
+        assert parameter["human_validation"]["validator"] == "expert_paie_humain"
+
+
+def test_parameter_referential_does_not_activate_calculation() -> None:
+    catalog = cloned_catalog("parameters")
+    for parameter in catalog["parameters"]:
+        assert parameter["calculation_allowed"] is False, parameter["parameter_id"]
+        assert parameter["synthetic_only"] is True, parameter["parameter_id"]
+        assert parameter["value_state"] != "calculation_ready", parameter["parameter_id"]
+    report = report_for("parameters", catalog)
+    assert report["valid"], report
+
+
+def test_parameter_links_to_existing_rules_variables_kelio_and_nibelis_only() -> None:
+    catalog = cloned_catalog("parameters")
+    linked_rule_ids = {rule_id for parameter in catalog["parameters"] for rule_id in parameter["linked_rule_ids"]}
+    linked_kelio_ids = {counter_id for parameter in catalog["parameters"] for counter_id in parameter["linked_kelio_counter_ids"]}
+    linked_nibelis_ids = {rubric_id for parameter in catalog["parameters"] for rubric_id in parameter["linked_nibelis_rubric_ids"]}
+    assert "PAY_HSUP_TRANCHES_001" in linked_rule_ids
+    assert "KELIO_HS_SYN" in linked_kelio_ids
+    assert "NIB_RUB_HSUP_MAJ" in linked_nibelis_ids
+    report = report_for("parameters", catalog)
     assert report["valid"], report
     assert_no_issue(report, "unknown_reference")
 
@@ -340,6 +441,20 @@ def test_reject_unknown_cross_referential_link() -> None:
     assert_issue(report, "unknown_reference")
 
 
+def test_reject_unknown_parameter_kelio_link() -> None:
+    catalog = cloned_catalog("parameters")
+    catalog["parameters"][0]["linked_kelio_counter_ids"] = ["KELIO_UNKNOWN"]
+    report = report_for("parameters", catalog)
+    assert_issue(report, "unknown_reference")
+
+
+def test_reject_unknown_parameter_nibelis_link() -> None:
+    catalog = cloned_catalog("parameters")
+    catalog["parameters"][0]["linked_nibelis_rubric_ids"] = ["NIB_RUB_UNKNOWN"]
+    report = report_for("parameters", catalog)
+    assert_issue(report, "unknown_reference")
+
+
 def test_reject_duplicate_link() -> None:
     catalog = cloned_catalog("parameters")
     catalog["parameters"][0]["linked_rule_ids"] = ["PAY_HSUP_TRANCHES_001", "PAY_HSUP_TRANCHES_001"]
@@ -353,6 +468,94 @@ def test_synthetic_fixture_cannot_enable_calculation() -> None:
     report = report_for("parameters", catalog)
     assert_issue(report, "synthetic_fixture_cannot_calculate")
     assert_issue(report, "calculation_from_synthetic_fixture")
+
+
+def test_parameter_synthetic_only_false_is_rejected() -> None:
+    catalog = cloned_catalog("parameters")
+    catalog["parameters"][0]["synthetic_only"] = False
+    report = report_for("parameters", catalog)
+    assert_issue(report, "synthetic_fixture_not_marked")
+
+
+def test_reject_parameter_invalid_percentage() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "HSUP_MAJ_SYN")
+    parameter["value"]["percentage"] = 301
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_percentage_out_of_range")
+
+
+def test_reject_parameter_currency_on_non_amount_unit() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "HSUP_MAJ_SYN")
+    parameter["value"]["currency"] = "EUR"
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_currency_incompatible_with_unit")
+
+
+def test_reject_parameter_unit_incompatible_with_type() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "HSUP_MAJ_SYN")
+    parameter["value"]["unit"] = "amount_eur"
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_unit_incompatible_with_type")
+
+
+def test_reject_parameter_numeric_value_in_method() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "CP_INDEMNITE_METHODE_SYN")
+    parameter["value"]["numeric_value"] = 12
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_method_has_numeric_value")
+
+
+def test_reject_parameter_fallback_value() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "DUREE_MENS_REF_SYN")
+    parameter["value"]["raw"] = "valeur par defaut interdite"
+    parameter["value"]["is_fallback_value"] = True
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_fallback_value_forbidden")
+
+
+def test_reject_parameter_unknown_value_with_numeric_default() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "REPOS_HEBDO_MIN_SYN")
+    parameter["value"]["numeric_value"] = 1
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_unknown_value_cannot_be_numeric")
+
+
+def test_reject_parameter_claiming_validation_without_human_validation() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "HSUP_MAJ_SYN")
+    parameter["validation_status"] = "human_validated"
+    parameter["confidence"] = "high"
+    parameter["value_state"] = "calculation_ready"
+    parameter["human_validation"]["status"] = "pending"
+    report = report_for("parameters", catalog)
+    assert_issue(report, "parameter_claims_validation_without_human_validation")
+
+
+def test_reject_parameter_exclusive_period_overlap() -> None:
+    catalog = cloned_catalog("parameters")
+    first = find_record(catalog, "parameters", "parameter_code", "HSUP_MAJ_SYN")
+    second = copy.deepcopy(first)
+    second["parameter_id"] = "PARAM_HSUP_MAJ_ALT_SYN"
+    second["parameter_code"] = "HSUP_MAJ_ALT_SYN"
+    second["source_reference"] = "fixture:param:hsup-majoration-alt"
+    catalog["parameters"].append(second)
+    report = report_for("parameters", catalog)
+    assert_issue(report, "exclusive_parameters_overlap")
+
+
+def test_reject_parameter_application_period_incoherent() -> None:
+    catalog = cloned_catalog("parameters")
+    parameter = find_record(catalog, "parameters", "parameter_code", "DUREE_MENS_REF_SYN")
+    parameter["application_period"]["start_date"] = "2026-02-01"
+    parameter["application_period"]["end_date"] = "2026-01-01"
+    report = report_for("parameters", catalog)
+    assert_issue(report, "application_period_start_after_end")
 
 
 def test_nibelis_synthetic_fixture_cannot_enable_calculation() -> None:
@@ -431,6 +634,9 @@ def test_private_validated_parameter_can_pass_calculation_gate() -> None:
     record = catalog["parameters"][0]
     record["calculation_allowed"] = True
     record["synthetic_only"] = False
+    record["data_role"] = "validated_data"
+    record["value_kind"] = "validated_data"
+    record["value_state"] = "calculation_ready"
     record["source_layer"] = "accord_entreprise"
     record["source_document"] = "Document synthetique de test valide"
     record["source_reference"] = "test:source:1"
@@ -438,7 +644,7 @@ def test_private_validated_parameter_can_pass_calculation_gate() -> None:
     record["validation_status"] = "human_validated"
     record["confidence"] = "high"
     record["human_validation"]["status"] = "validated"
-    record["human_validation"]["validator"] = "validateur synthetique"
+    record["human_validation"]["validator"] = "expert_paie_humain"
     record["human_validation"]["validated_at"] = "2026-01-01"
     report = report_for("parameters", catalog)
     assert report["valid"], report
