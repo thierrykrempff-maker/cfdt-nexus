@@ -11,7 +11,6 @@ from __future__ import annotations
 import argparse
 import copy
 import json
-import re
 import sys
 from dataclasses import dataclass
 from datetime import date
@@ -22,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from automation.payroll import payroll_data_privacy_validator as privacy_validator  # noqa: E402
 from automation.payroll import payroll_rule_validator as rule_validator  # noqa: E402
 
 
@@ -138,22 +138,6 @@ KNOWLEDGE_GRAPH_COMPATIBLE_TYPES = {
     "depends_on": {("rule", "kelio_counter"), ("payroll_parameter", "variable")},
 }
 
-SENSITIVE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("email", re.compile(r"\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b", re.IGNORECASE)),
-    ("iban", re.compile(r"\bFR\d{2}(?:\s?[A-Z0-9]){23}\b", re.IGNORECASE)),
-    (
-        "french_social_security_number",
-        re.compile(r"\b[12][\s.-]?\d{2}[\s.-]?\d{2}[\s.-]?\d{2}[\s.-]?\d{3}[\s.-]?\d{3}[\s.-]?\d{2}\b"),
-    ),
-    ("phone_number", re.compile(r"\b(?:\+33|0)[1-9](?:[\s.-]?\d{2}){4}\b")),
-    ("matricule", re.compile(r"\b(?:matricule|employee\s*id|numero\s*salari[ee])\b", re.IGNORECASE)),
-    (
-        "personal_address",
-        re.compile(r"\b\d{1,4}\s+(?:rue|avenue|boulevard|impasse|chemin|route|allee)\b", re.IGNORECASE),
-    ),
-)
-
-
 @dataclass
 class ReferentialIssue:
     code: str
@@ -203,19 +187,6 @@ def parse_iso_date(value: Any) -> date | None:
         return date.fromisoformat(value)
     except ValueError:
         return None
-
-
-def iter_string_values(value: Any, path: str = "$") -> list[tuple[str, str]]:
-    values: list[tuple[str, str]] = []
-    if isinstance(value, dict):
-        for key, item in value.items():
-            values.extend(iter_string_values(item, f"{path}.{key}"))
-    elif isinstance(value, list):
-        for index, item in enumerate(value):
-            values.extend(iter_string_values(item, f"{path}[{index}]"))
-    elif isinstance(value, str):
-        values.append((path, value))
-    return values
 
 
 def collect_rule_reference_index() -> dict[str, set[str]]:
@@ -367,16 +338,24 @@ def check_dates(record: dict[str, Any], path_prefix: str) -> list[ReferentialIss
 
 def check_sensitive_data(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
     issues: list[ReferentialIssue] = []
-    for path, value in iter_string_values(record, path_prefix):
-        for code, pattern in SENSITIVE_PATTERNS:
-            if pattern.search(value):
-                issues.append(
-                    ReferentialIssue(
-                        "sensitive_data_detected",
-                        f"Potential sensitive or personal data detected: {code}.",
-                        path,
-                    )
-                )
+    report = privacy_validator.scan_object(record, path=path_prefix)
+    for item in report.get("findings", []):
+        if not isinstance(item, dict):
+            continue
+        risk_level = item.get("risk_level")
+        if risk_level not in {privacy_validator.RISK_FORBIDDEN, privacy_validator.RISK_REVIEW}:
+            continue
+        category = item.get("category") or "unknown"
+        masked_excerpt = item.get("masked_excerpt") or ""
+        recommendation = item.get("recommendation") or "Verifier la donnee avant toute publication."
+        code = "sensitive_data_detected" if risk_level == privacy_validator.RISK_FORBIDDEN else "sensitive_data_to_review"
+        issues.append(
+            ReferentialIssue(
+                code,
+                f"Potential sensitive or personal data detected: {category}. {recommendation} Excerpt: {masked_excerpt}",
+                str(item.get("path") or path_prefix),
+            )
+        )
     return issues
 
 

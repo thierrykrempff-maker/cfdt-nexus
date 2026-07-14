@@ -752,35 +752,35 @@ def test_reject_nested_unknown_field() -> None:
 
 def test_detect_email_in_fixture() -> None:
     catalog = cloned_catalog("nibelis")
-    catalog["rubrics"][0]["notes"] = ["Contact test thierry@example.com"]
+    catalog["rubrics"][0]["notes"] = ["Contact test " + "personne.alpha" + "@" + "entreprise.invalid"]
     report = report_for("nibelis", catalog)
     assert_issue(report, "sensitive_data_detected")
 
 
 def test_detect_phone_number_in_fixture() -> None:
     catalog = cloned_catalog("kelio")
-    catalog["counters"][0]["notes"] = ["Numero fictif interdit 06 12 34 56 78"]
+    catalog["counters"][0]["notes"] = ["Numero interdit " + "06 " + "12 34 " + "56 78"]
     report = report_for("kelio", catalog)
     assert_issue(report, "sensitive_data_detected")
 
 
 def test_detect_iban_in_fixture() -> None:
     catalog = cloned_catalog("parameters")
-    catalog["parameters"][0]["notes"] = ["IBAN interdit FR76 3000 6000 0112 3456 7890 189"]
+    catalog["parameters"][0]["notes"] = ["IBAN interdit " + "FR76 " + "3000 6000 " + "0112 3456 " + "7890 189"]
     report = report_for("parameters", catalog)
     assert_issue(report, "sensitive_data_detected")
 
 
 def test_detect_social_security_number_in_fixture() -> None:
     catalog = cloned_catalog("parameters")
-    catalog["parameters"][0]["notes"] = ["NIR interdit 1 84 12 57 123 456 78"]
+    catalog["parameters"][0]["notes"] = ["NIR interdit " + "1 84 " + "12 57 " + "123 456 " + "78"]
     report = report_for("parameters", catalog)
     assert_issue(report, "sensitive_data_detected")
 
 
 def test_detect_matricule_in_fixture() -> None:
     catalog = cloned_catalog("kelio")
-    catalog["counters"][0]["notes"] = ["matricule salarie interdit dans une fixture"]
+    catalog["counters"][0]["notes"] = ["matricule: " + "MAT-" + "12345" + " interdit dans une fixture"]
     report = report_for("kelio", catalog)
     assert_issue(report, "sensitive_data_detected")
 

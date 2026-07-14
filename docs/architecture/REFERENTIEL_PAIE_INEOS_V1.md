@@ -711,18 +711,95 @@ Le validateur controle les liens vers :
 
 Objectif : eviter qu'une rubrique, un compteur ou un parametre fasse reference a une regle inexistante ou a une variable non connue du moteur.
 
-## Detection de donnees sensibles
+## LOT 4F - Controles d'anonymisation et protection des donnees paie
 
-Le validateur detecte dans les fixtures :
+Le LOT 4F ajoute une couche dediee de confidentialite :
 
-- email ;
-- IBAN ;
-- numero de securite sociale ;
+```text
+automation/payroll/payroll_data_privacy_validator.py
+automation/payroll/check_payroll_privacy_before_commit.py
+automation/payroll/test_payroll_data_privacy_validator.py
+```
+
+Cette couche scanne localement :
+
+- des objets Python ;
+- des fichiers JSON ou texte ;
+- des dossiers ;
+- les fichiers suivis modifies, stages ou non suivis avant commit.
+
+Elle ne transmet aucune donnee a un service externe.
+
+### Categories surveillees
+
+Le validateur recherche notamment :
+
+- adresse email ;
 - telephone ;
-- mention de matricule ;
-- adresse personnelle simple.
+- IBAN, BIC et references bancaires ;
+- numero de securite sociale ;
+- matricule ou identifiant salarie ;
+- nom ou prenom dans un champ nominatif ;
+- date ou lieu de naissance ;
+- numero fiscal ou taux individualise ;
+- salaire rattache a une identite ;
+- information medicale ou arret de travail nominatif ;
+- diagnostic ou pathologie ;
+- secrets techniques, tokens, mots de passe et cles API ;
+- noms de fichiers a risque : bulletin, payslip, export Kelio, export Nibelis, salaires, matricules, `.env`, sauvegardes et cles privees.
 
-Cette detection est volontairement prudente. Elle ne remplace pas une revue humaine avant tout ajout de donnees privees locales.
+### Rapport structure
+
+Chaque anomalie remonte :
+
+- categorie ;
+- chemin ou fichier ;
+- extrait masque ;
+- niveau de risque ;
+- recommandation.
+
+Les rapports ne doivent jamais reproduire la valeur complete detectee. Les extraits sont masques a plus de 70 %.
+
+### Donnees synthetiques autorisees
+
+Les exemples strictement synthetiques peuvent etre acceptes lorsqu'ils sont explicites :
+
+- marqueur `EXEMPLE_SYNTHETIQUE` ;
+- domaine reserve `example.com` ;
+- exemple invalide documente pour IBAN ou NIR ;
+- noms generiques irreels.
+
+Attention : `synthetic_only = true` ne donne pas une autorisation generale d'ajouter des donnees personnelles.
+
+### Integration au validateur referentiel
+
+`payroll_referential_validator.py` appelle la couche LOT 4F. Il ne duplique plus les regles de detection.
+
+Les erreurs bloquantes restent exposees avec le code historique :
+
+```text
+sensitive_data_detected
+```
+
+Les cas suspects mais non conclusifs peuvent remonter en revue humaine.
+
+### Controle avant commit
+
+Le script local peut etre lance avant un commit :
+
+```powershell
+python automation/payroll/check_payroll_privacy_before_commit.py
+```
+
+Il renvoie :
+
+- code `1` si une donnee interdite est detectee ;
+- code `0` si aucune donnee interdite n'est trouvee ;
+- des avertissements pour les fichiers ou contenus a verifier.
+
+Il ignore les dossiers techniques comme `.git`, caches, environnements virtuels et `node_modules`, et evite de charger de gros binaires.
+
+Un audit plus large reste possible en passant un ou plusieurs chemins explicites avec `--path`.
 
 ## Commandes
 
@@ -745,6 +822,7 @@ Tests :
 
 ```powershell
 python automation/payroll/test_payroll_referential_validator.py
+python automation/payroll/test_payroll_data_privacy_validator.py
 ```
 
 ## Limites
@@ -753,6 +831,7 @@ python automation/payroll/test_payroll_referential_validator.py
 - Aucun vrai referentiel Kelio n'est ajoute.
 - Aucun parametre INEOS reel n'est ajoute.
 - Aucun graphe issu de donnees reelles n'est ajoute.
+- Aucun bulletin, export Kelio, export Nibelis ou fichier nominatif reel n'est ajoute.
 - Aucun calcul n'est active.
 - Le moteur `payroll_rule_engine.py` n'est pas modifie.
 - `automation/experts/paie.py` n'est pas modifie.
@@ -783,6 +862,12 @@ LOT 4E :
 - ajouter de futures relations uniquement si les objets existent deja ;
 - ne pas utiliser le graphe comme moteur de calcul.
 
+LOT 4F :
+
+- faire tourner le controle de confidentialite avant chaque ajout de fixture paie ;
+- refuser tout bulletin reel, matricule, export nominatif ou secret technique dans Git ;
+- conserver les controles comme garde-fous, sans remplacer la validation humaine.
+
 ## Conclusion
 
-Les LOTS 4A a 4E posent le cadre de securite et de validation du referentiel paie. Ils ne rendent pas CFDT Nexus plus calculateur ; ils le rendent plus prudent, plus structure et plus difficile a polluer avec des donnees non verifiees.
+Les LOTS 4A a 4F posent le cadre de securite et de validation du referentiel paie. Ils ne rendent pas CFDT Nexus plus calculateur ; ils le rendent plus prudent, plus structure et plus difficile a polluer avec des donnees non verifiees ou confidentielles.
