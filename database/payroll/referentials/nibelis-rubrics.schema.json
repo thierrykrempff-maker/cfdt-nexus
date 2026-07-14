@@ -17,6 +17,16 @@
     }
   },
   "$defs": {
+    "SyntheticReadingExample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value", "interpretation"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "interpretation": { "type": "string" }
+      }
+    },
     "NibelisRubric": {
       "type": "object",
       "additionalProperties": false,
@@ -25,15 +35,21 @@
         "rubric_code",
         "label",
         "normalized_label",
+        "business_description",
         "data_role",
         "category",
         "sub_category",
         "payroll_topic",
+        "calculation_family",
+        "appears_on_payslip",
+        "gross_impact",
+        "affects_gross",
         "unit",
         "amount_applicable",
         "rate_applicable",
         "base_applicable",
         "source_layer",
+        "generic_source",
         "source_document",
         "source_reference",
         "effective_date",
@@ -41,10 +57,15 @@
         "linked_rule_ids",
         "linked_variables",
         "linked_kelio_counter_ids",
+        "documents_to_check",
+        "frequent_anomalies",
+        "control_points",
+        "synthetic_reading_examples",
         "calculation_allowed",
         "validation_status",
         "confidence",
         "confidentiality",
+        "anonymization_required",
         "synthetic_only",
         "notes"
       ],
@@ -53,6 +74,7 @@
         "rubric_code": { "type": "string" },
         "label": { "type": "string" },
         "normalized_label": { "type": "string" },
+        "business_description": { "type": "string" },
         "data_role": { "type": "string", "enum": ["source_data", "calculated_data", "controlled_data"] },
         "category": {
           "type": "string",
@@ -77,6 +99,13 @@
           "type": "array",
           "items": { "type": "string" }
         },
+        "calculation_family": {
+          "type": "string",
+          "enum": ["fixed_amount", "variable_amount", "time_based", "absence_deduction", "informational", "regularization", "benefit", "to_verify"]
+        },
+        "appears_on_payslip": { "type": "boolean" },
+        "gross_impact": { "type": "string", "enum": ["positive", "negative", "informational"] },
+        "affects_gross": { "type": "boolean" },
         "unit": {
           "type": "string",
           "enum": ["amount_eur", "hours", "days", "rate_percent", "count", "text", "km", "none"]
@@ -97,6 +126,7 @@
             "to_verify"
           ]
         },
+        "generic_source": { "type": "string" },
         "source_document": { "type": "string" },
         "source_reference": { "type": ["string", "null"] },
         "effective_date": { "type": ["string", "null"] },
@@ -113,6 +143,22 @@
           "type": "array",
           "items": { "type": "string" }
         },
+        "documents_to_check": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frequent_anomalies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "control_points": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "synthetic_reading_examples": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/SyntheticReadingExample" }
+        },
         "calculation_allowed": { "type": "boolean" },
         "validation_status": {
           "type": "string",
@@ -120,6 +166,7 @@
         },
         "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
         "confidentiality": { "type": "string", "enum": ["public", "internal", "confidential", "private"] },
+        "anonymization_required": { "type": "boolean" },
         "synthetic_only": { "type": "boolean" },
         "notes": {
           "type": "array",

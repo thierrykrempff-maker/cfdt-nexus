@@ -38,10 +38,61 @@ EXPECTED_KELIO_CODES = {
     "FERIE_SYN",
 }
 
+EXPECTED_NIBELIS_CODES = {
+    "BASE_SAL_SYN",
+    "ANC_SYN",
+    "POSTE_5X8_SYN",
+    "HS_BASE_SYN",
+    "HS_MAJ_SYN",
+    "NUIT_SYN",
+    "DIM_SYN",
+    "FERIE_PAY_SYN",
+    "AST_PAY_SYN",
+    "INT_AST_SYN",
+    "CP_INFO_SYN",
+    "ICP_SYN",
+    "ABS_NR_SYN",
+    "RET_ABS_SYN",
+    "MAINT_MAL_SYN",
+    "IJSS_SYN",
+    "SUBRO_SYN",
+    "ATMP_SYN",
+    "TREIZE_SYN",
+    "PRIME_EXC_SYN",
+    "KM_SYN",
+    "PANIER_SYN",
+    "REPOS_COMP_SYN",
+    "REG_PAIE_SYN",
+    "RAPPEL_SYN",
+    "COMPTEURS_INFO_SYN",
+}
+
+REQUIRED_NIBELIS_CATEGORIES = {
+    "base_salary",
+    "premium",
+    "overtime",
+    "leave",
+    "absence",
+    "sickness",
+    "on_call",
+    "allowance",
+    "regularization",
+    "counter_information",
+}
+
 KELIO_DOCUMENTATION_FIELDS = {
     "business_description",
     "feed_conditions",
     "decrease_conditions",
+    "documents_to_check",
+    "frequent_anomalies",
+    "control_points",
+    "synthetic_reading_examples",
+}
+
+NIBELIS_DOCUMENTATION_FIELDS = {
+    "business_description",
+    "generic_source",
     "documents_to_check",
     "frequent_anomalies",
     "control_points",
@@ -77,12 +128,65 @@ def assert_no_issue(report: dict[str, Any], code: str) -> None:
     assert not any(issue["code"] == code for issue in errors(report)), report
 
 
+def find_record(catalog: dict[str, Any], collection: str, field_name: str, value: str) -> dict[str, Any]:
+    for record in catalog[collection]:
+        if record[field_name] == value:
+            return record
+    raise AssertionError(f"Missing record {field_name}={value}")
+
+
 def test_all_example_referentials_validate() -> None:
     report = validator.validate_all()
     assert report["valid"], report
-    assert report["reports"]["nibelis"]["records_count"] == 3
+    assert report["reports"]["nibelis"]["records_count"] == 26
     assert report["reports"]["kelio"]["records_count"] == 17
     assert report["reports"]["parameters"]["records_count"] == 3
+
+
+def test_nibelis_referential_contains_required_synthetic_codes() -> None:
+    catalog = cloned_catalog("nibelis")
+    codes = {rubric["rubric_code"] for rubric in catalog["rubrics"]}
+    assert EXPECTED_NIBELIS_CODES == codes
+    assert len(catalog["rubrics"]) >= 25
+    assert len(catalog["rubrics"]) == len(codes)
+
+
+def test_nibelis_referential_covers_required_business_families() -> None:
+    catalog = cloned_catalog("nibelis")
+    categories = {rubric["category"] for rubric in catalog["rubrics"]}
+    assert REQUIRED_NIBELIS_CATEGORIES <= categories
+
+
+def test_nibelis_records_have_business_documentation() -> None:
+    catalog = cloned_catalog("nibelis")
+    for rubric in catalog["rubrics"]:
+        for field_name in NIBELIS_DOCUMENTATION_FIELDS:
+            assert rubric[field_name], (rubric["rubric_id"], field_name)
+        for example in rubric["synthetic_reading_examples"]:
+            assert example["label"].strip(), rubric["rubric_id"]
+            assert example["value"].strip(), rubric["rubric_id"]
+            assert example["interpretation"].strip(), rubric["rubric_id"]
+
+
+def test_nibelis_referential_does_not_activate_calculation() -> None:
+    catalog = cloned_catalog("nibelis")
+    for rubric in catalog["rubrics"]:
+        assert rubric["calculation_allowed"] is False, rubric["rubric_id"]
+        assert rubric["synthetic_only"] is True, rubric["rubric_id"]
+        assert rubric["source_layer"] == "synthetic_fixture", rubric["rubric_id"]
+    report = report_for("nibelis", catalog)
+    assert report["valid"], report
+
+
+def test_nibelis_links_to_existing_rules_variables_and_kelio_only() -> None:
+    catalog = cloned_catalog("nibelis")
+    linked_rule_ids = {rule_id for rubric in catalog["rubrics"] for rule_id in rubric["linked_rule_ids"]}
+    linked_kelio_ids = {counter_id for rubric in catalog["rubrics"] for counter_id in rubric["linked_kelio_counter_ids"]}
+    assert "PAY_HSUP_TRANCHES_001" in linked_rule_ids
+    assert "KELIO_HS_SYN" in linked_kelio_ids
+    report = report_for("nibelis", catalog)
+    assert report["valid"], report
+    assert_no_issue(report, "unknown_reference")
 
 
 def test_kelio_referential_contains_required_counter_codes() -> None:
@@ -127,6 +231,20 @@ def test_reject_kelio_synthetic_only_false_in_fixture() -> None:
     catalog = cloned_catalog("kelio")
     catalog["counters"][0]["synthetic_only"] = False
     report = report_for("kelio", catalog)
+    assert_issue(report, "synthetic_fixture_not_marked")
+
+
+def test_reject_nibelis_missing_business_documentation() -> None:
+    catalog = cloned_catalog("nibelis")
+    catalog["rubrics"][0]["documents_to_check"] = []
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "missing_business_documentation")
+
+
+def test_reject_nibelis_synthetic_only_false_in_fixture() -> None:
+    catalog = cloned_catalog("nibelis")
+    catalog["rubrics"][0]["synthetic_only"] = False
+    report = report_for("nibelis", catalog)
     assert_issue(report, "synthetic_fixture_not_marked")
 
 
@@ -208,6 +326,13 @@ def test_reject_unknown_variable_link() -> None:
     assert_issue(report, "unknown_reference")
 
 
+def test_reject_unknown_nibelis_variable_link() -> None:
+    catalog = cloned_catalog("nibelis")
+    catalog["rubrics"][0]["linked_variables"] = ["unknown_variable"]
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "unknown_reference")
+
+
 def test_reject_unknown_cross_referential_link() -> None:
     catalog = cloned_catalog("nibelis")
     catalog["rubrics"][1]["linked_kelio_counter_ids"] = ["KELIO_UNKNOWN"]
@@ -228,6 +353,54 @@ def test_synthetic_fixture_cannot_enable_calculation() -> None:
     report = report_for("parameters", catalog)
     assert_issue(report, "synthetic_fixture_cannot_calculate")
     assert_issue(report, "calculation_from_synthetic_fixture")
+
+
+def test_nibelis_synthetic_fixture_cannot_enable_calculation() -> None:
+    catalog = cloned_catalog("nibelis")
+    catalog["rubrics"][0]["calculation_allowed"] = True
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "synthetic_fixture_cannot_calculate")
+    assert_issue(report, "calculation_from_synthetic_fixture")
+
+
+def test_reject_nibelis_retenue_with_positive_impact() -> None:
+    catalog = cloned_catalog("nibelis")
+    rubric = find_record(catalog, "rubrics", "rubric_code", "RET_ABS_SYN")
+    rubric["gross_impact"] = "positive"
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "nibelis_retenue_must_be_negative")
+
+
+def test_reject_nibelis_informational_rubric_affecting_gross() -> None:
+    catalog = cloned_catalog("nibelis")
+    rubric = find_record(catalog, "rubrics", "rubric_code", "COMPTEURS_INFO_SYN")
+    rubric["affects_gross"] = True
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "nibelis_informational_cannot_affect_gross")
+
+
+def test_reject_nibelis_counter_information_with_non_informational_impact() -> None:
+    catalog = cloned_catalog("nibelis")
+    rubric = find_record(catalog, "rubrics", "rubric_code", "REPOS_COMP_SYN")
+    rubric["gross_impact"] = "positive"
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "nibelis_counter_information_must_be_informational")
+
+
+def test_reject_nibelis_hidden_rubric_described_as_visible() -> None:
+    catalog = cloned_catalog("nibelis")
+    rubric = find_record(catalog, "rubrics", "rubric_code", "REG_PAIE_SYN")
+    rubric["appears_on_payslip"] = False
+    rubric["notes"] = ["Cette rubrique est visible sur le bulletin fictif"]
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "nibelis_hidden_rubric_described_as_visible")
+
+
+def test_reject_nibelis_payslip_rubric_without_anonymization_guard() -> None:
+    catalog = cloned_catalog("nibelis")
+    catalog["rubrics"][0]["anonymization_required"] = False
+    report = report_for("nibelis", catalog)
+    assert_issue(report, "nibelis_anonymization_required")
 
 
 def test_calculation_allowed_requires_source_date_and_human_validation() -> None:

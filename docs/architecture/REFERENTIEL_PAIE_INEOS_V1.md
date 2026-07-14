@@ -228,6 +228,128 @@ La validation devra confirmer :
 - que les regles rattachees sont les bonnes ;
 - que les limites d'interpretation sont comprises.
 
+## LOT 4C - Referentiel metier Nibelis synthetique
+
+Le LOT 4C enrichit le referentiel Nibelis avec des rubriques synthetiques pedagogiques.
+
+Objectif :
+
+- modeliser les grandes familles visibles ou controlables sur un bulletin ;
+- expliquer le role metier d'une rubrique sans utiliser de code Nibelis reel ;
+- relier prudemment une rubrique a une variable metier, un compteur Kelio ou une regle existante ;
+- preparer les futurs rapprochements bulletin / Kelio / accords sans activer de calcul ;
+- imposer l'anonymisation avant toute utilisation de bulletin reel.
+
+### Rubriques couvertes
+
+Le referentiel synthetique contient 26 rubriques couvrant notamment :
+
+- salaire de base ;
+- primes ;
+- heures supplementaires ;
+- nuit, dimanche et jours feries ;
+- astreinte et intervention ;
+- conges payes ;
+- absences et retenues ;
+- maladie, IJSS, subrogation et accident du travail ;
+- 13e mois ;
+- indemnite kilometrique ;
+- panier repas ;
+- regularisations et rappels ;
+- informations de compteurs.
+
+Tous les codes finissent par `_SYN`. Ils sont volontairement fictifs et ne doivent jamais etre presentes comme des codes Nibelis reels, des codes INEOS confirmes ou des parametres de paie utilisables.
+
+### Rubrique, compteur, variable et regle
+
+Une rubrique Nibelis represente une ligne de presentation ou de controle.
+
+Exemple :
+
+```text
+NIB_RUB_HSUP_MAJ / HS_MAJ_SYN
+```
+
+Un compteur Kelio represente une donnee de temps ou de planning.
+
+Exemple :
+
+```text
+KELIO_HS_SYN
+```
+
+Une variable metier est une information attendue par une regle.
+
+Exemple :
+
+```text
+heures_validees
+```
+
+Une regle de paie reste la seule structure destinee a porter une logique metier opposable, quand elle sera verifiee.
+
+Exemple :
+
+```text
+PAY_HSUP_TRANCHES_001
+```
+
+Le lien Nibelis -> Kelio -> variable -> regle aide a organiser le controle. Il ne prouve pas un droit et ne declenche aucun calcul automatique.
+
+### Documentation metier obligatoire
+
+Chaque rubrique Nibelis synthetique doit contenir :
+
+- une description metier ;
+- une source generique ;
+- des documents a controler ;
+- des anomalies frequentes ;
+- des points de controle ;
+- au moins un exemple synthetique de lecture ;
+- l'indication de presence sur bulletin ;
+- l'impact brut attendu ;
+- l'obligation d'anonymisation.
+
+Le validateur refuse une fixture Nibelis si cette documentation minimale est absente.
+
+### Controles metier specifiques
+
+Le validateur ajoute des garde-fous propres a Nibelis :
+
+- une rubrique de retenue doit avoir `gross_impact = negative` ;
+- une rubrique informative ne peut pas impacter le brut ;
+- une rubrique `counter_information` doit rester informative ;
+- une rubrique annoncee non visible ne peut pas etre decrite comme visible sur bulletin ;
+- une rubrique visible sur bulletin doit imposer `anonymization_required = true`.
+
+### Anonymisation avant donnees reelles
+
+Avant toute analyse d'un bulletin reel, il faudra supprimer ou masquer :
+
+- nom et prenom ;
+- matricule ;
+- adresse ;
+- donnees bancaires ;
+- numero de securite sociale ;
+- informations de sante nominatives ;
+- service ou contexte permettant d'identifier directement un salarie si non indispensable ;
+- commentaires libres ou mentions individuelles.
+
+Les bulletins reels, exports Nibelis et rapprochements individuels doivent rester hors GitHub.
+
+### Rapprochement futur bulletin / Kelio / accords
+
+Le LOT 4C prepare une future methode de controle :
+
+1. identifier une rubrique de bulletin ;
+2. verifier son code et son libelle dans un referentiel local prive ;
+3. rapprocher la rubrique du ou des compteurs Kelio utiles ;
+4. relier les donnees aux variables attendues par une regle ;
+5. citer l'accord, la convention ou la source juridique applicable ;
+6. demander une validation humaine avant toute conclusion.
+
+Tant que cette chaine n'est pas complete, `calculation_allowed` reste `false`.
+
 ## Parametres de paie
 
 Le schema parametre modelise une valeur, un seuil, un taux, une methode ou un composant de formule.
@@ -327,8 +449,9 @@ LOT 4B :
 
 LOT 4C :
 
-- enrichir le referentiel Nibelis avec des rubriques synthetiques plus completes ;
-- preparer une procedure d'anonymisation avant toute analyse de bulletin reel.
+- poursuivre la revue humaine des familles Nibelis synthetiques ;
+- preparer une procedure locale d'anonymisation avant toute analyse de bulletin reel ;
+- ne pas importer de codes Nibelis reels dans GitHub.
 
 LOT 4D :
 

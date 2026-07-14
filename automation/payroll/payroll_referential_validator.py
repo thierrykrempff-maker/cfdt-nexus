@@ -71,6 +71,13 @@ KELIO_REQUIRED_LIST_FIELDS = (
     "control_points",
     "synthetic_reading_examples",
 )
+NIBELIS_REQUIRED_TEXT_FIELDS = ("business_description", "generic_source")
+NIBELIS_REQUIRED_LIST_FIELDS = (
+    "documents_to_check",
+    "frequent_anomalies",
+    "control_points",
+    "synthetic_reading_examples",
+)
 
 SENSITIVE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("email", re.compile(r"\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b", re.IGNORECASE)),
@@ -342,25 +349,32 @@ def check_synthetic_fixture_guard(record: dict[str, Any], path_prefix: str) -> l
     return issues
 
 
-def check_kelio_documentation(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
+def check_required_business_documentation(
+    record: dict[str, Any],
+    path_prefix: str,
+    *,
+    label: str,
+    text_fields: tuple[str, ...],
+    list_fields: tuple[str, ...],
+) -> list[ReferentialIssue]:
     issues: list[ReferentialIssue] = []
-    for field_name in KELIO_REQUIRED_TEXT_FIELDS:
+    for field_name in text_fields:
         value = record.get(field_name)
         if not isinstance(value, str) or not value.strip():
             issues.append(
                 ReferentialIssue(
                     "missing_business_documentation",
-                    f"Kelio counter must document {field_name}.",
+                    f"{label} must document {field_name}.",
                     f"{path_prefix}.{field_name}",
                 )
             )
-    for field_name in KELIO_REQUIRED_LIST_FIELDS:
+    for field_name in list_fields:
         value = record.get(field_name)
         if not isinstance(value, list) or not value:
             issues.append(
                 ReferentialIssue(
                     "missing_business_documentation",
-                    f"Kelio counter must provide at least one item in {field_name}.",
+                    f"{label} must provide at least one item in {field_name}.",
                     f"{path_prefix}.{field_name}",
                 )
             )
@@ -369,10 +383,85 @@ def check_kelio_documentation(record: dict[str, Any], path_prefix: str) -> list[
             issues.append(
                 ReferentialIssue(
                     "missing_business_documentation",
-                    f"Kelio counter documentation field is empty: {field_name}.",
+                    f"{label} documentation field is empty: {field_name}.",
                     f"{path_prefix}.{field_name}",
                 )
             )
+    return issues
+
+
+def check_nibelis_documentation(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
+    return check_required_business_documentation(
+        record,
+        path_prefix,
+        label="Nibelis rubric",
+        text_fields=NIBELIS_REQUIRED_TEXT_FIELDS,
+        list_fields=NIBELIS_REQUIRED_LIST_FIELDS,
+    )
+
+
+def check_nibelis_business_rules(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
+    issues: list[ReferentialIssue] = []
+    normalized_label = str(record.get("normalized_label") or "").lower()
+    sub_category = str(record.get("sub_category") or "").lower()
+    gross_impact = record.get("gross_impact")
+    affects_gross = record.get("affects_gross")
+
+    if ("retenue" in normalized_label or "retenue" in sub_category) and gross_impact != "negative":
+        issues.append(
+            ReferentialIssue(
+                "nibelis_retenue_must_be_negative",
+                "A deduction/retention rubric must declare gross_impact = negative.",
+                f"{path_prefix}.gross_impact",
+            )
+        )
+
+    if gross_impact == "informational" and affects_gross is not False:
+        issues.append(
+            ReferentialIssue(
+                "nibelis_informational_cannot_affect_gross",
+                "An informational rubric cannot affect gross pay.",
+                f"{path_prefix}.affects_gross",
+            )
+        )
+
+    if record.get("category") == "counter_information" and gross_impact != "informational":
+        issues.append(
+            ReferentialIssue(
+                "nibelis_counter_information_must_be_informational",
+                "A counter information rubric must use gross_impact = informational.",
+                f"{path_prefix}.gross_impact",
+            )
+        )
+
+    if record.get("appears_on_payslip") is False:
+        description_text = " ".join(
+            str(value or "")
+            for value in [
+                record.get("label"),
+                record.get("business_description"),
+                " ".join(record.get("notes") or []) if isinstance(record.get("notes"), list) else "",
+            ]
+        ).lower()
+        visible_markers = ("visible sur le bulletin", "presente sur le bulletin", "apparait sur le bulletin")
+        if any(marker in description_text for marker in visible_markers):
+            issues.append(
+                ReferentialIssue(
+                    "nibelis_hidden_rubric_described_as_visible",
+                    "A rubric with appears_on_payslip = false cannot be described as visible on the payslip.",
+                    f"{path_prefix}.appears_on_payslip",
+                )
+            )
+
+    if record.get("appears_on_payslip") is True and record.get("anonymization_required") is not True:
+        issues.append(
+            ReferentialIssue(
+                "nibelis_anonymization_required",
+                "A payslip rubric must explicitly require anonymization before any real data is used.",
+                f"{path_prefix}.anonymization_required",
+            )
+        )
+
     return issues
 
 
@@ -487,7 +576,18 @@ def validate_catalog(
         errors.extend(check_links(record, reference_index, path_prefix))
         errors.extend(check_calculation_gate(record, path_prefix))
         if kind == "kelio":
-            errors.extend(check_kelio_documentation(record, path_prefix))
+            errors.extend(
+                check_required_business_documentation(
+                    record,
+                    path_prefix,
+                    label="Kelio counter",
+                    text_fields=KELIO_REQUIRED_TEXT_FIELDS,
+                    list_fields=KELIO_REQUIRED_LIST_FIELDS,
+                )
+            )
+        if kind == "nibelis":
+            errors.extend(check_nibelis_documentation(record, path_prefix))
+            errors.extend(check_nibelis_business_rules(record, path_prefix))
         if fixture_type == "synthetic_example":
             errors.extend(check_synthetic_fixture_guard(record, path_prefix))
 
