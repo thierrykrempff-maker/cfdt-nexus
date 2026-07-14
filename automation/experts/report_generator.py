@@ -364,12 +364,82 @@ def litigation_items(juriste: dict[str, Any]) -> list[str]:
 def paie_section(paie_expert: dict[str, Any]) -> list[dict[str, Any]]:
     if not active(paie_expert):
         return []
-    return [
+    sections = [
         {"title": "Objet du controle paie", "items": as_list(paie_expert.get("objet_du_controle"))},
         {"title": "Elements du bulletin concernes", "items": paie_expert.get("elements_du_bulletin_concernes", [])},
         {"title": "Methode de controle", "items": paie_expert.get("methode_de_controle", [])},
         {"title": "Calcul detaille", "items": as_list(paie_expert.get("calcul_detaille"))},
     ]
+    analysis = paie_expert.get("payroll_rule_analysis")
+    if payroll_rule_analysis_has_signal(analysis):
+        sections.insert(1, {"title": "Analyse Paie INEOS", "items": payroll_rule_analysis_items(analysis)})
+    return sections
+
+
+def payroll_rule_analysis_has_signal(analysis: Any) -> bool:
+    if not isinstance(analysis, dict) or not analysis:
+        return False
+    if analysis.get("engine_available") is False:
+        return True
+    if as_list(analysis.get("query_topics")):
+        return True
+    if as_list(analysis.get("selected_rules")):
+        return True
+    if as_list(analysis.get("rejected_rules")):
+        return True
+    variables = analysis.get("variables") if isinstance(analysis.get("variables"), dict) else {}
+    if variables.get("present") or as_list(variables.get("missing")) or as_list(variables.get("ambiguous")):
+        return True
+    if as_list(analysis.get("documents_to_request")):
+        return True
+    if as_list(analysis.get("warnings")):
+        return True
+    confidence = str(analysis.get("confidence") or "").strip().lower()
+    return confidence in {"moyenne", "elevee", "élevée", "medium", "high"}
+
+
+def payroll_rule_analysis_items(analysis: dict[str, Any] | Any) -> list[str]:
+    if not isinstance(analysis, dict):
+        return ["PayrollRuleEngine non mobilise pour cette question."]
+    values: list[str] = []
+    if analysis.get("engine_available") is False:
+        values.append("PayrollRuleEngine indisponible : l'ancien controle paie reste utilise.")
+    topics = analysis.get("query_topics") or []
+    if topics:
+        values.append("Themes detectes: " + ", ".join(str(topic) for topic in topics[:6]))
+    for rule in as_list(analysis.get("selected_rules"))[:5]:
+        if not isinstance(rule, dict):
+            continue
+        title = rule.get("title") or rule.get("rule_id") or "Regle"
+        status = rule.get("status") or "statut inconnu"
+        population = ", ".join(str(item) for item in as_list(rule.get("population"))) or "population non precisee"
+        values.append(
+            f"Regle potentiellement applicable: {title} ({rule.get('rule_id')}) - statut {status}, population {population}."
+        )
+        warnings = ", ".join(str(item) for item in as_list(rule.get("warnings"))[:2])
+        if warnings:
+            values.append(f"Avertissement regle {rule.get('rule_id')}: {warnings}")
+    for rule in as_list(analysis.get("rejected_rules"))[:3]:
+        if not isinstance(rule, dict):
+            continue
+        values.append(
+            f"Regle ecartee: {rule.get('title') or rule.get('rule_id')} ({rule.get('rule_id')}) - raison {rule.get('reason')}."
+        )
+    variables = analysis.get("variables") if isinstance(analysis.get("variables"), dict) else {}
+    missing = as_list(variables.get("missing"))[:6]
+    if missing:
+        values.append("Donnees manquantes: " + ", ".join(str(item) for item in missing))
+    ambiguous = as_list(variables.get("ambiguous"))[:4]
+    if ambiguous:
+        labels = [str(item.get("variable")) if isinstance(item, dict) else str(item) for item in ambiguous]
+        values.append("Donnees ambigues: " + ", ".join(labels))
+    documents = as_list(analysis.get("documents_to_request"))[:6]
+    if documents:
+        values.append("Pieces a fournir: " + ", ".join(str(item) for item in documents))
+    for warning in as_list(analysis.get("warnings"))[:4]:
+        values.append("Avertissement: " + str(warning))
+    values.append("Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage.")
+    return text_items(values, limit=18)
 
 
 def collect_report_values(payload: dict[str, Any]) -> dict[str, list[str]]:
