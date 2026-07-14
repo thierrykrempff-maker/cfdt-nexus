@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/nibelis-rubrics.schema.json",
+  "title": "CFDT Nexus Nibelis Rubrics Referential V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog_id", "version", "scope", "fixture_type", "security_notice", "rubrics"],
+  "properties": {
+    "catalog_id": { "type": "string" },
+    "version": { "type": "string" },
+    "scope": { "type": "string" },
+    "fixture_type": { "type": "string", "enum": ["synthetic_example", "private_local"] },
+    "security_notice": { "type": "string" },
+    "rubrics": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/NibelisRubric" }
+    }
+  },
+  "$defs": {
+    "NibelisRubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rubric_id",
+        "rubric_code",
+        "label",
+        "normalized_label",
+        "data_role",
+        "category",
+        "sub_category",
+        "payroll_topic",
+        "unit",
+        "amount_applicable",
+        "rate_applicable",
+        "base_applicable",
+        "source_layer",
+        "source_document",
+        "source_reference",
+        "effective_date",
+        "end_date",
+        "linked_rule_ids",
+        "linked_variables",
+        "linked_kelio_counter_ids",
+        "calculation_allowed",
+        "validation_status",
+        "confidence",
+        "confidentiality",
+        "synthetic_only",
+        "notes"
+      ],
+      "properties": {
+        "rubric_id": { "type": "string" },
+        "rubric_code": { "type": "string" },
+        "label": { "type": "string" },
+        "normalized_label": { "type": "string" },
+        "data_role": { "type": "string", "enum": ["source_data", "calculated_data", "controlled_data"] },
+        "category": {
+          "type": "string",
+          "enum": [
+            "base_salary",
+            "premium",
+            "overtime",
+            "absence",
+            "leave",
+            "sickness",
+            "on_call",
+            "allowance",
+            "regularization",
+            "benefit",
+            "counter_information",
+            "tax_social_contribution",
+            "other"
+          ]
+        },
+        "sub_category": { "type": "string" },
+        "payroll_topic": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["amount_eur", "hours", "days", "rate_percent", "count", "text", "km", "none"]
+        },
+        "amount_applicable": { "type": "boolean" },
+        "rate_applicable": { "type": "boolean" },
+        "base_applicable": { "type": "boolean" },
+        "source_layer": {
+          "type": "string",
+          "enum": [
+            "presentation_bulletin",
+            "accord_entreprise",
+            "convention_collective",
+            "code_travail",
+            "note_rh",
+            "memoire_entreprise",
+            "synthetic_fixture",
+            "to_verify"
+          ]
+        },
+        "source_document": { "type": "string" },
+        "source_reference": { "type": ["string", "null"] },
+        "effective_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "linked_rule_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_variables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_kelio_counter_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "calculation_allowed": { "type": "boolean" },
+        "validation_status": {
+          "type": "string",
+          "enum": ["draft", "to_verify", "human_validated", "rejected", "synthetic_example"]
+        },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "confidentiality": { "type": "string", "enum": ["public", "internal", "confidential", "private"] },
+        "synthetic_only": { "type": "boolean" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

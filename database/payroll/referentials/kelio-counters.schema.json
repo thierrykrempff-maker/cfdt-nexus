@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/kelio-counters.schema.json",
+  "title": "CFDT Nexus Kelio Counters Referential V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog_id", "version", "scope", "fixture_type", "security_notice", "counters"],
+  "properties": {
+    "catalog_id": { "type": "string" },
+    "version": { "type": "string" },
+    "scope": { "type": "string" },
+    "fixture_type": { "type": "string", "enum": ["synthetic_example", "private_local"] },
+    "security_notice": { "type": "string" },
+    "counters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/KelioCounter" }
+    }
+  },
+  "$defs": {
+    "KelioCounter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "counter_id",
+        "counter_code",
+        "label",
+        "normalized_label",
+        "data_role",
+        "counter_type",
+        "unit",
+        "work_schedule",
+        "employee_population",
+        "source_document",
+        "source_reference",
+        "effective_date",
+        "end_date",
+        "linked_rule_ids",
+        "linked_variables",
+        "linked_nibelis_rubric_ids",
+        "reading_method",
+        "calculation_allowed",
+        "validation_status",
+        "confidence",
+        "confidentiality",
+        "synthetic_only",
+        "notes"
+      ],
+      "properties": {
+        "counter_id": { "type": "string" },
+        "counter_code": { "type": "string" },
+        "label": { "type": "string" },
+        "normalized_label": { "type": "string" },
+        "data_role": { "type": "string", "enum": ["source_data", "calculated_data", "controlled_data"] },
+        "counter_type": {
+          "type": "string",
+          "enum": [
+            "time",
+            "leave",
+            "rest",
+            "overtime",
+            "on_call",
+            "intervention",
+            "sickness",
+            "schedule",
+            "pointing",
+            "other"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["hours", "days", "count", "date", "text", "none"]
+        },
+        "work_schedule": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["tous", "jour", "5x8", "poste_continu", "gn", "polyolefines", "roulement"]
+          }
+        },
+        "employee_population": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["tous", "personnel_jour", "personnel_poste", "poste_continu", "ouvriers", "employes", "agents_maitrise", "cadres", "non_cadres", "gn", "polyolefines"]
+          }
+        },
+        "source_document": { "type": "string" },
+        "source_reference": { "type": ["string", "null"] },
+        "effective_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "linked_rule_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_variables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_nibelis_rubric_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reading_method": {
+          "type": "string",
+          "enum": ["manual_capture", "export", "statement", "synthetic_fixture", "to_verify"]
+        },
+        "calculation_allowed": { "type": "boolean" },
+        "validation_status": {
+          "type": "string",
+          "enum": ["draft", "to_verify", "human_validated", "rejected", "synthetic_example"]
+        },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "confidentiality": { "type": "string", "enum": ["public", "internal", "confidential", "private"] },
+        "synthetic_only": { "type": "boolean" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

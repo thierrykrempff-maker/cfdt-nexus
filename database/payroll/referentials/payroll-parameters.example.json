@@ -1,0 +1,111 @@
+{
+  "catalog_id": "payroll-parameters-synthetic-v1",
+  "version": "1.0.0",
+  "scope": "Fixtures synthetiques LOT 4A pour modeliser des parametres de paie sans valeur applicable reelle",
+  "fixture_type": "synthetic_example",
+  "security_notice": "Exemple synthetique uniquement. Les valeurs ne doivent pas etre appliquees a un salarie ni reutilisees comme droits INEOS.",
+  "parameters": [
+    {
+      "parameter_id": "PARAM_HSUP_MAJ_TEST",
+      "parameter_code": "SYN_HSUP_MAJ_TO_VERIFY",
+      "label": "Taux synthetique de majoration heures supplementaires",
+      "data_role": "source_data",
+      "parameter_type": "rate",
+      "value": {
+        "raw": "25% - valeur synthetique non applicable",
+        "numeric_value": 25,
+        "unit": "rate_percent"
+      },
+      "source_layer": "synthetic_fixture",
+      "source_document": "Fixture synthetique LOT 4A - ne pas appliquer",
+      "source_reference": "fixture:param:hsup",
+      "effective_date": "2026-01-01",
+      "end_date": null,
+      "linked_rule_ids": ["PAY_HSUP_TRANCHES_001"],
+      "linked_variables": ["valeur_applicable", "heures_validees", "base_horaire"],
+      "linked_nibelis_rubric_ids": ["NIB_RUB_HSUP_MAJ"],
+      "linked_kelio_counter_ids": ["KELIO_HS_SYN"],
+      "calculation_allowed": false,
+      "legal_priority": "to_verify",
+      "validation_status": "synthetic_example",
+      "human_validation": {
+        "status": "pending",
+        "validator": null,
+        "validated_at": null,
+        "notes": ["Fixture synthetique non validee."]
+      },
+      "confidence": "low",
+      "confidentiality": "internal",
+      "synthetic_only": true,
+      "notes": ["Ne pas utiliser cette valeur dans un calcul reel."]
+    },
+    {
+      "parameter_id": "PARAM_KM_TEST",
+      "parameter_code": "SYN_KM_TO_VERIFY",
+      "label": "Valeur synthetique indemnite kilometrique",
+      "data_role": "source_data",
+      "parameter_type": "amount",
+      "value": {
+        "raw": "0,10 euro/km - valeur synthetique non applicable",
+        "numeric_value": 0.1,
+        "unit": "amount_eur"
+      },
+      "source_layer": "synthetic_fixture",
+      "source_document": "Fixture synthetique LOT 4A - ne pas appliquer",
+      "source_reference": "fixture:param:km",
+      "effective_date": "2026-01-01",
+      "end_date": null,
+      "linked_rule_ids": ["PAY_INDEMNITE_KM_2023_001", "PAY_INDEMNITE_KM_DISTANCE_2026_001"],
+      "linked_variables": ["distance_km", "nombre_trajets", "valeur_applicable"],
+      "linked_nibelis_rubric_ids": ["NIB_RUB_INDEMNITE_KM"],
+      "linked_kelio_counter_ids": [],
+      "calculation_allowed": false,
+      "legal_priority": "to_verify",
+      "validation_status": "synthetic_example",
+      "human_validation": {
+        "status": "pending",
+        "validator": null,
+        "validated_at": null,
+        "notes": ["Fixture synthetique non validee."]
+      },
+      "confidence": "low",
+      "confidentiality": "internal",
+      "synthetic_only": true,
+      "notes": ["Aucune adresse reelle et aucune distance reelle dans cette fixture."]
+    },
+    {
+      "parameter_id": "PARAM_CP_ACQ_TEST",
+      "parameter_code": "SYN_CP_ACQ_TO_VERIFY",
+      "label": "Acquisition CP synthetique",
+      "data_role": "source_data",
+      "parameter_type": "formula_component",
+      "value": {
+        "raw": "2,5 jours - valeur synthetique non applicable",
+        "numeric_value": 2.5,
+        "unit": "days"
+      },
+      "source_layer": "synthetic_fixture",
+      "source_document": "Fixture synthetique LOT 4A - ne pas appliquer",
+      "source_reference": "fixture:param:cp",
+      "effective_date": "2026-01-01",
+      "end_date": null,
+      "linked_rule_ids": ["LEAVE_CP_ACQUISITION_001"],
+      "linked_variables": ["mois_travailles", "periode_acquisition", "mode_decompte_ouvrable_ou_ouvre"],
+      "linked_nibelis_rubric_ids": [],
+      "linked_kelio_counter_ids": ["KELIO_CP_SYN"],
+      "calculation_allowed": false,
+      "legal_priority": "to_verify",
+      "validation_status": "synthetic_example",
+      "human_validation": {
+        "status": "pending",
+        "validator": null,
+        "validated_at": null,
+        "notes": ["Fixture synthetique non validee."]
+      },
+      "confidence": "low",
+      "confidentiality": "internal",
+      "synthetic_only": true,
+      "notes": ["Parametre fictif pour verifier la structure, pas le droit applicable."]
+    }
+  ]
+}
