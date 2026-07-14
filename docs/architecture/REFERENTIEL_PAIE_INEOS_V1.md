@@ -543,6 +543,127 @@ Avant d'ajouter un bareme reel, il faudra :
 6. documenter les risques et limites ;
 7. activer `calculation_allowed` uniquement apres revue technique et metier.
 
+## LOT 4E - Graphe de connaissances metier Paie synthetique
+
+Le LOT 4E ajoute un graphe de connaissances synthetique.
+
+Objectif :
+
+- relier les regles de paie ;
+- relier les variables metier ;
+- relier les compteurs Kelio synthetiques ;
+- relier les rubriques Nibelis synthetiques ;
+- relier les parametres synthetiques ;
+- expliquer les chemins de controle sans calculer.
+
+Le graphe est stocke dans :
+
+```text
+database/payroll/referentials/payroll-knowledge-graph.example.json
+database/payroll/referentials/payroll-knowledge-graph.schema.json
+```
+
+### Role du graphe
+
+Le graphe ne porte aucune regle de calcul.
+
+Il sert a expliquer des dependances comme :
+
+```text
+regle -> variable -> compteur Kelio -> rubrique Nibelis -> parametre a sourcer
+```
+
+Il permet a Nexus de dire :
+
+- quelle regle est concernee ;
+- quelles variables manquent ;
+- quel compteur Kelio pourrait aider au controle ;
+- quelle rubrique Nibelis pourrait etre rapprochee ;
+- quel parametre doit etre source et valide humainement.
+
+### Relations autorisees
+
+Les relations sont limitees a une liste controlee :
+
+- `uses_parameter` ;
+- `uses_variable` ;
+- `feeds_counter` ;
+- `feeds_rubric` ;
+- `explains_rubric` ;
+- `derived_from` ;
+- `requires_document` ;
+- `requires_validation` ;
+- `may_trigger` ;
+- `controls` ;
+- `depends_on`.
+
+Le validateur refuse les relations libres.
+
+### Coherence des relations
+
+Chaque relation contient :
+
+- `relation_id` ;
+- `source_type` ;
+- `source_id` ;
+- `target_type` ;
+- `target_id` ;
+- `relation_type` ;
+- `description` ;
+- `confidence` ;
+- `validation_status` ;
+- `synthetic_only` ;
+- `calculation_allowed` ;
+- `documentation`.
+
+Le validateur controle :
+
+- l'unicite des relations ;
+- l'existence des objets source et cible ;
+- la compatibilite des types ;
+- l'absence de boucle directe incoherente ;
+- la couverture des 23 regles ;
+- les scenarios qui referencent uniquement des relations existantes.
+
+### Couverture des regles
+
+Le graphe couvre les 23 regles existantes par au moins une relation `rule -> variable`.
+
+Les liens vers parametres, compteurs Kelio ou rubriques Nibelis ne sont ajoutes que lorsque les referentiels precedents contiennent deja un rattachement coherent.
+
+Une absence de relation reste donc une information prudente : Nexus ne doit pas inventer un compteur, une rubrique ou un parametre qui n'existe pas encore.
+
+### Scenarios d'explication
+
+Le LOT 4E documente 6 scenarios synthetiques :
+
+- heures supplementaires ;
+- astreinte et intervention ;
+- conges payes ;
+- maintien maladie ;
+- jours feries ;
+- repos compensateur.
+
+Chaque scenario decrit un parcours explicatif.
+
+Il ne produit :
+
+- aucun montant ;
+- aucun taux applicable ;
+- aucune conclusion automatique ;
+- aucune preuve de droit.
+
+### Interdiction de calcul
+
+Chaque relation et chaque scenario conservent :
+
+```text
+synthetic_only = true
+calculation_allowed = false
+```
+
+Le validateur refuse toute relation ou scenario qui autoriserait un calcul.
+
 ## Parametres de paie
 
 Le schema parametre modelise une valeur, un seuil, un taux, une methode ou un composant de formule.
@@ -585,6 +706,8 @@ Le validateur controle les liens vers :
 - les variables existantes deja declarees dans les 23 regles ;
 - les rubriques Nibelis ;
 - les compteurs Kelio.
+- les parametres de paie ;
+- les relations du graphe de connaissances.
 
 Objectif : eviter qu'une rubrique, un compteur ou un parametre fasse reference a une regle inexistante ou a une variable non connue du moteur.
 
@@ -615,6 +738,7 @@ Validation d'un seul referentiel :
 python automation/payroll/payroll_referential_validator.py validate-catalog --kind nibelis
 python automation/payroll/payroll_referential_validator.py validate-catalog --kind kelio
 python automation/payroll/payroll_referential_validator.py validate-catalog --kind parameters
+python automation/payroll/payroll_referential_validator.py validate-catalog --kind knowledge_graph
 ```
 
 Tests :
@@ -628,6 +752,7 @@ python automation/payroll/test_payroll_referential_validator.py
 - Aucun vrai referentiel Nibelis n'est ajoute.
 - Aucun vrai referentiel Kelio n'est ajoute.
 - Aucun parametre INEOS reel n'est ajoute.
+- Aucun graphe issu de donnees reelles n'est ajoute.
 - Aucun calcul n'est active.
 - Le moteur `payroll_rule_engine.py` n'est pas modifie.
 - `automation/experts/paie.py` n'est pas modifie.
@@ -652,6 +777,12 @@ LOT 4D :
 - preparer le stockage local prive des baremes reels ;
 - conserver `calculation_allowed = false` tant que la validation humaine et la source documentaire ne sont pas completes.
 
+LOT 4E :
+
+- poursuivre la revue humaine des relations du graphe ;
+- ajouter de futures relations uniquement si les objets existent deja ;
+- ne pas utiliser le graphe comme moteur de calcul.
+
 ## Conclusion
 
-Le LOT 4A pose le cadre de securite et de validation. Il ne rend pas CFDT Nexus plus calculateur ; il le rend plus prudent, plus structure et plus difficile a polluer avec des donnees non verifiees.
+Les LOTS 4A a 4E posent le cadre de securite et de validation du referentiel paie. Ils ne rendent pas CFDT Nexus plus calculateur ; ils le rendent plus prudent, plus structure et plus difficile a polluer avec des donnees non verifiees.

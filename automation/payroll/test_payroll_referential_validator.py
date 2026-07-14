@@ -185,6 +185,7 @@ def test_all_example_referentials_validate() -> None:
     assert report["reports"]["nibelis"]["records_count"] == 26
     assert report["reports"]["kelio"]["records_count"] == 17
     assert report["reports"]["parameters"]["records_count"] == 23
+    assert report["reports"]["knowledge_graph"]["records_count"] == 74
 
 
 def test_nibelis_referential_contains_required_synthetic_codes() -> None:
@@ -288,6 +289,98 @@ def test_parameter_links_to_existing_rules_variables_kelio_and_nibelis_only() ->
     report = report_for("parameters", catalog)
     assert report["valid"], report
     assert_no_issue(report, "unknown_reference")
+
+
+def test_knowledge_graph_validates_and_covers_all_rules() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    report = report_for("knowledge_graph", catalog)
+    assert report["valid"], report
+    rule_ids = validator.collect_rule_reference_index()["rule_ids"]
+    covered_rule_ids = {
+        relation["source_id"]
+        for relation in catalog["relations"]
+        if relation["source_type"] == "rule"
+    }
+    assert rule_ids <= covered_rule_ids
+    assert len(catalog["relations"]) == 74
+    assert len(catalog["scenarios"]) == 6
+
+
+def test_knowledge_graph_scenarios_reference_existing_relations() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    relation_ids = {relation["relation_id"] for relation in catalog["relations"]}
+    for scenario in catalog["scenarios"]:
+        assert scenario["synthetic_only"] is True
+        assert scenario["calculation_allowed"] is False
+        assert scenario["relation_ids"], scenario["scenario_id"]
+        assert set(scenario["relation_ids"]) <= relation_ids
+
+
+def test_reject_knowledge_graph_unknown_reference() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["relations"][0]["target_id"] = "unknown_variable"
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_unknown_reference")
+
+
+def test_reject_knowledge_graph_invalid_relation_type() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["relations"][0]["relation_type"] = "free_relation"
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "invalid_enum")
+
+
+def test_reject_knowledge_graph_incompatible_relation() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["relations"][0]["relation_type"] = "feeds_rubric"
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_incompatible_relation")
+
+
+def test_reject_knowledge_graph_direct_cycle() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    reverse = copy.deepcopy(catalog["relations"][0])
+    reverse["relation_id"] = "KG_TEST_REVERSE_CYCLE"
+    reverse["source_type"] = catalog["relations"][0]["target_type"]
+    reverse["source_id"] = catalog["relations"][0]["target_id"]
+    reverse["target_type"] = catalog["relations"][0]["source_type"]
+    reverse["target_id"] = catalog["relations"][0]["source_id"]
+    reverse["relation_type"] = "depends_on"
+    catalog["relations"].append(reverse)
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_direct_cycle")
+
+
+def test_reject_knowledge_graph_missing_rule_coverage() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["relations"] = [
+        relation
+        for relation in catalog["relations"]
+        if relation["source_id"] != "WT_CHANGEMENT_ROULEMENT_PREVENANCE_001"
+    ]
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_missing_rule_coverage")
+
+
+def test_reject_knowledge_graph_relation_not_synthetic() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["relations"][0]["synthetic_only"] = False
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_relation_not_synthetic")
+
+
+def test_reject_knowledge_graph_calculation_enabled() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["relations"][0]["calculation_allowed"] = True
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_relation_cannot_calculate")
+
+
+def test_reject_knowledge_graph_scenario_unknown_relation() -> None:
+    catalog = cloned_catalog("knowledge_graph")
+    catalog["scenarios"][0]["relation_ids"].append("KG_UNKNOWN_RELATION")
+    report = report_for("knowledge_graph", catalog)
+    assert_issue(report, "knowledge_graph_unknown_relation")
 
 
 def test_kelio_referential_contains_required_counter_codes() -> None:

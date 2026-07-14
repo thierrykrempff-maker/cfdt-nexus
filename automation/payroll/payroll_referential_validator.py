@@ -49,6 +49,13 @@ REFERENTIALS = {
         "id_field": "parameter_id",
         "code_field": "parameter_code",
     },
+    "knowledge_graph": {
+        "schema": REFERENTIAL_DIR / "payroll-knowledge-graph.schema.json",
+        "catalog": REFERENTIAL_DIR / "payroll-knowledge-graph.example.json",
+        "record_key": "relations",
+        "id_field": "relation_id",
+        "code_field": "relation_id",
+    },
 }
 
 DATE_FIELDS = {"effective_date", "end_date", "validated_at", "last_checked_at"}
@@ -104,6 +111,32 @@ PARAMETER_TYPE_UNITS = {
 }
 PARAMETER_NUMERIC_TYPES = {"amount", "threshold", "duration", "distance", "formula_component", "ceiling"}
 PARAMETER_METHOD_TYPES = {"method", "informational", "period", "date"}
+KNOWLEDGE_GRAPH_RELATION_TYPES = {
+    "uses_parameter",
+    "uses_variable",
+    "feeds_counter",
+    "feeds_rubric",
+    "explains_rubric",
+    "derived_from",
+    "requires_document",
+    "requires_validation",
+    "may_trigger",
+    "controls",
+    "depends_on",
+}
+KNOWLEDGE_GRAPH_COMPATIBLE_TYPES = {
+    "uses_parameter": {("rule", "payroll_parameter")},
+    "uses_variable": {("rule", "variable")},
+    "feeds_counter": {("variable", "kelio_counter")},
+    "feeds_rubric": {("kelio_counter", "nibelis_rubric")},
+    "explains_rubric": {("payroll_parameter", "nibelis_rubric")},
+    "derived_from": {("payroll_parameter", "variable"), ("nibelis_rubric", "kelio_counter")},
+    "requires_document": {("rule", "payroll_parameter"), ("payroll_parameter", "rule")},
+    "requires_validation": {("rule", "payroll_parameter"), ("payroll_parameter", "rule")},
+    "may_trigger": {("rule", "nibelis_rubric")},
+    "controls": {("rule", "kelio_counter"), ("payroll_parameter", "kelio_counter")},
+    "depends_on": {("rule", "kelio_counter"), ("payroll_parameter", "variable")},
+}
 
 SENSITIVE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("email", re.compile(r"\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b", re.IGNORECASE)),
@@ -207,6 +240,7 @@ def collect_referential_ids(catalogs: dict[str, dict[str, Any]]) -> dict[str, se
         "nibelis_rubric_ids": set(),
         "kelio_counter_ids": set(),
         "parameter_ids": set(),
+        "knowledge_relation_ids": set(),
     }
     for kind, catalog in catalogs.items():
         config = REFERENTIALS[kind]
@@ -217,6 +251,7 @@ def collect_referential_ids(catalogs: dict[str, dict[str, Any]]) -> dict[str, se
             "nibelis": "nibelis_rubric_ids",
             "kelio": "kelio_counter_ids",
             "parameters": "parameter_ids",
+            "knowledge_graph": "knowledge_relation_ids",
         }[kind]
         id_field = config["id_field"]
         for record in records:
@@ -752,6 +787,175 @@ def check_parameter_exclusive_periods(records: list[Any], path_prefix: str) -> l
     return issues
 
 
+def knowledge_graph_object_ids(reference_index: dict[str, set[str]]) -> dict[str, set[str]]:
+    return {
+        "rule": reference_index.get("rule_ids", set()),
+        "variable": reference_index.get("variables", set()),
+        "kelio_counter": reference_index.get("kelio_counter_ids", set()),
+        "nibelis_rubric": reference_index.get("nibelis_rubric_ids", set()),
+        "payroll_parameter": reference_index.get("parameter_ids", set()),
+    }
+
+
+def check_knowledge_graph(
+    catalog: dict[str, Any],
+    records: list[Any],
+    reference_index: dict[str, set[str]],
+    path_prefix: str,
+) -> list[ReferentialIssue]:
+    issues: list[ReferentialIssue] = []
+    object_ids = knowledge_graph_object_ids(reference_index)
+    relation_ids = {
+        record.get("relation_id")
+        for record in records
+        if isinstance(record, dict) and isinstance(record.get("relation_id"), str)
+    }
+    covered_rules: set[str] = set()
+    seen_edges: set[tuple[tuple[str, str], tuple[str, str]]] = set()
+
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            continue
+        relation_path = f"{path_prefix}[{index}]"
+        relation_id = record.get("relation_id")
+        source_type = record.get("source_type")
+        target_type = record.get("target_type")
+        source_id = record.get("source_id")
+        target_id = record.get("target_id")
+        relation_type = record.get("relation_type")
+
+        if record.get("synthetic_only") is not True:
+            issues.append(
+                ReferentialIssue(
+                    "knowledge_graph_relation_not_synthetic",
+                    "Knowledge graph relations in example fixtures must keep synthetic_only = true.",
+                    f"{relation_path}.synthetic_only",
+                )
+            )
+        if record.get("calculation_allowed") is not False:
+            issues.append(
+                ReferentialIssue(
+                    "knowledge_graph_relation_cannot_calculate",
+                    "Knowledge graph relations cannot authorize payroll calculation.",
+                    f"{relation_path}.calculation_allowed",
+                )
+            )
+
+        if isinstance(source_type, str) and isinstance(source_id, str):
+            if source_id not in object_ids.get(source_type, set()):
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_unknown_reference",
+                        f"Unknown source reference: {source_type}:{source_id}",
+                        f"{relation_path}.source_id",
+                    )
+                )
+            if source_type == "rule":
+                covered_rules.add(source_id)
+        if isinstance(target_type, str) and isinstance(target_id, str):
+            if target_id not in object_ids.get(target_type, set()):
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_unknown_reference",
+                        f"Unknown target reference: {target_type}:{target_id}",
+                        f"{relation_path}.target_id",
+                    )
+                )
+
+        if isinstance(relation_type, str) and relation_type in KNOWLEDGE_GRAPH_RELATION_TYPES:
+            allowed_pairs = KNOWLEDGE_GRAPH_COMPATIBLE_TYPES.get(relation_type, set())
+            if (source_type, target_type) not in allowed_pairs:
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_incompatible_relation",
+                        f"Relation {relation_type} is not compatible with {source_type} -> {target_type}.",
+                        f"{relation_path}.relation_type",
+                    )
+                )
+
+        if (
+            isinstance(source_type, str)
+            and isinstance(target_type, str)
+            and isinstance(source_id, str)
+            and isinstance(target_id, str)
+        ):
+            source_node = (source_type, source_id)
+            target_node = (target_type, target_id)
+            if source_node == target_node:
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_direct_loop",
+                        f"Direct self-loop is forbidden for relation {relation_id}.",
+                        f"{relation_path}.target_id",
+                    )
+                )
+            if (target_node, source_node) in seen_edges:
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_direct_cycle",
+                        f"Direct reverse cycle is forbidden for relation {relation_id}.",
+                        f"{relation_path}.target_id",
+                    )
+                )
+            seen_edges.add((source_node, target_node))
+
+    missing_rules = sorted(reference_index.get("rule_ids", set()) - covered_rules)
+    for rule_id in missing_rules:
+        issues.append(
+            ReferentialIssue(
+                "knowledge_graph_missing_rule_coverage",
+                f"Payroll rule is not covered by the knowledge graph: {rule_id}",
+                path_prefix,
+            )
+        )
+
+    scenarios = catalog.get("scenarios")
+    if isinstance(scenarios, list):
+        for index, scenario in enumerate(scenarios):
+            if not isinstance(scenario, dict):
+                continue
+            scenario_path = f"scenarios[{index}]"
+            if scenario.get("synthetic_only") is not True:
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_scenario_not_synthetic",
+                        "Knowledge graph scenarios in example fixtures must keep synthetic_only = true.",
+                        f"{scenario_path}.synthetic_only",
+                    )
+                )
+            if scenario.get("calculation_allowed") is not False:
+                issues.append(
+                    ReferentialIssue(
+                        "knowledge_graph_scenario_cannot_calculate",
+                        "Knowledge graph scenarios cannot authorize payroll calculation.",
+                        f"{scenario_path}.calculation_allowed",
+                    )
+                )
+            starting_type = scenario.get("starting_object_type")
+            starting_id = scenario.get("starting_object_id")
+            if isinstance(starting_type, str) and isinstance(starting_id, str):
+                if starting_id not in object_ids.get(starting_type, set()):
+                    issues.append(
+                        ReferentialIssue(
+                            "knowledge_graph_unknown_reference",
+                            f"Unknown scenario starting object: {starting_type}:{starting_id}",
+                            f"{scenario_path}.starting_object_id",
+                        )
+                    )
+            relation_refs = scenario.get("relation_ids")
+            if isinstance(relation_refs, list):
+                for ref_index, relation_ref in enumerate(relation_refs):
+                    if isinstance(relation_ref, str) and relation_ref not in relation_ids:
+                        issues.append(
+                            ReferentialIssue(
+                                "knowledge_graph_unknown_relation",
+                                f"Unknown relation referenced by scenario: {relation_ref}",
+                                f"{scenario_path}.relation_ids[{ref_index}]",
+                            )
+                        )
+    return issues
+
+
 def check_calculation_gate(record: dict[str, Any], path_prefix: str) -> list[ReferentialIssue]:
     if record.get("calculation_allowed") is not True:
         return []
@@ -852,16 +1056,19 @@ def validate_catalog(
             issue_code="duplicate_identifier",
         )
     )
-    errors.extend(
-        check_unique_values(
-            records,
-            field_name=str(config["code_field"]),
-            path_prefix=str(config["record_key"]),
-            issue_code="duplicate_code",
+    if config["code_field"] != config["id_field"]:
+        errors.extend(
+            check_unique_values(
+                records,
+                field_name=str(config["code_field"]),
+                path_prefix=str(config["record_key"]),
+                issue_code="duplicate_code",
+            )
         )
-    )
     if kind == "parameters":
         errors.extend(check_parameter_exclusive_periods(records, str(config["record_key"])))
+    if kind == "knowledge_graph":
+        errors.extend(check_knowledge_graph(catalog, records, reference_index, str(config["record_key"])))
 
     fixture_type = catalog.get("fixture_type") if isinstance(catalog, dict) else None
     for index, record in enumerate(records):

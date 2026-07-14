@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/payroll-knowledge-graph.schema.json",
+  "title": "CFDT Nexus Payroll Knowledge Graph Synthetic V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog_id", "version", "scope", "fixture_type", "security_notice", "relations", "scenarios"],
+  "properties": {
+    "catalog_id": { "type": "string" },
+    "version": { "type": "string" },
+    "scope": { "type": "string" },
+    "fixture_type": { "type": "string", "enum": ["synthetic_example", "private_local"] },
+    "security_notice": { "type": "string" },
+    "relations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/KnowledgeRelation" }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ExplanationScenario" }
+    }
+  },
+  "$defs": {
+    "ObjectType": {
+      "type": "string",
+      "enum": ["rule", "variable", "kelio_counter", "nibelis_rubric", "payroll_parameter"]
+    },
+    "RelationType": {
+      "type": "string",
+      "enum": [
+        "uses_parameter",
+        "uses_variable",
+        "feeds_counter",
+        "feeds_rubric",
+        "explains_rubric",
+        "derived_from",
+        "requires_document",
+        "requires_validation",
+        "may_trigger",
+        "controls",
+        "depends_on"
+      ]
+    },
+    "KnowledgeRelation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_id",
+        "source_type",
+        "source_id",
+        "target_type",
+        "target_id",
+        "relation_type",
+        "description",
+        "confidence",
+        "validation_status",
+        "synthetic_only",
+        "calculation_allowed",
+        "documentation"
+      ],
+      "properties": {
+        "relation_id": { "type": "string" },
+        "source_type": { "$ref": "#/$defs/ObjectType" },
+        "source_id": { "type": "string" },
+        "target_type": { "$ref": "#/$defs/ObjectType" },
+        "target_id": { "type": "string" },
+        "relation_type": { "$ref": "#/$defs/RelationType" },
+        "description": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "validation_status": { "type": "string", "enum": ["synthetic_example", "to_verify", "human_validated", "rejected"] },
+        "synthetic_only": { "type": "boolean" },
+        "calculation_allowed": { "type": "boolean" },
+        "documentation": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "ExplanationScenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "title", "description", "starting_object_type", "starting_object_id", "relation_ids", "explanation_steps", "warning", "synthetic_only", "calculation_allowed"],
+      "properties": {
+        "scenario_id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "starting_object_type": { "$ref": "#/$defs/ObjectType" },
+        "starting_object_id": { "type": "string" },
+        "relation_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "explanation_steps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "warning": { "type": "string" },
+        "synthetic_only": { "type": "boolean" },
+        "calculation_allowed": { "type": "boolean" }
+      }
+    }
+  }
+}
