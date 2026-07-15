@@ -5,8 +5,20 @@ data-private/
 corpus-private/
 local-index/
 
+# CSE Memory Engine - confidential local corpus and generated artifacts
+CCSEMEMORYENGINE/RAW_DOCUMENTS/
+CCSEMEMORYENGINE/PROCESSED/
+CCSEMEMORYENGINE/INDEX/
+CCSEMEMORYENGINE/GRAPH/
+CCSEMEMORYENGINE/AUDIT/
+CCSEMEMORYENGINE/LISEZ_MOI.txt
+
 # Private inventories and local extracts
 *.private.json
 *.private.csv
 *.private.ndjson
 *.private.log
+
+# Python local bytecode
+__pycache__/
+*.py[cod]
