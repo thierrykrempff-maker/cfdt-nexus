@@ -12,7 +12,6 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from automation.cases.employee_case import (  # noqa: E402
-    AvailabilityStatus,
     CaseStatus,
     DocumentType,
     EmployeeCase,

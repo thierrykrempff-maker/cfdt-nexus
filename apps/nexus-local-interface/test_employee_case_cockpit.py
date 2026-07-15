@@ -3,12 +3,13 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager, redirect_stderr
+from io import StringIO
 import json
 import sys
 import threading
 import urllib.error
 import urllib.request
-from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -37,6 +38,20 @@ def local_server() -> Iterator[str]:
 
 def get_json(url: str) -> tuple[int, dict[str, Any]]:
     request = urllib.request.Request(url, headers={"Accept": "application/json"})
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:  # noqa: S310 - localhost only.
+            return response.status, json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read().decode("utf-8"))
+
+
+def post_json(url: str, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Accept": "application/json", "Content-Type": "application/json"},
+        method="POST",
+    )
     try:
         with urllib.request.urlopen(request, timeout=30) as response:  # noqa: S310 - localhost only.
             return response.status, json.loads(response.read().decode("utf-8"))
@@ -117,13 +132,35 @@ def test_endpoint_failure_is_explicit_and_safe() -> None:
         raise RuntimeError("Echec synthetique controle")
 
     server_module.build_demo_payload = broken_demo
+    logs = StringIO()
     try:
-        with local_server() as base:
+        with redirect_stderr(logs), local_server() as base:
             status, payload = get_json(base + "/api/employee-case/demo?scenario=overtime-complete")
     finally:
         server_module.build_demo_payload = previous
     assert status == 500
-    assert payload == {"ok": False, "error": "Echec synthetique controle"}
+    assert payload == {"ok": False, "error": server_module.INTERNAL_ERROR_MESSAGE}
+    assert "Echec synthetique controle" not in json.dumps(payload, ensure_ascii=False)
+    assert "Echec synthetique controle" in logs.getvalue()
+
+
+def test_analyze_endpoint_internal_error_is_generic_and_logged() -> None:
+    previous = server_module.analyze_question
+
+    def broken_analysis(_query: str, _source_limit: int = 6) -> dict[str, Any]:
+        raise RuntimeError("Detail interne analyse synthetique")
+
+    server_module.analyze_question = broken_analysis
+    logs = StringIO()
+    try:
+        with redirect_stderr(logs), local_server() as base:
+            status, payload = post_json(base + "/api/analyze", {"query": "question fictive"})
+    finally:
+        server_module.analyze_question = previous
+    assert status == 500
+    assert payload == {"ok": False, "error": server_module.INTERNAL_ERROR_MESSAGE}
+    assert "Detail interne analyse synthetique" not in json.dumps(payload, ensure_ascii=False)
+    assert "Detail interne analyse synthetique" in logs.getvalue()
 
 
 def test_frontend_loads_and_changes_scenarios() -> None:

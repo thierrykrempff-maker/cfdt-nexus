@@ -1,5 +1,7 @@
 # Validation de bout en bout du dossier salarié — LOT 5F
 
+[Index et navigation du LOT 5](LOT_5_EMPLOYEE_CASE_INDEX.md)
+
 ## Périmètre
 
 Cette validation démontre l'intégration des composants existants sans ajouter de fonction métier :

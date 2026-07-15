@@ -1,5 +1,7 @@
 # Cockpit V3 connecte au pipeline dossier salarie - LOT 5C
 
+[Index et navigation du LOT 5](LOT_5_EMPLOYEE_CASE_INDEX.md)
+
 ## Architecture reelle avant modification
 
 Le depot contient deux interfaces distinctes :

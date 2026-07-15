@@ -1,5 +1,7 @@
 # Moteur d'export des rapports V1 — LOT 5E
 
+[Index et navigation du LOT 5](LOT_5_EMPLOYEE_CASE_INDEX.md)
+
 ## Objectif et architecture
 
 Le moteur transforme un rapport d'analyse LOT 5B ou un résultat comparatif LOT 5D en une représentation exportable. Il reste indépendant du pipeline, des experts, du générateur de rapport, du comparateur et du Cockpit.

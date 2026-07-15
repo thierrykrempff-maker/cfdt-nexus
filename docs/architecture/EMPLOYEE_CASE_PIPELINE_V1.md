@@ -1,5 +1,7 @@
 # Pipeline d'analyse d'un dossier salarie V1 - LOT 5A
 
+[Index et navigation du LOT 5](LOT_5_EMPLOYEE_CASE_INDEX.md)
+
 ## Finalite
 
 Le LOT 5A cree le socle d'orchestration d'un dossier salarie entierement synthetique. Il inventorie et classe les

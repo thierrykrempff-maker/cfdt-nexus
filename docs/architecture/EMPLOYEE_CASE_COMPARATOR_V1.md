@@ -1,5 +1,7 @@
 # Comparateur de dossiers salariés V1 — LOT 5D
 
+[Index et navigation du LOT 5](LOT_5_EMPLOYEE_CASE_INDEX.md)
+
 ## Objectif
 
 Le comparateur rapproche deux dossiers salariés synthétiques ou deux rapports LOT 5B. Il décrit les écarts documentaires entre une situation A et une situation B sans recalculer la paie, sans appeler un expert et sans produire de conclusion juridique nouvelle.

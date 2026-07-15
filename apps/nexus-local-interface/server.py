@@ -25,6 +25,7 @@ APP_DIR = Path(__file__).resolve().parent
 ROOT = APP_DIR.parents[1]
 ROUTER_SCRIPT = ROOT / "automation" / "scripts" / "assistant_ds_router.py"
 EXPERTS_DIR = ROOT / "automation"
+INTERNAL_ERROR_MESSAGE = "Une erreur interne est survenue. Consultez les journaux du serveur."
 
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(EXPERTS_DIR))
@@ -102,6 +103,10 @@ class NexusHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def send_internal_error(self, exc: Exception) -> None:
+        self.log_error("Internal server error: %s", exc)
+        self.send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": INTERNAL_ERROR_MESSAGE})
+
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
         if parsed.path in {"/", ""}:
@@ -125,7 +130,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             except ValueError as exc:
                 self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})
             except Exception as exc:  # pragma: no cover - defensive local server boundary.
-                self.send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(exc)})
+                self.send_internal_error(exc)
             return
         super().do_GET()
 
@@ -143,7 +148,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
         except ValueError as exc:
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})
         except Exception as exc:  # pragma: no cover - defensive local server boundary.
-            self.send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(exc)})
+            self.send_internal_error(exc)
 
 
 def build_parser() -> argparse.ArgumentParser:

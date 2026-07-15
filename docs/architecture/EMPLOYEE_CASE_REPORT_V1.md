@@ -1,5 +1,7 @@
 # Generateur de rapport d'analyse salarie V1 - LOT 5B
 
+[Index et navigation du LOT 5](LOT_5_EMPLOYEE_CASE_INDEX.md)
+
 ## Finalite
 
 Le LOT 5B transforme le diagnostic structure du pipeline LOT 5A et les analyses expertes deja disponibles en un objet
