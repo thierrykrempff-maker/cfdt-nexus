@@ -8,12 +8,13 @@ from typing import Any
 from .utils import collect_issue_values, has_any, normalize, route_domains, source_documents, unique
 
 try:  # Used when automation/ is inserted directly in sys.path by the local UI.
-    from payroll import payroll_rule_engine
+    from payroll import payroll_referential_integration, payroll_rule_engine
 except Exception:  # pragma: no cover - fallback for package-style imports.
     try:
-        from automation.payroll import payroll_rule_engine  # type: ignore[no-redef]
+        from automation.payroll import payroll_referential_integration, payroll_rule_engine  # type: ignore[no-redef]
     except Exception:  # pragma: no cover - handled as a safe runtime fallback.
         payroll_rule_engine = None  # type: ignore[assignment]
+        payroll_referential_integration = None  # type: ignore[assignment]
 
 
 PAIE_KEYWORDS = [
@@ -657,6 +658,11 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
             "reason": "Question hors perimetre paie pour cette orchestration.",
         }
     rule_analysis = payroll_rule_analysis(answer)
+    referential_analysis = (
+        payroll_referential_integration.build_analysis(answer, rule_analysis or {})
+        if payroll_referential_integration is not None
+        else None
+    )
     rules_available = available_rules(answer)
     rules_available.extend(payroll_rule_source_items(rule_analysis))
     data = data_needed(answer)
@@ -664,8 +670,12 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
     documents = documents_needed(answer)
     if rule_analysis:
         documents.extend(str(item) for item in rule_analysis.get("documents_to_request", []))
+    if referential_analysis:
+        documents.extend(str(item) for item in referential_analysis.get("documents_missing", []))
     limit_values = limits(answer)
     limit_values.extend(payroll_rule_limit_items(rule_analysis))
+    if referential_analysis:
+        limit_values.extend(str(item) for item in referential_analysis.get("refusal_reasons", []))
     return {
         "active": True,
         "name": "Expert Paie V0",
@@ -678,7 +688,14 @@ def enrich(answer: dict[str, Any]) -> dict[str, Any]:
         "calcul_detaille": calculation_detail(answer),
         "documents_necessaires": unique(documents, limit=16),
         "sources_utilisees": source_documents(answer),
-        "niveau_de_confiance": confidence(answer),
+        "niveau_de_confiance": (
+            str(referential_analysis.get("confidence"))
+            if referential_analysis and referential_analysis.get("confidence")
+            else confidence(answer)
+        ),
         "limites": unique(limit_values, limit=12),
         "payroll_rule_analysis": rule_analysis,
+        "payroll_referential_analysis": referential_analysis,
+        "reponse_salarie": referential_analysis.get("employee_response") if referential_analysis else None,
+        "reponse_expert": referential_analysis.get("expert_response") if referential_analysis else None,
     }
