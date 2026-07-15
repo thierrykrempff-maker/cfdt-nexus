@@ -801,6 +801,52 @@ Il ignore les dossiers techniques comme `.git`, caches, environnements virtuels 
 
 Un audit plus large reste possible en passant un ou plusieurs chemins explicites avec `--path`.
 
+## LOT 4G - Protocole de raisonnement de l'Expert Paie
+
+Le LOT 4G ajoute un protocole metier independant du moteur :
+
+```text
+automation/payroll/payroll_reasoning_protocol.py
+docs/architecture/PAYROLL_REASONING_PROTOCOL.md
+```
+
+Le protocole impose 12 etapes ordonnees avant toute reponse : comprehension de la demande, identification de la
+population et de la periode, collecte documentaire, recherche des regles et objets metier, controle des informations
+manquantes, evaluation de la confiance et production d'une reponse adaptee.
+
+Il distingue une reponse salarie simple d'une reponse expert detaillee. Sa politique de refus interrompt la conclusion
+lorsqu'une information ou une piece indispensable manque, ou lorsque les documents sont contradictoires.
+
+La description complete du protocole est disponible dans
+[PAYROLL_REASONING_PROTOCOL.md](PAYROLL_REASONING_PROTOCOL.md).
+
+Le protocole ne calcule aucun montant, droit, compteur ou bulletin. Les variables, compteurs Kelio, rubriques Nibelis
+et parametres restent des objets a rechercher et a controler.
+
+## LOT 4H - Integration prudente dans l'Expert Paie
+
+Le LOT 4H relie prudemment l'Expert Paie aux composants des LOTS 4A a 4G :
+
+```text
+automation/experts/paie.py
+automation/payroll/payroll_referential_integration.py
+automation/experts/test_paie_referential_integration.py
+```
+
+L'integration conserve le comportement historique et le diagnostic `payroll_rule_analysis`. Elle ajoute :
+
+- l'application du protocole LOT 4G ;
+- des pistes de regles, variables, compteurs Kelio, rubriques Nibelis et parametres ;
+- les relations pertinentes du graphe a partir des regles selectionnees ;
+- les documents verifies et les pieces indispensables manquantes ;
+- le niveau de confiance et ses causes ;
+- des sorties distinctes `reponse_salarie` et `reponse_expert`.
+
+Cette integration reste strictement non calculatoire. Elle ne transmet aucune valeur synthetique a l'Expert, ne cree
+aucune formule et ne modifie pas `payroll_rule_engine.py`. Seuls les objets marques `synthetic_only = true` et
+`calculation_allowed = false` peuvent etre exposes, toujours comme pistes de controle et jamais comme preuves. Les
+accords, la convention collective, le Code du travail et les documents reels restent indispensables a toute conclusion.
+
 ## Commandes
 
 Validation complete :
@@ -834,7 +880,7 @@ python automation/payroll/test_payroll_data_privacy_validator.py
 - Aucun bulletin, export Kelio, export Nibelis ou fichier nominatif reel n'est ajoute.
 - Aucun calcul n'est active.
 - Le moteur `payroll_rule_engine.py` n'est pas modifie.
-- `automation/experts/paie.py` n'est pas modifie.
+- `automation/experts/paie.py` est enrichi par le LOT 4H sans modifier le moteur ni supprimer les garde-fous existants.
 
 ## Prochaines etapes
 
@@ -868,6 +914,15 @@ LOT 4F :
 - refuser tout bulletin reel, matricule, export nominatif ou secret technique dans Git ;
 - conserver les controles comme garde-fous, sans remplacer la validation humaine.
 
+LOTS 4G et 4H :
+
+- conserver les 12 etapes du protocole avant toute reponse enrichie ;
+- presenter les objets des referentiels uniquement comme pistes de controle ;
+- maintenir l'integration strictement non calculatoire ;
+- suivre l'optimisation des chargements de catalogues comme dette technique separee.
+
 ## Conclusion
 
-Les LOTS 4A a 4F posent le cadre de securite et de validation du referentiel paie. Ils ne rendent pas CFDT Nexus plus calculateur ; ils le rendent plus prudent, plus structure et plus difficile a polluer avec des donnees non verifiees ou confidentielles.
+Les LOTS 4A a 4H posent le cadre de securite, de validation, de raisonnement et d'integration prudente du referentiel
+paie. Ils ne rendent pas CFDT Nexus plus calculateur ; ils le rendent plus prudent, plus structure et plus difficile a
+polluer avec des donnees non verifiees ou confidentielles.

@@ -122,12 +122,16 @@ question = PayrollQuestion(
     question="Verifier des heures supplementaires",
     question_type="controle",
     subject="heures_supplementaires",
-    scope=QuestionScope.EMPLOYEE,
+    scope=QuestionScope("employee"),
     population="salarie concerne",
     period="juin 2026",
 )
 diagnostic = assess(question)
-reponse = render_response(question, diagnostic, Audience.EMPLOYEE)
+reponse = render_response(question, diagnostic, Audience("employee"))
 ```
 
 Le resultat demande des preuves et decrit les recherches a mener. Il ne calcule ni heures, ni taux, ni montant.
+
+Les valeurs d'enumeration sont construites ici depuis leur valeur metier en minuscules. Cette ecriture cible uniquement
+l'exemple documentaire et evite qu'un controle generique de chaines en majuscules ne confonde le nom symbolique de
+l'audience avec un code bancaire. Aucune exception au detecteur de BIC n'est ajoutee et sa detection reste inchangee.
