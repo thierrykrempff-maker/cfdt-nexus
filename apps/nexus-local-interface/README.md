@@ -1,4 +1,4 @@
-# Nexus Local Interface
+# Nexus Local Interface - Cockpit V3
 
 Interface locale privee pour interroger Nexus sans taper de commande PowerShell.
 
@@ -32,7 +32,24 @@ http://127.0.0.1:8765/
 - rapport d'analyse local par `automation/experts/report_generator.py`, uniquement a partir du resultat reel Nexus ;
 - experts locaux Juriste et Paie, sans service IA externe.
 
-## Perimetre V2.2
+## Perimetre V3
+
+Le Cockpit V3 conserve toutes les fonctions V2.2 et ajoute un dossier salarie synthetique connecte au pipeline LOT 5A
+et au rapport LOT 5B.
+
+Endpoints locaux ajoutes :
+
+```text
+GET /api/employee-case/scenarios
+GET /api/employee-case/demo?scenario=<identifiant>
+```
+
+Les cinq scenarios publics sont strictement fictifs. La fixture de confidentialite n'est jamais exposee dans la liste
+de demonstration. Le navigateur ne fournit aucun chemin de fichier et ne stocke aucun dossier.
+
+Le flux V3 est documente dans `docs/architecture/COCKPIT_V3_EMPLOYEE_CASE.md`.
+
+## Perimetre V2.2 conserve
 
 L'interface affiche :
 

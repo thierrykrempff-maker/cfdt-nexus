@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CFDT Nexus - Interface locale</title>
+    <title>CFDT Nexus - Cockpit V3 local</title>
     <meta name="description" content="Interface locale privee pour interroger Nexus sans PowerShell.">
     <meta
       http-equiv="Content-Security-Policy"
@@ -14,14 +14,14 @@
     <script src="app.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#questionInput">Aller a la question</a>
+    <a class="skip-link" href="#employeeCasePanel">Aller au dossier salarie</a>
 
     <header class="app-header">
       <div class="brand-block">
         <span class="brand-mark">Cfdt.</span>
         <span class="brand-copy">
           <strong>CFDT Nexus</strong>
-          <span>Assistant DS local</span>
+          <span>Cockpit V3 local</span>
         </span>
       </div>
       <div class="status-line">
@@ -31,10 +31,75 @@
     </header>
 
     <main class="workspace">
+      <section class="employee-case-panel" id="employeeCasePanel" aria-labelledby="employeeCaseTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">LOT 5C - demonstration synthetique</p>
+            <h1 id="employeeCaseTitle">Dossier salarie</h1>
+          </div>
+          <div class="case-controls">
+            <label for="caseScenarioSelect">Scenario</label>
+            <select id="caseScenarioSelect" aria-describedby="caseSafetyNotice"></select>
+            <button class="primary-button" type="button" id="loadCaseButton">Charger le dossier</button>
+          </div>
+        </div>
+        <p class="safety-notice" id="caseSafetyNotice">
+          Demonstrations fictives uniquement. Aucun document local reel ne peut etre charge.
+        </p>
+        <div class="case-error" id="caseError" role="alert" hidden></div>
+        <div class="case-content" id="caseContent" hidden>
+          <section class="case-header-card" aria-labelledby="caseHeaderTitle">
+            <div>
+              <p class="eyebrow">Dossier</p>
+              <h2 id="caseHeaderTitle">-</h2>
+              <p id="caseHeaderMeta"></p>
+            </div>
+            <div class="case-badges">
+              <span class="status-badge" id="caseStatus">-</span>
+              <span class="status-badge" id="caseConfidentiality">-</span>
+              <span class="status-badge" id="caseConfidence">-</span>
+            </div>
+          </section>
+
+          <section class="case-section" aria-labelledby="pipelineTitle">
+            <h2 id="pipelineTitle">Progression du pipeline</h2>
+            <ol class="pipeline-steps" id="pipelineSteps"></ol>
+          </section>
+
+          <section class="case-section" aria-labelledby="completenessTitle">
+            <div class="section-heading">
+              <h2 id="completenessTitle">Completude documentaire</h2>
+              <strong id="completenessRate">-</strong>
+            </div>
+            <p id="completenessNotice" class="safety-notice"></p>
+            <div class="grid-four" id="documentSummary"></div>
+          </section>
+
+          <section class="case-section" aria-labelledby="pipelineDiagnosticTitle">
+            <h2 id="pipelineDiagnosticTitle">Diagnostic du dossier</h2>
+            <div id="caseDiagnosticSummary"></div>
+          </section>
+
+          <section class="case-section" aria-labelledby="caseReportTitle">
+            <div class="section-heading">
+              <div>
+                <h2 id="caseReportTitle">Rapport structure</h2>
+                <p class="view-description" id="caseViewDescription">Vue salarie simple et pedagogique.</p>
+              </div>
+              <div class="view-switch" role="group" aria-label="Choisir la vue du rapport">
+                <button class="secondary-button is-active" type="button" id="employeeViewButton" aria-pressed="true">Vue salarie</button>
+                <button class="secondary-button" type="button" id="expertViewButton" aria-pressed="false">Vue expert</button>
+              </div>
+            </div>
+            <div class="case-report-view" id="caseReportView"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="ask-panel" aria-labelledby="askTitle">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Nexus V2.2</p>
+            <p class="eyebrow">Assistant Nexus V2.2 conserve</p>
             <h1 id="askTitle">Question a analyser</h1>
           </div>
           <div class="confidence-pill" id="statusPill">Pret</div>

@@ -371,7 +371,7 @@ def main() -> None:
         assert incomplete_payload["expert_paie"]["active"] is True
         assert incomplete_payload["answer"]["confidence"] == "faible"
         assert "incomplete" in normalize(incomplete_payload["answer"]["short_answer"])
-        assert incomplete_payload["expert_paie"]["niveau_de_confiance"] == "faible"
+        assert incomplete_payload["expert_paie"]["niveau_de_confiance"] == "LOW"
         incomplete_needed = normalize(" ".join(incomplete_payload["expert_paie"]["donnees_necessaires_au_calcul"]))
         assert "libelle exact" in incomplete_needed
         assert "periode" in incomplete_needed

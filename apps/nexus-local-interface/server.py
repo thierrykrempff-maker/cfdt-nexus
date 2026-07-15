@@ -18,6 +18,7 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 
 APP_DIR = Path(__file__).resolve().parent
@@ -25,8 +26,10 @@ ROOT = APP_DIR.parents[1]
 ROUTER_SCRIPT = ROOT / "automation" / "scripts" / "assistant_ds_router.py"
 EXPERTS_DIR = ROOT / "automation"
 
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(EXPERTS_DIR))
 from experts import orchestrator, report_generator  # noqa: E402
+from employee_case_demo import build_demo_payload, public_scenarios  # noqa: E402
 
 
 def router_environment() -> dict[str, str]:
@@ -82,7 +85,7 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
 
 
 class NexusHandler(SimpleHTTPRequestHandler):
-    server_version = "NexusLocalInterface/2.2"
+    server_version = "NexusLocalInterface/3.0"
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(APP_DIR), **kwargs)
@@ -100,10 +103,29 @@ class NexusHandler(SimpleHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self) -> None:  # noqa: N802
-        if self.path in {"/", ""}:
+        parsed = urlparse(self.path)
+        if parsed.path in {"/", ""}:
             self.path = "/index.html"
-        if self.path == "/health":
-            self.send_json(HTTPStatus.OK, {"ok": True, "service": "nexus-local-interface", "version": "2.2"})
+        if parsed.path == "/health":
+            self.send_json(HTTPStatus.OK, {"ok": True, "service": "nexus-local-interface", "version": "3.0"})
+            return
+        if parsed.path == "/api/employee-case/scenarios":
+            self.send_json(HTTPStatus.OK, {"ok": True, "scenarios": public_scenarios(), "synthetic_only": True})
+            return
+        if parsed.path == "/api/employee-case/demo":
+            try:
+                scenario = (parse_qs(parsed.query).get("scenario") or [""])[0]
+                if not scenario:
+                    raise ValueError("Scenario synthetique manquant.")
+                self.send_json(HTTPStatus.OK, build_demo_payload(scenario))
+            except KeyError as exc:
+                self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(exc.args[0])})
+            except PermissionError as exc:
+                self.send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": str(exc)})
+            except ValueError as exc:
+                self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})
+            except Exception as exc:  # pragma: no cover - defensive local server boundary.
+                self.send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": str(exc)})
             return
         super().do_GET()
 
