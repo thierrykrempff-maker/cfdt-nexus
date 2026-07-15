@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/nibelis-rubrics.schema.json",
+  "title": "CFDT Nexus Nibelis Rubrics Referential V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog_id", "version", "scope", "fixture_type", "security_notice", "rubrics"],
+  "properties": {
+    "catalog_id": { "type": "string" },
+    "version": { "type": "string" },
+    "scope": { "type": "string" },
+    "fixture_type": { "type": "string", "enum": ["synthetic_example", "private_local"] },
+    "security_notice": { "type": "string" },
+    "rubrics": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/NibelisRubric" }
+    }
+  },
+  "$defs": {
+    "SyntheticReadingExample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value", "interpretation"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "interpretation": { "type": "string" }
+      }
+    },
+    "NibelisRubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rubric_id",
+        "rubric_code",
+        "label",
+        "normalized_label",
+        "business_description",
+        "data_role",
+        "category",
+        "sub_category",
+        "payroll_topic",
+        "calculation_family",
+        "appears_on_payslip",
+        "gross_impact",
+        "affects_gross",
+        "unit",
+        "amount_applicable",
+        "rate_applicable",
+        "base_applicable",
+        "source_layer",
+        "generic_source",
+        "source_document",
+        "source_reference",
+        "effective_date",
+        "end_date",
+        "linked_rule_ids",
+        "linked_variables",
+        "linked_kelio_counter_ids",
+        "documents_to_check",
+        "frequent_anomalies",
+        "control_points",
+        "synthetic_reading_examples",
+        "calculation_allowed",
+        "validation_status",
+        "confidence",
+        "confidentiality",
+        "anonymization_required",
+        "synthetic_only",
+        "notes"
+      ],
+      "properties": {
+        "rubric_id": { "type": "string" },
+        "rubric_code": { "type": "string" },
+        "label": { "type": "string" },
+        "normalized_label": { "type": "string" },
+        "business_description": { "type": "string" },
+        "data_role": { "type": "string", "enum": ["source_data", "calculated_data", "controlled_data"] },
+        "category": {
+          "type": "string",
+          "enum": [
+            "base_salary",
+            "premium",
+            "overtime",
+            "absence",
+            "leave",
+            "sickness",
+            "on_call",
+            "allowance",
+            "regularization",
+            "benefit",
+            "counter_information",
+            "tax_social_contribution",
+            "other"
+          ]
+        },
+        "sub_category": { "type": "string" },
+        "payroll_topic": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "calculation_family": {
+          "type": "string",
+          "enum": ["fixed_amount", "variable_amount", "time_based", "absence_deduction", "informational", "regularization", "benefit", "to_verify"]
+        },
+        "appears_on_payslip": { "type": "boolean" },
+        "gross_impact": { "type": "string", "enum": ["positive", "negative", "informational"] },
+        "affects_gross": { "type": "boolean" },
+        "unit": {
+          "type": "string",
+          "enum": ["amount_eur", "hours", "days", "rate_percent", "count", "text", "km", "none"]
+        },
+        "amount_applicable": { "type": "boolean" },
+        "rate_applicable": { "type": "boolean" },
+        "base_applicable": { "type": "boolean" },
+        "source_layer": {
+          "type": "string",
+          "enum": [
+            "presentation_bulletin",
+            "accord_entreprise",
+            "convention_collective",
+            "code_travail",
+            "note_rh",
+            "memoire_entreprise",
+            "synthetic_fixture",
+            "to_verify"
+          ]
+        },
+        "generic_source": { "type": "string" },
+        "source_document": { "type": "string" },
+        "source_reference": { "type": ["string", "null"] },
+        "effective_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "linked_rule_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_variables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_kelio_counter_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "documents_to_check": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frequent_anomalies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "control_points": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "synthetic_reading_examples": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/SyntheticReadingExample" }
+        },
+        "calculation_allowed": { "type": "boolean" },
+        "validation_status": {
+          "type": "string",
+          "enum": ["draft", "to_verify", "human_validated", "rejected", "synthetic_example"]
+        },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "confidentiality": { "type": "string", "enum": ["public", "internal", "confidential", "private"] },
+        "anonymization_required": { "type": "boolean" },
+        "synthetic_only": { "type": "boolean" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

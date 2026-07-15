@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schema/payroll-parameters.schema.json",
+  "title": "CFDT Nexus Payroll Parameters Referential V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog_id", "version", "scope", "fixture_type", "security_notice", "parameters"],
+  "properties": {
+    "catalog_id": { "type": "string" },
+    "version": { "type": "string" },
+    "scope": { "type": "string" },
+    "fixture_type": { "type": "string", "enum": ["synthetic_example", "private_local"] },
+    "security_notice": { "type": "string" },
+    "parameters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PayrollParameter" }
+    }
+  },
+  "$defs": {
+    "ParameterValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw", "numeric_value", "unit", "currency", "percentage", "is_fallback_value"],
+      "properties": {
+        "raw": { "type": "string" },
+        "numeric_value": { "type": ["number", "null"] },
+        "unit": {
+          "type": "string",
+          "enum": ["amount_eur", "hours", "days", "rate_percent", "count", "date", "km", "text", "none"]
+        },
+        "currency": { "type": ["string", "null"], "enum": ["EUR", null] },
+        "percentage": { "type": ["number", "null"] },
+        "is_fallback_value": { "type": "boolean" }
+      }
+    },
+    "ApplicationPeriod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "start_date", "end_date", "notes"],
+      "properties": {
+        "label": { "type": "string" },
+        "start_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "HumanValidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "validator", "validated_at", "notes"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pending", "validated", "rejected"] },
+        "validator": { "type": ["string", "null"] },
+        "validated_at": { "type": ["string", "null"] },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "PayrollParameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parameter_id",
+        "parameter_code",
+        "label",
+        "business_description",
+        "data_role",
+        "parameter_type",
+        "value_state",
+        "value_kind",
+        "value",
+        "employee_population",
+        "work_schedule",
+        "application_period",
+        "source_layer",
+        "source_document",
+        "source_reference",
+        "effective_date",
+        "end_date",
+        "linked_rule_ids",
+        "linked_variables",
+        "linked_nibelis_rubric_ids",
+        "linked_kelio_counter_ids",
+        "calculation_allowed",
+        "legal_priority",
+        "validation_status",
+        "human_validation",
+        "confidence",
+        "confidentiality",
+        "verified_by",
+        "last_checked_at",
+        "validation_documents",
+        "misuse_risks",
+        "mutually_exclusive_group",
+        "synthetic_only",
+        "notes"
+      ],
+      "properties": {
+        "parameter_id": { "type": "string" },
+        "parameter_code": { "type": "string" },
+        "label": { "type": "string" },
+        "business_description": { "type": "string" },
+        "data_role": { "type": "string", "enum": ["source_data", "entered_data", "derived_data", "controlled_data", "validated_data"] },
+        "parameter_type": {
+          "type": "string",
+          "enum": ["rate", "amount", "threshold", "date", "duration", "distance", "method", "formula_component", "ceiling", "period", "informational", "other"]
+        },
+        "value_state": {
+          "type": "string",
+          "enum": [
+            "identified_value_unknown",
+            "synthetic_test_value",
+            "awaiting_source",
+            "awaiting_human_validation",
+            "structurally_checked_not_applicable",
+            "calculation_ready"
+          ]
+        },
+        "value_kind": { "type": "string", "enum": ["source_data", "entered_data", "derived_data", "controlled_data", "validated_data"] },
+        "value": { "$ref": "#/$defs/ParameterValue" },
+        "employee_population": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "work_schedule": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "application_period": { "$ref": "#/$defs/ApplicationPeriod" },
+        "source_layer": {
+          "type": "string",
+          "enum": [
+            "accord_entreprise",
+            "convention_collective",
+            "code_travail",
+            "note_rh",
+            "presentation_bulletin",
+            "synthetic_fixture",
+            "to_verify"
+          ]
+        },
+        "source_document": { "type": "string" },
+        "source_reference": { "type": ["string", "null"] },
+        "effective_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "linked_rule_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_variables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_nibelis_rubric_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "linked_kelio_counter_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "calculation_allowed": { "type": "boolean" },
+        "legal_priority": { "type": "string", "enum": ["opposable", "interpretative", "memory_only", "to_verify"] },
+        "validation_status": {
+          "type": "string",
+          "enum": ["draft", "to_verify", "human_validated", "rejected", "synthetic_example"]
+        },
+        "human_validation": { "$ref": "#/$defs/HumanValidation" },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "confidentiality": { "type": "string", "enum": ["public", "internal", "confidential", "private"] },
+        "verified_by": { "type": ["string", "null"] },
+        "last_checked_at": { "type": ["string", "null"] },
+        "validation_documents": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "misuse_risks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "mutually_exclusive_group": { "type": ["string", "null"] },
+        "synthetic_only": { "type": "boolean" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
