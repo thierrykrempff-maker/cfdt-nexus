@@ -1,0 +1,47 @@
+{
+  "fixture_type": "synthetic_example",
+  "synthetic_only": true,
+  "cases": [
+    {
+      "case_id": "CASE_OVERTIME_SYN_001", "title": "Controle fictif des heures supplementaires", "main_question": "Quels controles documentaires mener ?", "description": "Dossier pedagogique sans valeur de paie reelle.", "period": "2099-01", "population": "population synthetique", "detected_themes": ["overtime"], "urgent": false, "status": "ready", "confidentiality": "restricted", "synthetic_only": true, "created_at": "2099-01-02T09:00:00Z",
+      "employee_information": {"fact": "heures declarees dans un exemple fictif sans quantite"}, "documents": [
+        {"document_id": "DOC_OV_PAY_SYN", "document_type": "payslip", "title": "Bulletin fictif sans valeur", "period": "2099-01", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_OV_TIME_SYN", "document_type": "time_statement", "title": "Releve de temps fictif", "period": "2099-01", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_OV_PLAN_SYN", "document_type": "planning", "title": "Planning fictif", "period": "2099-01", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_OV_RULE_SYN", "document_type": "company_agreement", "title": "Accord fictif", "period": "2099-01", "declared_source": "fixture", "file_format": "json", "synthetic_only": true}
+      ]
+    },
+    {
+      "case_id": "CASE_ONCALL_SYN_002", "title": "Astreinte fictive incomplete", "main_question": "Quelles pieces manquent ?", "description": "Fixture incomplete.", "period": "2099-02", "population": "population synthetique", "detected_themes": ["on_call"], "urgent": false, "status": "draft", "confidentiality": "restricted", "synthetic_only": true,
+      "documents": [{"document_id": "DOC_ON_PLAN_SYN", "document_type": "planning", "title": "Planning fictif", "period": "2099-02", "declared_source": "fixture", "file_format": "json", "synthetic_only": true}]
+    },
+    {
+      "case_id": "CASE_SICK_SYN_003", "title": "Maintien fictif avec contradiction", "main_question": "Quels faits rapprocher ?", "description": "Deux pieces fictives portent des faits differents.", "period": "2099-03", "population": "population synthetique", "detected_themes": ["sickness_maintenance"], "urgent": false, "status": "ready", "confidentiality": "restricted", "synthetic_only": true,
+      "documents": [
+        {"document_id": "DOC_SICK_PAY_SYN", "document_type": "payslip", "title": "Bulletin fictif", "period": "2099-03", "declared_source": "fixture", "file_format": "json", "metadata": {"asserted_facts": {"absence_period": "periode_A"}}, "synthetic_only": true},
+        {"document_id": "DOC_SICK_PROOF_SYN", "document_type": "anonymized_absence_proof", "title": "Justificatif anonymise fictif", "period": "2099-03", "declared_source": "fixture", "file_format": "json", "metadata": {"asserted_facts": {"absence_period": "periode_B"}}, "synthetic_only": true},
+        {"document_id": "DOC_SICK_RULE_SYN", "document_type": "applicable_rule", "title": "Regle fictive", "period": "2099-03", "declared_source": "fixture", "file_format": "json", "synthetic_only": true}
+      ]
+    },
+    {
+      "case_id": "CASE_CLASS_SYN_004", "title": "Classification fictive incomplete", "main_question": "Quels documents de classification verifier ?", "description": "Fixture sans fiche de poste.", "period": "2099", "population": "population synthetique", "detected_themes": ["classification"], "urgent": false, "status": "draft", "confidentiality": "restricted", "synthetic_only": true,
+      "documents": [
+        {"document_id": "DOC_CLASS_CONTRACT_SYN", "document_type": "employment_contract", "title": "Contrat fictif", "period": "2099", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_CLASS_FUNCTIONS_SYN", "document_type": "functions_statement", "title": "Fonctions fictives", "period": "2099", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_CLASS_CC_SYN", "document_type": "collective_agreement", "title": "Convention fictive", "period": "2099", "declared_source": "fixture", "file_format": "json", "synthetic_only": true}
+      ]
+    },
+    {
+      "case_id": "CASE_LEAVE_SYN_005", "title": "Conges payes fictifs complets", "main_question": "Quels controles documentaires mener ?", "description": "Fixture complete sans valeur reelle.", "period": "2099-05", "population": "population synthetique", "detected_themes": ["paid_leave"], "urgent": false, "status": "ready", "confidentiality": "restricted", "synthetic_only": true,
+      "documents": [
+        {"document_id": "DOC_LEAVE_PAY_SYN", "document_type": "payslip", "title": "Bulletin fictif", "period": "2099-05", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_LEAVE_COUNTER_SYN", "document_type": "leave_counter", "title": "Compteur fictif", "period": "2099-05", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_LEAVE_REQUEST_SYN", "document_type": "leave_request", "title": "Demande fictive", "period": "2099-05", "declared_source": "fixture", "file_format": "json", "synthetic_only": true},
+        {"document_id": "DOC_LEAVE_RULE_SYN", "document_type": "applicable_rule", "title": "Regle fictive", "period": "2099-05", "declared_source": "fixture", "file_format": "json", "synthetic_only": true}
+      ]
+    },
+    {
+      "case_id": "CASE_PRIVACY_SYN_006", "title": "Controle de confidentialite fictif", "main_question": "Le garde-fou bloque-t-il le dossier ?", "description": "Le marqueur produit uniquement en memoire une donnee de test interdite.", "period": "2099-06", "population": "population synthetique", "detected_themes": ["overtime"], "urgent": false, "status": "draft", "confidentiality": "restricted", "synthetic_only": true, "privacy_probe": "synthetic_email_probe", "documents": []
+    }
+  ]
+}
