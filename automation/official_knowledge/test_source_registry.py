@@ -2,8 +2,8 @@ import unittest
 from automation.official_knowledge.source_registry import CATALOG_SOURCE_IDS,SOURCE_REGISTRY,list_sources
 
 class RegistryTests(unittest.TestCase):
- def test_fifteen_stable_sources(self):
-  self.assertEqual(15,len(list_sources()));self.assertEqual(len(SOURCE_REGISTRY),len(set(SOURCE_REGISTRY)))
+ def test_sixteen_stable_sources(self):
+  self.assertEqual(16,len(list_sources()));self.assertEqual(len(SOURCE_REGISTRY),len(set(SOURCE_REGISTRY)))
  def test_disabled_architecture_only(self):
   self.assertTrue(all(not s.enabled and s.connector_status=="architecture_only" for s in list_sources()))
  def test_uninvestigated_sources_do_not_invent_endpoints(self):
@@ -18,3 +18,5 @@ class RegistryTests(unittest.TestCase):
    source=SOURCE_REGISTRY[source_id];self.assertEqual(authority,source.authority_level);self.assertFalse(source.enabled);self.assertEqual("architecture_only",source.connector_status)
  def test_prioritized_catalog_is_visible_without_activation(self):
   self.assertIn("dreal_grand_est",CATALOG_SOURCE_IDS);self.assertIn("france_chimie",CATALOG_SOURCE_IDS);self.assertTrue(all(not source.enabled for source in list_sources()))
+ def test_dreets_grand_est_contract_stays_disabled(self):
+  source=SOURCE_REGISTRY["dreets_grand_est"];self.assertFalse(source.enabled);self.assertEqual("architecture_only",source.connector_status);self.assertEqual(("grand-est.dreets.gouv.fr",),source.official_domains)
