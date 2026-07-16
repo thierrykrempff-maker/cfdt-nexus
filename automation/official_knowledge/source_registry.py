@@ -12,9 +12,12 @@ _NAMES = (
  ("judilibre","JUDILIBRE","Cour de cassation"), ("code_travail_numerique","Code du travail numérique","Ministère du Travail"),
 )
 _EXISTING_DOMAINS={"legifrance":("api.piste.gouv.fr","oauth.piste.gouv.fr"),"judilibre":("api.piste.gouv.fr","oauth.piste.gouv.fr"),"code_travail_numerique":("code.travail.gouv.fr",)}
+_CNIL_DOMAINS=("cnil.fr","linc.cnil.fr","data.gouv.fr","legifrance.gouv.fr")
 SOURCES=tuple(SourceDefinition(source_id=sid,display_name=name,publisher=publisher,
-    source_type="existing_internal_connector" if sid in _EXISTING_DOMAINS else "unknown",
-    official_domains=_EXISTING_DOMAINS.get(sid,()), authority_level="unknown", domain_tags=(),
+    source_type="targeted_pages" if sid=="cnil" else "existing_internal_connector" if sid in _EXISTING_DOMAINS else "unknown",
+    official_domains=_CNIL_DOMAINS if sid=="cnil" else _EXISTING_DOMAINS.get(sid,()),
+    allowed_access_modes=("targeted_pages","open_data_catalog","legifrance_reference") if sid=="cnil" else (),
+    authority_level="official_guidance" if sid=="cnil" else "unknown", domain_tags=("personal_data","work",) if sid=="cnil" else (),
     kill_switch_key=sid.upper(), connector_status="architecture_only", enabled=False) for sid,name,publisher in _NAMES)
 SOURCE_REGISTRY={s.source_id:s for s in SOURCES}
 
