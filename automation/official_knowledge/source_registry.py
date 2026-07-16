@@ -18,7 +18,20 @@ SOURCES=tuple(SourceDefinition(source_id=sid,display_name=name,publisher=publish
     official_domains=_CNIL_DOMAINS if sid=="cnil" else _EXISTING_DOMAINS.get(sid,()),
     allowed_access_modes=("targeted_pages","open_data_catalog","legifrance_reference") if sid=="cnil" else (),
     authority_level="official_guidance" if sid=="cnil" else "unknown", domain_tags=("personal_data","work",) if sid=="cnil" else (),
-    kill_switch_key=sid.upper(), connector_status="architecture_only", enabled=False) for sid,name,publisher in _NAMES)
+    kill_switch_key=sid.upper(), connector_status="architecture_only", enabled=False) for sid,name,publisher in _NAMES) + (
+ SourceDefinition(source_id="alsace_moselle_local_law",display_name="Droit local d'Alsace-Moselle — textes",
+    publisher="République française",source_type="existing_internal_connector",official_domains=("legifrance.gouv.fr",),
+    authority_level="primary_law",domain_tags=("ALSACE_MOSELLE_LOCAL_LAW",),kill_switch_key="ALSACE_MOSELLE_LOCAL_LAW",enabled=False,connector_status="architecture_only"),
+ SourceDefinition(source_id="alsace_moselle_case_law",display_name="Droit local d'Alsace-Moselle — jurisprudence",
+    publisher="Cour de cassation",source_type="existing_internal_connector",official_domains=("courdecassation.fr","legifrance.gouv.fr"),
+    authority_level="official_case_law",domain_tags=("ALSACE_MOSELLE_LOCAL_LAW",),kill_switch_key="ALSACE_MOSELLE_CASE_LAW",enabled=False,connector_status="architecture_only"),
+ SourceDefinition(source_id="dreets_grand_est_local_law",display_name="DREETS Grand Est — droit local du travail",
+    publisher="DREETS Grand Est",source_type="targeted_pages",official_domains=("grand-est.dreets.gouv.fr",),
+    authority_level="official_guidance",domain_tags=("ALSACE_MOSELLE_LOCAL_LAW",),kill_switch_key="DREETS_GRAND_EST",enabled=False,connector_status="architecture_only"),
+ SourceDefinition(source_id="service_public_local_law",display_name="Service-Public.fr — informations pratiques droit local",
+    publisher="Direction de l'information légale et administrative",source_type="targeted_pages",official_domains=("service-public.fr",),
+    authority_level="official_practical_information",domain_tags=("ALSACE_MOSELLE_LOCAL_LAW",),kill_switch_key="SERVICE_PUBLIC_LOCAL_LAW",enabled=False,connector_status="architecture_only"),
+)
 SOURCE_REGISTRY={s.source_id:s for s in SOURCES}
 
 def get_source(source_id: str) -> SourceDefinition: return SOURCE_REGISTRY[source_id]
