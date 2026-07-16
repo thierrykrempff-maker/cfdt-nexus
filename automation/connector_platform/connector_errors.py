@@ -1,0 +1,12 @@
+from enum import StrEnum
+
+class ErrorCode(StrEnum):
+ NETWORK_DISABLED="NETWORK_DISABLED"; OPERATION_NOT_IMPLEMENTED="OPERATION_NOT_IMPLEMENTED"
+ VALIDATION_FAILED="VALIDATION_FAILED"; LICENSE_FORBIDDEN="LICENSE_FORBIDDEN"
+ SECURITY_POLICY_VIOLATION="SECURITY_POLICY_VIOLATION"; RATE_LIMITED="RATE_LIMITED"
+ RETRY_EXHAUSTED="RETRY_EXHAUSTED"; INVALID_STATE="INVALID_STATE"; INVALID_METADATA="INVALID_METADATA"
+
+class ConnectorPlatformError(RuntimeError):
+ def __init__(self,code:ErrorCode,message:str):
+  if not message:raise ValueError("message is required")
+  self.code=code;super().__init__(message)
