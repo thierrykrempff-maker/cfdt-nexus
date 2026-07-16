@@ -3,6 +3,7 @@ from __future__ import annotations
 import unicodedata
 from .dreets_catalog import DOMAIN_FAMILIES
 from .dreets_models import ClassificationResult,DreetsDocumentType
+from .dreets_platform import DREETS_PLATFORM_CONTRACT,DREETS_VALIDATION
 
 KEYWORDS={
  "cse":("cse","comite social et economique","information consultation"),"temps_de_travail":("temps de travail","conges","repos"),
@@ -20,4 +21,7 @@ def classify_document(title:str,category:str="fiche")->ClassificationResult:
  return ClassificationResult(domains,category,"medium" if domains!=("questions_reponses_officielles",) else "low","metadata_only",True,("classification_does_not_establish_legal_applicability",))
 
 def default_document_policy(category:str)->DreetsDocumentType:
- return DreetsDocumentType(category,"official_guidance","dreets_fail_closed_pending_review")
+ if not DREETS_VALIDATION.valid:raise ValueError("invalid platform contract")
+ policy=DreetsDocumentType(category,"official_guidance","dreets_fail_closed_pending_review")
+ if policy.to_platform_policy()!=DREETS_PLATFORM_CONTRACT.document_policy:raise ValueError("platform policy mismatch")
+ return policy
