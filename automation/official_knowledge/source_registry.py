@@ -36,3 +36,8 @@ SOURCE_REGISTRY={s.source_id:s for s in SOURCES}
 
 def get_source(source_id: str) -> SourceDefinition: return SOURCE_REGISTRY[source_id]
 def list_sources() -> tuple[SourceDefinition,...]: return SOURCES
+
+# The prioritized catalog is descriptive; registry membership remains the smaller
+# operational/architectural allow-list and does not activate catalog entries.
+from .source_catalog import CATALOG_BY_ID
+CATALOG_SOURCE_IDS=frozenset(CATALOG_BY_ID)
