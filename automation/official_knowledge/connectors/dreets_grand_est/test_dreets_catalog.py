@@ -3,7 +3,14 @@ from automation.official_knowledge.connectors.dreets_grand_est.dreets_catalog im
 
 class CatalogTests(unittest.TestCase):
  def test_official_domain_is_scoped(self): self.assertEqual("grand-est.dreets.gouv.fr",OFFICIAL_DOMAIN)
- def test_all_access_modes_pending_and_not_recommended(self): self.assertTrue(all(item["status"]=="pending_official_review" and not item["recommended"] for item in ACCESS_STUDY))
+ def test_access_modes_preserve_evidence_status(self):
+  by_mode={item["mechanism"]:item for item in ACCESS_STUDY}
+  self.assertEqual(by_mode["targeted_official_pages"]["status"],"officially_observed")
+  self.assertTrue(by_mode["targeted_official_pages"]["recommended"])
+  self.assertEqual(by_mode["official_api"]["status"],"not_identified_in_limited_review")
+  self.assertFalse(by_mode["official_api"]["recommended"])
+  self.assertFalse(by_mode["rss_or_atom"]["recommended"])
+  self.assertFalse(by_mode["sitemap"]["recommended"])
  def test_no_endpoint_is_inferred(self): self.assertTrue(all("url" not in item and "uri" not in item for item in ACCESS_STUDY))
  def test_licenses_fail_closed(self): self.assertTrue(all(not item["cache"] and not item["full_text"] and item["index_level"]=="METADATA_ONLY" for item in LICENSE_STUDY.values()))
  def test_twenty_domain_families(self): self.assertEqual(20,len(DOMAIN_FAMILIES))

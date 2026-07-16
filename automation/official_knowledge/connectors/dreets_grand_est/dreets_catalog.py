@@ -3,10 +3,10 @@
 OFFICIAL_DOMAIN="grand-est.dreets.gouv.fr"
 STUDY_STATUS="pending_official_review"
 ACCESS_STUDY=(
- {"mechanism":"targeted_official_pages","status":STUDY_STATUS,"access_mode":"targeted_pages","authentication":"unknown","pagination":"unknown","format":"unknown","recommended":False,"caveat":"official terms, robots and page stability must be reviewed"},
- {"mechanism":"official_api","status":STUDY_STATUS,"access_mode":"unknown","authentication":"unknown","pagination":"unknown","format":"unknown","recommended":False,"caveat":"no endpoint inferred"},
- {"mechanism":"rss_or_atom","status":STUDY_STATUS,"access_mode":"unknown","authentication":"unknown","pagination":"not_applicable","format":"unknown","recommended":False,"caveat":"feed existence not asserted"},
- {"mechanism":"sitemap","status":STUDY_STATUS,"access_mode":"unknown","authentication":"unknown","pagination":"not_applicable","format":"unknown","recommended":False,"caveat":"sitemap existence not asserted"},
+ {"mechanism":"targeted_official_pages","status":"officially_observed","access_mode":"targeted_pages","authentication":"none_observed","pagination":"observed","format":"html","recommended":True,"caveat":"metadata-only collection; legal classification remains document-specific"},
+ {"mechanism":"official_api","status":"not_identified_in_limited_review","access_mode":"unknown","authentication":"unknown","pagination":"unknown","format":"unknown","recommended":False,"caveat":"absence was not established; no endpoint or developer documentation was identified"},
+ {"mechanism":"rss_or_atom","status":"rss_link_observed_payload_unverified","access_mode":"published_link","authentication":"none_observed","pagination":"not_applicable","format":"rss_expected","recommended":False,"caveat":"the published RSS endpoint could not be parsed by the review tool; Atom was not identified"},
+ {"mechanism":"sitemap","status":"html_site_plan_observed_xml_unverified","access_mode":"published_link","authentication":"none_observed","pagination":"not_applicable","format":"html","recommended":False,"caveat":"the SPIP site-plan page is not evidence of an XML sitemap"},
 )
 
 LICENSE_STUDY={
