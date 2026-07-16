@@ -1,5 +1,5 @@
 import unittest
-from automation.official_knowledge.source_registry import SOURCE_REGISTRY,list_sources
+from automation.official_knowledge.source_registry import CATALOG_SOURCE_IDS,SOURCE_REGISTRY,list_sources
 
 class RegistryTests(unittest.TestCase):
  def test_fifteen_stable_sources(self):
@@ -16,3 +16,5 @@ class RegistryTests(unittest.TestCase):
   expected={"alsace_moselle_local_law":"primary_law","alsace_moselle_case_law":"official_case_law","dreets_grand_est_local_law":"official_guidance","service_public_local_law":"official_practical_information"}
   for source_id,authority in expected.items():
    source=SOURCE_REGISTRY[source_id];self.assertEqual(authority,source.authority_level);self.assertFalse(source.enabled);self.assertEqual("architecture_only",source.connector_status)
+ def test_prioritized_catalog_is_visible_without_activation(self):
+  self.assertIn("dreal_grand_est",CATALOG_SOURCE_IDS);self.assertIn("france_chimie",CATALOG_SOURCE_IDS);self.assertTrue(all(not source.enabled for source in list_sources()))
