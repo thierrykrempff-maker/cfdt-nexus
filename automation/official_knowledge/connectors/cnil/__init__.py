@@ -1,0 +1,3 @@
+"""CNIL LOT 1A contracts only; no production transport."""
+
+CNIL_NETWORK_NOT_IMPLEMENTED = "CNIL_CONNECTOR_NETWORK_NOT_IMPLEMENTED"
