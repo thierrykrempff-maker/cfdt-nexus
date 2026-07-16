@@ -31,6 +31,11 @@ SOURCES=tuple(SourceDefinition(source_id=sid,display_name=name,publisher=publish
  SourceDefinition(source_id="service_public_local_law",display_name="Service-Public.fr — informations pratiques droit local",
     publisher="Direction de l'information légale et administrative",source_type="targeted_pages",official_domains=("service-public.fr",),
     authority_level="official_practical_information",domain_tags=("ALSACE_MOSELLE_LOCAL_LAW",),kill_switch_key="SERVICE_PUBLIC_LOCAL_LAW",enabled=False,connector_status="architecture_only"),
+ SourceDefinition(source_id="dreets_grand_est",display_name="DREETS Grand Est",
+    publisher="Ministère du Travail",source_type="targeted_pages",official_domains=("grand-est.dreets.gouv.fr",),
+    authority_level="official_guidance",domain_tags=("employment_law","labour_inspection","social_dialogue","occupational_health"),
+    kill_switch_key="DREETS_GRAND_EST",enabled=False,connector_status="architecture_only",
+    notes="Access, terms and licenses require official review before any network implementation."),
 )
 SOURCE_REGISTRY={s.source_id:s for s in SOURCES}
 
