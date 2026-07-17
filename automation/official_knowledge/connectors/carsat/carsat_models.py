@@ -23,6 +23,16 @@ class CarsatDocumentFamily(StrEnum):
  WORK_ACCIDENT_PRICING_INFORMATION="work_accident_pricing_information"
  FORM="form"; FAQ="faq"; NEWS="news"; TOOL="tool"; OTHER="other"
 
+class CarsatFunctionalDomain(StrEnum):
+ PREVENTION="prevention"; AT_MP="at_mp"; AIDES_PREVENTION="aides_prevention"
+ ACCOMPAGNEMENT_ENTREPRISE="accompagnement_entreprise"; RETRAITE="retraite"
+ STATISTIQUES="statistiques"; OUTILS="outils"; GUIDES="guides"; AUTRE="autre"
+
+class CarsatDocumentCategory(StrEnum):
+ GUIDE="guide"; FICHE="fiche"; BROCHURE="brochure"; DOSSIER="dossier"
+ FORMULAIRE="formulaire"; OUTIL="outil"; PUBLICATION="publication"
+ STATISTIQUE="statistique"; FAQ="faq"; AUTRE="autre"
+
 class AccessReviewStatus(StrEnum):
  PENDING_OFFICIAL_REVIEW="pending_official_review"
 
@@ -37,16 +47,20 @@ class AccessPossibility:
 class CarsatDocumentIdentity:
  reference:str;title:str;family:CarsatDocumentFamily;mission:CarsatMission
  publication_date:str|None=None;version:str|None=None
+ functional_domain:CarsatFunctionalDomain=CarsatFunctionalDomain.AUTRE
+ category:CarsatDocumentCategory=CarsatDocumentCategory.AUTRE
  def __post_init__(self):
   if not self.reference or not self.title:raise ValueError("reference and title required")
  def to_dict(self)->dict[str,Any]:
-  return {"reference":self.reference,"title":self.title,"family":self.family.value,"mission":self.mission.value,"publication_date":self.publication_date,"version":self.version}
+  return {"reference":self.reference,"title":self.title,"family":self.family.value,"mission":self.mission.value,"publication_date":self.publication_date,"version":self.version,"functional_domain":self.functional_domain.value,"category":self.category.value}
  @classmethod
  def from_dict(cls,value:dict[str,Any])->"CarsatDocumentIdentity":
   if not {"reference","title","family","mission"}<=value.keys():raise ValueError("missing document identity field")
-  return cls(str(value["reference"]),str(value["title"]),CarsatDocumentFamily(value["family"]),CarsatMission(value["mission"]),value.get("publication_date"),value.get("version"))
+  return cls(str(value["reference"]),str(value["title"]),CarsatDocumentFamily(value["family"]),CarsatMission(value["mission"]),value.get("publication_date"),value.get("version"),CarsatFunctionalDomain(value.get("functional_domain","autre")),CarsatDocumentCategory(value.get("category","autre")))
  def fingerprint(self)->str:
-  return fingerprint_metadata((self.reference,self.title,self.family.value,self.mission.value,self.publication_date or "",self.version or ""))
+  values=(self.reference,self.title,self.family.value,self.mission.value,self.publication_date or "",self.version or "")
+  if self.functional_domain is not CarsatFunctionalDomain.AUTRE or self.category is not CarsatDocumentCategory.AUTRE:values+=self.functional_domain.value,self.category.value
+  return fingerprint_metadata(values)
  def platform_policy(self)->DocumentPolicy:return DocumentPolicy.METADATA_ONLY
  def platform_license(self)->LicenseId:return LicenseId.DOCUMENT_SPECIFIC
  def citation(self,canonical_url:str)->Citation:

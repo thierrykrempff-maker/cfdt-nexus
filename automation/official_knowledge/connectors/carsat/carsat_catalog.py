@@ -1,8 +1,10 @@
 """Offline CARSAT architecture catalogue; every access requires later review."""
-from .carsat_models import AccessPossibility,CarsatDocumentFamily,CarsatMission
+from .carsat_models import AccessPossibility,CarsatDocumentCategory,CarsatDocumentFamily,CarsatFunctionalDomain,CarsatMission
 
 MISSIONS=tuple(CarsatMission)
 DOCUMENT_FAMILIES=tuple(CarsatDocumentFamily)
+FUNCTIONAL_DOMAINS=tuple(CarsatFunctionalDomain)
+DOCUMENT_CATEGORIES=tuple(CarsatDocumentCategory)
 
 ACCESS_POSSIBILITIES=(
  AccessPossibility("api",notes="existence, scope, terms and stability remain to be verified"),
