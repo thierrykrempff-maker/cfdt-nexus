@@ -6,12 +6,15 @@ from automation.connector_platform.connector_health import HealthReport
 from automation.connector_platform.connector_provenance import Provenance
 
 from .anact_catalog import SOURCES,get_source
+from .anact_classification_models import UrlClassification
 from .anact_freshness import FRESHNESS_POLICIES,FreshnessPolicy
 from .anact_legal_policy import ANACT_LEGAL_POLICY,LegalPolicy
 from .anact_models import AnactResource,AnactSource
+from .anact_review_queue import AnactReviewQueue
 from .anact_source_audit import AUDIT_RECORDS,SourceAuditRecord
 from .anact_sitemap_transport import AnactSitemapTransport
-from .anact_transport_models import ConditionalState,SitemapInspectionResult
+from .anact_transport_models import ConditionalState,SitemapCandidate,SitemapInspectionResult
+from .anact_url_classifier import AnactUrlClassifier
 from .anact_platform import ANACT_CAPABILITIES,ANACT_HEALTH,ANACT_METRICS,ANACT_PLATFORM_CONTRACT,ANACT_REGISTRY,ANACT_STATISTICS,ANACT_VALIDATION,operation_not_implemented
 
 @dataclass(frozen=True)
@@ -38,6 +41,9 @@ class AnactConnector:
  def legal_policy(self)->LegalPolicy:return ANACT_LEGAL_POLICY
  def freshness_policies(self)->tuple[FreshnessPolicy,...]:return FRESHNESS_POLICIES
  def inspect_sitemap(self,transport:AnactSitemapTransport,state:ConditionalState=ConditionalState())->SitemapInspectionResult:return transport.inspect(state)
+ def classify_candidate(self,candidate:SitemapCandidate)->UrlClassification:return AnactUrlClassifier().classify_candidate(candidate)
+ def classify_candidates(self,candidates:tuple[SitemapCandidate,...])->tuple[UrlClassification,...]:return AnactUrlClassifier().classify_candidates(candidates)
+ def new_review_queue(self)->AnactReviewQueue:return AnactReviewQueue()
  def normalize(self,resource:AnactResource)->AnactResource:return resource
  def validate_resource(self,resource:AnactResource)->ResourceValidation:
   errors=[]
