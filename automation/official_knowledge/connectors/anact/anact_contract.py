@@ -7,6 +7,7 @@ from automation.connector_platform.connector_provenance import Provenance
 
 from .anact_catalog import SOURCES,get_source
 from .anact_classification_models import UrlClassification
+from .anact_document_catalog import InMemoryAnactDocumentCatalog
 from .anact_freshness import FRESHNESS_POLICIES,FreshnessPolicy
 from .anact_legal_policy import ANACT_LEGAL_POLICY,LegalPolicy
 from .anact_models import AnactResource,AnactSource
@@ -47,6 +48,7 @@ class AnactConnector:
  def classify_candidate(self,candidate:SitemapCandidate)->UrlClassification:return AnactUrlClassifier().classify_candidate(candidate)
  def classify_candidates(self,candidates:tuple[SitemapCandidate,...])->tuple[UrlClassification,...]:return AnactUrlClassifier().classify_candidates(candidates)
  def new_review_queue(self)->AnactReviewQueue:return AnactReviewQueue()
+ def new_document_catalog(self)->InMemoryAnactDocumentCatalog:return InMemoryAnactDocumentCatalog()
  def read_page_metadata(self,target:PageMetadataTarget,transport:AnactPageMetadataTransport,state:ConditionalState=ConditionalState())->PageMetadataResult:return transport.inspect(target,state)
  def normalize(self,resource:AnactResource)->AnactResource:return resource
  def validate_resource(self,resource:AnactResource)->ResourceValidation:
