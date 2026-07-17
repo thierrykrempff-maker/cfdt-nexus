@@ -5,6 +5,7 @@ from urllib.parse import urlsplit,parse_qs
 from automation.official_knowledge.source_policy import AccessPolicy,validate_url
 from .cnil_catalog import THEME_PRIORITIES
 from .cnil_models import ResourceCandidate,ValidationResult
+from .cnil_platform import CNIL_PLATFORM_VALIDATION
 
 @dataclass(frozen=True)
 class CnilSelectionPolicy:
@@ -15,6 +16,7 @@ class CnilSelectionPolicy:
  allowed_path_prefixes:tuple[str,...]=("/fr/","/organizations/cnil/","/cnil/","/sites/")
 
 def validate_candidate(candidate:ResourceCandidate,policy:CnilSelectionPolicy=CnilSelectionPolicy(),*,size_bytes:int=0,license_status:str="pending")->ValidationResult:
+ if not CNIL_PLATFORM_VALIDATION.valid:return ValidationResult(False,"PLATFORM_CONTRACT_INVALID")
  try:validate_url(candidate.canonical_uri,AccessPolicy(policy.allowed_domains,allowed_mime_types=policy.allowed_mime_types,max_download_bytes=policy.max_size_bytes))
  except ValueError as exc:return ValidationResult(False,str(exc))
  parsed=urlsplit(candidate.canonical_uri);path=parsed.path.casefold();query=parse_qs(parsed.query)
