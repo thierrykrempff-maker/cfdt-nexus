@@ -16,7 +16,7 @@ SITEMAP_URL=CONFIRMED_ENTRY_POINTS["sitemap"]
 USER_AGENT="CFDT-Nexus-ANACT-Sitemap/1.0 (+metadata-only; contact=repository-maintainer)"
 ACCEPTED_MIME_TYPES=frozenset({"application/xml","text/xml","application/sitemap+xml"})
 
-class TransportErrorCode(StrEnum):DISABLED="transport_disabled"; DOMAIN="domain_not_allowed"; REDIRECT="redirect_not_allowed"; HTTP="http_error"; TIMEOUT="timeout"; TLS="tls_error"; NETWORK="network_error"; MIME="unexpected_mime_type"; SIZE="response_too_large"; XML="invalid_xml"
+class TransportErrorCode(StrEnum):DISABLED="transport_disabled"; DOMAIN="domain_not_allowed"; REDIRECT="redirect_not_allowed"; HTTP="http_error"; TIMEOUT="timeout"; TLS="tls_error"; NETWORK="network_error"; MIME="unexpected_mime_type"; SIZE="response_too_large"; XML="invalid_xml"; HTML="invalid_html"
 class AnactTransportError(RuntimeError):
  def __init__(self,code:TransportErrorCode,message:str,status:int|None=None):self.code=code;self.status=status;super().__init__(message)
 

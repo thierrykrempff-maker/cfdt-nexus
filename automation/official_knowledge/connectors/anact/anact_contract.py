@@ -10,6 +10,8 @@ from .anact_classification_models import UrlClassification
 from .anact_freshness import FRESHNESS_POLICIES,FreshnessPolicy
 from .anact_legal_policy import ANACT_LEGAL_POLICY,LegalPolicy
 from .anact_models import AnactResource,AnactSource
+from .anact_page_metadata_models import PageMetadataResult,PageMetadataTarget
+from .anact_page_metadata_transport import AnactPageMetadataTransport
 from .anact_review_queue import AnactReviewQueue
 from .anact_source_audit import AUDIT_RECORDS,SourceAuditRecord
 from .anact_sitemap_transport import AnactSitemapTransport
@@ -36,6 +38,7 @@ class AnactConnector:
  capabilities=ANACT_CAPABILITIES;health=ANACT_HEALTH;statistics=ANACT_STATISTICS;metrics=ANACT_METRICS
  enabled=platform_contract.enabled;connector_status=platform_contract.state.value
  sitemap_transport_implemented=True;sitemap_transport_enabled_by_default=False
+ page_metadata_transport_implemented=True;page_metadata_transport_enabled_by_default=False
  def list_sources(self)->tuple[AnactSource,...]:return SOURCES
  def source_audit(self)->tuple[SourceAuditRecord,...]:return AUDIT_RECORDS
  def legal_policy(self)->LegalPolicy:return ANACT_LEGAL_POLICY
@@ -44,6 +47,7 @@ class AnactConnector:
  def classify_candidate(self,candidate:SitemapCandidate)->UrlClassification:return AnactUrlClassifier().classify_candidate(candidate)
  def classify_candidates(self,candidates:tuple[SitemapCandidate,...])->tuple[UrlClassification,...]:return AnactUrlClassifier().classify_candidates(candidates)
  def new_review_queue(self)->AnactReviewQueue:return AnactReviewQueue()
+ def read_page_metadata(self,target:PageMetadataTarget,transport:AnactPageMetadataTransport,state:ConditionalState=ConditionalState())->PageMetadataResult:return transport.inspect(target,state)
  def normalize(self,resource:AnactResource)->AnactResource:return resource
  def validate_resource(self,resource:AnactResource)->ResourceValidation:
   errors=[]
