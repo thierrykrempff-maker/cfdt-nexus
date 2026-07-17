@@ -13,7 +13,7 @@ from automation.connector_platform.connector_registry import ConnectorRegistry
 from automation.connector_platform.connector_security import DEFAULT_SECURITY_POLICY
 from automation.connector_platform.connector_states import ConnectorState
 from automation.connector_platform.connector_statistics import ConnectorStatistics
-from automation.connector_platform.connector_validation import validate_contract
+from automation.connector_platform.connector_validation import ValidationResult,validate_contract
 
 from . import INRS_NETWORK_NOT_IMPLEMENTED
 
@@ -24,11 +24,11 @@ INRS_PLATFORM_CONTRACT=ConnectorContract(
  document_policy=DocumentPolicy.METADATA_ONLY,license_id=LicenseId.DOCUMENT_SPECIFIC,
  security=DEFAULT_SECURITY_POLICY,enabled=False,
 )
-INRS_VALIDATION=validate_contract(INRS_PLATFORM_CONTRACT)
+INRS_VALIDATION:ValidationResult=validate_contract(INRS_PLATFORM_CONTRACT)
 INRS_REGISTRY=ConnectorRegistry();INRS_REGISTRY.register(INRS_PLATFORM_CONTRACT)
 INRS_HEALTH=HealthReport(HealthStatus.DISABLED,datetime(2026,7,17,tzinfo=timezone.utc),"architecture_only")
-INRS_STATISTICS=ConnectorStatistics()
-INRS_METRICS=(Metric("documents",0,"count"),Metric("consultations",0,"count"))
+INRS_STATISTICS=ConnectorStatistics(document_count=0,consultation_count=0,average_duration_ms=0,last_synchronization=None,last_validation=None)
+INRS_METRICS=(Metric("documents",0,"count"),Metric("consultations",0,"count"),Metric("errors",0,"count"),Metric("average_duration",0,"ms"))
 
 def network_not_implemented()->ConnectorPlatformError:
  return ConnectorPlatformError(ErrorCode.NETWORK_DISABLED,INRS_NETWORK_NOT_IMPLEMENTED)

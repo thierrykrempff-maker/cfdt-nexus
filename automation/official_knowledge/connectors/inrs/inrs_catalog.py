@@ -1,5 +1,5 @@
 """Verified observations and prioritization; no endpoint or transport configuration."""
-from .inrs_models import AccessEvidence,EvidenceStatus,FamilyProfile,ResourceFamily
+from .inrs_models import AccessEvidence,EvidenceStatus,FamilyProfile,InrsDocumentType,ResourceFamily
 
 ACCESS_EVIDENCE=(
  AccessEvidence("targeted_html_pages",EvidenceStatus.OFFICIALLY_OBSERVED,notes="resource pages expose title, type, INRS reference and publication date"),
@@ -28,3 +28,11 @@ FAMILY_PROFILES=(
 
 IDENTIFIER_FAMILIES=("ED","TJ","A","AD","AR")
 VERSIONING_OBSERVATION="latest-publications pages identify updates that cancel and replace previous editions"
+SUPPORTED_DOCUMENT_TYPES=tuple(InrsDocumentType)
+REFERENCE_DOCUMENT_TYPES={"ED":InrsDocumentType.ED,"TJ":InrsDocumentType.TJ,"AD":InrsDocumentType.AD,"AR":InrsDocumentType.AR}
+
+def document_type_for_reference(reference:str)->InrsDocumentType:
+ normalized=reference.strip().upper()
+ for prefix,document_type in REFERENCE_DOCUMENT_TYPES.items():
+  if normalized==prefix or normalized.startswith(prefix+" ") or normalized.startswith(prefix+"-"):return document_type
+ return InrsDocumentType.AUTRE

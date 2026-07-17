@@ -82,3 +82,9 @@ Ce vocabulaire commun devra pouvoir être adopté ultérieurement par INRS, ANAC
 ## Limites
 
 L'étude n'affirme pas l'inexistence d'une API, d'un sitemap ou d'autres flux ; elle indique seulement qu'ils n'ont pas été validés dans le périmètre observé. Aucun développement opérationnel n'est autorisé par cette architecture.
+
+## LOT 1 — Intégration complète à Connector Platform
+
+Le contrat déclaratif est complété sans changement fonctionnel. Connector Platform reste la source de vérité pour l'état, les capacités, la politique documentaire, la licence, la sécurité, le registre, la validation, la santé, les statistiques, les métriques et les erreurs. La façade INRS conserve `enabled = false`, `architecture_only`, `NETWORK_DISABLED_BY_DEFAULT` et `METADATA_ONLY`.
+
+Le vocabulaire local prépare les références `ED`, `TJ`, `AD` et `AR`, ainsi que les brochures, fiches, dossiers, FAQ, outils et publications. Les identités documentaires disposent d'une sérialisation déterministe, d'une désérialisation validée, d'une empreinte stable et de conversions explicites vers citation, provenance, licence et politique Connector Platform. Cette préparation ne crée aucun endpoint, accès HTML/PDF, API, RSS, téléchargement, scraping, authentification, cache ou scheduler.
