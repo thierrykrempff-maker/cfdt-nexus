@@ -29,6 +29,15 @@ SOURCE_FAMILIES=(
 )
 FAMILY_BY_ID={family.family_id:family for family in SOURCE_FAMILIES}
 
+CONFIRMED_ENTRY_POINTS={
+ "homepage":"https://www.anact.fr/",
+ "themes":"https://www.anact.fr/themes",
+ "regions":"https://www.anact.fr/regions",
+ "grand_est":"https://www.anact.fr/grand-est",
+ "robots":"https://www.anact.fr/robots.txt",
+ "sitemap":"https://www.anact.fr/sitemap.xml",
+}
+
 def get_source(source_id:str)->AnactSource:
  try:return SOURCE_BY_ID[source_id]
  except KeyError as error:raise KeyError(f"unknown ANACT source: {source_id}") from error

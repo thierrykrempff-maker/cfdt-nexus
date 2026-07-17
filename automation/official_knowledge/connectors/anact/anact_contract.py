@@ -6,7 +6,10 @@ from automation.connector_platform.connector_health import HealthReport
 from automation.connector_platform.connector_provenance import Provenance
 
 from .anact_catalog import SOURCES,get_source
+from .anact_freshness import FRESHNESS_POLICIES,FreshnessPolicy
+from .anact_legal_policy import ANACT_LEGAL_POLICY,LegalPolicy
 from .anact_models import AnactResource,AnactSource
+from .anact_source_audit import AUDIT_RECORDS,SourceAuditRecord
 from .anact_platform import ANACT_CAPABILITIES,ANACT_HEALTH,ANACT_METRICS,ANACT_PLATFORM_CONTRACT,ANACT_REGISTRY,ANACT_STATISTICS,ANACT_VALIDATION,operation_not_implemented
 
 @dataclass(frozen=True)
@@ -28,6 +31,9 @@ class AnactConnector:
  capabilities=ANACT_CAPABILITIES;health=ANACT_HEALTH;statistics=ANACT_STATISTICS;metrics=ANACT_METRICS
  enabled=platform_contract.enabled;connector_status=platform_contract.state.value
  def list_sources(self)->tuple[AnactSource,...]:return SOURCES
+ def source_audit(self)->tuple[SourceAuditRecord,...]:return AUDIT_RECORDS
+ def legal_policy(self)->LegalPolicy:return ANACT_LEGAL_POLICY
+ def freshness_policies(self)->tuple[FreshnessPolicy,...]:return FRESHNESS_POLICIES
  def normalize(self,resource:AnactResource)->AnactResource:return resource
  def validate_resource(self,resource:AnactResource)->ResourceValidation:
   errors=[]
