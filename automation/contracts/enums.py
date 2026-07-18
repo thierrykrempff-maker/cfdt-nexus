@@ -1,0 +1,76 @@
+"""Small canonical vocabularies shared by Nexus contracts."""
+
+from enum import Enum
+
+
+class ConfidentialityLevel(str, Enum):
+    PUBLIC = "PUBLIC"
+    INTERNAL = "INTERNAL"
+    RESTRICTED = "RESTRICTED"
+    SENSITIVE = "SENSITIVE"
+
+
+class ReportStatus(str, Enum):
+    DRAFT = "DRAFT"
+    PARTIAL = "PARTIAL"
+    COMPLETED = "COMPLETED"
+    REFUSED = "REFUSED"
+    FAILED = "FAILED"
+
+
+class ConnectionStatus(str, Enum):
+    NOT_INVESTIGATED = "NOT_INVESTIGATED"
+    ARCHITECTURE_ONLY = "ARCHITECTURE_ONLY"
+    PARTIAL = "PARTIAL"
+    OPERATIONAL = "OPERATIONAL"
+    DISABLED = "DISABLED"
+    DEPRECATED = "DEPRECATED"
+
+
+class ConsultationStatus(str, Enum):
+    NOT_ATTEMPTED = "NOT_ATTEMPTED"
+    PLANNED = "PLANNED"
+    SUCCEEDED = "SUCCEEDED"
+    FAILED = "FAILED"
+    CACHE_HIT = "CACHE_HIT"
+
+
+class SourceCategory(str, Enum):
+    OFFICIAL = "OFFICIAL"
+    INTERNAL = "INTERNAL"
+    REGULATORY = "REGULATORY"
+    CONTEXTUAL = "CONTEXTUAL"
+    OTHER = "OTHER"
+
+
+class StatementKind(str, Enum):
+    ESTABLISHED_FACT = "ESTABLISHED_FACT"
+    DECLARED_INFORMATION = "DECLARED_INFORMATION"
+    ASSUMPTION = "ASSUMPTION"
+    SCENARIO = "SCENARIO"
+    ASSUMED_INTENTION = "ASSUMED_INTENTION"
+
+
+class CriticalityLevel(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class ConfidenceLevel(str, Enum):
+    VERY_LOW = "VERY_LOW"
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    VERY_HIGH = "VERY_HIGH"
+
+
+class ConfidenceDimension(str, Enum):
+    SOURCE_RELIABILITY = "SOURCE_RELIABILITY"
+    EXTRACTION_CONFIDENCE = "EXTRACTION_CONFIDENCE"
+    QUESTION_RELEVANCE = "QUESTION_RELEVANCE"
+    CASE_COMPLETENESS = "CASE_COMPLETENESS"
+    EXPERT_ANALYSIS_CONFIDENCE = "EXPERT_ANALYSIS_CONFIDENCE"
+    LEGAL_SOLIDITY = "LEGAL_SOLIDITY"
+    STRATEGIC_UNCERTAINTY = "STRATEGIC_UNCERTAINTY"
