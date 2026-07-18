@@ -1,0 +1,370 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-07-17",
+  "audited_revision": "5d42cbfa5a87736602e9e239914d75499b85f633",
+  "branch": "audit-connectors-platform-conformity",
+  "network_probe_executed": false,
+  "status_vocabulary": [
+    "conforme",
+    "partiellement conforme",
+    "non conforme",
+    "non applicable",
+    "non vérifiable"
+  ],
+  "criterion_count": 58,
+  "criteria": {
+    "A01": "Structure et responsabilités identifiables",
+    "A02": "Contrat explicite",
+    "A03": "Modèles typés",
+    "A04": "Façade ou point d'entrée identifiable",
+    "A05": "Catalogue ou déclaration des sources",
+    "A06": "Enregistrement Connector Platform",
+    "A07": "Séparation transport, parsing, modèles et logique",
+    "A08": "Absence de couplage injustifié à un moteur d'expertise",
+    "P01": "Désactivation par défaut",
+    "P02": "État architecture_only cohérent lorsqu'applicable",
+    "P03": "Politique documentaire et licence explicites, fail-closed",
+    "P04": "Cohérence documentation, capacités déclarées et comportement",
+    "N01": "HTTPS uniquement",
+    "N02": "Domaines autorisés explicitement",
+    "N03": "Validation des redirections",
+    "N04": "Refus des redirections externes",
+    "N05": "Timeout borné",
+    "N06": "Taille de réponse bornée",
+    "N07": "Statuts HTTP traités",
+    "N08": "MIME contrôlé",
+    "N09": "ETag conservé et réutilisé",
+    "N10": "Last-Modified conservé et réutilisé",
+    "N11": "304 Not Modified traité",
+    "N12": "Politique robots lorsqu'applicable",
+    "N13": "Découverte bornée, sans crawl incontrôlé",
+    "M01": "URL source",
+    "M02": "URL finale ou canonique lorsqu'elle existe",
+    "M03": "Organisme producteur et type de source",
+    "M04": "Dates de collecte, publication ou mise à jour disponibles",
+    "M05": "Identifiant ou empreinte stable",
+    "M06": "Version du parseur ou classificateur",
+    "M07": "Confiance et état de validation",
+    "M08": "Traçabilité de la découverte",
+    "C01": "Classification déterministe",
+    "C02": "Ambiguïtés explicites",
+    "C03": "Revue humaine possible",
+    "C04": "Absence de validation implicite dangereuse",
+    "C05": "Décision et provenance conservées",
+    "S01": "Aucun secret suivi",
+    "S02": "Aucun jeton ou identifiant réel dans les fixtures",
+    "S03": "Aucune donnée personnelle ou confidentielle réelle suivie",
+    "S04": "Aucun contenu complet conservé sans justification",
+    "S05": "Aucun cookie persistant inutile",
+    "S06": "Journaux, caches et sorties assainis et ignorés",
+    "S07": "Chemins locaux et temporaires contrôlés",
+    "T01": "Tests propres au connecteur",
+    "T02": "Tests hors ligne et fixtures synthétiques",
+    "T03": "Déterminisme",
+    "T04": "Erreurs réseau et parsing invalide",
+    "T05": "Redirections et limites de taille",
+    "T06": "Aucun service réel pendant les tests",
+    "T07": "Compatibilité Connector Platform et Official Knowledge",
+    "D01": "Architecture documentée",
+    "D02": "Sources officielles documentées",
+    "D03": "Limites et exclusions documentées",
+    "D04": "Mise à jour et comportement réseau documentés",
+    "D05": "Données conservées documentées",
+    "D06": "Lot suivant proposé lorsqu'il existe"
+  },
+  "connectors": [
+    {
+      "id": "anact",
+      "name": "ANACT",
+      "implementation": "connector_platform_native",
+      "summary": "partiellement conforme",
+      "tests": 174,
+      "status_by_criterion": {
+        "conforme": [
+          "A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08",
+          "P01", "P02", "P03",
+          "N01", "N02", "N03", "N04", "N05", "N06", "N07", "N08", "N09", "N10", "N11", "N12", "N13",
+          "M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08",
+          "C01", "C02", "C03", "C04", "C05",
+          "S01", "S02", "S03", "S04", "S05", "S06", "S07",
+          "T01", "T02", "T03", "T04", "T05", "T06", "T07",
+          "D01", "D02", "D03", "D04", "D05", "D06"
+        ],
+        "partiellement conforme": ["P04"],
+        "non conforme": [],
+        "non applicable": [],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "carsat",
+      "name": "CARSAT",
+      "implementation": "connector_platform_native_architecture_only",
+      "summary": "partiellement conforme",
+      "tests": 50,
+      "status_by_criterion": {
+        "conforme": [
+          "A01", "A02", "A03", "A04", "A05", "A06", "A08",
+          "P01", "P02", "P03", "P04",
+          "M03", "M05",
+          "S01", "S02", "S03", "S04", "S05", "S06", "S07",
+          "T01", "T02", "T03", "T06", "T07",
+          "D01", "D03", "D04", "D05", "D06"
+        ],
+        "partiellement conforme": ["M06", "M07", "T04", "D02"],
+        "non conforme": [],
+        "non applicable": [
+          "A07",
+          "N01", "N02", "N03", "N04", "N05", "N06", "N07", "N08", "N09", "N10", "N11", "N12", "N13",
+          "M01", "M02", "M04", "M08",
+          "C01", "C02", "C03", "C04", "C05",
+          "T05"
+        ],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "cnil",
+      "name": "CNIL",
+      "implementation": "connector_platform_native_architecture_only",
+      "summary": "partiellement conforme",
+      "tests": 40,
+      "status_by_criterion": {
+        "conforme": [
+          "A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08",
+          "P01", "P02", "P03", "P04",
+          "M01", "M02", "M03", "M04", "M05", "M06", "M07",
+          "C03", "C04",
+          "S01", "S02", "S03", "S04", "S05", "S06", "S07",
+          "T01", "T02", "T03", "T04", "T06", "T07",
+          "D01", "D02", "D03", "D04", "D05", "D06"
+        ],
+        "partiellement conforme": ["M08", "C01", "C02", "C05"],
+        "non conforme": [],
+        "non applicable": [
+          "N01", "N02", "N03", "N04", "N05", "N06", "N07", "N08", "N09", "N10", "N11", "N12", "N13",
+          "T05"
+        ],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "dreets_grand_est",
+      "name": "DREETS Grand Est",
+      "implementation": "connector_platform_native_architecture_only",
+      "summary": "partiellement conforme",
+      "tests": 62,
+      "status_by_criterion": {
+        "conforme": [
+          "A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08",
+          "P01", "P02", "P03", "P04",
+          "M01", "M03", "M05", "M07",
+          "C01", "C04",
+          "S01", "S02", "S03", "S04", "S05", "S06", "S07",
+          "T01", "T02", "T03", "T04", "T06", "T07",
+          "D01", "D02", "D03", "D04", "D05", "D06"
+        ],
+        "partiellement conforme": ["M02", "M06", "M08", "C02", "C03", "C05"],
+        "non conforme": [],
+        "non applicable": [
+          "N01", "N02", "N03", "N04", "N05", "N06", "N07", "N08", "N09", "N10", "N11", "N12", "N13",
+          "M04", "T05"
+        ],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "inrs",
+      "name": "INRS",
+      "implementation": "connector_platform_native_architecture_only",
+      "summary": "partiellement conforme",
+      "tests": 50,
+      "status_by_criterion": {
+        "conforme": [
+          "A01", "A02", "A03", "A04", "A05", "A06", "A08",
+          "P01", "P02", "P03", "P04",
+          "M03", "M05",
+          "S01", "S02", "S03", "S04", "S05", "S06", "S07",
+          "T01", "T02", "T03", "T06", "T07",
+          "D01", "D03", "D04", "D05", "D06"
+        ],
+        "partiellement conforme": ["M06", "M07", "T04", "D02"],
+        "non conforme": [],
+        "non applicable": [
+          "A07",
+          "N01", "N02", "N03", "N04", "N05", "N06", "N07", "N08", "N09", "N10", "N11", "N12", "N13",
+          "M01", "M02", "M04", "M08",
+          "C01", "C02", "C03", "C04", "C05",
+          "T05"
+        ],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "legifrance",
+      "name": "Légifrance PISTE",
+      "implementation": "legacy_operational_script",
+      "summary": "non conforme",
+      "tests": 5,
+      "test_scope": "fallback routeur avec faux connecteur, pas le transport API",
+      "status_by_criterion": {
+        "conforme": [
+          "A04", "N05", "N07", "N13",
+          "M01", "M04", "M05", "M08",
+          "S01", "S02", "S03", "S05",
+          "T02", "T03", "T06"
+        ],
+        "partiellement conforme": [
+          "A01", "A03", "A05", "A08",
+          "P01", "P04", "N01",
+          "M02", "M03", "M07",
+          "S04", "S06", "S07",
+          "T01",
+          "D01", "D02", "D03", "D04", "D05"
+        ],
+        "non conforme": [
+          "A02", "A06", "A07",
+          "P02", "P03",
+          "N02", "N03", "N04", "N06", "N08", "N09", "N10", "N11",
+          "M06", "T04", "T05", "T07", "D06"
+        ],
+        "non applicable": ["N12", "C01", "C02", "C03", "C04", "C05"],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "judilibre",
+      "name": "JUDILIBRE PISTE",
+      "implementation": "legacy_operational_script",
+      "summary": "non conforme",
+      "tests": 0,
+      "status_by_criterion": {
+        "conforme": [
+          "A04", "N05", "N07", "N13",
+          "M01", "M04", "M05", "M08",
+          "S01", "S03", "S05"
+        ],
+        "partiellement conforme": [
+          "A01", "A03", "A05", "A08",
+          "P01", "P04", "N01",
+          "M02", "M03", "M07",
+          "S04", "S06", "S07",
+          "D01", "D02", "D03", "D04", "D05"
+        ],
+        "non conforme": [
+          "A02", "A06", "A07",
+          "P02", "P03",
+          "N02", "N03", "N04", "N06", "N08", "N09", "N10", "N11",
+          "M06", "T01", "T07", "D06"
+        ],
+        "non applicable": ["N12", "C01", "C02", "C03", "C04", "C05"],
+        "non vérifiable": ["S02", "T02", "T03", "T04", "T05", "T06"]
+      }
+    },
+    {
+      "id": "cdtn",
+      "name": "Code du travail numérique / pratique officielle",
+      "implementation": "two_legacy_operational_scripts",
+      "summary": "partiellement conforme",
+      "tests": 8,
+      "test_scope": "implémentation pratique_officielle uniquement",
+      "status_by_criterion": {
+        "conforme": [
+          "A04", "N05", "N07", "N13",
+          "M01", "M03", "M05", "M08",
+          "S01", "S02", "S03", "S04", "S05",
+          "T02", "T03", "T04", "T06",
+          "D02", "D03", "D05", "D06"
+        ],
+        "partiellement conforme": [
+          "A01", "A03", "A05", "A07", "A08",
+          "P03", "N01", "N02", "N06", "N08",
+          "M02", "M04", "M07",
+          "S06", "S07", "T01", "T05", "D01", "D04"
+        ],
+        "non conforme": [
+          "A02", "A06", "P01", "P02", "P04",
+          "N03", "N04", "N09", "N10", "N11",
+          "M06", "T07"
+        ],
+        "non applicable": ["N12", "C01", "C02", "C03", "C04", "C05"],
+        "non vérifiable": []
+      }
+    },
+    {
+      "id": "watch_v1",
+      "name": "Veille multi-source V1",
+      "implementation": "legacy_node_multi_source_watcher",
+      "summary": "non conforme",
+      "tests": 0,
+      "status_by_criterion": {
+        "conforme": [
+          "A04", "A05",
+          "N05", "N07",
+          "M01", "M03", "M04", "M08",
+          "S01", "S02", "S03", "S04", "S05", "S06", "S07",
+          "D02", "D03", "D04", "D05"
+        ],
+        "partiellement conforme": [
+          "A01", "A07", "A08", "P04",
+          "N01", "N08", "N13",
+          "M02", "M05", "M07",
+          "C01", "C03", "C04",
+          "D01", "D06"
+        ],
+        "non conforme": [
+          "A02", "A03", "A06",
+          "P01", "P02", "P03",
+          "N02", "N03", "N04", "N06", "N09", "N10", "N11", "N12",
+          "M06", "C02", "C05",
+          "T01", "T04", "T05", "T07"
+        ],
+        "non applicable": [],
+        "non vérifiable": ["T02", "T03", "T06"]
+      }
+    }
+  ],
+  "priorities": {
+    "P0": [],
+    "P1": [
+      "Définir un profil opérationnel Connector Platform avant migration des API OAuth/POST",
+      "Aligner les connecteurs historiques avec l'état et la validation Official Knowledge",
+      "Centraliser allowlists, redirections, limites, MIME et contrôles conditionnels",
+      "Désactiver ou migrer la veille multi-source V1 avant exécution régulière",
+      "Ajouter des tests dédiés JUDILIBRE, Légifrance transport, ancien CDTN et veille V1",
+      "Résoudre la coexistence des deux implémentations CDTN",
+      "Sécuriser rétention, permissions et purge des jetons OAuth locaux"
+    ],
+    "P2": [
+      "Aligner les capacités ANACT sur les transports implémentés",
+      "Composer un registre global des connecteurs",
+      "Harmoniser les métadonnées de provenance et validation",
+      "Ajouter un historique minimal de revue CNIL et DREETS",
+      "Consolider la documentation des connecteurs historiques"
+    ],
+    "P3": [
+      "Harmoniser les erreurs réseau et sérialisations",
+      "Produire une fiche de capacités par connecteur",
+      "Uniformiser les diagnostics sans contenu sensible"
+    ]
+  },
+  "test_results": {
+    "anact": {"passed": 174, "failed": 0},
+    "carsat": {"passed": 50, "failed": 0},
+    "cnil": {"passed": 40, "failed": 0},
+    "dreets_grand_est": {"passed": 62, "failed": 0},
+    "inrs": {"passed": 50, "failed": 0},
+    "connector_platform": {"passed": 118, "failed": 0},
+    "official_knowledge": {"passed": 452, "failed": 0},
+    "general_isolated": {"passed": 325, "failed": 0},
+    "watch_v1_syntax": {"valid": true, "network_executed": false}
+  },
+  "confidentiality": {
+    "tracked_official_knowledge_data_files": 0,
+    "tracked_protection_sociale_engine_files": 0,
+    "tracked_cse_memory_engine_files": 0,
+    "tracked_local_index_files": 0,
+    "tracked_connector_corpus_or_pdf_files": 0,
+    "hard_coded_real_secrets_detected": 0
+  }
+}
