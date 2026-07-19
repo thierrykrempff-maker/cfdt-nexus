@@ -60,10 +60,11 @@ class CnilDocumentFamily(StrEnum):
 
 @dataclass(frozen=True)
 class CnilConnectorParameters:
- enabled:bool=False; metadata_only:bool=True
+ enabled:bool=False; mode:str="METADATA_ONLY"
  allowed_domains:tuple[str,...]=("cnil.fr",); https_required:bool=True
  def __post_init__(self):
-  if self.enabled or not self.metadata_only:raise ValueError("CNIL LOT 0 must remain disabled and metadata-only")
+  if not isinstance(self.enabled,bool):raise TypeError("enabled must be a boolean")
+  if self.mode!="METADATA_ONLY":raise ValueError("CNIL activation is limited to METADATA_ONLY")
   if self.allowed_domains != ("cnil.fr",):raise ValueError("only the official CNIL domain is allowed")
   if not self.https_required:raise ValueError("HTTPS is mandatory")
 

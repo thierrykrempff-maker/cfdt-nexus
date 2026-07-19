@@ -18,9 +18,12 @@ from automation.connector_platform.connector_validation import ValidationResult 
 from . import CNIL_NETWORK_NOT_IMPLEMENTED
 
 CNIL_METADATA=ConnectorMetadata("cnil","CNIL","Commission nationale de l'informatique et des libertés","Contrat documentaire désactivé et sans transport",("privacy","official_guidance"))
-CNIL_CAPABILITIES=frozenset({Capability.HTML,Capability.PDF,Capability.OPEN_DATA,Capability.MANUAL})
+CNIL_CAPABILITIES=frozenset({Capability.HTML,Capability.RSS,Capability.ATOM,Capability.MANUAL})
+CNIL_METADATA_DISCOVERY_CAPABILITIES=("HTML_METADATA","RSS_METADATA","ATOM_METADATA")
+CNIL_ACTIVATION_SCOPE="METADATA_ONLY"
+CNIL_DISCOVERY_LIMITS=(1,50,100)
 CNIL_PLATFORM_CONTRACT=ConnectorContract(
- metadata=CNIL_METADATA,state=ConnectorState.ARCHITECTURE_ONLY,capabilities=CNIL_CAPABILITIES,
+ metadata=CNIL_METADATA,state=ConnectorState.DISABLED,capabilities=CNIL_CAPABILITIES,
  document_policy=DocumentPolicy.METADATA_ONLY,license_id=LicenseId.CC_BY_ND,
  security=DEFAULT_SECURITY_POLICY,enabled=False,
 )
@@ -29,7 +32,7 @@ CNIL_PLATFORM_REGISTRY=ConnectorRegistry();CNIL_PLATFORM_REGISTRY.register(CNIL_
 # Stable aliases used by new architecture-only connectors.
 CNIL_VALIDATION=CNIL_PLATFORM_VALIDATION
 CNIL_REGISTRY=CNIL_PLATFORM_REGISTRY
-CNIL_HEALTH=HealthReport(HealthStatus.DISABLED,datetime(2026,7,16,tzinfo=timezone.utc),"architecture_only")
+CNIL_HEALTH=HealthReport(HealthStatus.DISABLED,datetime(2026,7,16,tzinfo=timezone.utc),"metadata_only_activable")
 CNIL_STATISTICS=ConnectorStatistics(document_count=0,consultation_count=0,average_duration_ms=0,last_synchronization=None,last_validation=None)
 CNIL_METRICS=(Metric("documents",0,"count"),Metric("consultations",0,"count"))
 

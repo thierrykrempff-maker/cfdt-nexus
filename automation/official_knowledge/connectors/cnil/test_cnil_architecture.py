@@ -28,12 +28,12 @@ class CnilArchitectureTests(unittest.TestCase):
         self.assertTrue(CNIL_VALIDATION.valid)
         self.assertEqual((), CNIL_VALIDATION.errors)
 
-    def test_connector_is_disabled_and_architecture_only(self) -> None:
+    def test_connector_is_disabled_and_metadata_activable(self) -> None:
         connector = CnilConnector()
         self.assertFalse(connector.enabled)
         self.assertFalse(connector.parameters.enabled)
         self.assertFalse(CNIL_PLATFORM_CONTRACT.enabled)
-        self.assertIs(ConnectorState.ARCHITECTURE_ONLY, CNIL_PLATFORM_CONTRACT.state)
+        self.assertIs(ConnectorState.DISABLED, CNIL_PLATFORM_CONTRACT.state)
         self.assertNotIn("discovery", {item.value for item in CNIL_PLATFORM_CONTRACT.capabilities})
         self.assertNotIn("download", {item.value for item in CNIL_PLATFORM_CONTRACT.capabilities})
 
