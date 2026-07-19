@@ -26,6 +26,9 @@ CNIL_PLATFORM_CONTRACT=ConnectorContract(
 )
 CNIL_PLATFORM_VALIDATION:PlatformValidationResult=validate_contract(CNIL_PLATFORM_CONTRACT)
 CNIL_PLATFORM_REGISTRY=ConnectorRegistry();CNIL_PLATFORM_REGISTRY.register(CNIL_PLATFORM_CONTRACT)
+# Stable aliases used by new architecture-only connectors.
+CNIL_VALIDATION=CNIL_PLATFORM_VALIDATION
+CNIL_REGISTRY=CNIL_PLATFORM_REGISTRY
 CNIL_HEALTH=HealthReport(HealthStatus.DISABLED,datetime(2026,7,16,tzinfo=timezone.utc),"architecture_only")
 CNIL_STATISTICS=ConnectorStatistics(document_count=0,consultation_count=0,average_duration_ms=0,last_synchronization=None,last_validation=None)
 CNIL_METRICS=(Metric("documents",0,"count"),Metric("consultations",0,"count"))

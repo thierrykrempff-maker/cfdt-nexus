@@ -2,6 +2,9 @@
 from __future__ import annotations
 from typing import Protocol
 from .cnil_models import ParsedOfficialResource,RawOfficialResource,ResourceCandidate,ValidationResult
+from .cnil_catalog import CNIL_ALLOWED_DOMAINS,CNIL_CATALOG_DESCRIPTION,CNIL_DOCUMENT_FAMILIES,CNIL_PLANNED_CAPABILITIES
+from .cnil_contract import CNIL_DOCUMENT_CONTRACT,CnilDocumentRegistryPort
+from .cnil_models import CnilConnectorParameters
 from .cnil_platform import CNIL_CAPABILITIES,CNIL_HEALTH,CNIL_METRICS,CNIL_PLATFORM_CONTRACT,CNIL_PLATFORM_REGISTRY,CNIL_PLATFORM_VALIDATION,CNIL_STATISTICS,network_not_implemented
 
 class CnilConnectorContract(Protocol):
@@ -20,6 +23,15 @@ class CnilConnector:
  metrics=CNIL_METRICS
  enabled=platform_contract.enabled
  connector_status=platform_contract.state.value
+ document_contract=CNIL_DOCUMENT_CONTRACT
+ description=CNIL_CATALOG_DESCRIPTION
+ allowed_domains=CNIL_ALLOWED_DOMAINS
+ document_families=CNIL_DOCUMENT_FAMILIES
+ planned_capabilities=CNIL_PLANNED_CAPABILITIES
+ def __init__(self,document_registry:CnilDocumentRegistryPort|None=None,parameters:CnilConnectorParameters|None=None):
+  self.document_registry=document_registry;self.parameters=parameters or CnilConnectorParameters()
+ @property
+ def document_registry_compatible(self)->bool:return True
  def discover_resources(self,_query_or_scope:str)->list[ResourceCandidate]:raise network_not_implemented()
  def fetch_resource(self,_candidate:ResourceCandidate)->RawOfficialResource:raise network_not_implemented()
  def validate_resource(self,_raw:RawOfficialResource)->ValidationResult:raise network_not_implemented()

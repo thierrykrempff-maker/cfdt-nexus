@@ -26,3 +26,15 @@ THEME_PRIORITIES={
  "priority_medium":("questionnaires_surveys","photos_directories","subcontracting","data_transfers"),
  "out_of_scope_initially":(),
 }
+
+# LOT 0 declarations. These do not authorize access or collection.
+from .cnil_models import CnilDocumentFamily,CnilPlannedCapability
+
+CNIL_ALLOWED_DOMAINS=frozenset({"cnil.fr"})
+CNIL_DOCUMENT_FAMILIES=tuple(CnilDocumentFamily)
+CNIL_PLANNED_CAPABILITIES=(
+ CnilPlannedCapability("public_metadata","Read public publication metadata"),
+ CnilPlannedCapability("metadata_discovery","Discover public metadata incrementally"),
+ CnilPlannedCapability("document_registry","Register validated metadata in the common registry"),
+)
+CNIL_CATALOG_DESCRIPTION="Architecture-only catalogue for future public CNIL metadata; no collection is implemented in LOT 0."

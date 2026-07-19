@@ -2,6 +2,7 @@
 from __future__ import annotations
 from dataclasses import asdict,dataclass,field
 from datetime import date
+from enum import StrEnum
 from typing import Any
 import uuid
 from automation.connector_platform.connector_citation import Citation
@@ -49,3 +50,27 @@ class RawOfficialResource: candidate:ResourceCandidate; body:bytes; mime_type:st
 class ValidationResult: accepted:bool; reason:str|None=None; warnings:tuple[str,...]=()
 @dataclass(frozen=True)
 class ParsedOfficialResource: resource:CnilResource; extracted_text:str=""
+
+
+class CnilDocumentFamily(StrEnum):
+ NEWS="news"; DELIBERATIONS="deliberations"; RECOMMENDATIONS="recommendations"
+ GUIDES="guides"; PRACTICAL_SHEETS="practical_sheets"; SANCTIONS="sanctions"
+ REFERENTIALS="referentials"; FAQ="faq"; OTHER_PUBLICATIONS="other_publications"
+
+
+@dataclass(frozen=True)
+class CnilConnectorParameters:
+ enabled:bool=False; metadata_only:bool=True
+ allowed_domains:tuple[str,...]=("cnil.fr",); https_required:bool=True
+ def __post_init__(self):
+  if self.enabled or not self.metadata_only:raise ValueError("CNIL LOT 0 must remain disabled and metadata-only")
+  if self.allowed_domains != ("cnil.fr",):raise ValueError("only the official CNIL domain is allowed")
+  if not self.https_required:raise ValueError("HTTPS is mandatory")
+
+
+@dataclass(frozen=True)
+class CnilPlannedCapability:
+ name:str; description:str; implemented:bool=False
+ def __post_init__(self):
+  if not self.name or not self.description:raise ValueError("planned capability fields are required")
+  if self.implemented:raise ValueError("CNIL LOT 0 capabilities cannot be implemented")
