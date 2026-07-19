@@ -17,6 +17,8 @@ from automation.connector_platform.connector_validation import ValidationResult,
 
 from . import INRS_NETWORK_NOT_IMPLEMENTED
 
+INRS_OFFICIAL_DOMAINS=frozenset({"www.inrs.fr"})
+
 INRS_METADATA=ConnectorMetadata("inrs","INRS","Institut national de recherche et de sécurité","Architecture documentaire sans transport",("occupational_health","prevention"))
 INRS_CAPABILITIES=frozenset({Capability.HTML,Capability.PDF,Capability.MANUAL})
 INRS_PLATFORM_CONTRACT=ConnectorContract(

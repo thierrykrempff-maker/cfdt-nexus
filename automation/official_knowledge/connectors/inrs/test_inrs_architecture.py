@@ -1,4 +1,5 @@
-import unittest
+import ast,unittest
+from pathlib import Path
 from automation.connector_platform import NETWORK_DISABLED_BY_DEFAULT
 from automation.connector_platform.connector_capabilities import Capability
 from automation.connector_platform.connector_contract import ConnectorContract
@@ -10,9 +11,10 @@ from automation.connector_platform.connector_states import ConnectorState
 from automation.official_knowledge.source_registry import get_source
 from . import INRS_NETWORK_NOT_IMPLEMENTED
 from .inrs_catalog import ACCESS_EVIDENCE,FAMILY_PROFILES,IDENTIFIER_FAMILIES
-from .inrs_contract import InrsConnector
+from .inrs_connector import InrsConnector
+from .inrs_contract import INRS_DOCUMENT_CONTRACT
 from .inrs_models import EvidenceStatus,InrsDocumentIdentity,ResourceFamily
-from .inrs_platform import INRS_PLATFORM_CONTRACT,INRS_REGISTRY,INRS_VALIDATION
+from .inrs_platform import INRS_OFFICIAL_DOMAINS,INRS_PLATFORM_CONTRACT,INRS_REGISTRY,INRS_VALIDATION
 
 class InrsArchitectureTests(unittest.TestCase):
  def test_platform_contract_used(self):self.assertIsInstance(InrsConnector.platform_contract,ConnectorContract)
@@ -22,6 +24,21 @@ class InrsArchitectureTests(unittest.TestCase):
   value=get_source("inrs");self.assertFalse(value.enabled);self.assertEqual("architecture_only",value.connector_status)
  def test_network_default(self):self.assertEqual("NETWORK_DISABLED_BY_DEFAULT",NETWORK_DISABLED_BY_DEFAULT)
  def test_metadata_only(self):self.assertIs(DocumentPolicy.METADATA_ONLY,INRS_PLATFORM_CONTRACT.document_policy)
+ def test_official_domain(self):self.assertEqual(frozenset({"www.inrs.fr"}),INRS_OFFICIAL_DOMAINS);self.assertEqual(INRS_OFFICIAL_DOMAINS,InrsConnector.official_domains)
+ def test_document_contract(self):
+  self.assertEqual("METADATA_ONLY",INRS_DOCUMENT_CONTRACT.policy);self.assertTrue(INRS_DOCUMENT_CONTRACT.provenance_required);self.assertTrue(INRS_DOCUMENT_CONTRACT.citation_required);self.assertTrue(INRS_DOCUMENT_CONTRACT.https_required)
+  forbidden=(INRS_DOCUMENT_CONTRACT.cache_allowed,INRS_DOCUMENT_CONTRACT.text_indexing_allowed,INRS_DOCUMENT_CONTRACT.local_copy_allowed,INRS_DOCUMENT_CONTRACT.pdf_storage_allowed,INRS_DOCUMENT_CONTRACT.html_storage_allowed,INRS_DOCUMENT_CONTRACT.full_text_allowed,INRS_DOCUMENT_CONTRACT.download_allowed)
+  self.assertFalse(any(forbidden))
+ def test_document_registry_compatibility(self):self.assertTrue(InrsConnector().document_registry_compatible);self.assertIsNone(InrsConnector().document_registry)
+ def test_no_network_client_import(self):
+  forbidden={"requests","httpx","aiohttp","urllib.request","http.client","socket"}
+  for path in Path(__file__).parent.glob("*.py"):
+   if path.name.startswith("test_"):continue
+   tree=ast.parse(path.read_text(encoding="utf-8"),filename=str(path));imports=set()
+   for node in ast.walk(tree):
+    if isinstance(node,ast.Import):imports.update(alias.name for alias in node.names)
+    elif isinstance(node,ast.ImportFrom) and node.module:imports.add(node.module)
+   self.assertTrue(forbidden.isdisjoint(imports),path.name)
  def test_document_specific_license(self):self.assertIs(LicenseId.DOCUMENT_SPECIFIC,INRS_PLATFORM_CONTRACT.license_id)
  def test_contract_valid(self):self.assertTrue(INRS_VALIDATION.valid)
  def test_only_documentary_capabilities(self):self.assertEqual({Capability.HTML,Capability.PDF,Capability.MANUAL},set(INRS_PLATFORM_CONTRACT.capabilities))
