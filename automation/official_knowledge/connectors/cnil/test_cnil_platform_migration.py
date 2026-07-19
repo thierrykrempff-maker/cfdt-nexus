@@ -17,15 +17,15 @@ from automation.official_knowledge.connectors.cnil.cnil_sync import synchronize
 
 class CnilPlatformMigrationTests(unittest.TestCase):
  def test_connector_uses_platform_contract(self):self.assertIsInstance(CnilConnector.platform_contract,ConnectorContract)
- def test_state_remains_architecture_only(self):self.assertIs(ConnectorState.ARCHITECTURE_ONLY,CNIL_PLATFORM_CONTRACT.state)
+ def test_state_is_disabled_and_activable(self):self.assertIs(ConnectorState.DISABLED,CNIL_PLATFORM_CONTRACT.state)
  def test_source_remains_disabled(self):self.assertFalse(CnilConnector.enabled)
- def test_status_remains_architecture_only(self):self.assertEqual("architecture_only",CnilConnector.connector_status)
+ def test_status_is_disabled(self):self.assertEqual("disabled",CnilConnector.connector_status)
  def test_platform_contract_is_valid(self):self.assertTrue(CNIL_PLATFORM_VALIDATION.valid)
  def test_policy_remains_metadata_only(self):self.assertIs(DocumentPolicy.METADATA_ONLY,CNIL_PLATFORM_CONTRACT.document_policy)
  def test_license_remains_cc_by_nd(self):self.assertIs(LicenseId.CC_BY_ND,CNIL_PLATFORM_CONTRACT.license_id)
  def test_security_is_fail_closed(self):self.assertTrue(all(vars(CNIL_PLATFORM_CONTRACT.security).values()))
  def test_network_default_unchanged(self):self.assertEqual("NETWORK_DISABLED_BY_DEFAULT",NETWORK_DISABLED_BY_DEFAULT)
- def test_capabilities_are_documentary_only(self):self.assertEqual({Capability.HTML,Capability.PDF,Capability.OPEN_DATA,Capability.MANUAL},set(CNIL_PLATFORM_CONTRACT.capabilities))
+ def test_capabilities_are_metadata_only(self):self.assertEqual({Capability.HTML,Capability.RSS,Capability.ATOM,Capability.MANUAL},set(CNIL_PLATFORM_CONTRACT.capabilities))
  def test_active_capabilities_are_absent(self):self.assertFalse({Capability.AUTHENTICATION,Capability.CACHE,Capability.SYNC,Capability.DOWNLOAD,Capability.DISCOVERY}&CNIL_PLATFORM_CONTRACT.capabilities)
  def test_registry_is_generic(self):self.assertIsInstance(CNIL_PLATFORM_REGISTRY,ConnectorRegistry)
  def test_registry_contains_only_cnil(self):self.assertEqual(("cnil",),CNIL_PLATFORM_REGISTRY.list_ids())
