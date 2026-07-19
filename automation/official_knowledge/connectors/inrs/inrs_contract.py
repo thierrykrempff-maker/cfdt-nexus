@@ -1,18 +1,35 @@
+from dataclasses import dataclass
 from typing import Protocol
+from automation.official_knowledge.document_registry import DocumentChange,DocumentRecord
 from .inrs_models import InrsDocumentIdentity
-from .inrs_platform import INRS_CAPABILITIES,INRS_HEALTH,INRS_METRICS,INRS_PLATFORM_CONTRACT,INRS_REGISTRY,INRS_STATISTICS,INRS_VALIDATION,network_not_implemented
+
+@dataclass(frozen=True)
+class InrsDocumentContract:
+ policy:str="METADATA_ONLY";cache_allowed:bool=False;text_indexing_allowed:bool=False
+ local_copy_allowed:bool=False;pdf_storage_allowed:bool=False;html_storage_allowed:bool=False
+ full_text_allowed:bool=False;download_allowed:bool=False;provenance_required:bool=True
+ citation_required:bool=True;https_required:bool=True
+ def __post_init__(self):
+  if self.policy!="METADATA_ONLY":raise ValueError("INRS LOT 0 requires METADATA_ONLY")
+  forbidden=(self.cache_allowed,self.text_indexing_allowed,self.local_copy_allowed,self.pdf_storage_allowed,self.html_storage_allowed,self.full_text_allowed,self.download_allowed)
+  if any(forbidden):raise ValueError("INRS LOT 0 forbids document content")
+  if not all((self.provenance_required,self.citation_required,self.https_required)):raise ValueError("provenance, citation and HTTPS are mandatory")
+
+class InrsDocumentRegistryPort(Protocol):
+ def register_document(self,document:DocumentRecord)->DocumentChange:...
+ def update_document(self,document:DocumentRecord)->DocumentChange:...
+ def find_document(self,document_id:str)->DocumentRecord|None:...
 
 class InrsConnectorContract(Protocol):
  def discover(self,scope:str)->list[InrsDocumentIdentity]:...
  def fetch(self,identity:InrsDocumentIdentity)->bytes:...
  def synchronize(self)->None:...
 
-class InrsConnector:
- platform_contract=INRS_PLATFORM_CONTRACT;platform_registry=INRS_REGISTRY;platform_validation=INRS_VALIDATION
- capabilities=INRS_CAPABILITIES;health=INRS_HEALTH;statistics=INRS_STATISTICS;metrics=INRS_METRICS
- enabled=platform_contract.enabled;connector_status=platform_contract.state.value
- def serialize_identity(self,identity:InrsDocumentIdentity)->dict:return identity.to_dict()
- def deserialize_identity(self,value:dict)->InrsDocumentIdentity:return InrsDocumentIdentity.from_dict(value)
- def discover(self,_scope:str):raise network_not_implemented()
- def fetch(self,_identity:InrsDocumentIdentity):raise network_not_implemented()
- def synchronize(self):raise network_not_implemented()
+INRS_DOCUMENT_CONTRACT=InrsDocumentContract()
+
+# Historical public import path remains supported without a circular import.
+def __getattr__(name:str):
+ if name=="InrsConnector":
+  from .inrs_connector import InrsConnector
+  return InrsConnector
+ raise AttributeError(name)
