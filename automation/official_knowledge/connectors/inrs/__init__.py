@@ -5,5 +5,6 @@ INRS_NETWORK_NOT_IMPLEMENTED="INRS_CONNECTOR_NETWORK_NOT_IMPLEMENTED"
 
 from .inrs_connector import InrsConnector
 from .inrs_contract import INRS_DOCUMENT_CONTRACT,InrsDocumentRegistryPort
+from .inrs_metadata import InrsMetadata,InrsMetadataDocumentType,InrsMetadataFamily,InrsMetadataRefusal
 
-__all__=("INRS_NETWORK_NOT_IMPLEMENTED","INRS_DOCUMENT_CONTRACT","InrsConnector","InrsDocumentRegistryPort")
+__all__=("INRS_NETWORK_NOT_IMPLEMENTED","INRS_DOCUMENT_CONTRACT","InrsConnector","InrsDocumentRegistryPort","InrsMetadata","InrsMetadataDocumentType","InrsMetadataFamily","InrsMetadataRefusal")
