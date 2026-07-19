@@ -7,7 +7,9 @@ import inspect
 
 import pytest
 
-from .dreets_connector import DreetsGrandEstConnector
+from automation.official_knowledge.document_registry import ChangeKind, JsonDocumentStorage
+
+from .dreets_connector import DreetsGrandEstConnector, build_dreets_document_registry
 from .dreets_discovery import DreetsDiscoveryItem, DreetsMetadataDiscovery
 from .dreets_metadata import DreetsMetadataRefusal
 
@@ -119,3 +121,34 @@ def test_discovery_is_deterministic_and_does_not_mutate_input():
     second = discovery.discover((original,), discovered_on="2026-07-21")
     assert first == second
     assert original == item()
+
+
+def test_discovered_metadata_is_registered_without_content(tmp_path):
+    path = tmp_path / "documents.json"
+    registry = build_dreets_document_registry(JsonDocumentStorage(path))
+    connector = DreetsGrandEstConnector(metadata_discovery_enabled=True, document_registry=registry)
+    changes = connector.register_discovered_metadata((item(),), discovered_on="2026-07-21")
+    assert changes[0].kind is ChangeKind.NEW
+    stored = registry.find_document(changes[0].document_id)
+    assert stored is not None
+    assert stored.connector_name == "dreets_grand_est"
+    assert stored.title == "Inspection du travail"
+    assert not set(stored.to_dict()) & {"text", "content", "html", "pdf", "excerpt"}
+    assert "Inspection du travail" in path.read_text(encoding="utf-8")
+
+
+def test_second_dreets_observation_detects_metadata_update(tmp_path):
+    registry = build_dreets_document_registry(JsonDocumentStorage(tmp_path / "documents.json"))
+    connector = DreetsGrandEstConnector(metadata_discovery_enabled=True, document_registry=registry)
+    first = connector.register_discovered_metadata((item(),), discovered_on="2026-07-21")
+    second = connector.register_discovered_metadata((item(title="Inspection du travail mise à jour"),), discovered_on="2026-07-22")
+    assert first[0].kind is ChangeKind.NEW
+    assert second[0].kind is ChangeKind.TITLE_CHANGED
+    assert registry.find_updated_documents() == (second[0].current,)
+
+
+def test_registry_must_be_explicitly_configured():
+    connector = DreetsGrandEstConnector(metadata_discovery_enabled=True)
+    with pytest.raises(DreetsMetadataRefusal) as raised:
+        connector.register_discovered_metadata((item(),), discovered_on="2026-07-21")
+    assert raised.value.code == "REGISTRY_NOT_CONFIGURED"
