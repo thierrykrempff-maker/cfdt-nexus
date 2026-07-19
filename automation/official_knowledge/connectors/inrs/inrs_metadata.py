@@ -6,8 +6,9 @@ import re
 from dataclasses import asdict, dataclass
 from datetime import date
 from enum import Enum
-from hashlib import sha256
 from typing import Any, Mapping
+
+from automation.official_knowledge.document_registry import stable_document_id
 
 
 INRS_CONNECTOR_NAME = "inrs"
@@ -144,11 +145,11 @@ class InrsMetadata:
 
 
 def stable_inrs_document_id(canonical_url: str, reference: str | None = None) -> str:
-    """Create a stable identifier from the official reference, then URL as fallback."""
+    """Use the common registry identity while retaining the official reference separately."""
 
-    normalized_reference = normalize_inrs_reference(reference)
-    identity = f"reference:{normalized_reference}" if normalized_reference else f"url:{canonicalize_inrs_url(canonical_url)}"
-    return sha256(f"{INRS_CONNECTOR_NAME}\n{identity}".encode("utf-8")).hexdigest()
+    if reference is not None:
+        normalize_inrs_reference(reference)
+    return stable_document_id(INRS_CONNECTOR_NAME, canonicalize_inrs_url(canonical_url))
 
 
 def normalize_inrs_reference(value: str | None) -> str | None:

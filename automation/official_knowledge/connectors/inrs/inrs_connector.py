@@ -1,4 +1,4 @@
-"""Public architecture-only facade for the future official INRS connector."""
+"""Public facade for offline INRS metadata discovery and synchronization contracts."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from .inrs_platform import (
 
 
 class InrsConnector:
-    """Inactive connector description; every operational method fails closed."""
+    """Disabled-by-default metadata facade; production transport remains blocked."""
 
     platform_contract=INRS_PLATFORM_CONTRACT;platform_registry=INRS_REGISTRY
     platform_validation=INRS_VALIDATION;capabilities=INRS_CAPABILITIES

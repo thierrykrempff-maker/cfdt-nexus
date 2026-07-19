@@ -68,6 +68,12 @@ class InrsDocumentSyncTests(unittest.TestCase):
         self.assertIsNone(event.previous_snapshot)
         self.assertIsNotNone(event.new_snapshot)
 
+    def test_discovery_and_sync_share_document_id_with_official_reference(self) -> None:
+        item = metadata(reference="ED 0000")
+        event = self.sync.compare_and_sync((item,), detected_at="2026-07-19")[0]
+        self.assertEqual(item.document_id, event.document_id)
+        self.assertEqual("ED 0000", item.reference)
+
     def test_unchanged_document(self) -> None:
         self.first_sync()
         event = self.sync.compare_and_sync((metadata(),), detected_at="2026-07-20")[0]
@@ -153,14 +159,17 @@ class InrsDocumentSyncTests(unittest.TestCase):
         second = second_sync.compare_and_sync(tuple(reversed(items)), detected_at="2026-07-19")
         self.assertEqual(first, second)
 
-    def test_duplicate_url_and_identity_are_rejected(self) -> None:
+    def test_duplicate_url_is_rejected(self) -> None:
         item = metadata()
         with self.assertRaisesRegex(InrsMetadataRefusal, "Duplicate"):
             self.sync.compare_and_sync((item, item), detected_at="2026-07-19")
+
+    def test_same_reference_on_distinct_urls_keeps_registry_identities_distinct(self) -> None:
         same_reference = metadata("https://www.inrs.fr/publications/other", reference="ED 1")
         other_url_same_reference = metadata("https://www.inrs.fr/publications/another", reference="ED-1")
-        with self.assertRaisesRegex(InrsMetadataRefusal, "Duplicate"):
-            self.sync.compare_and_sync((same_reference, other_url_same_reference), detected_at="2026-07-19")
+        events = self.sync.compare_and_sync((same_reference, other_url_same_reference), detected_at="2026-07-19")
+        self.assertEqual(2, len(events))
+        self.assertNotEqual(events[0].document_id, events[1].document_id)
 
     def test_invalid_detection_date_is_rejected(self) -> None:
         with self.assertRaisesRegex(InrsMetadataRefusal, "ISO"):

@@ -1,4 +1,4 @@
-"""INRS LOT 0 architecture only; no production transport."""
+"""Official INRS metadata discovery and synchronization; no production transport."""
 from automation.connector_platform import NETWORK_DISABLED_BY_DEFAULT
 
 INRS_NETWORK_NOT_IMPLEMENTED="INRS_CONNECTOR_NETWORK_NOT_IMPLEMENTED"

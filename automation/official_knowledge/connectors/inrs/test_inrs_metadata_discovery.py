@@ -3,7 +3,7 @@ import unittest
 from dataclasses import fields
 from pathlib import Path
 
-from automation.official_knowledge.document_registry import DocumentRecord, DocumentStatus, DocumentValidator
+from automation.official_knowledge.document_registry import DocumentRecord, DocumentStatus, DocumentValidator, stable_document_id
 
 from .inrs_connector import InrsConnector
 from .inrs_metadata import (
@@ -69,11 +69,13 @@ class InrsMetadataDiscoveryTests(unittest.TestCase):
         self.assertEqual(("inrs", "INRS", INRS_SOURCE_DOMAIN), (result.connector_name, result.source_name, result.source_domain))
         self.assertTrue(result.metadata_only)
 
-    def test_stable_id_uses_reference(self):
+    def test_stable_id_uses_common_registry_identity(self):
         first = metadata_from_mapping(synthetic(url="https://www.inrs.fr/a"))
         second = metadata_from_mapping(synthetic(url="https://www.inrs.fr/b"))
-        self.assertEqual(first.document_id, second.document_id)
+        self.assertNotEqual(first.document_id, second.document_id)
         self.assertEqual(first.document_id, stable_inrs_document_id(first.canonical_url, "ED-0000"))
+        self.assertEqual(first.document_id, stable_document_id("inrs", first.canonical_url))
+        self.assertEqual("ED 0000", first.reference)
 
     def test_stable_id_falls_back_to_canonical_url(self):
         first = metadata_from_mapping(synthetic(reference=None, url="https://www.inrs.fr/a#one"))
