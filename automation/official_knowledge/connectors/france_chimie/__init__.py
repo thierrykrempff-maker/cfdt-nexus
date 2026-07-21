@@ -31,6 +31,13 @@ from .france_chimie_platform import (
     FRANCE_CHIMIE_REGISTRY,
     FRANCE_CHIMIE_VALIDATION,
 )
+from .france_chimie_sync import (
+    FranceChimieDocumentSnapshot,
+    FranceChimieDocumentSync,
+    FranceChimieRedirect,
+    FranceChimieSyncEvent,
+    FranceChimieSyncEventType,
+)
 
 __all__ = (
     "FRANCE_CHIMIE_ACTIVE_DOMAINS",
@@ -48,10 +55,15 @@ __all__ = (
     "FranceChimieDocumentContract",
     "FranceChimieDocumentIdentity",
     "FranceChimieDocumentRegistryPort",
+    "FranceChimieDocumentSnapshot",
+    "FranceChimieDocumentSync",
     "FranceChimieDocumentType",
     "FranceChimieMetadata",
     "FranceChimieMetadataRefusal",
+    "FranceChimieRedirect",
     "FranceChimieResourceFamily",
+    "FranceChimieSyncEvent",
+    "FranceChimieSyncEventType",
     "metadata_from_mapping",
     "normalize_injected_metadata",
 )
