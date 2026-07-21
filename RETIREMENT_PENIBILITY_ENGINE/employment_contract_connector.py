@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .career_reconstruction_engine import CareerReconstructionEngine
-from .career_reconstruction_models import ReconstructionRequest
+from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .employment_contract_converter import EmploymentContractConverter
 from .employment_contract_models import (
     EmploymentConfidence,
@@ -23,11 +23,19 @@ from .employment_contract_validator import EmploymentContractValidator
 class EmploymentContractConnector:
     """Prepare injected contract metadata without parsers, APIs or I/O."""
 
+    _RECONSTRUCTION = ConnectorReconstructionSpec(
+        "employment-contract-context",
+        "employment-contract-request",
+        "Prepare a synthetic employment-contract reconstruction proposal.",
+    )
+
     def __init__(self, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
-        self._validator = validator or EmploymentContractValidator()
-        self._converter = converter or EmploymentContractConverter()
+        self._foundation = ConnectorFoundation(
+            validator or EmploymentContractValidator(),
+            converter or EmploymentContractConverter(),
+            reconstruction_engine or CareerReconstructionEngine(),
+        )
         self._report_builder = report_builder or EmploymentContractReportBuilder()
-        self._reconstruction_engine = reconstruction_engine or CareerReconstructionEngine()
 
     def create_empty_contract(self, contract_id: str, imported_at: str = "1970-01-01") -> EmploymentContract:
         metadata = EmploymentMetadata(
@@ -41,13 +49,13 @@ class EmploymentContractConnector:
         return EmploymentContract(metadata, status=EmploymentStatus.EMPTY)
 
     def validate_contract(self, contract: EmploymentContract) -> EmploymentValidation:
-        return self._validator.validate(contract)
+        return self._foundation.validate(contract)
 
     def convert_to_import_batch(self, contract: EmploymentContract):
-        validation = self.validate_contract(contract)
-        if not validation.valid:
-            raise ValueError("Employment contract must pass structural validation before conversion.")
-        return self._converter.convert(contract).import_batch
+        return self._foundation.convert_validated(
+            contract,
+            "Employment contract must pass structural validation before conversion.",
+        ).import_batch
 
     def extract_contract_information(self, contract: EmploymentContract) -> EmploymentContractInformation:
         return EmploymentContractInformation(
@@ -64,23 +72,19 @@ class EmploymentContractConnector:
         )
 
     def prepare_reconstruction(self, contract: EmploymentContract) -> EmploymentImport:
-        validation = self.validate_contract(contract)
-        if not validation.valid:
-            raise ValueError("Invalid employment contract cannot prepare reconstruction.")
-        converted = self._converter.convert(contract)
-        context = self._reconstruction_engine.create_reconstruction_context(
-            f"employment-contract-context:{contract.metadata.contract_id}",
-            ReconstructionRequest(
-                f"employment-contract-request:{contract.metadata.contract_id}",
-                "Prepare a synthetic employment-contract reconstruction proposal.",
-            ),
+        converted = self._foundation.convert_validated(
+            contract,
+            "Invalid employment contract cannot prepare reconstruction.",
         )
-        context = self._reconstruction_engine.add_import_batch(context, converted.import_batch)
-        proposal = self._reconstruction_engine.build_reconstruction_proposal(context)
+        proposal = self._foundation.prepare_reconstruction(
+            contract.metadata.contract_id,
+            converted.import_batch,
+            self._RECONSTRUCTION,
+        )
         return EmploymentImport(converted.contract_id, converted.import_batch, converted.converted_record_ids, proposal)
 
     def generate_import_report(self, contract: EmploymentContract, view: EmploymentReportView) -> EmploymentReport:
         validation = self.validate_contract(contract)
         information = self.extract_contract_information(contract)
-        converted = self._converter.convert(contract)
+        converted = self._foundation.convert(contract)
         return self._report_builder.build(contract, validation, information, converted, view)

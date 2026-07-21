@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .career_reconstruction_engine import CareerReconstructionEngine
-from .career_reconstruction_models import ReconstructionRequest
+from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .nibelis_converter import NibelisConverter
 from .nibelis_models import (
     NibelisConfidence,
@@ -39,11 +39,19 @@ class InjectedNibelisReferentialLookup:
 class NibelisConnector:
     """Prepare injected occurrences without Nibelis access, files or APIs."""
 
+    _RECONSTRUCTION = ConnectorReconstructionSpec(
+        "nibelis-context",
+        "nibelis-request",
+        "Prepare a synthetic Nibelis reconstruction proposal.",
+    )
+
     def __init__(self, referential_lookup=None, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
-        self._validator = validator or NibelisValidator(referential_lookup)
-        self._converter = converter or NibelisConverter()
+        self._foundation = ConnectorFoundation(
+            validator or NibelisValidator(referential_lookup),
+            converter or NibelisConverter(),
+            reconstruction_engine or CareerReconstructionEngine(),
+        )
         self._report_builder = report_builder or NibelisReportBuilder()
-        self._reconstruction_engine = reconstruction_engine or CareerReconstructionEngine()
 
     def create_empty_export(self, export_id: str, imported_at: str = "1970-01-01") -> NibelisExport:
         metadata = NibelisMetadata(
@@ -57,7 +65,7 @@ class NibelisConnector:
         return NibelisExport(metadata, status=NibelisStatus.EMPTY)
 
     def validate_export(self, export: NibelisExport) -> NibelisValidation:
-        return self._validator.validate(export)
+        return self._foundation.validate(export)
 
     def extract_payroll_data(self, export: NibelisExport) -> NibelisPayrollInformation:
         rubric_ids = tuple(
@@ -77,29 +85,25 @@ class NibelisConnector:
         )
 
     def convert_to_import_batch(self, export: NibelisExport):
-        validation = self.validate_export(export)
-        if not validation.valid:
-            raise ValueError("Nibelis export must pass structural validation before conversion.")
-        return self._converter.convert(export).import_batch
+        return self._foundation.convert_validated(
+            export,
+            "Nibelis export must pass structural validation before conversion.",
+        ).import_batch
 
     def prepare_reconstruction(self, export: NibelisExport) -> NibelisImport:
-        validation = self.validate_export(export)
-        if not validation.valid:
-            raise ValueError("Invalid Nibelis export cannot prepare reconstruction.")
-        converted = self._converter.convert(export)
-        context = self._reconstruction_engine.create_reconstruction_context(
-            f"nibelis-context:{export.metadata.export_id}",
-            ReconstructionRequest(
-                f"nibelis-request:{export.metadata.export_id}",
-                "Prepare a synthetic Nibelis reconstruction proposal.",
-            ),
+        converted = self._foundation.convert_validated(
+            export,
+            "Invalid Nibelis export cannot prepare reconstruction.",
         )
-        context = self._reconstruction_engine.add_import_batch(context, converted.import_batch)
-        proposal = self._reconstruction_engine.build_reconstruction_proposal(context)
+        proposal = self._foundation.prepare_reconstruction(
+            export.metadata.export_id,
+            converted.import_batch,
+            self._RECONSTRUCTION,
+        )
         return NibelisImport(converted.export_id, converted.import_batch, converted.converted_record_ids, proposal)
 
     def generate_import_report(self, export: NibelisExport, view: NibelisReportView) -> NibelisReport:
         validation = self.validate_export(export)
         information = self.extract_payroll_data(export)
-        converted = self._converter.convert(export)
+        converted = self._foundation.convert(export)
         return self._report_builder.build(export, validation, information, converted, view)

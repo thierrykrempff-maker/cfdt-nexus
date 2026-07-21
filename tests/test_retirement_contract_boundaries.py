@@ -58,7 +58,7 @@ def _relative_dependencies(path: Path) -> set[str]:
 
 
 def test_all_contract_modules_are_in_scope():
-    assert len(CONTRACT_FILES) == 15
+    assert len(CONTRACT_FILES) == 16
 
 
 @pytest.mark.parametrize("path", CONTRACT_FILES, ids=lambda path: path.stem)
@@ -89,7 +89,9 @@ def test_contract_defines_no_concrete_facade(path: Path):
     classes = [
         node.name
         for node in _tree(path).body
-        if isinstance(node, ast.ClassDef) and node.name.endswith(forbidden_class_suffixes)
+        if isinstance(node, ast.ClassDef)
+        and node.name.endswith(forbidden_class_suffixes)
+        and not any(ast.unparse(base).startswith("Protocol") for base in node.bases)
     ]
     assert classes == []
 

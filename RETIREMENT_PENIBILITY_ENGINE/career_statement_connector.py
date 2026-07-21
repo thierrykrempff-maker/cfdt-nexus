@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from .career_reconstruction_engine import CareerReconstructionEngine
-from .career_reconstruction_models import ReconstructionRequest
 from .career_statement_converter import CareerStatementConverter
 from .career_statement_models import (
     CareerStatement,
@@ -19,16 +18,25 @@ from .career_statement_models import (
 )
 from .career_statement_report import CareerStatementReportBuilder
 from .career_statement_validator import CareerStatementValidator
+from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 
 
 class CareerStatementConnector:
     """Prepare injected metadata without parsing, network access or I/O."""
 
+    _RECONSTRUCTION = ConnectorReconstructionSpec(
+        "statement-context",
+        "statement-request",
+        "Prepare a synthetic career-statement reconstruction proposal.",
+    )
+
     def __init__(self, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
-        self._validator = validator or CareerStatementValidator()
-        self._converter = converter or CareerStatementConverter()
+        self._foundation = ConnectorFoundation(
+            validator or CareerStatementValidator(),
+            converter or CareerStatementConverter(),
+            reconstruction_engine or CareerReconstructionEngine(),
+        )
         self._report_builder = report_builder or CareerStatementReportBuilder()
-        self._reconstruction_engine = reconstruction_engine or CareerReconstructionEngine()
 
     def create_empty_statement(
         self,
@@ -49,36 +57,32 @@ class CareerStatementConnector:
         return CareerStatement(metadata, CareerStatementHeader(), status=CareerStatementStatus.EMPTY)
 
     def validate_statement(self, statement: CareerStatement) -> CareerStatementValidation:
-        return self._validator.validate(statement)
+        return self._foundation.validate(statement)
 
     def convert_to_import_batch(self, statement: CareerStatement):
-        validation = self.validate_statement(statement)
-        if not validation.valid:
-            raise ValueError("Career statement must pass structural validation before conversion.")
-        return self._converter.convert(statement).import_batch
+        return self._foundation.convert_validated(
+            statement,
+            "Career statement must pass structural validation before conversion.",
+        ).import_batch
 
     def generate_import_report(
         self, statement: CareerStatement, view: CareerStatementReportView
     ) -> CareerStatementReport:
         validation = self.validate_statement(statement)
-        conversion = self._converter.convert(statement)
+        conversion = self._foundation.convert(statement)
         return self._report_builder.build(statement, validation, conversion, view)
 
     def extract_metadata(self, statement: CareerStatement) -> CareerStatementMetadata:
         return statement.metadata
 
     def prepare_reconstruction(self, statement: CareerStatement) -> CareerStatementImport:
-        validation = self.validate_statement(statement)
-        if not validation.valid:
-            raise ValueError("Invalid career statement cannot prepare reconstruction.")
-        conversion = self._converter.convert(statement)
-        context = self._reconstruction_engine.create_reconstruction_context(
-            f"statement-context:{statement.metadata.statement_id}",
-            ReconstructionRequest(
-                f"statement-request:{statement.metadata.statement_id}",
-                "Prepare a synthetic career-statement reconstruction proposal.",
-            ),
+        conversion = self._foundation.convert_validated(
+            statement,
+            "Invalid career statement cannot prepare reconstruction.",
         )
-        context = self._reconstruction_engine.add_import_batch(context, conversion.import_batch)
-        proposal = self._reconstruction_engine.build_reconstruction_proposal(context)
+        proposal = self._foundation.prepare_reconstruction(
+            statement.metadata.statement_id,
+            conversion.import_batch,
+            self._RECONSTRUCTION,
+        )
         return CareerStatementImport(statement.metadata.statement_id, conversion, proposal)

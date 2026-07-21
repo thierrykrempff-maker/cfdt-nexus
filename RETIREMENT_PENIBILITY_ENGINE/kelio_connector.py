@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .career_reconstruction_engine import CareerReconstructionEngine
-from .career_reconstruction_models import ReconstructionRequest
+from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .kelio_converter import KelioConverter
 from .kelio_models import (
     KelioConfidence,
@@ -24,11 +24,19 @@ from .kelio_validator import KelioValidator
 class KelioConnector:
     """Prepare injected Kelio metadata without file access, API or parsing."""
 
+    _RECONSTRUCTION = ConnectorReconstructionSpec(
+        "kelio-context",
+        "kelio-request",
+        "Prepare a synthetic Kelio reconstruction proposal.",
+    )
+
     def __init__(self, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
-        self._validator = validator or KelioValidator()
-        self._converter = converter or KelioConverter()
+        self._foundation = ConnectorFoundation(
+            validator or KelioValidator(),
+            converter or KelioConverter(),
+            reconstruction_engine or CareerReconstructionEngine(),
+        )
         self._report_builder = report_builder or KelioReportBuilder()
-        self._reconstruction_engine = reconstruction_engine or CareerReconstructionEngine()
 
     def create_empty_export(self, export_id: str, imported_at: str = "1970-01-01") -> KelioExport:
         metadata = KelioMetadata(
@@ -42,13 +50,13 @@ class KelioConnector:
         return KelioExport(metadata, KelioEmployee(f"synthetic-employee:{export_id}"), status=KelioStatus.EMPTY)
 
     def validate_export(self, export: KelioExport) -> KelioValidation:
-        return self._validator.validate(export)
+        return self._foundation.validate(export)
 
     def convert_to_import_batch(self, export: KelioExport):
-        validation = self.validate_export(export)
-        if not validation.valid:
-            raise ValueError("Kelio export must pass structural validation before conversion.")
-        return self._converter.convert(export).import_batch
+        return self._foundation.convert_validated(
+            export,
+            "Kelio export must pass structural validation before conversion.",
+        ).import_batch
 
     def extract_working_time(self, export: KelioExport) -> KelioWorkingTimeInformation:
         return KelioWorkingTimeInformation(
@@ -67,23 +75,19 @@ class KelioConnector:
         )
 
     def prepare_reconstruction(self, export: KelioExport) -> KelioImport:
-        validation = self.validate_export(export)
-        if not validation.valid:
-            raise ValueError("Invalid Kelio export cannot prepare reconstruction.")
-        converted = self._converter.convert(export)
-        context = self._reconstruction_engine.create_reconstruction_context(
-            f"kelio-context:{export.metadata.export_id}",
-            ReconstructionRequest(
-                f"kelio-request:{export.metadata.export_id}",
-                "Prepare a synthetic Kelio reconstruction proposal.",
-            ),
+        converted = self._foundation.convert_validated(
+            export,
+            "Invalid Kelio export cannot prepare reconstruction.",
         )
-        context = self._reconstruction_engine.add_import_batch(context, converted.import_batch)
-        proposal = self._reconstruction_engine.build_reconstruction_proposal(context)
+        proposal = self._foundation.prepare_reconstruction(
+            export.metadata.export_id,
+            converted.import_batch,
+            self._RECONSTRUCTION,
+        )
         return KelioImport(converted.export_id, converted.import_batch, converted.converted_record_ids, proposal)
 
     def generate_import_report(self, export: KelioExport, view: KelioReportView) -> KelioReport:
         validation = self.validate_export(export)
         information = self.extract_working_time(export)
-        converted = self._converter.convert(export)
+        converted = self._foundation.convert(export)
         return self._report_builder.build(export, validation, information, converted, view)
