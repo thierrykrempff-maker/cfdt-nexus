@@ -1,0 +1,148 @@
+{
+  "audit_version": "final-a1-a6-1.0",
+  "audit_date": "2026-07-21",
+  "branch": "retirement-penibility-final-architecture-audit",
+  "commit": "b3be9a03c006874414a8a39ed8057590dfa49414",
+  "scope": {
+    "audited_files": 134,
+    "engine_python_files": 105,
+    "retirement_test_files": 19,
+    "excluded_untracked_files": [
+      "RETIREMENT_PENIBILITY_CONFIDENTIAL_MEMORY_LOT_0.md",
+      "RETIREMENT_PENIBILITY_CONFIDENTIAL_MEMORY_LOT_0_MATRIX.json"
+    ]
+  },
+  "initial_findings": [
+    {"id": "P1-1", "title": "Dépendances inversées contrats / implémentations", "initial_priority": "P1"},
+    {"id": "P1-2", "title": "Contournement du Career Import Engine", "initial_priority": "P1"},
+    {"id": "P1-3", "title": "Rapprochement insuffisamment sensible au type métier", "initial_priority": "P1"},
+    {"id": "P1-4", "title": "Duplication entre connecteurs", "initial_priority": "P1"},
+    {"id": "P1-5", "title": "Confidentialité principalement déclarative", "initial_priority": "P1"},
+    {"id": "P1-6", "title": "Intégration Kelio incomplète", "initial_priority": "P1"}
+  ],
+  "final_findings": [
+    {
+      "id": "P1-1",
+      "status": "RESOLVED",
+      "evidence": ["17 contract modules", "0 forbidden contract dependency", "tests/test_retirement_contract_boundaries.py"]
+    },
+    {
+      "id": "P1-2",
+      "status": "RESOLVED",
+      "evidence": ["ConnectorFoundation", "CareerImportPipeline.validate_for_reconstruction", "CareerReconstructionEngine.add_import_batch", "0 bypass path"]
+    },
+    {
+      "id": "P1-3",
+      "status": "PARTIALLY_RESOLVED",
+      "evidence": ["DocumentResolutionStrategy", "ReconstructionMerge.resolution_order", "career_event_type absent from CareerReconstructionMatcher._COMPARABLE"]
+    },
+    {
+      "id": "P1-4",
+      "status": "PARTIALLY_RESOLVED",
+      "evidence": ["ConnectorFoundation", "16 operational duplications removed", "validator/policy/report invariants remain repeated"]
+    },
+    {
+      "id": "P1-5",
+      "status": "RESOLVED",
+      "evidence": ["RetirementPrivacyGate", "require_privacy_gate", "44 active privacy tests"]
+    },
+    {
+      "id": "P1-6",
+      "status": "RESOLVED",
+      "evidence": ["KelioReferentialLookup", "PayrollKelioReferentialLookup", "56 referential tests", "0 duplicated Kelio referential"]
+    },
+    {
+      "id": "P1-N1",
+      "priority": "P1",
+      "kind": "demonstrated_anomaly",
+      "title": "ImportedCareerRecord de types métier différents encore fusionnables"
+    },
+    {
+      "id": "P1-N2",
+      "priority": "P1",
+      "kind": "demonstrated_anomaly",
+      "title": "Clé sensible de mapping reproduite dans un diagnostic Privacy Gate"
+    }
+  ],
+  "resolved_p1": {
+    "resolved": 4,
+    "partially_resolved": 2,
+    "not_resolved": 0,
+    "regression": 0
+  },
+  "remaining_p0": 0,
+  "remaining_p1": 2,
+  "remaining_p2": 7,
+  "remaining_p3": 2,
+  "metrics": {
+    "models": 285,
+    "model_dataclasses": 221,
+    "model_enums": 63,
+    "contract_modules": 17,
+    "protocols": 23,
+    "protocol_methods": 111,
+    "connectors": 5,
+    "converters": 5,
+    "policies": 12,
+    "validators": 8,
+    "reports": 11,
+    "test_functions": 269,
+    "retirement_test_cases": 455,
+    "forbidden_dependencies": 0,
+    "import_cycles": 0,
+    "career_import_bypass_paths": 0,
+    "duplicated_referentials": 0,
+    "dynamic_imports": 0,
+    "network_or_ocr_imports": 0
+  },
+  "scores_before": {
+    "architecture": 7.3,
+    "decoupling": 6.8,
+    "extensibility": 7.5,
+    "models": 7.0,
+    "contracts": 6.8,
+    "connectors": 7.2,
+    "tests": 7.6,
+    "confidentiality": 8.1,
+    "maintainability": 6.7,
+    "production_readiness": 5.9,
+    "average": 7.1
+  },
+  "scores_after": {
+    "architecture": 8.7,
+    "decoupling": 8.5,
+    "extensibility": 8.4,
+    "models": 7.3,
+    "contracts": 8.8,
+    "connectors": 8.5,
+    "tests": 8.8,
+    "confidentiality": 8.4,
+    "maintainability": 7.8,
+    "production_readiness": 6.8,
+    "average": 8.2
+  },
+  "test_results": {
+    "targeted": {"passed": 333, "failed": 0},
+    "retirement": {"passed": 455, "failed": 0},
+    "full_suite": {
+      "passed": 1912,
+      "subtests_passed": 128,
+      "failed": 3,
+      "new_failures": 0,
+      "historical_failures": [
+        "DependencyTests::test_import_does_not_load_forbidden_packages",
+        "IsolationAndCompatibilityTests::test_import_does_not_load_domain_packages",
+        "test_integration_failure_preserves_legacy_expert_payload"
+      ]
+    },
+    "git_diff_check": "PASS",
+    "python_3_10": "PASS"
+  },
+  "production_readiness": {
+    "synthetic_offline_development": true,
+    "real_data_ingestion": false,
+    "external_transport": false,
+    "blocking_findings": ["P1-N1", "P1-N2"]
+  },
+  "recommendation": "READY_WITH_RESTRICTIONS"
+}
