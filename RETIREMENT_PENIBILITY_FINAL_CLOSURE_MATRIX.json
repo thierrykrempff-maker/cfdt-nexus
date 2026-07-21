@@ -1,0 +1,88 @@
+{
+  "audit_version": "final-closure-a8-1.0",
+  "audit_date": "2026-07-21",
+  "branch": "retirement-penibility-final-closure-audit",
+  "commit": "9782e24139cf540dfa35cd78ec918ea53119f404",
+  "remaining_p0": 0,
+  "remaining_p1": 0,
+  "initial_p1_status": [
+    {"id": "P1-1", "title": "Dépendances contrats / implémentations", "status": "RESOLVED"},
+    {"id": "P1-2", "title": "Contournement Career Import", "status": "RESOLVED"},
+    {"id": "P1-3", "title": "Rapprochement sensible au type métier", "status": "RESOLVED"},
+    {"id": "P1-4", "title": "Duplication des connecteurs", "status": "RESOLVED"},
+    {"id": "P1-5", "title": "Confidentialité principalement déclarative", "status": "RESOLVED"},
+    {"id": "P1-6", "title": "Référentiel Kelio incomplet", "status": "RESOLVED"}
+  ],
+  "a7_closures": [
+    {
+      "id": "P1-3",
+      "initial_status": "PARTIALLY_RESOLVED",
+      "final_status": "RESOLVED",
+      "evidence": [
+        "DocumentRole",
+        "FactFamily",
+        "FactResolution",
+        "career event type conflict",
+        "tests/test_document_type_resolution_a7.py"
+      ]
+    },
+    {
+      "id": "P1-4",
+      "initial_status": "PARTIALLY_RESOLVED",
+      "final_status": "RESOLVED",
+      "evidence": [
+        "single Privacy Gate inspection per validated conversion",
+        "unchanged connector signatures",
+        "zero connector file changed",
+        "tests/test_connector_residual_duplication_a7.py"
+      ]
+    }
+  ],
+  "blocking_findings": [
+    {
+      "id": "P1-N2",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Clé sensible reproduite dans un diagnostic Privacy Gate",
+      "evidence": "Diagnostics limited to stable error code, category and severity; sensitive paths redacted by A8"
+    }
+  ],
+  "compatibility": {
+    "a1_to_a8_regression": false,
+    "public_signatures_preserved": true,
+    "privacy_gate_fail_closed": true,
+    "career_import_pipeline_mandatory": true,
+    "kelio_referential_preserved": true,
+    "nibelis_fail_closed": true,
+    "import_cycles": 0,
+    "dynamic_imports": 0,
+    "network_api_ocr_imports": 0,
+    "tracked_confidential_lot0_files": 0
+  },
+  "test_results": {
+    "a7": {"passed": 27, "failed": 0},
+    "a1_to_a7": {"passed": 263, "failed": 0},
+    "five_connectors": {"passed": 97, "failed": 0},
+    "a8": {"passed": 21, "failed": 0},
+    "retirement": {"passed": 503, "failed": 0},
+    "full_suite": {
+      "passed": 1939,
+      "subtests_passed": 128,
+      "failed": 3,
+      "new_failures": 0,
+      "historical_failures": 3
+    },
+    "git_diff_check": "PASS",
+    "python_3_10": "PASS"
+  },
+  "ready_conditions": {
+    "p0_is_zero": true,
+    "p1_is_zero": true,
+    "retirement_tests_pass": true,
+    "connectors_compatible": true,
+    "a1_to_a8_no_regression": true,
+    "no_tracked_confidential_data": true
+  },
+  "recommendation": "READY",
+  "integration_step_executed": false
+}
