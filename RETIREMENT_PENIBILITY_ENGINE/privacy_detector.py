@@ -75,9 +75,9 @@ class PrivacyDetector:
         active_ids.add(object_id)
         try:
             if is_dataclass(value) and not isinstance(value, type):
-                for item in fields(value):
+                for index, item in enumerate(fields(value)):
                     child = getattr(value, item.name)
-                    child_path = f"{path}.{item.name}"
+                    child_path = f"{path}.field[{index}]"
                     if item.name == "synthetic_only" and child is not True:
                         self._critical(findings, PrivacyCategory.REAL_DOCUMENT, child_path, "PRIVACY_SYNTHETIC_REQUIRED", "Synthetic metadata is required.")
                     if item.name in {"provenance", "source", "source_reference"} and (child is None or child == ""):
@@ -85,12 +85,12 @@ class PrivacyDetector:
                     self._walk(child, child_path, item.name, findings, active_ids)
                 return
             if isinstance(value, Mapping):
-                for key in sorted(value, key=lambda item: str(item)):
+                for index, key in enumerate(sorted(value, key=lambda item: str(item))):
                     if not isinstance(key, str):
                         self._critical(findings, PrivacyCategory.INSPECTION, path, "PRIVACY_UNSUPPORTED_MAPPING_KEY", "Mapping keys must be text field names.")
                         continue
                     child = value[key]
-                    child_path = f"{path}.{key}"
+                    child_path = f"{path}.entry[{index}]"
                     if key == "synthetic_only" and child is not True:
                         self._critical(findings, PrivacyCategory.REAL_DOCUMENT, child_path, "PRIVACY_SYNTHETIC_REQUIRED", "Synthetic metadata is required.")
                     if key in {"provenance", "source", "source_reference"} and (child is None or child == ""):

@@ -51,7 +51,11 @@ class RetirementPrivacyGate:
         if not inspection.findings:
             return "PRIVACY_INSPECTION_ERROR"
         return "; ".join(
-            f"{item.code} at {item.field_path}" for item in inspection.findings
+            (
+                f"{item.code} category={item.category.value} "
+                f"severity={item.severity.value}"
+            )
+            for item in inspection.findings
         )
 
 
