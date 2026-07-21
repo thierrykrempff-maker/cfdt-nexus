@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
-from .rule_reasoning_engine import RetirementRuleReasoningEngine
 from .rule_reasoning_models import (
     ApplicableScheme,
     ReasoningConflict,
@@ -66,7 +65,6 @@ class RetirementRuleReasoningPort(Protocol):
 
 
 __all__ = (
-    "RetirementRuleReasoningEngine",
     "RetirementRuleReasoningPort",
     "RULE_REASONING_SAFETY_CONTRACT",
 )

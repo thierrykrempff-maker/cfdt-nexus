@@ -20,9 +20,9 @@ from RETIREMENT_PENIBILITY_ENGINE.career_timeline_models import CareerEvent, Car
 from RETIREMENT_PENIBILITY_ENGINE.document_knowledge_models import KnowledgeContext, KnowledgeRequest
 from RETIREMENT_PENIBILITY_ENGINE.potential_rights_contract import (
     POTENTIAL_RIGHTS_SAFETY_CONTRACT,
-    PotentialRightsEngine,
     PotentialRightsPort,
 )
+from RETIREMENT_PENIBILITY_ENGINE.potential_rights_engine import PotentialRightsEngine
 from RETIREMENT_PENIBILITY_ENGINE.potential_rights_models import (
     CaseMaturityIndicatorType,
     CaseMaturityLevel,

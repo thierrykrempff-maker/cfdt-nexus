@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from .career_evidence_models import EvidenceBundle
-from .career_import_engine import CareerImportEngine
 from .career_import_models import (
     ImportBatch,
     ImportConflict,
@@ -66,7 +65,6 @@ class CareerImportPort(Protocol):
 
 
 __all__ = (
-    "CareerImportEngine",
     "CareerImportPort",
     "CAREER_IMPORT_SAFETY_CONTRACT",
 )

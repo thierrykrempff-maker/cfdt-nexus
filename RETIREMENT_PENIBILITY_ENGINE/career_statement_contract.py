@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from .career_import_models import ImportBatch
-from .career_statement_connector import CareerStatementConnector
 from .career_statement_models import (
     CareerStatement,
     CareerStatementImport,
@@ -56,7 +55,6 @@ class CareerStatementPort(Protocol):
 
 
 __all__ = (
-    "CareerStatementConnector",
     "CareerStatementPort",
     "CAREER_STATEMENT_SAFETY_CONTRACT",
 )

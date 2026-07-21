@@ -7,7 +7,6 @@ from typing import Protocol
 
 from .career_evidence_models import EvidenceBundle
 from .career_import_models import ImportBatch
-from .career_reconstruction_engine import CareerReconstructionEngine
 from .career_reconstruction_models import (
     ReconstructionCandidate,
     ReconstructionConflict,
@@ -74,7 +73,6 @@ class CareerReconstructionPort(Protocol):
 
 
 __all__ = (
-    "CareerReconstructionEngine",
     "CareerReconstructionPort",
     "CAREER_RECONSTRUCTION_SAFETY_CONTRACT",
 )

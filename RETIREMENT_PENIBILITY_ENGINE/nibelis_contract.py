@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from .career_import_models import ImportBatch
-from .nibelis_connector import InjectedNibelisReferentialLookup, NibelisConnector
 from .nibelis_models import (
     NibelisExport,
     NibelisImport,
@@ -75,8 +74,6 @@ class NibelisPort(Protocol):
 
 
 __all__ = (
-    "InjectedNibelisReferentialLookup",
-    "NibelisConnector",
     "NibelisPort",
     "NibelisReferentialLookup",
     "NIBELIS_REFERENTIAL_COMPATIBILITY",

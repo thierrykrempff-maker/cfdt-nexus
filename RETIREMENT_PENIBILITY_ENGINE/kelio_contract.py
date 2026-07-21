@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from .career_import_models import ImportBatch
-from .kelio_connector import KelioConnector
 from .kelio_models import (
     KelioExport,
     KelioImport,
@@ -62,4 +61,4 @@ class KelioPort(Protocol):
     def generate_import_report(self, export: KelioExport, view: KelioReportView) -> KelioReport: ...
 
 
-__all__ = ("KelioConnector", "KelioPort", "KELIO_SAFETY_CONTRACT")
+__all__ = ("KelioPort", "KELIO_SAFETY_CONTRACT")

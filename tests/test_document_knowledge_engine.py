@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from RETIREMENT_PENIBILITY_ENGINE.career_evidence_contract import CareerEvidenceEngine
+from RETIREMENT_PENIBILITY_ENGINE.career_evidence_engine import CareerEvidenceEngine
 from RETIREMENT_PENIBILITY_ENGINE.career_evidence_models import (
     CareerEvidenceItem,
     EvidenceAuthorityLevel,
@@ -20,8 +20,8 @@ from RETIREMENT_PENIBILITY_ENGINE.career_timeline_engine import CareerTimelineEn
 from RETIREMENT_PENIBILITY_ENGINE.career_timeline_models import CareerEvent, CareerEventType, EvidenceLevel
 from RETIREMENT_PENIBILITY_ENGINE.document_knowledge_contract import (
     DOCUMENT_KNOWLEDGE_SAFETY_CONTRACT,
-    DocumentKnowledgeEngine,
 )
+from RETIREMENT_PENIBILITY_ENGINE.document_knowledge_engine import DocumentKnowledgeEngine
 from RETIREMENT_PENIBILITY_ENGINE.document_knowledge_models import (
     ApplicableDocument,
     ApplicablePassage,

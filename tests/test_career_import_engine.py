@@ -8,9 +8,9 @@ import pytest
 
 from RETIREMENT_PENIBILITY_ENGINE.career_import_contract import (
     CAREER_IMPORT_SAFETY_CONTRACT,
-    CareerImportEngine,
     CareerImportPort,
 )
+from RETIREMENT_PENIBILITY_ENGINE.career_import_engine import CareerImportEngine
 from RETIREMENT_PENIBILITY_ENGINE.career_import_models import (
     ImportBatch,
     ImportConfidence,

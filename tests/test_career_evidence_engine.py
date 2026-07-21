@@ -9,8 +9,8 @@ import pytest
 from RETIREMENT_PENIBILITY_ENGINE.career_document_search_contract import CareerDocumentSearchProvider
 from RETIREMENT_PENIBILITY_ENGINE.career_evidence_contract import (
     CAREER_EVIDENCE_SAFETY_CONTRACT,
-    CareerEvidenceEngine,
 )
+from RETIREMENT_PENIBILITY_ENGINE.career_evidence_engine import CareerEvidenceEngine
 from RETIREMENT_PENIBILITY_ENGINE.career_evidence_models import (
     CareerEvidenceItem,
     DocumentPassageReference,

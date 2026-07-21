@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
-from .potential_rights_engine import PotentialRightsEngine
 from .potential_rights_models import (
     CaseMaturity,
     MissingRequirement,
@@ -75,7 +74,6 @@ class PotentialRightsPort(Protocol):
 
 
 __all__ = (
-    "PotentialRightsEngine",
     "PotentialRightsPort",
     "POTENTIAL_RIGHTS_SAFETY_CONTRACT",
 )

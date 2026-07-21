@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from .career_import_models import ImportBatch
-from .payslip_connector import PayslipConnector
 from .payslip_models import (
     Payslip,
     PayslipImport,
@@ -60,4 +59,4 @@ class PayslipPort(Protocol):
     def generate_import_report(self, payslip: Payslip, view: PayslipReportView) -> PayslipReport: ...
 
 
-__all__ = ("PayslipConnector", "PayslipPort", "PAYSLIP_SAFETY_CONTRACT")
+__all__ = ("PayslipPort", "PAYSLIP_SAFETY_CONTRACT")

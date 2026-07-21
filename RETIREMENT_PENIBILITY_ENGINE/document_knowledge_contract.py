@@ -1,12 +1,12 @@
-"""Public architecture-only facade for retirement document knowledge."""
+"""Implementation-independent contract for retirement document knowledge."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Protocol
 
 from .career_evidence_models import EvidenceBundle
 from .career_timeline_models import CareerTimeline
-from .document_context_builder import DocumentContextBuilder
 from .document_knowledge_models import (
     ApplicableDocument,
     DocumentSelectionReport,
@@ -15,8 +15,6 @@ from .document_knowledge_models import (
     KnowledgeContext,
     KnowledgeRequest,
 )
-from .document_selector import DocumentSelector
-from .document_version_resolver import DocumentVersionResolver
 
 
 @dataclass(frozen=True)
@@ -39,30 +37,18 @@ class DocumentKnowledgeSafetyContract:
 DOCUMENT_KNOWLEDGE_SAFETY_CONTRACT = DocumentKnowledgeSafetyContract()
 
 
-class DocumentKnowledgeEngine:
-    """Coordinate structural selection, version resolution and context building."""
-
-    def __init__(
-        self,
-        selector: DocumentSelector | None = None,
-        version_resolver: DocumentVersionResolver | None = None,
-        context_builder: DocumentContextBuilder | None = None,
-    ) -> None:
-        self._selector = selector or DocumentSelector()
-        self._version_resolver = version_resolver or DocumentVersionResolver()
-        self._context_builder = context_builder or DocumentContextBuilder()
+class DocumentKnowledgePort(Protocol):
+    """Stable operations implemented by ``DocumentKnowledgeEngine``."""
 
     def select_documents(
         self,
         request: KnowledgeRequest,
         candidates: tuple[ApplicableDocument, ...] = (),
-    ) -> DocumentSelectionReport:
-        return self._selector.select(request, candidates)
+    ) -> DocumentSelectionReport: ...
 
     def resolve_document_version(
         self, timeline: DocumentTimeline, applicable_on: str
-    ) -> DocumentVersion | None:
-        return self._version_resolver.resolve(timeline, applicable_on)
+    ) -> DocumentVersion | None: ...
 
     def build_context(
         self,
@@ -71,7 +57,10 @@ class DocumentKnowledgeEngine:
         evidence_bundle: EvidenceBundle,
         employee_question: str,
         request: KnowledgeRequest,
-    ) -> KnowledgeContext:
-        return self._context_builder.build(
-            context_id, timeline, evidence_bundle, employee_question, request
-        )
+    ) -> KnowledgeContext: ...
+
+
+__all__ = (
+    "DocumentKnowledgePort",
+    "DOCUMENT_KNOWLEDGE_SAFETY_CONTRACT",
+)

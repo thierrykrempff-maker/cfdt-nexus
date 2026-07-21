@@ -19,8 +19,10 @@ from RETIREMENT_PENIBILITY_ENGINE.career_import_models import (
 )
 from RETIREMENT_PENIBILITY_ENGINE.career_reconstruction_contract import (
     CAREER_RECONSTRUCTION_SAFETY_CONTRACT,
-    CareerReconstructionEngine,
     CareerReconstructionPort,
+)
+from RETIREMENT_PENIBILITY_ENGINE.career_reconstruction_engine import (
+    CareerReconstructionEngine,
 )
 from RETIREMENT_PENIBILITY_ENGINE.career_reconstruction_models import (
     DatePrecision,

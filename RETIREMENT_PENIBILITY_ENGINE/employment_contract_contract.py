@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from .career_import_models import ImportBatch
-from .employment_contract_connector import EmploymentContractConnector
 from .employment_contract_models import (
     EmploymentContract,
     EmploymentContractInformation,
@@ -61,7 +60,6 @@ class EmploymentContractPort(Protocol):
 
 
 __all__ = (
-    "EmploymentContractConnector",
     "EmploymentContractPort",
     "EMPLOYMENT_CONTRACT_SAFETY_CONTRACT",
 )

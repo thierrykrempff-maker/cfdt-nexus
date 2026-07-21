@@ -26,8 +26,10 @@ from RETIREMENT_PENIBILITY_ENGINE.document_knowledge_models import (
 )
 from RETIREMENT_PENIBILITY_ENGINE.rule_reasoning_contract import (
     RULE_REASONING_SAFETY_CONTRACT,
-    RetirementRuleReasoningEngine,
     RetirementRuleReasoningPort,
+)
+from RETIREMENT_PENIBILITY_ENGINE.rule_reasoning_engine import (
+    RetirementRuleReasoningEngine,
 )
 from RETIREMENT_PENIBILITY_ENGINE.rule_reasoning_models import (
     ConditionEvaluationState,
