@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-07-21",
+  "audited_revision": "ee2ec8bcb2618cf142486b1629590eed05942961",
+  "branch": "france-chimie-lot-0-audit-architecture-connecteur",
+  "connector": {
+    "display_name": "France Chimie",
+    "recommended_id": "france_chimie",
+    "recommended_package": "automation.official_knowledge.connectors.france_chimie",
+    "official_domains_validated": [],
+    "network_probe_executed": false
+  },
+  "audit_scope": [
+    "connector_platform",
+    "inrs_architecture",
+    "inrs_metadata_discovery",
+    "inrs_document_sync",
+    "carsat_architecture",
+    "carsat_document_sync",
+    "document_registry_public_api",
+    "offline_security_tests"
+  ],
+  "constraints": {
+    "metadata_only": true,
+    "network_allowed": false,
+    "scraping_allowed": false,
+    "download_allowed": false,
+    "content_storage_allowed": false,
+    "common_component_change_required": false
+  },
+  "reuse_matrix": [
+    {
+      "concern": "connector_platform_contract",
+      "inrs_reference": "inrs_platform.py",
+      "carsat_reference": "carsat_platform.py",
+      "recommendation": "ARCHITECTURE_ONLY, enabled false, METADATA_ONLY, DOCUMENT_SPECIFIC, DEFAULT_SECURITY_POLICY"
+    },
+    {
+      "concern": "public_facade",
+      "inrs_reference": "inrs_connector.py",
+      "carsat_reference": "carsat_contract.py",
+      "recommendation": "Expose declarative metadata and fail closed for discover, fetch and synchronize"
+    },
+    {
+      "concern": "metadata_discovery",
+      "inrs_reference": "inrs_metadata.py and inrs_discovery.py",
+      "carsat_reference": "carsat_metadata.py",
+      "recommendation": "Use immutable injected batches, exact domain allowlist, bounded quota, canonicalization and deterministic ordering"
+    },
+    {
+      "concern": "document_identity",
+      "inrs_reference": "stable_inrs_document_id delegates to stable_document_id",
+      "carsat_reference": "CarsatMetadata.create uses stable_document_id",
+      "recommendation": "Use stable_document_id('france_chimie', canonical_url); keep any institutional reference separate"
+    },
+    {
+      "concern": "document_sync",
+      "inrs_reference": "InrsDocumentSync",
+      "carsat_reference": "CarsatDocumentSync",
+      "recommendation": "Inject DocumentRegistry and use only register_document, update_document, mark_removed and find_by_connector"
+    },
+    {
+      "concern": "sync_events",
+      "inrs_reference": "InrsSyncEvent",
+      "carsat_reference": "CarsatSyncEvent",
+      "recommendation": "Immutable metadata-only NEW, UPDATED, REMOVED, REDIRECTED and UNCHANGED events sorted by document_id and event_type"
+    },
+    {
+      "concern": "security_tests",
+      "inrs_reference": "test_inrs_architecture.py, test_inrs_metadata_discovery.py and test_inrs_sync.py",
+      "carsat_reference": "test_carsat_sync.py",
+      "recommendation": "AST import guards, synthetic fixtures, HTTPS/PDF/content refusals, deterministic and idempotent behavior"
+    }
+  ],
+  "document_registry": {
+    "public_import": "automation.official_knowledge.document_registry",
+    "allowed_types": [
+      "ChangeKind",
+      "DocumentRecord",
+      "DocumentRegistry",
+      "DocumentStatus",
+      "DocumentStorage",
+      "DocumentValidator"
+    ],
+    "allowed_functions": [
+      "stable_document_id"
+    ],
+    "allowed_operations": [
+      "register_document",
+      "update_document",
+      "mark_removed",
+      "find_document",
+      "find_by_connector"
+    ],
+    "forbidden_access": [
+      "DocumentRegistry._storage",
+      "DocumentRegistry._validator",
+      "DocumentRegistry._load",
+      "DocumentRegistry._by_id",
+      "DocumentRegistry._save"
+    ]
+  },
+  "metadata_conventions": {
+    "input": "immutable injected tuple",
+    "output": "immutable deterministic tuple",
+    "quota": "integer between 1 and 100",
+    "identity": "stable_document_id('france_chimie', canonical_url)",
+    "required_registry_fields": [
+      "document_id",
+      "connector_name",
+      "canonical_url",
+      "title",
+      "category",
+      "family",
+      "document_type",
+      "publication_date",
+      "first_seen",
+      "last_checked",
+      "last_modified_metadata",
+      "language",
+      "provenance",
+      "status"
+    ],
+    "forbidden_content_fields": [
+      "attachment",
+      "binary",
+      "body",
+      "content",
+      "excerpt",
+      "full_text",
+      "html",
+      "pdf",
+      "raw_html",
+      "text"
+    ]
+  },
+  "synchronization": {
+    "events": [
+      "NEW",
+      "UPDATED",
+      "REMOVED",
+      "REDIRECTED",
+      "UNCHANGED"
+    ],
+    "event_fields": [
+      "document_id",
+      "connector_name",
+      "event_type",
+      "detected_at",
+      "previous_snapshot",
+      "new_snapshot"
+    ],
+    "stable_sort": [
+      "document_id",
+      "event_type"
+    ],
+    "redirect_preserves_document_id": true,
+    "logical_removal": true,
+    "idempotence_required": true
+  },
+  "network_and_content_guards": {
+    "forbidden_imports": [
+      "aiohttp",
+      "http.client",
+      "httpx",
+      "requests",
+      "socket",
+      "urllib",
+      "urllib.request"
+    ],
+    "https_required": true,
+    "exact_domain_allowlist_required": true,
+    "pdf_forbidden": true,
+    "html_forbidden": true,
+    "binary_forbidden": true,
+    "fail_closed": true
+  },
+  "open_decisions": [
+    "Validate the exact official France Chimie domain allowlist",
+    "Review legal notices and document reuse rights",
+    "Validate official document families and taxonomy",
+    "Validate canonical URL and redirect rules",
+    "Validate whether any official structured feed exists before declaring capabilities"
+  ],
+  "decision": {
+    "architecture_reusable_without_common_changes": true,
+    "ready_for_architecture_only_lot": true,
+    "ready_for_network_activation": false,
+    "recommended_reference": "INRS discovery and synchronization architecture with CARSAT event minimalism"
+  }
+}
