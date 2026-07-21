@@ -11,6 +11,7 @@ from .career_reconstruction_models import (
     ReconstructionRecord,
     ReconstructionStatus,
 )
+from .document_resolution import DocumentResolutionStrategy
 
 
 _CONFLICT_BY_FIELD = {
@@ -30,9 +31,13 @@ _CONFLICT_BY_FIELD = {
 class CareerReconstructionMerger:
     """Merge common values and preserve every incompatible alternative."""
 
+    def __init__(self, resolution_strategy=None) -> None:
+        self._resolution_strategy = resolution_strategy or DocumentResolutionStrategy()
+
     def merge(
         self, records: tuple[ReconstructionRecord, ...]
     ) -> tuple[ReconstructionMerge, tuple[ReconstructionConflict, ...]]:
+        records = self._resolution_strategy.order(records)
         keys = tuple(dict.fromkeys(key for record in records for key, _ in record.values))
         merged = []
         alternatives = []
@@ -45,9 +50,8 @@ class CareerReconstructionMerger:
                 if not self._unknown(dict(record.values).get(key))
             )
             unique = tuple(dict.fromkeys(values))
-            if len(unique) <= 1:
-                merged.append((key, unique[0] if unique else None))
-            else:
+            merged.append((key, unique[0] if unique else None))
+            if len(unique) > 1:
                 alternatives.append((key, unique))
                 conflict_type = _CONFLICT_BY_FIELD.get(key, ReconstructionConflictType.PROVENANCE_CONFLICT)
                 conflicts.append(
@@ -68,6 +72,7 @@ class CareerReconstructionMerger:
             tuple(alternatives),
             provenance,
             status,
+            tuple(record.record_id for record in records),
         )
         return result, tuple(conflicts)
 

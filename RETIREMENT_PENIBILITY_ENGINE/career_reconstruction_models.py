@@ -146,6 +146,7 @@ class ReconstructionMerge:
     alternative_values: tuple[tuple[str, tuple[ReconstructionValue, ...]], ...]
     provenance: tuple[ImportProvenance, ...]
     status: ReconstructionStatus
+    resolution_order: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
