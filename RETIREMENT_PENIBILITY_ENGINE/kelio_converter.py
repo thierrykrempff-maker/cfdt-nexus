@@ -33,8 +33,8 @@ class KelioConverter:
             records.append(
                 ImportedNightWork(
                     item.night_work_id,
-                    shift.start_at if shift else None,
-                    shift.end_at if shift else None,
+                    shift.start_at.split("T", 1)[0] if shift else None,
+                    shift.end_at.split("T", 1)[0] if shift else None,
                     schedules_by_day.get(days_by_shift.get(item.shift_id)),
                     provenance,
                 )

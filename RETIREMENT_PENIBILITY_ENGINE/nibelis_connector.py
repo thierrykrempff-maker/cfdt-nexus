@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .career_reconstruction_engine import CareerReconstructionEngine
+from .career_import_pipeline import CareerImportPipeline
 from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .nibelis_converter import NibelisConverter
 from .nibelis_models import (
@@ -45,11 +45,11 @@ class NibelisConnector:
         "Prepare a synthetic Nibelis reconstruction proposal.",
     )
 
-    def __init__(self, referential_lookup=None, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
+    def __init__(self, referential_lookup=None, validator=None, converter=None, report_builder=None, import_pipeline=None):
         self._foundation = ConnectorFoundation(
             validator or NibelisValidator(referential_lookup),
             converter or NibelisConverter(),
-            reconstruction_engine or CareerReconstructionEngine(),
+            import_pipeline or CareerImportPipeline(),
         )
         self._report_builder = report_builder or NibelisReportBuilder()
 

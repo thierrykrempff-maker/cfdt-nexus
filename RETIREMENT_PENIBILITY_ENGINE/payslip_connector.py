@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .career_reconstruction_engine import CareerReconstructionEngine
+from .career_import_pipeline import CareerImportPipeline
 from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .payslip_converter import PayslipConverter
 from .payslip_models import (
@@ -31,11 +31,11 @@ class PayslipConnector:
         "Prepare a synthetic payslip reconstruction proposal.",
     )
 
-    def __init__(self, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
+    def __init__(self, validator=None, converter=None, report_builder=None, import_pipeline=None):
         self._foundation = ConnectorFoundation(
             validator or PayslipValidator(),
             converter or PayslipConverter(),
-            reconstruction_engine or CareerReconstructionEngine(),
+            import_pipeline or CareerImportPipeline(),
         )
         self._report_builder = report_builder or PayslipReportBuilder()
 

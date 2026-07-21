@@ -46,8 +46,8 @@ class ConnectorConverter(Protocol[SourceT, ConversionT]):
     def convert(self, source: SourceT) -> ConversionT: ...
 
 
-class ReconstructionCoordinator(Protocol):
-    """Subset of reconstruction operations used by all five connectors."""
+class CareerImportPipelineCoordinator(Protocol):
+    """Mandatory Career Import gateway used by all five connectors."""
 
     def create_reconstruction_context(
         self,
@@ -82,6 +82,6 @@ __all__ = (
     "ConnectorConverter",
     "ConnectorValidationResult",
     "ConnectorValidator",
-    "ReconstructionCoordinator",
+    "CareerImportPipelineCoordinator",
     "RetirementSourceConnector",
 )

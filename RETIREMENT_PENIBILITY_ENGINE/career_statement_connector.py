@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .career_reconstruction_engine import CareerReconstructionEngine
+from .career_import_pipeline import CareerImportPipeline
 from .career_statement_converter import CareerStatementConverter
 from .career_statement_models import (
     CareerStatement,
@@ -30,11 +30,11 @@ class CareerStatementConnector:
         "Prepare a synthetic career-statement reconstruction proposal.",
     )
 
-    def __init__(self, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
+    def __init__(self, validator=None, converter=None, report_builder=None, import_pipeline=None):
         self._foundation = ConnectorFoundation(
             validator or CareerStatementValidator(),
             converter or CareerStatementConverter(),
-            reconstruction_engine or CareerReconstructionEngine(),
+            import_pipeline or CareerImportPipeline(),
         )
         self._report_builder = report_builder or CareerStatementReportBuilder()
 

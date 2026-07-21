@@ -9,6 +9,7 @@ from .career_evidence_models import EvidenceBundle, EvidenceStatus
 from .career_import_engine import CareerImportEngine
 from .career_import_models import (
     ImportBatch,
+    ImportStatus,
     ImportedCareerRecord,
     ImportedEmploymentPeriod,
 )
@@ -67,6 +68,14 @@ class CareerReconstructionEngine:
     def add_import_batch(
         self, context: ReconstructionContext, batch: ImportBatch
     ) -> ReconstructionContext:
+        if type(batch) is not ImportBatch:
+            raise TypeError("Career reconstruction accepts ImportBatch only.")
+        if batch.status is not ImportStatus.VALIDATED:
+            raise ValueError(
+                "ImportBatch must be validated by Career Import before reconstruction."
+            )
+        if not batch.synthetic_only:
+            raise ValueError("Career reconstruction accepts synthetic metadata only.")
         return replace(context, import_batches=context.import_batches + (batch,))
 
     def build_candidates(

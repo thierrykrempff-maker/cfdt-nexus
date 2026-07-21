@@ -12,7 +12,7 @@ from .connector_contract import (
     ConnectorConverter,
     ConnectorValidationResult,
     ConnectorValidator,
-    ReconstructionCoordinator,
+    CareerImportPipelineCoordinator,
 )
 
 
@@ -37,11 +37,11 @@ class ConnectorFoundation(Generic[SourceT, ValidationT, ConversionT]):
         self,
         validator: ConnectorValidator[SourceT, ValidationT],
         converter: ConnectorConverter[SourceT, ConversionT],
-        reconstruction: ReconstructionCoordinator,
+        import_pipeline: CareerImportPipelineCoordinator,
     ) -> None:
         self._validator = validator
         self._converter = converter
-        self._reconstruction = reconstruction
+        self._import_pipeline = import_pipeline
 
     def validate(self, source: SourceT) -> ValidationT:
         return self._validator.validate(source)
@@ -60,15 +60,15 @@ class ConnectorFoundation(Generic[SourceT, ValidationT, ConversionT]):
         batch: ImportBatch,
         spec: ConnectorReconstructionSpec,
     ) -> ReconstructionProposal:
-        context = self._reconstruction.create_reconstruction_context(
+        context = self._import_pipeline.create_reconstruction_context(
             f"{spec.context_prefix}:{source_id}",
             ReconstructionRequest(
                 f"{spec.request_prefix}:{source_id}",
                 spec.description,
             ),
         )
-        context = self._reconstruction.add_import_batch(context, batch)
-        return self._reconstruction.build_reconstruction_proposal(context)
+        context = self._import_pipeline.add_import_batch(context, batch)
+        return self._import_pipeline.build_reconstruction_proposal(context)
 
 
 __all__ = ("ConnectorFoundation", "ConnectorReconstructionSpec")

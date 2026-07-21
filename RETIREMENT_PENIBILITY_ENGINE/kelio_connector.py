@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .career_reconstruction_engine import CareerReconstructionEngine
+from .career_import_pipeline import CareerImportPipeline
 from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .kelio_converter import KelioConverter
 from .kelio_models import (
@@ -30,11 +30,11 @@ class KelioConnector:
         "Prepare a synthetic Kelio reconstruction proposal.",
     )
 
-    def __init__(self, validator=None, converter=None, report_builder=None, reconstruction_engine=None):
+    def __init__(self, validator=None, converter=None, report_builder=None, import_pipeline=None):
         self._foundation = ConnectorFoundation(
             validator or KelioValidator(),
             converter or KelioConverter(),
-            reconstruction_engine or CareerReconstructionEngine(),
+            import_pipeline or CareerImportPipeline(),
         )
         self._report_builder = report_builder or KelioReportBuilder()
 

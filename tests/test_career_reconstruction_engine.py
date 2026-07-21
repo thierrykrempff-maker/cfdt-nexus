@@ -10,6 +10,7 @@ from RETIREMENT_PENIBILITY_ENGINE.career_import_models import (
     ImportBatch,
     ImportConfidence,
     ImportDocumentType,
+    ImportStatus,
     ImportedCareerRecord,
     ImportedClassification,
     ImportedEmploymentPeriod,
@@ -56,7 +57,14 @@ def context(*records, timeline=None):
     ctx = engine.create_reconstruction_context(
         "case-1", ReconstructionRequest("request-1", "Reconstruire les faits declares"), timeline
     )
-    return engine, engine.add_import_batch(ctx, ImportBatch("batch-1", records=tuple(records)))
+    return engine, engine.add_import_batch(
+        ctx,
+        ImportBatch(
+            "batch-1",
+            records=tuple(records),
+            status=ImportStatus.VALIDATED,
+        ),
+    )
 
 
 def test_public_contract_is_architecture_only_and_disabled():
