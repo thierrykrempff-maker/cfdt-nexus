@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "branch": "nexus-core-v3-lot-0-common-domain-model",
+  "commit_base": "ef7a75fe3f2552991522a82e39aacfd3ab8e2489",
+  "module": "NEXUS_CORE.evidence_graph",
+  "models": [
+    "EvidenceNode",
+    "EvidenceEdge",
+    "EvidenceGraph",
+    "EvidenceLink",
+    "EvidenceCluster",
+    "EvidenceRelation",
+    "GraphStatistics"
+  ],
+  "enums": [
+    "EvidenceRelationType",
+    "GraphNodeType",
+    "GraphStatus"
+  ],
+  "protocols": [
+    "EvidenceGraphBuilder",
+    "EvidenceGraphExporter"
+  ],
+  "node_references": [
+    "EvidenceId",
+    "FindingId",
+    "ConflictId",
+    "DocumentId"
+  ],
+  "relations": [
+    "supports",
+    "contradicts",
+    "duplicates",
+    "references",
+    "extends",
+    "corroborates",
+    "unknown"
+  ],
+  "operations": [
+    "empty",
+    "add_node",
+    "add_relation",
+    "add_cluster",
+    "find_node",
+    "find_by_type",
+    "find_by_period",
+    "links",
+    "traverse",
+    "statistics",
+    "seal",
+    "export_json"
+  ],
+  "dependencies_allowed": [
+    "NEXUS_CORE",
+    "Python 3.10 standard library"
+  ],
+  "dependencies_forbidden": [
+    "domain engines",
+    "automation",
+    "official connectors",
+    "network clients",
+    "web APIs",
+    "databases",
+    "persistent storage"
+  ],
+  "privacy_guards": [
+    "reference-only nodes",
+    "technical identifiers",
+    "no copied domain object",
+    "no personal-data field",
+    "deterministic safe serialization"
+  ],
+  "serialization": {
+    "format": "deterministic JSON",
+    "dates": "ISO 8601",
+    "enums": "explicit string values",
+    "schema_version": "1.0"
+  },
+  "tests": [
+    "tests/test_nexus_evidence_graph.py"
+  ],
+  "out_of_scope": [
+    "legal or business rules",
+    "evidence priority",
+    "conflict resolution",
+    "orchestration",
+    "user interface",
+    "API",
+    "storage"
+  ],
+  "next_lots": [
+    "Conflict Resolver",
+    "Nexus V3 Orchestrator"
+  ]
+}
