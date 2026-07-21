@@ -49,14 +49,17 @@ class ConnectorFoundation(Generic[SourceT, ValidationT, ConversionT]):
     def validate(self, source: SourceT) -> ValidationT:
         return self._validator.validate(source)
 
-    def convert(self, source: SourceT) -> ConversionT:
+    def assert_safe(self, source: SourceT) -> None:
         require_privacy_gate(self._privacy_gate).assert_safe(source)
+
+    def convert(self, source: SourceT) -> ConversionT:
+        self.assert_safe(source)
         return self._converter.convert(source)
 
     def convert_validated(self, source: SourceT, error_message: str) -> ConversionT:
         if not self.validate(source).valid:
             raise ValueError(error_message)
-        require_privacy_gate(self._privacy_gate).assert_safe(source)
+        self.assert_safe(source)
         return self.convert(source)
 
     def prepare_reconstruction(

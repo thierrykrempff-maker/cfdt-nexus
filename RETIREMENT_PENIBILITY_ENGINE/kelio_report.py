@@ -34,4 +34,9 @@ class KelioReportBuilder:
             on_calls=information.on_call_ids + information.intervention_ids,
             documentary_consistency=("coherent" if validation.valid else "verification requise",),
             career_import_preparation=converted.converted_record_ids,
+            resolved_counter_ids=tuple(
+                item.metadata.canonical_counter_id
+                for item in information.counter_resolutions
+                if item.metadata is not None
+            ),
         )

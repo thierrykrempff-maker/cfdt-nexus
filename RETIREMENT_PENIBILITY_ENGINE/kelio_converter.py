@@ -11,12 +11,44 @@ from .career_import_models import (
     ImportProvenance,
 )
 from .kelio_models import KelioConfidence, KelioExport, KelioImport
+from .kelio_referential_models import KelioCounterResolution
+
+
+class KelioReferentialResolutionError(ValueError):
+    """Safe fail-closed error containing only a deterministic code."""
 
 
 class KelioConverter:
     """Convert declared metadata without reading or parsing an export."""
 
+    def __init__(self, referential_lookup) -> None:
+        self._referential_lookup = referential_lookup
+
+    def resolve_counters(
+        self, export: KelioExport
+    ) -> tuple[KelioCounterResolution, ...]:
+        if self._referential_lookup is None:
+            raise KelioReferentialResolutionError("KELIO_REFERENTIAL_REQUIRED")
+        resolver = getattr(self._referential_lookup, "resolve_counter", None)
+        if not callable(resolver):
+            raise KelioReferentialResolutionError("KELIO_REFERENTIAL_INVALID")
+        resolutions = []
+        for counter in export.counters:
+            try:
+                resolution = resolver(counter.counter_id)
+            except Exception:
+                raise KelioReferentialResolutionError(
+                    "KELIO_REFERENTIAL_LOOKUP_ERROR"
+                ) from None
+            if not isinstance(resolution, KelioCounterResolution):
+                raise KelioReferentialResolutionError("KELIO_REFERENTIAL_INVALID")
+            if not resolution.usable:
+                raise KelioReferentialResolutionError(resolution.code)
+            resolutions.append(resolution)
+        return tuple(resolutions)
+
     def convert(self, export: KelioExport) -> KelioImport:
+        resolutions = self.resolve_counters(export)
         provenance = self._provenance(export)
         records = [
             ImportedEmploymentPeriod(item.working_time_id, None, item.start_date, item.end_date, provenance)
@@ -44,8 +76,24 @@ class KelioConverter:
             records.append(ImportedFiveShift(item.five_shift_id, item.start_date, item.end_date, schedules.get(item.schedule_id), provenance))
         for item in export.evidence:
             records.append(ImportedEvidence(item.evidence_id, "KELIO_EXPORT", "UNVERIFIED", item.opaque_reference, provenance))
+        for resolution in resolutions:
+            metadata = resolution.metadata
+            records.append(
+                ImportedEvidence(
+                    f"kelio-counter:{metadata.canonical_counter_id}",
+                    "KELIO_COUNTER",
+                    "UNVERIFIED",
+                    metadata.canonical_counter_id,
+                    provenance,
+                )
+            )
         batch = ImportBatch(f"kelio:{export.metadata.export_id}", records=tuple(records), synthetic_only=True)
-        return KelioImport(export.metadata.export_id, batch, tuple(item.record_id for item in records))
+        return KelioImport(
+            export.metadata.export_id,
+            batch,
+            tuple(item.record_id for item in records),
+            resolutions,
+        )
 
     @staticmethod
     def _provenance(export):
@@ -64,3 +112,6 @@ class KelioConverter:
             "SYNTHETIC_KELIO_EXPORT",
             confidence,
         )
+
+
+__all__ = ("KelioConverter", "KelioReferentialResolutionError")

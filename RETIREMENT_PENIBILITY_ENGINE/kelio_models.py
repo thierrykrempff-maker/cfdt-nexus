@@ -7,6 +7,7 @@ from enum import Enum
 
 from .career_import_models import ImportBatch
 from .career_reconstruction_models import ReconstructionProposal
+from .kelio_referential_models import KelioCounterResolution
 
 
 class KelioConfidence(str, Enum):
@@ -181,6 +182,7 @@ class KelioWorkingTimeInformation:
     intervention_ids: tuple[str, ...]
     leave_ids: tuple[str, ...]
     counters: tuple[str, ...]
+    counter_resolutions: tuple[KelioCounterResolution, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -188,6 +190,7 @@ class KelioImport:
     export_id: str
     import_batch: ImportBatch
     converted_record_ids: tuple[str, ...]
+    counter_resolutions: tuple[KelioCounterResolution, ...] = ()
     reconstruction_proposal: ReconstructionProposal | None = None
 
 
@@ -217,3 +220,4 @@ class KelioReport:
     on_calls: tuple[str, ...] = ()
     documentary_consistency: tuple[str, ...] = ()
     career_import_preparation: tuple[str, ...] = ()
+    resolved_counter_ids: tuple[str, ...] = ()

@@ -47,7 +47,7 @@ def kelio_export():
         interventions=(KelioIntervention("intervention-1", "on-call-1", "2026-01-03T10:00:00", "2026-01-03T11:00:00"),),
         leaves=(KelioLeave("leave-1", "CONGE-SYNTHETIQUE", "2026-01-10", "2026-01-11"),),
         working_times=(KelioWorkingTime("working-1", "2026-01-01", "2026-01-31", "151.67"),),
-        counters=(KelioCounter("counter-1", "Compteur synthetique", "10.00", "2026-01-31"),),
+        counters=(KelioCounter("KELIO_HS_SYN", "Compteur synthetique", "10.00", "2026-01-31"),),
         evidence=(KelioEvidence("evidence-1", "KELIO_EXPORT", "opaque-evidence-reference"),),
     )
 

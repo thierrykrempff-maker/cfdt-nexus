@@ -5,6 +5,7 @@ from __future__ import annotations
 from .career_import_pipeline import CareerImportPipeline
 from .connector_base import ConnectorFoundation, ConnectorReconstructionSpec
 from .kelio_converter import KelioConverter
+from .kelio_referential_adapter import PayrollKelioReferentialLookup
 from .kelio_models import (
     KelioConfidence,
     KelioEmployee,
@@ -30,10 +31,22 @@ class KelioConnector:
         "Prepare a synthetic Kelio reconstruction proposal.",
     )
 
-    def __init__(self, validator=None, converter=None, report_builder=None, import_pipeline=None):
+    _DEFAULT_LOOKUP = object()
+
+    def __init__(
+        self,
+        validator=None,
+        converter=None,
+        report_builder=None,
+        import_pipeline=None,
+        referential_lookup=_DEFAULT_LOOKUP,
+    ):
+        if referential_lookup is self._DEFAULT_LOOKUP:
+            referential_lookup = PayrollKelioReferentialLookup()
+        self._converter = converter or KelioConverter(referential_lookup)
         self._foundation = ConnectorFoundation(
             validator or KelioValidator(),
-            converter or KelioConverter(),
+            self._converter,
             import_pipeline or CareerImportPipeline(),
         )
         self._report_builder = report_builder or KelioReportBuilder()
@@ -59,6 +72,10 @@ class KelioConnector:
         ).import_batch
 
     def extract_working_time(self, export: KelioExport) -> KelioWorkingTimeInformation:
+        if not self.validate_export(export).valid:
+            raise ValueError("Invalid Kelio export cannot resolve counters.")
+        self._foundation.assert_safe(export)
+        resolutions = self._converter.resolve_counters(export)
         return KelioWorkingTimeInformation(
             tuple(item.working_time_id for item in export.working_times),
             tuple(item.label for item in export.schedules if item.label),
@@ -72,6 +89,7 @@ class KelioConnector:
                 for item in export.counters
                 if item.label and item.declared_value is not None
             ),
+            resolutions,
         )
 
     def prepare_reconstruction(self, export: KelioExport) -> KelioImport:
@@ -84,7 +102,13 @@ class KelioConnector:
             converted.import_batch,
             self._RECONSTRUCTION,
         )
-        return KelioImport(converted.export_id, converted.import_batch, converted.converted_record_ids, proposal)
+        return KelioImport(
+            converted.export_id,
+            converted.import_batch,
+            converted.converted_record_ids,
+            converted.counter_resolutions,
+            proposal,
+        )
 
     def generate_import_report(self, export: KelioExport, view: KelioReportView) -> KelioReport:
         validation = self.validate_export(export)

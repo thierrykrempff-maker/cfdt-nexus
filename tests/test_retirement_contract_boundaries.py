@@ -58,7 +58,7 @@ def _relative_dependencies(path: Path) -> set[str]:
 
 
 def test_all_contract_modules_are_in_scope():
-    assert len(CONTRACT_FILES) == 16
+    assert len(CONTRACT_FILES) == 17
 
 
 @pytest.mark.parametrize("path", CONTRACT_FILES, ids=lambda path: path.stem)
