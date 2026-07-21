@@ -1,0 +1,223 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-07-21",
+  "audited_revision": "af7f3e69f7879681a542a4176563eefda606e8e3",
+  "branch": "anact-lot-0-audit-architecture-connecteur",
+  "network_probe_executed": false,
+  "connector": {
+    "id": "anact",
+    "display_name": "ANACT",
+    "recommended_package": "automation.official_knowledge.connectors.anact",
+    "existing_package_detected": true,
+    "official_integration_status": "audit_required_before_harmonization"
+  },
+  "mission_scope": [
+    "working_conditions",
+    "work_organization",
+    "occupational_risk_prevention",
+    "qvct",
+    "work_transformations",
+    "social_dialogue"
+  ],
+  "existing_state": {
+    "connector_platform_contract": true,
+    "architecture_only": true,
+    "enabled_by_default": false,
+    "metadata_only": true,
+    "classification_components": true,
+    "http_transport_components_present": true,
+    "http_transport_enabled_by_default": false,
+    "document_registry_identity": false,
+    "document_registry_sync": false,
+    "common_sync_events": false
+  },
+  "reference_architecture": {
+    "primary": "france_chimie",
+    "primary_reason": "Most recent strict offline metadata, inactive-domain, stable identity and Document Registry synchronization pattern",
+    "secondary": [
+      {
+        "connector": "inrs",
+        "reuse": "bounded injected metadata discovery, taxonomy and deduplication"
+      },
+      {
+        "connector": "carsat",
+        "reuse": "minimal deterministic synchronization and event semantics"
+      }
+    ],
+    "existing_anact_transport_reuse": "forbidden_until_separate_audit"
+  },
+  "potential_domain_policy": {
+    "repository_declared_candidate": "www.anact.fr",
+    "alias_candidate_pending_review": "anact.fr",
+    "active_domains": [],
+    "wildcard_subdomains_allowed": false,
+    "regional_paths_pending_individual_review": true,
+    "regional_domains_pending_individual_review": true,
+    "external_link_domains_allowed": false
+  },
+  "document_categories": [
+    "guide",
+    "study",
+    "practical_sheet",
+    "tool",
+    "thematic_dossier",
+    "regional_publication"
+  ],
+  "recommended_modules": [
+    {
+      "module": "__init__.py",
+      "responsibility": "minimal public API without implicit transport imports"
+    },
+    {
+      "module": "anact_catalog.py",
+      "responsibility": "document families, themes, domain candidates and inactive allowlist"
+    },
+    {
+      "module": "anact_contract.py",
+      "responsibility": "metadata-only contract, Document Registry port and disabled facade"
+    },
+    {
+      "module": "anact_models.py",
+      "responsibility": "national and regional typed metadata"
+    },
+    {
+      "module": "anact_platform.py",
+      "responsibility": "single inactive Connector Platform composition"
+    },
+    {
+      "module": "anact_metadata.py",
+      "responsibility": "strict injected metadata validation and canonicalization"
+    },
+    {
+      "module": "anact_discovery.py",
+      "responsibility": "bounded deterministic local discovery"
+    },
+    {
+      "module": "anact_sync.py",
+      "responsibility": "public Document Registry synchronization"
+    }
+  ],
+  "recommended_contract": {
+    "state": "ARCHITECTURE_ONLY",
+    "enabled": false,
+    "document_policy": "METADATA_ONLY",
+    "license": "DOCUMENT_SPECIFIC",
+    "network_disabled_by_default": true,
+    "content_collection_allowed": false,
+    "html_storage_allowed": false,
+    "pdf_storage_allowed": false,
+    "text_indexing_allowed": false,
+    "download_allowed": false,
+    "scraping_allowed": false,
+    "citation_required": true,
+    "provenance_required": true,
+    "https_required": true
+  },
+  "identity": {
+    "function": "stable_document_id",
+    "connector_name": "anact",
+    "material": "canonical_url",
+    "formula": "stable_document_id('anact', canonical_url)",
+    "canonicalization_required_before_hash": true,
+    "regional_metadata_excluded_from_id": true,
+    "reference_excluded_from_id": true,
+    "redirect_preserves_id_when_continuity_is_validated": true
+  },
+  "sync_events": [
+    "NEW",
+    "UPDATED",
+    "REMOVED",
+    "REDIRECTED",
+    "UNCHANGED"
+  ],
+  "document_registry": {
+    "public_import": "automation.official_knowledge.document_registry",
+    "allowed_types": [
+      "ChangeKind",
+      "DocumentRecord",
+      "DocumentRegistry",
+      "DocumentStatus",
+      "DocumentStorage",
+      "DocumentValidator"
+    ],
+    "allowed_function": "stable_document_id",
+    "allowed_operations": [
+      "register_document",
+      "update_document",
+      "mark_removed",
+      "find_document",
+      "find_by_connector"
+    ],
+    "private_access_allowed": false,
+    "global_registry_allowed": false,
+    "document_cache_allowed": false
+  },
+  "risk_matrix": [
+    {
+      "risk": "anact_aract_attribution",
+      "control": "explicit producer, national_or_regional scope and aract metadata"
+    },
+    {
+      "risk": "regional_domains",
+      "control": "exact per-domain validation; no wildcard or implicit inheritance"
+    },
+    {
+      "risk": "external_redirects",
+      "control": "fail closed unless source and target are explicitly allowed"
+    },
+    {
+      "risk": "national_regional_duplicates",
+      "control": "canonicalize first, reject conflicting duplicates and keep distinct URLs distinct"
+    },
+    {
+      "risk": "reuse_rights",
+      "control": "DOCUMENT_SPECIFIC and metadata only pending legal review"
+    },
+    {
+      "risk": "archived_content",
+      "control": "separate archive, removal and redirect states"
+    },
+    {
+      "risk": "external_resources",
+      "control": "do not ingest third-party links as ANACT documents"
+    },
+    {
+      "risk": "unstable_urls",
+      "control": "deterministic canonicalization and explicit identity-query policy"
+    },
+    {
+      "risk": "personal_or_confidential_data",
+      "control": "synthetic fixtures, metadata allowlist and forbidden content fields"
+    },
+    {
+      "risk": "legacy_http_transports",
+      "control": "keep isolated, disabled and excluded from official imports until separate audit"
+    }
+  ],
+  "forbidden_in_initial_lots": [
+    "network_access",
+    "http_client",
+    "scraping",
+    "download",
+    "content_storage",
+    "pdf_processing",
+    "html_extraction",
+    "text_indexing",
+    "shared_component_change",
+    "implicit_transport_import"
+  ],
+  "recommended_sequence": [
+    "LOT_1_HARMONIZE_EXISTING_ARCHITECTURE_AND_ISOLATE_TRANSPORTS",
+    "LOT_2_INJECTED_METADATA_AND_STABLE_IDENTITY",
+    "LOT_3_DOCUMENT_REGISTRY_SYNCHRONIZATION",
+    "LOT_4_SEPARATE_LEGACY_TRANSPORT_AUDIT",
+    "EXPLICIT_ACTIVATION_REVIEW"
+  ],
+  "decision": {
+    "shared_component_change_required": false,
+    "new_package_creation_required": false,
+    "existing_package_harmonization_required": true,
+    "ready_for_offline_harmonization_lot": true,
+    "ready_for_network_activation": false
+  }
+}
