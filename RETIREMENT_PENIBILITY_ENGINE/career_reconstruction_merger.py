@@ -12,6 +12,7 @@ from .career_reconstruction_models import (
     ReconstructionStatus,
 )
 from .document_resolution import DocumentResolutionStrategy
+from .document_resolution_models import FactResolutionStatus
 
 
 _CONFLICT_BY_FIELD = {
@@ -42,6 +43,7 @@ class CareerReconstructionMerger:
         merged = []
         alternatives = []
         conflicts = []
+        resolutions = []
         provenance = tuple(dict.fromkeys(item for record in records for item in record.provenance))
         for key in keys:
             values = tuple(
@@ -50,7 +52,9 @@ class CareerReconstructionMerger:
                 if not self._unknown(dict(record.values).get(key))
             )
             unique = tuple(dict.fromkeys(values))
-            merged.append((key, unique[0] if unique else None))
+            resolution = self._resolution_strategy.resolve(key, records)
+            resolutions.append(resolution)
+            merged.append((key, resolution.selected_value))
             if len(unique) > 1:
                 alternatives.append((key, unique))
                 conflict_type = _CONFLICT_BY_FIELD.get(key, ReconstructionConflictType.PROVENANCE_CONFLICT)
@@ -64,7 +68,16 @@ class CareerReconstructionMerger:
                         f"Conflicting values retained for {key}.",
                     )
                 )
-        status = ReconstructionStatus.PARTIALLY_MERGED if conflicts else ReconstructionStatus.MERGED
+        unresolved = {
+            FactResolutionStatus.CONFLICT,
+            FactResolutionStatus.UNSUPPORTED_FACT_TYPE,
+        }
+        if any(item.status in unresolved for item in resolutions):
+            status = ReconstructionStatus.CONFLICTED
+        elif conflicts:
+            status = ReconstructionStatus.PARTIALLY_MERGED
+        else:
+            status = ReconstructionStatus.MERGED
         result = ReconstructionMerge(
             "merge:" + ":".join(record.record_id for record in records),
             tuple(record.record_id for record in records),
@@ -73,6 +86,7 @@ class CareerReconstructionMerger:
             provenance,
             status,
             tuple(record.record_id for record in records),
+            tuple(resolutions),
         )
         return result, tuple(conflicts)
 

@@ -59,7 +59,8 @@ class ConnectorFoundation(Generic[SourceT, ValidationT, ConversionT]):
     def convert_validated(self, source: SourceT, error_message: str) -> ConversionT:
         if not self.validate(source).valid:
             raise ValueError(error_message)
-        self.assert_safe(source)
+        # ``convert`` is the single shared Privacy Gate boundary. Calling
+        # ``assert_safe`` here as well inspected every validated source twice.
         return self.convert(source)
 
     def prepare_reconstruction(

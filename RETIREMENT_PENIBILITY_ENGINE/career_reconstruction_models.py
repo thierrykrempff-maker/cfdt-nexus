@@ -8,6 +8,7 @@ from enum import Enum
 from .career_evidence_models import EvidenceBundle
 from .career_import_models import ImportBatch, ImportProvenance
 from .career_timeline_models import CareerTimeline
+from .document_resolution_models import FactResolution
 
 
 class ReconstructionStatus(str, Enum):
@@ -147,6 +148,7 @@ class ReconstructionMerge:
     provenance: tuple[ImportProvenance, ...]
     status: ReconstructionStatus
     resolution_order: tuple[str, ...] = ()
+    fact_resolutions: tuple[FactResolution, ...] = ()
 
 
 @dataclass(frozen=True)
