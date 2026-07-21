@@ -34,6 +34,7 @@ from .career_import_normalizer import CareerImportNormalizer
 from .career_import_report import CareerImportReportBuilder
 from .career_import_validator import CareerImportValidator
 from .career_timeline_models import CareerEvent, CareerEventType, CareerTimeline, EvidenceLevel
+from .privacy_gate import RetirementPrivacyGate, require_privacy_gate
 
 
 class CareerImportEngine:
@@ -44,23 +45,30 @@ class CareerImportEngine:
         validator: CareerImportValidator | None = None,
         normalizer: CareerImportNormalizer | None = None,
         report_builder: CareerImportReportBuilder | None = None,
+        privacy_gate=RetirementPrivacyGate(),
     ) -> None:
         self._validator = validator or CareerImportValidator()
         self._normalizer = normalizer or CareerImportNormalizer()
         self._report_builder = report_builder or CareerImportReportBuilder()
+        self._privacy_gate = privacy_gate
 
     def create_import_batch(
         self, batch_id: str, documents=(), records=()
     ) -> ImportBatch:
-        return ImportBatch(batch_id, tuple(documents), tuple(records))
+        batch = ImportBatch(batch_id, tuple(documents), tuple(records))
+        self._assert_private(batch)
+        return batch
 
     def validate_batch(self, batch: ImportBatch) -> ImportValidation:
+        self._assert_private(batch)
         return self._validator.validate(batch)
 
     def normalize_batch(self, batch: ImportBatch) -> tuple[ImportNormalization, ...]:
+        self._assert_private(batch)
         return self._normalizer.normalize(batch)
 
     def detect_conflicts(self, batch: ImportBatch) -> tuple[ImportConflict, ...]:
+        self._assert_private(batch)
         conflicts: list[ImportConflict] = []
         records = batch.records
         for index, left in enumerate(records):
@@ -110,6 +118,7 @@ class CareerImportEngine:
         normalizations: tuple[ImportNormalization, ...],
         conflicts: tuple[ImportConflict, ...],
     ) -> ImportSummary:
+        self._assert_private(batch)
         if conflicts:
             status = ImportStatus.CONFLICTED
         elif validation.valid:
@@ -134,6 +143,7 @@ class CareerImportEngine:
         conflicts: tuple[ImportConflict, ...],
         view: ImportReportView,
     ) -> ImportReport:
+        self._assert_private(batch)
         summary = self.build_import_summary(batch, validation, normalizations, conflicts)
         recommendations = self._recommendations(validation, conflicts)
         return self._report_builder.build(
@@ -145,6 +155,7 @@ class CareerImportEngine:
         batch: ImportBatch,
         normalizations: tuple[ImportNormalization, ...],
     ) -> CareerTimeline:
+        self._assert_private(batch)
         normalized = {item.record_id: dict(item.normalized_values) for item in normalizations}
         events: list[CareerEvent] = []
         for record in batch.records:
@@ -175,6 +186,7 @@ class CareerImportEngine:
         )
 
     def prepare_evidence_records(self, batch: ImportBatch) -> EvidenceBundle:
+        self._assert_private(batch)
         evidence_items: list[CareerEvidenceItem] = []
         confidence_map = {
             "UNKNOWN": EvidenceConfidenceLevel.UNKNOWN,
@@ -227,6 +239,9 @@ class CareerImportEngine:
             if left.evidence_id == right.evidence_id and (left.reference, left.status) != (right.reference, right.status):
                 return ImportConflictType.CONTRADICTORY_EVIDENCE
         return None
+
+    def _assert_private(self, batch: ImportBatch) -> None:
+        require_privacy_gate(self._privacy_gate).assert_safe(batch)
 
     @staticmethod
     def _recommendations(validation, conflicts):

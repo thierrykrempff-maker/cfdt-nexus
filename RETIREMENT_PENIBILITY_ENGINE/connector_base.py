@@ -14,6 +14,7 @@ from .connector_contract import (
     ConnectorValidator,
     CareerImportPipelineCoordinator,
 )
+from .privacy_gate import RetirementPrivacyGate, require_privacy_gate
 
 
 SourceT = TypeVar("SourceT")
@@ -38,20 +39,24 @@ class ConnectorFoundation(Generic[SourceT, ValidationT, ConversionT]):
         validator: ConnectorValidator[SourceT, ValidationT],
         converter: ConnectorConverter[SourceT, ConversionT],
         import_pipeline: CareerImportPipelineCoordinator,
+        privacy_gate=RetirementPrivacyGate(),
     ) -> None:
         self._validator = validator
         self._converter = converter
         self._import_pipeline = import_pipeline
+        self._privacy_gate = privacy_gate
 
     def validate(self, source: SourceT) -> ValidationT:
         return self._validator.validate(source)
 
     def convert(self, source: SourceT) -> ConversionT:
+        require_privacy_gate(self._privacy_gate).assert_safe(source)
         return self._converter.convert(source)
 
     def convert_validated(self, source: SourceT, error_message: str) -> ConversionT:
         if not self.validate(source).valid:
             raise ValueError(error_message)
+        require_privacy_gate(self._privacy_gate).assert_safe(source)
         return self.convert(source)
 
     def prepare_reconstruction(

@@ -26,6 +26,7 @@ from .potential_rights_models import (
 )
 from .potential_rights_report import PotentialRightsReportBuilder
 from .potential_rights_scoring import CaseMaturityScorer
+from .privacy_gate import RetirementPrivacyGate, require_privacy_gate
 
 
 _CATEGORY_MAP = {
@@ -54,10 +55,12 @@ class PotentialRightsEngine:
         scorer: CaseMaturityScorer | None = None,
         report_builder: PotentialRightsReportBuilder | None = None,
         timeline_validator: CareerTimelineValidator | None = None,
+        privacy_gate=RetirementPrivacyGate(),
     ) -> None:
         self._scorer = scorer or CaseMaturityScorer()
         self._report_builder = report_builder or PotentialRightsReportBuilder()
         self._timeline_validator = timeline_validator or CareerTimelineValidator()
+        self._privacy_gate = privacy_gate
 
     def create_context(
         self,
@@ -67,6 +70,9 @@ class PotentialRightsEngine:
         knowledge_context,
         reasoning_report,
     ) -> PotentialRightsContext:
+        require_privacy_gate(self._privacy_gate).assert_safe(
+            (timeline, evidence_bundle, knowledge_context, reasoning_report)
+        )
         return PotentialRightsContext(
             context_id,
             timeline,
@@ -195,6 +201,7 @@ class PotentialRightsEngine:
         )
 
     def analyze(self, context: PotentialRightsContext) -> PotentialRightsAnalysis:
+        require_privacy_gate(self._privacy_gate).assert_safe(context)
         rights = self.identify_potential_rights(context)
         maturity = self.calculate_case_maturity(context)
         missing = self.identify_missing_requirements(context)
@@ -208,6 +215,7 @@ class PotentialRightsEngine:
         analysis: PotentialRightsAnalysis,
         view: PotentialRightsReportView,
     ) -> PotentialRightsReport:
+        require_privacy_gate(self._privacy_gate).assert_safe((context, analysis))
         return self._report_builder.build(context, analysis, view)
 
     def _build_indicators(

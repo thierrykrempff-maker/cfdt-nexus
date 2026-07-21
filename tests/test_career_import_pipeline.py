@@ -196,7 +196,7 @@ def test_pipeline_requires_provenance():
 
 
 def test_pipeline_rejects_real_documents():
-    with pytest.raises(ValueError, match="synthetic metadata only"):
+    with pytest.raises(ValueError, match="PRIVACY_SYNTHETIC_REQUIRED"):
         CareerImportPipeline().validate_for_reconstruction(
             replace(valid_batch(), synthetic_only=False)
         )

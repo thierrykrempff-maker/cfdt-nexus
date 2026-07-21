@@ -39,6 +39,7 @@ from .career_reconstruction_models import (
 )
 from .career_reconstruction_report import CareerReconstructionReportBuilder
 from .career_reconstruction_validator import CareerReconstructionValidator
+from .privacy_gate import RetirementPrivacyGate, require_privacy_gate
 
 
 class CareerReconstructionEngine:
@@ -50,11 +51,13 @@ class CareerReconstructionEngine:
         merger: CareerReconstructionMerger | None = None,
         validator: CareerReconstructionValidator | None = None,
         report_builder: CareerReconstructionReportBuilder | None = None,
+        privacy_gate=RetirementPrivacyGate(),
     ) -> None:
         self._matcher = matcher or CareerReconstructionMatcher()
         self._merger = merger or CareerReconstructionMerger()
         self._validator = validator or CareerReconstructionValidator()
         self._report_builder = report_builder or CareerReconstructionReportBuilder()
+        self._privacy_gate = privacy_gate
 
     def create_reconstruction_context(
         self,
@@ -63,6 +66,8 @@ class CareerReconstructionEngine:
         existing_timeline=None,
         existing_evidence=None,
     ) -> ReconstructionContext:
+        values = (request, existing_timeline, existing_evidence)
+        require_privacy_gate(self._privacy_gate).assert_safe(values)
         return ReconstructionContext(context_id, request, (), existing_timeline, existing_evidence)
 
     def add_import_batch(
@@ -70,6 +75,7 @@ class CareerReconstructionEngine:
     ) -> ReconstructionContext:
         if type(batch) is not ImportBatch:
             raise TypeError("Career reconstruction accepts ImportBatch only.")
+        require_privacy_gate(self._privacy_gate).assert_safe((context, batch))
         if batch.status is not ImportStatus.VALIDATED:
             raise ValueError(
                 "ImportBatch must be validated by Career Import before reconstruction."
@@ -170,6 +176,7 @@ class CareerReconstructionEngine:
     def build_reconstruction_proposal(
         self, context: ReconstructionContext
     ) -> ReconstructionProposal:
+        require_privacy_gate(self._privacy_gate).assert_safe(context)
         records = self._records(context)
         matches = self.match_records(context)
         merges = self.merge_compatible_records(context)
@@ -251,9 +258,11 @@ class CareerReconstructionEngine:
         proposal: ReconstructionProposal,
         view: ReconstructionReportView,
     ) -> ReconstructionReport:
+        require_privacy_gate(self._privacy_gate).assert_safe((context, proposal))
         return self._report_builder.build(context, proposal, view)
 
     def _records(self, context: ReconstructionContext) -> tuple[ReconstructionRecord, ...]:
+        require_privacy_gate(self._privacy_gate).assert_safe(context)
         return tuple(self._to_record(record) for batch in context.import_batches for record in batch.records)
 
     def _to_record(self, record) -> ReconstructionRecord:

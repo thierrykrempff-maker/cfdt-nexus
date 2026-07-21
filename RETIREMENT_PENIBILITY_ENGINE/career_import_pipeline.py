@@ -17,6 +17,7 @@ from .career_reconstruction_models import (
     ReconstructionProposal,
     ReconstructionRequest,
 )
+from .privacy_gate import RetirementPrivacyGate, require_privacy_gate
 
 
 CAREER_IMPORT_PIPELINE_STAGES = (
@@ -32,9 +33,15 @@ CAREER_IMPORT_PIPELINE_STAGES = (
 class CareerImportPipeline:
     """Validate connector metadata before delegating reconstruction."""
 
-    def __init__(self, import_engine=None, reconstruction_engine=None) -> None:
+    def __init__(
+        self,
+        import_engine=None,
+        reconstruction_engine=None,
+        privacy_gate=RetirementPrivacyGate(),
+    ) -> None:
         self._import = import_engine or CareerImportEngine()
         self._reconstruction = reconstruction_engine or CareerReconstructionEngine()
+        self._privacy_gate = privacy_gate
 
     def create_reconstruction_context(
         self,
@@ -66,6 +73,7 @@ class CareerImportPipeline:
 
         if type(batch) is not ImportBatch:
             raise TypeError("Career reconstruction accepts ImportBatch only.")
+        require_privacy_gate(self._privacy_gate).assert_safe(batch)
         if not batch.synthetic_only:
             raise ValueError("Career reconstruction accepts synthetic metadata only.")
         self._require_provenance(batch)
