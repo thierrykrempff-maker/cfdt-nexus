@@ -7,6 +7,7 @@ from typing import Any
 
 from .models import RuntimeCoreIntegrationResult, RuntimeMode
 from .cse_memory_runtime import RuntimeCSEMemoryMode, RuntimeCSEMemoryResult
+from .retirement_runtime import RuntimeRetirementMode, RuntimeRetirementResult
 
 
 class RuntimeCoreReportMapper:
@@ -57,5 +58,30 @@ class RuntimeCSEMemoryReportMapper:
             "NEXUS_CORE/orchestration: PipelineExecutor",
             "automation/orchestrator_common/orchestrator.py: CommonExpertOrchestrator",
         ])
+        result["generated_from"] = list(dict.fromkeys(generated))
+        return result
+
+
+class RuntimeRetirementReportMapper:
+    """Append a bounded non-decisional summary; fallback preserves identity."""
+
+    def map(self, report: dict[str, Any], integration: RuntimeRetirementResult) -> dict[str, Any]:
+        if integration.mode is not RuntimeRetirementMode.SUCCEEDED:
+            return report
+        result = deepcopy(report)
+        sections = list(result.get("sections") or ())
+        sections.append({
+            "id": "retirement_runtime",
+            "title": "Retraite et pénibilité",
+            "items": list(integration.report_items),
+        })
+        result["sections"] = sections
+        generated = list(result.get("generated_from") or ())
+        generated.extend((
+            "Retirement Domain",
+            "Retirement Adapter",
+            "Nexus Core V3",
+            "Common Expert Orchestrator",
+        ))
         result["generated_from"] = list(dict.fromkeys(generated))
         return result

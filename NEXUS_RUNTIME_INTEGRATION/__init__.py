@@ -1,6 +1,11 @@
 """Progressive, fail-safe bridge from the historical Runtime to Nexus Core V3."""
 
-from .config import RuntimeCSEMemoryConfig, RuntimeConnectorConfig, RuntimeIntegrationConfig
+from .config import (
+    RuntimeCSEMemoryConfig,
+    RuntimeConnectorConfig,
+    RuntimeIntegrationConfig,
+    RuntimeRetirementConfig,
+)
 from .connector_mapper import RuntimeConnectorMappingResult, RuntimeConnectorPayloadMapper
 from .integration import RuntimeCoreIntegration
 from .mappers import RuntimeExpertPayloadMapper
@@ -18,6 +23,14 @@ from .cse_memory_runtime import (
     RuntimeCSEMemoryResult,
 )
 from .report_mapper import RuntimeCSEMemoryReportMapper
+from .retirement_runtime import (
+    RuntimeRetirementDiagnostics,
+    RuntimeRetirementIntegration,
+    RuntimeRetirementMode,
+    RuntimeRetirementResult,
+    needs_retirement,
+)
+from .report_mapper import RuntimeRetirementReportMapper
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -37,4 +50,11 @@ __all__ = (
     "RuntimeExpertPayloadMapper",
     "RuntimeIntegrationConfig",
     "RuntimeMode",
+    "RuntimeRetirementConfig",
+    "RuntimeRetirementDiagnostics",
+    "RuntimeRetirementIntegration",
+    "RuntimeRetirementMode",
+    "RuntimeRetirementReportMapper",
+    "RuntimeRetirementResult",
+    "needs_retirement",
 )

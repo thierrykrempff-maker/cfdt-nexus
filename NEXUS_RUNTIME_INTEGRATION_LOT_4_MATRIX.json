@@ -1,0 +1,43 @@
+{
+  "lot": "RUNTIME_INTEGRATION_LOT_4",
+  "domain": "retirement_penibility",
+  "feature_flag": {
+    "name": "NEXUS_RETIREMENT_RUNTIME_ENABLED",
+    "default": false
+  },
+  "runtime_path": [
+    "router",
+    "retirement_runtime",
+    "retirement_adapter",
+    "pipeline_executor",
+    "common_expert_orchestrator",
+    "report_mapper"
+  ],
+  "diagnostics": [
+    "retirement_called",
+    "retirement_runtime_ms",
+    "retirement_elements_used",
+    "retirement_fallback"
+  ],
+  "fallback_preserves_historical_report": true,
+  "calculations": {
+    "retirement_date": false,
+    "quarters": false,
+    "pension": false,
+    "c2p_points": false
+  },
+  "privacy": {
+    "disk_paths_exposed": false,
+    "raw_documents_exposed": false,
+    "internal_identifiers_exposed": false,
+    "exception_messages_exposed": false
+  },
+  "out_of_scope": [
+    "social_protection",
+    "cssct",
+    "new_connector",
+    "new_api",
+    "new_corpus",
+    "business_rule_change"
+  ]
+}

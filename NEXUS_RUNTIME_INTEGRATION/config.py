@@ -12,6 +12,7 @@ CORE_RUNTIME_ENV = "NEXUS_CORE_RUNTIME_ENABLED"
 CONNECTOR_RUNTIME_ENV = "NEXUS_CONNECTOR_RUNTIME_ENABLED"
 CSE_MEMORY_RUNTIME_ENV = "NEXUS_CSE_MEMORY_RUNTIME_ENABLED"
 CSE_MEMORY_ROOT_ENV = "NEXUS_CSE_MEMORY_PROCESSED_ROOT"
+RETIREMENT_RUNTIME_ENV = "NEXUS_RETIREMENT_RUNTIME_ENABLED"
 _TRUE_VALUES = frozenset({"1", "true", "yes", "on"})
 _FALSE_VALUES = frozenset({"", "0", "false", "no", "off"})
 
@@ -73,3 +74,18 @@ class RuntimeCSEMemoryConfig:
     def __post_init__(self) -> None:
         if self.max_documents < 1 or self.max_chunks < 1:
             raise ValueError("CSE Memory limits must be positive")
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeRetirementConfig:
+    """Independent, fail-safe switch for the Retirement Runtime bridge."""
+
+    enabled: bool = False
+
+    @classmethod
+    def from_env(
+        cls, environ: Mapping[str, str] | None = None
+    ) -> "RuntimeRetirementConfig":
+        source = os.environ if environ is None else environ
+        enabled = str(source.get(RETIREMENT_RUNTIME_ENV, "")).strip().lower() in _TRUE_VALUES
+        return cls(enabled)
