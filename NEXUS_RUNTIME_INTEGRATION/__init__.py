@@ -4,6 +4,7 @@ from .config import (
     RuntimeCSEMemoryConfig,
     RuntimeConnectorConfig,
     RuntimeIntegrationConfig,
+    RuntimeOfficialConnectorsConfig,
     RuntimeProtectionSocialeConfig,
     RuntimeRetirementConfig,
 )
@@ -46,6 +47,11 @@ from .protection_sociale_runtime import (
     needs_protection_sociale,
 )
 from .report_mapper import RuntimeProtectionSocialeReportMapper
+from .official_connectors_runtime import (
+    RuntimeOfficialConnectorsDiagnostics,
+    RuntimeOfficialConnectorsIntegration,
+    RuntimeOfficialConnectorsResult,
+)
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -64,6 +70,10 @@ __all__ = (
     "RuntimeCSEMemoryResult",
     "RuntimeExpertPayloadMapper",
     "RuntimeIntegrationConfig",
+    "RuntimeOfficialConnectorsConfig",
+    "RuntimeOfficialConnectorsDiagnostics",
+    "RuntimeOfficialConnectorsIntegration",
+    "RuntimeOfficialConnectorsResult",
     "RuntimeMode",
     "ProtectionSocialeMetadataDocument",
     "ProtectionSocialeSearchResult",
