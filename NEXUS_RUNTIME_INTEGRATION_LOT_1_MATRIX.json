@@ -1,0 +1,66 @@
+{
+  "lot": "NEXUS_RUNTIME_INTEGRATION_LOT_1",
+  "feature_flag": {
+    "name": "NEXUS_CORE_RUNTIME_ENABLED",
+    "default": false,
+    "invalid_value_policy": "disabled"
+  },
+  "components": [
+    {"name": "local_server", "path": "apps/nexus-local-interface/server.py", "status": "integrated"},
+    {"name": "assistant_ds_router", "status": "preserved"},
+    {"name": "juriste_travail", "status": "mapped_minimally"},
+    {"name": "expert_paie", "status": "adapted"},
+    {"name": "PayrollAdapter", "path": "NEXUS_ADAPTERS/payroll", "status": "runtime_called"},
+    {"name": "Nexus_Core_V3", "status": "runtime_called"},
+    {"name": "CommonExpertOrchestrator", "path": "automation/orchestrator_common", "status": "runtime_called"},
+    {"name": "historical_report_generator", "status": "preserved"}
+  ],
+  "runtime_paths": {
+    "legacy": ["question", "local_server", "assistant_ds_router", "historical_experts", "historical_report"],
+    "core_v3": ["question", "local_server", "assistant_ds_router", "juriste_and_paie", "runtime_mappers", "PayrollAdapter", "Nexus_Core_V3", "CommonExpertOrchestrator", "historical_report_plus_core_section"],
+    "core_v3_fallback": ["question", "historical_runtime", "core_attempt", "safe_diagnostic", "unchanged_historical_report"]
+  },
+  "scenarios": [
+    "legal_only",
+    "payroll_only",
+    "legal_and_payroll",
+    "classification_with_payroll_impact",
+    "unpaid_overtime",
+    "incorrect_bonus",
+    "forced_core_failure",
+    "malformed_payroll_payload",
+    "core_disabled",
+    "diagnostic_confidentiality"
+  ],
+  "fallbacks": [
+    "RUNTIME_QUESTION_MISSING",
+    "RUNTIME_PAYROLL_PAYLOAD_MALFORMED",
+    "RUNTIME_LEGAL_PAYLOAD_MALFORMED",
+    "NO_RUNTIME_EXPERT_PAYLOAD",
+    "PAYROLL_EXPERT_UNAVAILABLE",
+    "PAYROLL_ADAPTER_FAILED",
+    "CORE_PIPELINE_FAILED",
+    "COMMON_ORCHESTRATION_FAILED",
+    "CORE_RUNTIME_INTEGRATION_FAILED"
+  ],
+  "tests": {
+    "unit": "tests/test_runtime_core_mappers.py",
+    "integration": "tests/test_runtime_core_integration.py",
+    "report_and_confidentiality": "tests/test_runtime_core_report_and_confidentiality.py",
+    "real_server_path": "tests/test_runtime_core_server_integration.py"
+  },
+  "compatibility": {
+    "legacy_default": true,
+    "historical_payload_preserved_on_fallback": true,
+    "core_contracts_modified": false,
+    "experts_modified": false,
+    "router_modified": false
+  },
+  "remaining_breaks": [
+    "retirement_not_connected",
+    "cse_memory_not_connected",
+    "social_protection_not_connected",
+    "official_connectors_not_connected",
+    "connector_adapter_not_connected_to_remote_calls"
+  ]
+}

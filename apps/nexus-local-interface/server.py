@@ -31,6 +31,12 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(EXPERTS_DIR))
 from experts import orchestrator, report_generator  # noqa: E402
 from employee_case_demo import build_demo_payload, public_scenarios  # noqa: E402
+from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
+    RuntimeCoreIntegration,
+    RuntimeCoreIntegrationInput,
+    RuntimeCoreReportMapper,
+    RuntimeIntegrationConfig,
+)
 
 
 def router_environment() -> dict[str, str]:
@@ -81,7 +87,17 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         "answer": answer,
         **expert_payload,
     }
-    payload["analysis_report"] = report_generator.build_report(payload)
+    integration = RuntimeCoreIntegration(RuntimeIntegrationConfig.from_env()).integrate(
+        RuntimeCoreIntegrationInput(
+            answer=answer,
+            legal_payload=payload.get("expert_juriste"),
+            payroll_payload=payload.get("expert_paie"),
+            historical_orchestration=payload.get("orchestration") or {},
+        )
+    )
+    payload["runtime_integration"] = integration.to_dict()
+    historical_report = report_generator.build_report(payload)
+    payload["analysis_report"] = RuntimeCoreReportMapper().map(historical_report, integration)
     return payload
 
 
