@@ -37,6 +37,9 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreReportMapper,
     RuntimeConnectorConfig,
     RuntimeConnectorPayloadMapper,
+    RuntimeCSEMemoryConfig,
+    RuntimeCSEMemoryIntegration,
+    RuntimeCSEMemoryReportMapper,
     RuntimeIntegrationConfig,
 )
 
@@ -104,7 +107,13 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
     )
     payload["runtime_integration"] = integration.to_dict()
     historical_report = report_generator.build_report(payload)
-    payload["analysis_report"] = RuntimeCoreReportMapper().map(historical_report, integration)
+    core_report = RuntimeCoreReportMapper().map(historical_report, integration)
+    cse_config = RuntimeCSEMemoryConfig.from_env(
+        default_root=ROOT / "CCSEMEMORYENGINE" / "PROCESSED" / "LOT_1D"
+    )
+    cse_integration = RuntimeCSEMemoryIntegration(cse_config).integrate(answer)
+    payload["cse_memory_runtime"] = cse_integration.to_dict()
+    payload["analysis_report"] = RuntimeCSEMemoryReportMapper().map(core_report, cse_integration)
     return payload
 
 

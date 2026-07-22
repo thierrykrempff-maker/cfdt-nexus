@@ -6,6 +6,7 @@ from copy import deepcopy
 from typing import Any
 
 from .models import RuntimeCoreIntegrationResult, RuntimeMode
+from .cse_memory_runtime import RuntimeCSEMemoryMode, RuntimeCSEMemoryResult
 
 
 class RuntimeCoreReportMapper:
@@ -32,4 +33,29 @@ class RuntimeCoreReportMapper:
             markdown += "\n\n## Synthèse Nexus Core V3\n\n"
             markdown += "\n".join(f"- {item}" for item in integration.report_items)
             result["markdown"] = markdown
+        return result
+
+
+class RuntimeCSEMemoryReportMapper:
+    """Add only a bounded metadata summary; fallback returns the exact prior report."""
+
+    def map(self, report: dict[str, Any], integration: RuntimeCSEMemoryResult) -> dict[str, Any]:
+        if integration.mode is not RuntimeCSEMemoryMode.SUCCEEDED:
+            return report
+        result = deepcopy(report)
+        sections = list(result.get("sections") or ())
+        sections.append({
+            "id": "cse_memory_runtime",
+            "title": "Mémoire documentaire CSE",
+            "items": list(integration.report_items),
+        })
+        result["sections"] = sections
+        generated = list(result.get("generated_from") or ())
+        generated.extend([
+            "automation/cse_memory: LOT_1D prepared chunks",
+            "NEXUS_ADAPTERS/cse/adapter.py: CSEAdapter",
+            "NEXUS_CORE/orchestration: PipelineExecutor",
+            "automation/orchestrator_common/orchestrator.py: CommonExpertOrchestrator",
+        ])
+        result["generated_from"] = list(dict.fromkeys(generated))
         return result

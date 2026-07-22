@@ -1,0 +1,98 @@
+{
+  "lot": "NEXUS_RUNTIME_INTEGRATION_LOT_3",
+  "base_commit": "b0b1ac0c2f1f1782a85f070f0489448cdf0d5996",
+  "feature_flag": {
+    "name": "NEXUS_CSE_MEMORY_RUNTIME_ENABLED",
+    "default": false,
+    "root_override": "NEXUS_CSE_MEMORY_PROCESSED_ROOT"
+  },
+  "runtime_path": [
+    "local_server",
+    "assistant_ds_router",
+    "cse_documentary_detection",
+    "RuntimeCSEMemoryGateway",
+    "existing_LOT_1D_chunks",
+    "CSEAdapter",
+    "Nexus_Core_V3",
+    "CommonExpertOrchestrator",
+    "bounded_cse_report_section"
+  ],
+  "existing_components_used": [
+    "automation/cse_memory LOT_1D chunks",
+    "NEXUS_ADAPTERS.cse.CSEAdapter",
+    "NEXUS_CORE.orchestration.EngineRegistry",
+    "NEXUS_CORE.orchestration.ExecutionPlanner",
+    "NEXUS_CORE.orchestration.PipelineExecutor",
+    "automation.orchestrator_common.CommonExpertOrchestrator"
+  ],
+  "detection": {
+    "router_domains_reused": true,
+    "router_intents_reused": true,
+    "new_nlp_engine": false,
+    "closed_markers": [
+      "pv cse",
+      "ancien pv",
+      "decision cse",
+      "consultation",
+      "avis",
+      "reunion",
+      "ordre du jour",
+      "commission",
+      "historique",
+      "vote",
+      "resolution"
+    ]
+  },
+  "retrieval": {
+    "mode": "read_only_bounded_lexical_scan",
+    "source": "CCSEMEMORYENGINE/PROCESSED/LOT_1D/chunks",
+    "semantic_index_present": false,
+    "network": false,
+    "corpus_mutation": false,
+    "raw_document_exposure": false
+  },
+  "diagnostics": [
+    "enabled",
+    "called",
+    "document_count",
+    "chunk_count",
+    "duration_ms",
+    "adapter_called",
+    "core_pipeline_called",
+    "common_orchestrator_called",
+    "fallback_triggered",
+    "fallback_code"
+  ],
+  "fallbacks": [
+    "CSE_MEMORY_UNAVAILABLE",
+    "CSE_MEMORY_NO_MATCH",
+    "CSE_MEMORY_SEARCH_FAILED",
+    "CSE_MEMORY_ADAPTER_FAILED",
+    "CSE_MEMORY_CORE_FAILED",
+    "CSE_MEMORY_ORCHESTRATION_FAILED"
+  ],
+  "tests": [
+    "tests/test_runtime_cse_memory_search.py",
+    "tests/test_runtime_cse_memory_integration.py",
+    "tests/test_runtime_cse_memory_server_and_confidentiality.py"
+  ],
+  "excluded": [
+    "retirement",
+    "social_protection",
+    "cssct",
+    "new_connectors",
+    "new_experts",
+    "new_api",
+    "new_corpus",
+    "semantic_index",
+    "major_refactoring"
+  ],
+  "compatibility": {
+    "historical_report_preserved_on_fallback": true,
+    "corpus_modified": false,
+    "chunks_modified": false,
+    "import_pipeline_modified": false,
+    "core_contract_modified": false,
+    "cse_adapter_modified": false
+  }
+}
