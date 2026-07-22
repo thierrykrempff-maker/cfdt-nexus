@@ -6,9 +6,10 @@ from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import Callable
 
-from automation.contracts import ExpertReport
+from automation.contracts import ExpertReport, ReportStatus
 from automation.expert_facades import ExpertFacade, ExpertFacadeRegistry
 from automation.orchestrator_common import CommonExpertOrchestrator, OrchestrationRequest
+from NEXUS_ADAPTERS.connectors import ConnectorAdapterResult, GenericConnectorAdapter
 from NEXUS_ADAPTERS.payroll import PAYROLL_ADAPTATION, PayrollAdapter
 from NEXUS_CORE import EntityId, EntityReference
 from NEXUS_CORE.orchestration import (
@@ -66,6 +67,26 @@ class _RuntimeLegalCoreEngine:
         )
 
 
+class _RuntimeConnectorCoreEngine:
+    def __init__(self, result: ConnectorAdapterResult) -> None:
+        self._result = result
+        self.engine_id = EntityId(_stable("connector-engine", result.connector_id))
+
+    def execute(self, _context: ExecutionContext) -> ExecutionResult:
+        references = tuple(
+            [EntityId(item.document_id.value) for item in self._result.documents]
+            + [EntityId(item.evidence_id.value) for item in self._result.evidence]
+            + [EntityId(item.finding_id.value) for item in self._result.findings]
+        )
+        return ExecutionResult(
+            EntityId(_stable("connector-execution-result", self._result.connector_id)),
+            self.engine_id,
+            ExecutionStatus.SUCCEEDED,
+            (EngineCapability("CONNECTOR_SNAPSHOT_ADAPTATION"),),
+            references,
+        )
+
+
 class RuntimeCoreIntegration:
     """Run Core opportunistically and always preserve the historical response."""
 
@@ -84,7 +105,10 @@ class RuntimeCoreIntegration:
         if not self._config.enabled:
             return RuntimeCoreIntegrationResult(
                 RuntimeMode.LEGACY,
-                RuntimeCoreIntegrationDiagnostics(core_enabled=False),
+                RuntimeCoreIntegrationDiagnostics(
+                    core_enabled=False,
+                    connector_runtime_enabled=source.connector_runtime_enabled,
+                ),
             )
         try:
             return self._integrate_enabled(source)
@@ -93,6 +117,9 @@ class RuntimeCoreIntegration:
                 self._safe_fallback_code(exc),
                 legal_executed=self._payload_was_executed(source.legal_payload),
                 payroll_executed=self._payload_was_executed(source.payroll_payload),
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_fallback_triggered=source.connector_runtime_enabled,
+                connector_fallback_code=source.connector_mapping_fallback_code,
             )
 
     def _integrate_enabled(self, source: RuntimeCoreIntegrationInput) -> RuntimeCoreIntegrationResult:
@@ -103,13 +130,31 @@ class RuntimeCoreIntegration:
             source.legal_payload, source.answer, request.request_id, subject, timestamp
         )
         payroll_report = self._mapper.map_payroll(source.payroll_payload, request.request_id)
-        if legal is None and payroll_report is None:
-            return self._fallback("NO_RUNTIME_EXPERT_PAYLOAD")
+        connector_results, connector_fallback_code = self._adapt_connectors(source)
+        connector_adapter_called = (
+            source.connector_runtime_enabled
+            and bool(source.connector_inputs)
+            and not source.connector_mapping_fallback_code
+        )
+        if legal is None and payroll_report is None and not connector_results:
+            return self._fallback(
+                "NO_RUNTIME_EXPERT_PAYLOAD",
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
+            )
         if payroll_report is not None and payroll_report.status.value in {"FAILED", "REFUSED"}:
             return self._fallback(
                 "PAYROLL_EXPERT_UNAVAILABLE",
                 legal_executed=legal is not None,
                 payroll_executed=True,
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=len(source.connector_inputs),
+                connector_snapshot_count=len(source.connector_inputs),
+                connector_evidence_count=sum(len(item.evidence) for item in connector_results),
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
             )
 
         payroll_adapter = PayrollAdapter(payroll_report, subject, timestamp) if payroll_report else None
@@ -121,9 +166,18 @@ class RuntimeCoreIntegration:
                 legal_executed=legal is not None,
                 payroll_executed=payroll_report is not None,
                 payroll_adapter_called=True,
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=len(source.connector_inputs),
+                connector_snapshot_count=len(source.connector_inputs),
+                connector_evidence_count=sum(len(item.evidence) for item in connector_results),
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
             )
         try:
-            core_report = self._run_core(request.request_id, timestamp, legal, payroll_adapter)
+            core_report = self._run_core(
+                request.request_id, timestamp, legal, payroll_adapter, connector_results
+            )
         except Exception:
             return self._fallback(
                 "CORE_RUNTIME_INTEGRATION_FAILED",
@@ -131,6 +185,13 @@ class RuntimeCoreIntegration:
                 payroll_executed=payroll_report is not None,
                 payroll_adapter_called=payroll_adapter is not None,
                 core_pipeline_called=True,
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=len(source.connector_inputs),
+                connector_snapshot_count=len(source.connector_inputs),
+                connector_evidence_count=sum(len(item.evidence) for item in connector_results),
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
             )
         if core_report.summary.failed_count:
             return self._fallback(
@@ -139,9 +200,16 @@ class RuntimeCoreIntegration:
                 payroll_executed=payroll_report is not None,
                 payroll_adapter_called=payroll_adapter is not None,
                 core_pipeline_called=True,
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=len(source.connector_inputs),
+                connector_snapshot_count=len(source.connector_inputs),
+                connector_evidence_count=sum(len(item.evidence) for item in connector_results),
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
             )
         try:
-            common = self._run_common(request, legal, payroll_report)
+            common = self._run_common(request, legal, payroll_report, connector_results)
         except Exception:
             return self._fallback(
                 "COMMON_ORCHESTRATION_FAILED",
@@ -150,6 +218,13 @@ class RuntimeCoreIntegration:
                 payroll_adapter_called=payroll_adapter is not None,
                 core_pipeline_called=True,
                 common_orchestrator_called=True,
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=len(source.connector_inputs),
+                connector_snapshot_count=len(source.connector_inputs),
+                connector_evidence_count=sum(len(item.evidence) for item in connector_results),
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
             )
         if not common.reports:
             return self._fallback(
@@ -159,11 +234,27 @@ class RuntimeCoreIntegration:
                 payroll_adapter_called=payroll_adapter is not None,
                 core_pipeline_called=True,
                 common_orchestrator_called=True,
+                connector_runtime_enabled=source.connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=len(source.connector_inputs),
+                connector_snapshot_count=len(source.connector_inputs),
+                connector_evidence_count=sum(len(item.evidence) for item in connector_results),
+                connector_fallback_triggered=bool(connector_fallback_code),
+                connector_fallback_code=connector_fallback_code,
             )
 
         legal_artifacts = legal.artifacts if legal else RuntimeCoreArtifacts()
-        evidence_count = len(legal_artifacts.evidence) + (len(payroll_result.evidence) if payroll_result else 0)
-        finding_count = len(legal_artifacts.findings) + (len(payroll_result.findings) if payroll_result else 0)
+        connector_evidence_count = sum(len(item.evidence) for item in connector_results)
+        evidence_count = (
+            len(legal_artifacts.evidence)
+            + (len(payroll_result.evidence) if payroll_result else 0)
+            + connector_evidence_count
+        )
+        finding_count = (
+            len(legal_artifacts.findings)
+            + (len(payroll_result.findings) if payroll_result else 0)
+            + sum(len(item.findings) for item in connector_results)
+        )
         recommendation_count = len(legal_artifacts.recommendations) + (
             len(payroll_result.recommendations) if payroll_result else 0
         )
@@ -178,6 +269,13 @@ class RuntimeCoreIntegration:
             evidence_count=evidence_count,
             finding_count=finding_count,
             recommendation_count=recommendation_count,
+            connector_runtime_enabled=source.connector_runtime_enabled,
+            connector_adapter_called=connector_adapter_called,
+            connector_count=len(source.connector_inputs),
+            connector_snapshot_count=len(source.connector_inputs),
+            connector_evidence_count=connector_evidence_count,
+            connector_fallback_triggered=bool(connector_fallback_code),
+            connector_fallback_code=connector_fallback_code,
         )
         return RuntimeCoreIntegrationResult(
             RuntimeMode.CORE_V3,
@@ -191,10 +289,27 @@ class RuntimeCoreIntegration:
                 f"Preuves transmises : {evidence_count}.",
                 f"Constats transmis : {finding_count}.",
                 f"Recommandations transmises : {recommendation_count}.",
+                f"Connecteurs adaptés : {len(connector_results)}.",
+                f"Preuves connecteurs transmises : {connector_evidence_count}.",
             ),
         )
 
-    def _run_core(self, request_id, timestamp, legal: MappedLegalPayload | None, payroll_adapter):
+    @staticmethod
+    def _adapt_connectors(source):
+        if not source.connector_runtime_enabled or source.connector_mapping_fallback_code:
+            return (), source.connector_mapping_fallback_code
+        results = []
+        try:
+            for connector_input in source.connector_inputs:
+                results.append(GenericConnectorAdapter(connector_input).adapt())
+        except Exception:
+            return (), "CONNECTOR_ADAPTER_FAILED"
+        return tuple(results), None
+
+    def _run_core(
+        self, request_id, timestamp, legal: MappedLegalPayload | None, payroll_adapter,
+        connector_results=(),
+    ):
         registry = EngineRegistry()
         requested = []
         if legal is not None:
@@ -211,6 +326,18 @@ class RuntimeCoreIntegration:
                 payroll_adapter,
             )
             requested.append(PAYROLL_ADAPTATION)
+        connector_capability = EngineCapability("CONNECTOR_SNAPSHOT_ADAPTATION")
+        for result in connector_results:
+            engine = _RuntimeConnectorCoreEngine(result)
+            registry.register(
+                EngineDescriptor(
+                    engine.engine_id,
+                    f"RUNTIME_CONNECTOR_ADAPTER_{result.connector_id.upper()}",
+                    (connector_capability,),
+                ),
+                engine,
+            )
+            requested.append(connector_capability)
         plan_id = EntityId(_stable("core-plan", request_id))
         plan = ExecutionPlanner().plan(plan_id, registry, tuple(requested), timestamp)
         context = ExecutionContext(
@@ -223,7 +350,7 @@ class RuntimeCoreIntegration:
         return PipelineExecutor().execute(plan, registry, context, self._clock())
 
     @staticmethod
-    def _run_common(request, legal, payroll_report):
+    def _run_common(request, legal, payroll_report, connector_results=()):
         registry = ExpertFacadeRegistry()
         selected = []
         if legal is not None:
@@ -232,6 +359,23 @@ class RuntimeCoreIntegration:
         if payroll_report is not None:
             registry.register(_StaticReportFacade("paie", payroll_report))
             selected.append("paie")
+        for result in connector_results:
+            expert_id = f"connector_{result.connector_id}"
+            connector_report = ExpertReport(
+                report_id=_stable("connector-report", request.request_id, result.connector_id),
+                request_id=request.request_id,
+                producer=expert_id,
+                findings=(f"CONNECTOR_EVIDENCE_COUNT_{len(result.evidence)}",),
+                conclusions=("CONNECTOR_SNAPSHOT_ADAPTED",),
+                status=ReportStatus.COMPLETED,
+                metadata={
+                    "connector_id": result.connector_id,
+                    "evidence_count": len(result.evidence),
+                    "document_count": len(result.documents),
+                },
+            )
+            registry.register(_StaticReportFacade(expert_id, connector_report))
+            selected.append(expert_id)
         return CommonExpertOrchestrator(registry).execute(
             OrchestrationRequest(request, requested_experts=tuple(selected))
         )
@@ -245,6 +389,13 @@ class RuntimeCoreIntegration:
         payroll_adapter_called: bool = False,
         core_pipeline_called: bool = False,
         common_orchestrator_called: bool = False,
+        connector_runtime_enabled: bool = False,
+        connector_adapter_called: bool = False,
+        connector_count: int = 0,
+        connector_snapshot_count: int = 0,
+        connector_evidence_count: int = 0,
+        connector_fallback_triggered: bool = False,
+        connector_fallback_code: str | None = None,
     ) -> RuntimeCoreIntegrationResult:
         return RuntimeCoreIntegrationResult(
             RuntimeMode.CORE_V3_FALLBACK,
@@ -255,6 +406,13 @@ class RuntimeCoreIntegration:
                 payroll_adapter_called=payroll_adapter_called,
                 core_pipeline_called=core_pipeline_called,
                 common_orchestrator_called=common_orchestrator_called,
+                connector_runtime_enabled=connector_runtime_enabled,
+                connector_adapter_called=connector_adapter_called,
+                connector_count=connector_count,
+                connector_snapshot_count=connector_snapshot_count,
+                connector_evidence_count=connector_evidence_count,
+                connector_fallback_triggered=connector_fallback_triggered,
+                connector_fallback_code=connector_fallback_code,
                 fallback_triggered=True,
                 fallback_code=code,
             ),

@@ -1,6 +1,7 @@
 """Progressive, fail-safe bridge from the historical Runtime to Nexus Core V3."""
 
-from .config import RuntimeIntegrationConfig
+from .config import RuntimeConnectorConfig, RuntimeIntegrationConfig
+from .connector_mapper import RuntimeConnectorMappingResult, RuntimeConnectorPayloadMapper
 from .integration import RuntimeCoreIntegration
 from .mappers import RuntimeExpertPayloadMapper
 from .models import (
@@ -17,6 +18,9 @@ __all__ = (
     "RuntimeCoreIntegrationInput",
     "RuntimeCoreIntegrationResult",
     "RuntimeCoreReportMapper",
+    "RuntimeConnectorConfig",
+    "RuntimeConnectorMappingResult",
+    "RuntimeConnectorPayloadMapper",
     "RuntimeExpertPayloadMapper",
     "RuntimeIntegrationConfig",
     "RuntimeMode",

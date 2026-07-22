@@ -1,0 +1,84 @@
+{
+  "lot": "NEXUS_RUNTIME_INTEGRATION_LOT_2",
+  "base_commit": "9075800d60d645ff7628e6173b9d06751dd24a0f",
+  "feature_flags": {
+    "core": "NEXUS_CORE_RUNTIME_ENABLED",
+    "connectors": "NEXUS_CONNECTOR_RUNTIME_ENABLED",
+    "default_enabled": false
+  },
+  "runtime_path": [
+    "local_server",
+    "assistant_ds_router",
+    "historical_connector_results",
+    "RuntimeConnectorPayloadMapper",
+    "ConnectorResponseSnapshot",
+    "GenericConnectorAdapter",
+    "Nexus_Core_V3",
+    "CommonExpertOrchestrator",
+    "historical_report_plus_core_section"
+  ],
+  "connected": [
+    {
+      "connector_id": "legifrance",
+      "runtime_origin": "legifrance_code_travail",
+      "source_category": "LEGISLATION",
+      "status": "runtime_connected"
+    },
+    {
+      "connector_id": "judilibre",
+      "runtime_origin": "judilibre_jurisprudence",
+      "source_category": "CASE_LAW",
+      "status": "runtime_connected"
+    },
+    {
+      "connector_id": "cdtn",
+      "runtime_origin": "cdtn_pratique_officielle",
+      "source_category": "ADMINISTRATIVE_DOCTRINE",
+      "status": "runtime_connected"
+    }
+  ],
+  "waiting": [
+    {"connector_id": "carsat", "reason": "not_called_by_runtime_router"},
+    {"connector_id": "cnil", "reason": "not_called_by_runtime_router"},
+    {"connector_id": "inrs", "reason": "not_called_by_runtime_router"},
+    {"connector_id": "dreets_grand_est", "reason": "not_called_by_runtime_router"},
+    {"connector_id": "anact", "reason": "not_called_by_runtime_router"},
+    {"connector_id": "france_chimie", "reason": "not_called_by_runtime_router"}
+  ],
+  "excluded": [
+    "retirement",
+    "cse_memory",
+    "social_protection",
+    "cpam",
+    "cssct",
+    "new_interface",
+    "pdf_export",
+    "user_history"
+  ],
+  "diagnostics": [
+    "connector_runtime_enabled",
+    "connector_adapter_called",
+    "connector_count",
+    "connector_snapshot_count",
+    "connector_evidence_count",
+    "connector_fallback_triggered",
+    "connector_fallback_code"
+  ],
+  "fallbacks": {
+    "CONNECTOR_SNAPSHOT_MAPPING_FAILED": "preserve_historical_sources",
+    "CONNECTOR_ADAPTER_FAILED": "preserve_historical_sources"
+  },
+  "tests": [
+    "tests/test_runtime_connector_mapper.py",
+    "tests/test_runtime_connector_integration.py",
+    "tests/test_runtime_connector_server_and_confidentiality.py"
+  ],
+  "compatibility": {
+    "router_decision_modified": false,
+    "connector_modified": false,
+    "core_contract_modified": false,
+    "historical_sources_preserved": true,
+    "network_call_added": false,
+    "new_connector_created": false
+  }
+}

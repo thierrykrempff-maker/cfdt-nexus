@@ -35,6 +35,8 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
     RuntimeCoreReportMapper,
+    RuntimeConnectorConfig,
+    RuntimeConnectorPayloadMapper,
     RuntimeIntegrationConfig,
 )
 
@@ -87,12 +89,17 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         "answer": answer,
         **expert_payload,
     }
+    connector_config = RuntimeConnectorConfig.from_env()
+    connector_mapping = RuntimeConnectorPayloadMapper(connector_config).map(answer)
     integration = RuntimeCoreIntegration(RuntimeIntegrationConfig.from_env()).integrate(
         RuntimeCoreIntegrationInput(
             answer=answer,
             legal_payload=payload.get("expert_juriste"),
             payroll_payload=payload.get("expert_paie"),
             historical_orchestration=payload.get("orchestration") or {},
+            connector_inputs=connector_mapping.inputs,
+            connector_runtime_enabled=connector_config.enabled,
+            connector_mapping_fallback_code=connector_mapping.fallback_code,
         )
     )
     payload["runtime_integration"] = integration.to_dict()
