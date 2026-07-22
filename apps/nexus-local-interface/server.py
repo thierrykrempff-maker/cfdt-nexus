@@ -41,6 +41,9 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCSEMemoryIntegration,
     RuntimeCSEMemoryReportMapper,
     RuntimeIntegrationConfig,
+    RuntimeProtectionSocialeConfig,
+    RuntimeProtectionSocialeIntegration,
+    RuntimeProtectionSocialeReportMapper,
     RuntimeRetirementConfig,
     RuntimeRetirementIntegration,
     RuntimeRetirementReportMapper,
@@ -121,8 +124,18 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         RuntimeRetirementConfig.from_env()
     ).integrate(answer)
     payload["retirement_runtime"] = retirement_integration.to_dict()
-    payload["analysis_report"] = RuntimeRetirementReportMapper().map(
+    retirement_report = RuntimeRetirementReportMapper().map(
         cse_report, retirement_integration
+    )
+    protection_config = RuntimeProtectionSocialeConfig.from_env(
+        default_root=ROOT / "PROTECTION_SOCIALE_ENGINE" / "PROCESSED" / "LOT_1D"
+    )
+    protection_integration = RuntimeProtectionSocialeIntegration(
+        protection_config
+    ).integrate(answer)
+    payload["protection_sociale_runtime"] = protection_integration.to_dict()
+    payload["analysis_report"] = RuntimeProtectionSocialeReportMapper().map(
+        retirement_report, protection_integration
     )
     return payload
 

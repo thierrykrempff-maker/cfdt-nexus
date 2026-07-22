@@ -4,6 +4,7 @@ from .config import (
     RuntimeCSEMemoryConfig,
     RuntimeConnectorConfig,
     RuntimeIntegrationConfig,
+    RuntimeProtectionSocialeConfig,
     RuntimeRetirementConfig,
 )
 from .connector_mapper import RuntimeConnectorMappingResult, RuntimeConnectorPayloadMapper
@@ -31,6 +32,20 @@ from .retirement_runtime import (
     needs_retirement,
 )
 from .report_mapper import RuntimeRetirementReportMapper
+from .protection_sociale_search import (
+    ProtectionSocialeMetadataDocument,
+    ProtectionSocialeSearchResult,
+    RuntimeProtectionSocialeGateway,
+)
+from .protection_sociale_runtime import (
+    RuntimeProtectionSocialeDiagnostics,
+    RuntimeProtectionSocialeIntegration,
+    RuntimeProtectionSocialeMapper,
+    RuntimeProtectionSocialeMode,
+    RuntimeProtectionSocialeResult,
+    needs_protection_sociale,
+)
+from .report_mapper import RuntimeProtectionSocialeReportMapper
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -50,6 +65,16 @@ __all__ = (
     "RuntimeExpertPayloadMapper",
     "RuntimeIntegrationConfig",
     "RuntimeMode",
+    "ProtectionSocialeMetadataDocument",
+    "ProtectionSocialeSearchResult",
+    "RuntimeProtectionSocialeConfig",
+    "RuntimeProtectionSocialeDiagnostics",
+    "RuntimeProtectionSocialeGateway",
+    "RuntimeProtectionSocialeIntegration",
+    "RuntimeProtectionSocialeMapper",
+    "RuntimeProtectionSocialeMode",
+    "RuntimeProtectionSocialeReportMapper",
+    "RuntimeProtectionSocialeResult",
     "RuntimeRetirementConfig",
     "RuntimeRetirementDiagnostics",
     "RuntimeRetirementIntegration",
@@ -57,4 +82,5 @@ __all__ = (
     "RuntimeRetirementReportMapper",
     "RuntimeRetirementResult",
     "needs_retirement",
+    "needs_protection_sociale",
 )
