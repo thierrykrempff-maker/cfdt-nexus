@@ -1,0 +1,47 @@
+{
+  "adapter": "cse_memory",
+  "version": "1.0",
+  "source": "automation.cse_memory",
+  "target": "NEXUS_CORE",
+  "domain": "cse",
+  "protocols": [
+    "ExecutableEngine",
+    "EvidenceProducer",
+    "FindingProducer",
+    "RecommendationProducer",
+    "FactProducer"
+  ],
+  "components": [
+    "CSEAdapter",
+    "CSEEvidenceMapper",
+    "CSEFindingMapper",
+    "CSERecommendationMapper",
+    "CSEMetadataMapper",
+    "CSEMeetingMapper",
+    "CSEDecisionMapper",
+    "CSEVoteMapper",
+    "CSEAdapterInput",
+    "CSEAdapterResult",
+    "CSEAdapterDiagnostics"
+  ],
+  "mappings": [
+    {"from": "DocumentRecord", "to": ["DocumentReference", "Evidence", "Provenance"]},
+    {"from": "CSEMeetingSnapshot", "to": ["Evidence"]},
+    {"from": "CSEDecisionSnapshot", "to": ["Finding", "Recommendation"]},
+    {"from": "CSEVoteSnapshot", "to": ["Evidence", "Finding"]},
+    {"from": "MetadataRecord.conflicts", "to": ["ReasoningConflict"]},
+    {"from": "MetadataValue.confidence", "to": ["ConfidenceAssessment"]}
+  ],
+  "invariants": {
+    "translation_only": true,
+    "explicit_mapping": true,
+    "deterministic": true,
+    "no_business_logic": true,
+    "no_network": true,
+    "no_document_import": true,
+    "no_text_content_copy": true,
+    "no_personal_data_in_diagnostics": true,
+    "cse_memory_modified": false,
+    "nexus_core_modified": false
+  }
+}
