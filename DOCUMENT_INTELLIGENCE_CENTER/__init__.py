@@ -29,6 +29,15 @@ from .models import (
     RelationKind,
 )
 from .pv_linking import PVAgreementLinker
+from .navigation_models import (
+    GraphPath,
+    GraphStatistics,
+    NavigationDirection,
+    NavigationDocument,
+    NavigationQuery,
+    NavigationResult,
+)
+from .navigation_service import DocumentNavigationService
 from .search_contracts import (
     DocumentSearchBackend,
     SearchDocument,
@@ -50,6 +59,7 @@ __all__ = [
     "DocumentIngestionService",
     "DocumentKind",
     "DocumentMetadataInput",
+    "DocumentNavigationService",
     "DocumentRelation",
     "DocumentSearchBackend",
     "ExplicitDocumentLink",
@@ -64,6 +74,12 @@ __all__ = [
     "MetadataIndex",
     "MetadataQuery",
     "MetadataStatus",
+    "GraphPath",
+    "GraphStatistics",
+    "NavigationDirection",
+    "NavigationDocument",
+    "NavigationQuery",
+    "NavigationResult",
     "PVAgreementLinker",
     "RelationKind",
     "SearchDocument",
