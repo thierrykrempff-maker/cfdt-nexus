@@ -38,8 +38,11 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeConnectorConfig,
     RuntimeConnectorPayloadMapper,
     RuntimeCSEMemoryConfig,
+    RuntimeCSEMemoryDiagnostics,
     RuntimeCSEMemoryIntegration,
+    RuntimeCSEMemoryMode,
     RuntimeCSEMemoryReportMapper,
+    RuntimeCSEMemoryResult,
     RuntimeIntegrationConfig,
     RuntimeOfficialConnectorsConfig,
     RuntimeOfficialConnectorsIntegration,
@@ -125,7 +128,18 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
     cse_config = RuntimeCSEMemoryConfig.from_env(
         default_root=ROOT / "CCSEMEMORYENGINE" / "PROCESSED" / "LOT_1D"
     )
-    cse_integration = RuntimeCSEMemoryIntegration(cse_config).integrate(answer)
+    try:
+        cse_integration = RuntimeCSEMemoryIntegration(cse_config).integrate(answer)
+    except Exception:
+        cse_integration = RuntimeCSEMemoryResult(
+            RuntimeCSEMemoryMode.FALLBACK,
+            RuntimeCSEMemoryDiagnostics(
+                cse_config.enabled,
+                called=True,
+                fallback_triggered=True,
+                fallback_code="CSE_MEMORY_RUNTIME_FAILED",
+            ),
+        )
     payload["cse_memory_runtime"] = cse_integration.to_dict()
     cse_report = RuntimeCSEMemoryReportMapper().map(core_report, cse_integration)
     retirement_integration = RuntimeRetirementIntegration(

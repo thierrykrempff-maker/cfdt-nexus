@@ -55,6 +55,7 @@ _RETIREMENT_DOMAINS = frozenset({
     "retraite",
     "retirement_penibility",
     "retirement_penibility_engine",
+    "retraite_penibilite",
     "penibilite",
 })
 

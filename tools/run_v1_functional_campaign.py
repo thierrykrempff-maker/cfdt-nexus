@@ -151,13 +151,13 @@ def observed_experts(payload: Mapping[str, Any]) -> tuple[str, ...]:
         normalized = _EXPERT_ALIASES.get(str(name))
         if normalized:
             found.add(normalized)
-    for key, expert, called_key in (
-        ("cse_memory_runtime", "cse_memory", "cse_memory_called"),
-        ("retirement_runtime", "retirement", "retirement_called"),
-        ("protection_sociale_runtime", "protection_sociale", "protection_sociale_called"),
+    for key, expert, called_keys in (
+        ("cse_memory_runtime", "cse_memory", ("called", "cse_memory_called")),
+        ("retirement_runtime", "retirement", ("retirement_called",)),
+        ("protection_sociale_runtime", "protection_sociale", ("protection_sociale_called",)),
     ):
         diagnostics = _mapping(_mapping(payload.get(key)).get("diagnostics"))
-        if diagnostics.get(called_key) is True:
+        if any(diagnostics.get(called_key) is True for called_key in called_keys):
             found.add(expert)
     return tuple(sorted(found))
 
@@ -387,10 +387,11 @@ def classify_anomalies(scenario: Mapping[str, Any], execution: Mapping[str, Any]
 def execute_one(server, scenario: Mapping[str, Any]) -> dict[str, Any]:
     started = time.perf_counter()
     try:
-        public_entrypoint = getattr(server, "analyze_public_question", server.analyze_question)
-        payload = public_entrypoint(scenario["question_salarie"])
+        internal_payload = server.analyze_question(scenario["question_salarie"])
+        sanitizer = getattr(server, "sanitize_public_payload", None)
+        payload = sanitizer(internal_payload) if callable(sanitizer) else internal_payload
         duration = round((time.perf_counter() - started) * 1000)
-        diagnostics = safe_diagnostics(payload)
+        diagnostics = safe_diagnostics(internal_payload)
         result = {
             "id": scenario["id"],
             "domaine_principal": scenario["domaine_principal"],
@@ -400,12 +401,12 @@ def execute_one(server, scenario: Mapping[str, Any]) -> dict[str, Any]:
             "reponse_produite": response_observation(payload),
             "duree_totale_ms": duration,
             "experts_attendus": scenario["experts_attendus"],
-            "experts_observes": list(observed_experts(payload)),
+            "experts_observes": list(observed_experts(internal_payload)),
             "connecteurs_attendus": scenario["connecteurs_attendus"],
-            "connecteurs_observes": list(observed_connectors(payload)),
+            "connecteurs_observes": list(observed_connectors(internal_payload)),
             "domaines_attendus": scenario["domaines_attendus"],
-            "domaines_observes": list(observed_domains(payload)),
-            "familles_sources_citees": list(source_families(payload)),
+            "domaines_observes": list(observed_domains(internal_payload)),
+            "familles_sources_citees": list(source_families(internal_payload)),
             "diagnostics_techniques": diagnostics,
             "fallback_declenche": fallback_observed(diagnostics),
             "erreur": None,
@@ -418,7 +419,18 @@ def execute_one(server, scenario: Mapping[str, Any]) -> dict[str, Any]:
         result = {
             "id": scenario["id"], "domaine_principal": scenario["domaine_principal"],
             "difficulte": scenario["difficulte"], "question_envoyee": scenario["question_salarie"],
-            "statut_execution": "error", "reponse_produite": {"non_empty": False, "raw_answer_retained": False},
+            "statut_execution": "error",
+            "reponse_produite": {
+                "non_empty": False,
+                "report_section_ids": [],
+                "report_section_count": 0,
+                "report_item_count": 0,
+                "markdown_character_count": 0,
+                "short_answer_present": False,
+                "short_answer_character_count": 0,
+                "warning_count": 0,
+                "raw_answer_retained": False,
+            },
             "duree_totale_ms": duration, "experts_attendus": scenario["experts_attendus"],
             "experts_observes": [], "connecteurs_attendus": scenario["connecteurs_attendus"],
             "connecteurs_observes": [], "domaines_attendus": scenario["domaines_attendus"],

@@ -58,6 +58,20 @@ def test_runner_uses_runtime_result_and_never_retains_raw_answer():
     assert record["evaluation"]["routage_principal_correct"] is True
 
 
+def test_runner_records_runtime_failure_without_interrupting_campaign():
+    class BrokenServer:
+        @staticmethod
+        def analyze_question(_question):
+            raise RuntimeError("synthetic failure")
+
+    runner = load_runner()
+    record = runner.execute_one(BrokenServer(), scenario())
+    assert record["statut_execution"] == "error"
+    assert record["erreur"] == "RUNTIME_EXECUTION_ERROR"
+    assert record["reponse_produite"]["report_section_count"] == 0
+    assert record["evaluation"]["routage_principal_correct"] is False
+
+
 def test_privacy_detector_reports_categories_without_values():
     runner = load_runner()
     synthetic_path = "C:" + "\\" + "Users" + "\\" + "private" + "\\" + "secret.txt"

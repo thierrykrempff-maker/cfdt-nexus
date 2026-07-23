@@ -12,6 +12,7 @@ from datetime import date, datetime, timezone
 import hashlib
 import time
 from typing import Any, Callable
+import unicodedata
 
 from automation.official_knowledge.connectors.cnil import CnilConnector, CnilDiscoveryEntry
 from automation.official_knowledge.connectors.dreets_grand_est.dreets_connector import (
@@ -44,6 +45,27 @@ _SOURCE_DETAILS = {
         "https://grand-est.dreets.gouv.fr",
     ),
     "inrs": ("INRS", ConnectorSourceCategory.OTHER_OFFICIAL, "https://www.inrs.fr"),
+}
+_CONNECTOR_MARKERS = {
+    "cnil": (
+        "rgpd", "donnees personnelles", "details personnels", "confidentialite",
+        "camera", "videosurveillance", "geolocalisation", "messagerie",
+        "boite professionnelle", "appartenance syndicale", "biometrie",
+        "classe automatiquement",
+    ),
+    "inrs": (
+        "incident dangereux", "risque grave", "presque-accident",
+        "accident du travail", "risque chimique", "produit chimique",
+        "substance", "epi", "gant", "prevention", "tms", "douleur",
+        "surcharge", "entreprise exterieure", "coactivite", "exposition",
+        "expose", "symptome", "mesures d ambiance", "travail de nuit",
+        "travail poste", "5x8", "penibilite", "inaptitude",
+    ),
+    "dreets_grand_est": (
+        "incident dangereux", "protocole electoral", "substance",
+        "entreprise exterieure", "coactivite", "mesures d ambiance",
+        "projet industriel", "risque grave",
+    ),
 }
 
 
@@ -107,26 +129,57 @@ class RuntimeOfficialConnectorsIntegration:
         if not self._config.enabled:
             return RuntimeOfficialConnectorsResult()
         grouped = self._group_sources(answer)
-        if not grouped:
+        selected = self._selected_connectors(answer) | set(grouped)
+        if not selected:
             return RuntimeOfficialConnectorsResult()
         started = self._timer()
         try:
             inputs = tuple(
-                self._connector_input(connector_id, grouped[connector_id], answer)
-                for connector_id in sorted(grouped)
+                self._connector_input(connector_id, grouped.get(connector_id, ()), answer)
+                for connector_id in sorted(selected)
             )
+            connectors_used = tuple(item.descriptor.connector_id for item in inputs)
             if not any(item.response.documents for item in inputs):
-                return self._fallback("OFFICIAL_CONNECTORS_NO_RESULT", started)
+                return RuntimeOfficialConnectorsResult(
+                    inputs,
+                    RuntimeOfficialConnectorsDiagnostics(
+                        True,
+                        self._duration(started),
+                        connectors_used,
+                        "OFFICIAL_CONNECTORS_NO_RESULT",
+                    ),
+                )
             return RuntimeOfficialConnectorsResult(
                 inputs,
                 RuntimeOfficialConnectorsDiagnostics(
                     True,
                     self._duration(started),
-                    tuple(item.descriptor.connector_id for item in inputs),
+                    connectors_used,
                 ),
             )
         except Exception:
             return self._fallback("OFFICIAL_CONNECTOR_RUNTIME_FAILED", started)
+
+    @classmethod
+    def _selected_connectors(cls, answer: Mapping[str, Any]) -> set[str]:
+        if not isinstance(answer, Mapping):
+            return set()
+        query = cls._normalize(answer.get("query"))
+        route = answer.get("route") if isinstance(answer.get("route"), Mapping) else {}
+        domains = {
+            cls._normalize(item).replace(" ", "_")
+            for item in route.get("domains", ())
+        }
+        selected = {
+            connector_id
+            for connector_id, markers in _CONNECTOR_MARKERS.items()
+            if any(marker in query for marker in markers)
+        }
+        if "rgpd_cnil" in domains:
+            selected.add("cnil")
+        if "cssct_securite" in domains:
+            selected.add("inrs")
+        return selected
 
     @staticmethod
     def _group_sources(answer: Mapping[str, Any]) -> dict[str, tuple[Mapping[str, Any], ...]]:
@@ -154,7 +207,9 @@ class RuntimeOfficialConnectorsIntegration:
     ) -> ConnectorAdapterInput:
         if len(sources) > self._config.max_documents_per_connector:
             raise ValueError("official connector quota exceeded")
-        discovered_at = self._date_text(answer.get("generated_at"))
+        discovered_at = self._date_text(
+            answer.get("generated_at"), default=self._clock().date()
+        )
         if connector_id == "cnil":
             metadata = CnilConnector(
                 enabled=True, limit=self._config.max_documents_per_connector
@@ -268,12 +323,24 @@ class RuntimeOfficialConnectorsIntegration:
         return max(0, round((self._timer() - started) * 1000))
 
     @staticmethod
-    def _date_text(value: object) -> str:
+    def _normalize(value: object) -> str:
+        text = unicodedata.normalize("NFKD", str(value or ""))
+        return " ".join(
+            "".join(char for char in text if not unicodedata.combining(char))
+            .lower()
+            .replace("'", " ")
+            .split()
+        )
+
+    @staticmethod
+    def _date_text(value: object, *, default: date | None = None) -> str:
         if isinstance(value, datetime):
             return value.date().isoformat()
         if isinstance(value, date):
             return value.isoformat()
         text = str(value or "")
+        if not text and default is not None:
+            return default.isoformat()
         return date.fromisoformat(text[:10]).isoformat()
 
     @staticmethod

@@ -102,6 +102,10 @@ GENERIC_PRUDENCE_MARKERS = [
 
 DOMAIN_LABELS = {
     "bible_accords": "Bible Accords",
+    "droit_travail_general": "droit du travail",
+    "rgpd_cnil": "RGPD/CNIL",
+    "protection_sociale": "protection sociale",
+    "retraite_penibilite": "retraite/penibilite",
     "classification_carriere": "classification/carriere",
     "inaptitude_reclassement": "inaptitude/reclassement",
     "disciplinaire": "disciplinaire",
@@ -130,6 +134,7 @@ INTENT_LABELS = {
     "demander_documents": "demande de documents",
     "verifier_conformite": "controle de conformite",
     "rechercher_veille": "veille juridique",
+    "rechercher_cse_memory": "recherche dans la memoire CSE",
 }
 
 STOPWORDS = {
@@ -363,6 +368,10 @@ LEGIFRANCE_CONCEPT_TERMS: dict[str, list[str]] = {
 LEGIFRANCE_WEAK_MATCH_TERMS = {"bulletin", "emploi", "fonction", "majoration", "paie", "poste", "prime", "remuneration", "salaire"}
 
 DOMAIN_ORDER = [
+    "droit_travail_general",
+    "rgpd_cnil",
+    "protection_sociale",
+    "retraite_penibilite",
     "classification_carriere",
     "inaptitude_reclassement",
     "disciplinaire",
@@ -379,6 +388,10 @@ DOMAIN_ORDER = [
 
 REQUIRED_DOMAINS = [
     "bible_accords",
+    "droit_travail_general",
+    "rgpd_cnil",
+    "protection_sociale",
+    "retraite_penibilite",
     "cse",
     "cssct_securite",
     "paie_remuneration",
@@ -405,9 +418,87 @@ INTENTS = [
     "demander_documents",
     "verifier_conformite",
     "rechercher_veille",
+    "rechercher_cse_memory",
 ]
 
 DOMAIN_RULES: list[dict[str, Any]] = [
+    {
+        "domain": "droit_travail_general",
+        "reason": "La demande porte sur la relation de travail ou une garantie legale generale.",
+        "patterns": [
+            r"\bcontrat\b",
+            r"\bavenant\b",
+            r"periode d'?essai",
+            r"\bcdd\b",
+            r"\bcdi\b",
+            r"\brequalification\b",
+            r"\blicenciement\b",
+            r"\brupture\b",
+            r"\bharcelement\b",
+            r"\bdiscrimination\b",
+            r"insuffisance professionnelle",
+            r"\bformation\b",
+            r"\bforfait jours\b",
+            r"\bmobilite\b",
+            r"\baffectation\b",
+            r"\btransfert d'?activite\b",
+            r"\banciennete\b",
+            r"\bsignalement\b",
+            r"\benquete interne\b",
+            r"remarques? humiliantes?",
+            r"objectifs? changeants?",
+        ],
+    },
+    {
+        "domain": "rgpd_cnil",
+        "reason": "La demande porte sur les donnees personnelles ou la vie privee au travail.",
+        "patterns": [
+            r"\brgpd\b",
+            r"donnees? personnelles?",
+            r"details? personnels?",
+            r"\bconfidentialite\b",
+            r"\bcamera\b",
+            r"\bvideosurveillance\b",
+            r"\bgeolocalisation\b",
+            r"\bmessagerie\b",
+            r"boite professionnelle",
+            r"appartenance syndicale",
+            r"classe automatiquement",
+            r"\bbiometrie\b",
+        ],
+    },
+    {
+        "domain": "protection_sociale",
+        "reason": "La demande porte sur la mutuelle, la prevoyance ou des garanties sociales.",
+        "patterns": [
+            r"\bmutuelle\b",
+            r"\bprevoyance\b",
+            r"\bsubrogation\b",
+            r"\bij\b",
+            r"indemnites? journalieres?",
+            r"\binvalidite\b",
+            r"\bincapacite\b",
+            r"\brente\b",
+            r"garanties? sante",
+            r"maintien de salaire",
+        ],
+    },
+    {
+        "domain": "retraite_penibilite",
+        "reason": "La demande porte sur la retraite, la carriere ou la penibilite.",
+        "patterns": [
+            r"\bretraite\b",
+            r"\bcarriere\b",
+            r"carriere longue",
+            r"\bpenibilite\b",
+            r"\bc2p\b",
+            r"depart anticipe",
+            r"\btrimestres?\b",
+            r"\bexposition\b",
+            r"fin de carriere",
+            r"annees? de nuit",
+        ],
+    },
     {
         "domain": "classification_carriere",
         "reason": "La demande porte sur classification, emploi, carriere ou coefficient.",
@@ -465,6 +556,8 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"fatigue des postes?",
             r"reprend son poste",
             r"\bhoraires?\b",
+            r"\bpause\b",
+            r"equipes? alternantes?",
             r"heures supplementaires",
             r"compteurs? d'?heures?",
             r"\bcompteurs?\b",
@@ -478,6 +571,7 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"\bmodulation\b",
             r"\bannualisation\b",
             r"travail de nuit",
+            r"\bnuit\b",
             r"\bdimanches?\b",
             r"jours? feries?",
         ],
@@ -516,6 +610,11 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"jours? feries?",
             r"calcul des conges",
             r"\bdixieme\b",
+            r"\bretenue\b",
+            r"\bsubrogation\b",
+            r"indemnites? journalieres?",
+            r"\bpause\b",
+            r"equipes? alternantes?",
         ],
     },
     {
@@ -553,6 +652,24 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"plan de contingence",
             r"maintenance preventive",
             r"\bfatigue\b",
+            r"\bincident dangereux\b",
+            r"\brisque grave\b",
+            r"\bpresque-accident\b",
+            r"\baccident du travail\b",
+            r"\brisques? chimiques?\b",
+            r"\bproduit chimique\b",
+            r"\bsubstance\b",
+            r"\bepi\b",
+            r"\bgants?\b",
+            r"\bprevention\b",
+            r"\btms\b",
+            r"\bdouleurs?\b",
+            r"\bsurcharge\b",
+            r"\bentreprise exterieure\b",
+            r"\bcoactivite\b",
+            r"\bexposee?\b",
+            r"\bsymptomes?\b",
+            r"mesures? d'?ambiance",
         ],
     },
     {
@@ -636,6 +753,8 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"presente au cse",
             r"information consultation",
             r"ordre du jour",
+            r"protocole electoral",
+            r"expertise.*(?:decision|engagement)",
             r"la direction veut",
             r"reorganisation",
             r"suppression de postes?",
@@ -826,6 +945,25 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"derniers? textes?",
             r"cour de cassation",
             r"nouveau decret",
+        ],
+    },
+    {
+        "intent": "rechercher_cse_memory",
+        "reason": "La demande appelle une recherche dans les documents et decisions CSE existants.",
+        "patterns": [
+            r"\bpv cse\b",
+            r"\bancien pv\b",
+            r"\bdecision(?:s)?\b.*\bcse\b",
+            r"\bengagements? anterieurs?\b",
+            r"\bordre du jour\b",
+            r"\bresolution\b",
+            r"\bconsultation\b.*\bexpertise\b",
+            r"\bdossier\b.*\breorganisation\b",
+            r"\bdonnees?\b.*\bcse\b",
+            r"\bavis du cse\b",
+            r"\bdiscute\b.*\bcse\b",
+            r"\bdemarches? collectives?\b",
+            r"\benquete interne\b",
         ],
     },
 ]
@@ -1894,6 +2032,13 @@ def detect_intents(query: str, domains: list[str]) -> tuple[list[str], list[str]
     if "cssct_securite" in domains and "preparer_cssct" not in scores:
         scores["preparer_cssct"] = 1
         reasons.append("Le domaine sante-securite appelle une preparation CSSCT/CSE.")
+    if "cse" in domains and re.search(
+        r"ordre du jour|resolution|decision|engagement|dossier|consultation|expertise|"
+        r"historique|ancien|document|donnees?|avis",
+        text,
+    ):
+        scores.setdefault("rechercher_cse_memory", 1)
+        reasons.append("Le besoin documentaire CSE appelle une recherche dans la memoire existante.")
     if any(domain in domains for domain in ["classification_carriere", "inaptitude_reclassement", "disciplinaire"]):
         scores.setdefault("analyser_situation_individuelle", 1)
         reasons.append("Le domaine RH detecte appelle une fiche de situation individuelle.")
@@ -1937,6 +2082,7 @@ def simple_bible_only(intents: list[str], domains: list[str], query: str) -> boo
         "construire_argumentaire",
         "demander_documents",
         "verifier_conformite",
+        "rechercher_cse_memory",
     }
     if any(intent in intents for intent in complex_intents):
         return False
@@ -1948,9 +2094,12 @@ def simple_bible_only(intents: list[str], domains: list[str], query: str) -> boo
 def needs_code_travail(query: str, domains: list[str], intents: list[str]) -> bool:
     text = normalize(query)
     legal_domains = {
+        "droit_travail_general",
+        "rgpd_cnil",
         "classification_carriere",
         "inaptitude_reclassement",
         "disciplinaire",
+        "cssct_securite",
         "temps_travail",
         "astreinte",
         "droit_syndical",
@@ -1968,52 +2117,57 @@ def needs_code_travail(query: str, domains: list[str], intents: list[str]) -> bo
 
 def needs_jurisprudence(query: str, domains: list[str], intents: list[str]) -> bool:
     text = normalize(query)
-    jurisprudence_domains = {
-        "classification_carriere",
-        "temps_travail",
-        "astreinte",
-        "droit_syndical",
-        "cse",
-        "paie_remuneration",
-        "conges_payes",
-    }
-    if any(domain in domains for domain in jurisprudence_domains):
-        return True
-    if any(intent in intents for intent in ["verifier_conformite", "analyser_situation_individuelle", "construire_argumentaire"]):
-        return True
-    return bool(re.search(r"jurisprudence|cour de cassation|arret|pourvoi|decision", text))
+    # Jurisprudence is useful for a bounded dispute or interpretation issue, not
+    # for every legal or payroll question. Keeping this decision semantic avoids
+    # activating JUDILIBRE for routine calculations and documentary checks.
+    return bool(
+        re.search(
+            r"jurisprudence|cour de cassation|pourvoi|"
+            r"(?:taches?|niveau).*\breclassification\b|\breclassification\b.*(?:taches?|niveau)|"
+            r"\brequalification\b|"
+            r"periode d.?essai.*(?:rompt|rupt|contest)|(?:rompt|rupt|contest).*periode d.?essai|"
+            r"insuffisance professionnelle|avis d inaptitude|"
+            r"inaptitude.*(?:employeur|accident du travail|poste moins qualifie)|"
+            r"\breclassement\b|\bdiscrimination\b|activite syndicale|"
+            r"remarques? humiliantes?|forfait jours|"
+            r"geolocalisation|messagerie|boite professionnelle|"
+            r"classe automatiquement|decision automatisee|"
+            r"(?:envisager|consultation|quels cas).*\bexpertise\b|"
+            r"\bexpertise\b.*\bconsultation\b|\bresolution\b|president a vote|"
+            r"astreinte.*repos|repos.*astreinte|"
+            r"risque grave.*licenciement|licenciement.*(?:signal|risque grave)|"
+            r"accident du travail.*inaptitude|inaptitude.*accident du travail|"
+            r"\benquete interne\b|"
+            r"affectation durable|\bmobilite\b.*(?:coefficient|perspectives|garanties)|"
+            r"poste combine.*niveau conventionnel|"
+            r"accord.*plus favorable.*bulletins?|bulletins?.*autre methode",
+            text,
+        )
+    )
 
 
 def needs_pratique_officielle(query: str, domains: list[str], intents: list[str]) -> bool:
     text = normalize(query)
-    practical_domains = {
-        "disciplinaire",
-        "temps_travail",
-        "astreinte",
-        "paie_remuneration",
-        "conges_payes",
-        "cse",
-        "inaptitude_reclassement",
-        "classification_carriere",
-    }
-    if any(domain in domains for domain in practical_domains):
-        return True
-    if any(
-        intent in intents
-        for intent in [
-            "analyser_situation_individuelle",
-            "analyser_paie",
-            "preparer_cse",
-            "preparer_negociation",
-            "construire_argumentaire",
-            "demander_documents",
-        ]
-    ):
-        return True
+    # The CDTN practical layer is selected for operational employment questions.
+    # A generic domain or intent is not sufficient: that used to activate it for
+    # retirement, RGPD and agreement-only questions where it added no value.
+    if "retraite_penibilite" in domains or "ineos" in text:
+        return False
     return bool(
         re.search(
-            r"sanction|entretien|heures? supplementaires?|astreinte|repos|prime|salaire|"
-            r"conges?|rupture|harcelement|accident du travail|cse|reorganisation",
+            r"lieu de travail.*horaires?.*avenant|periode d.?essai|\bcdd\b|"
+            r"\bavertissement\b|\bentretien disciplinaire\b|"
+            r"(?:sept|7) heures?.*\bpause\b|\brequalification\b|"
+            r"avis d.?inaptitude|\breclassement\b|remarques? humiliantes?|"
+            r"repos entre deux postes|astreinte.*repos|repos.*astreinte|forfait jours|"
+            r"travail.*\bnuit\b|equipes? alternantes?|prime d.?astreinte|"
+            r"\b5x8\b|heures?.*(?:au-dela|supplementaires?).*(?:paie|apparaissent)|"
+            r"compteur de conges|semaine de maladie|accident du travail.*(?:code|maladie)|"
+            r"indemnite de conges payes|cycle change|solde de tout compte|"
+            r"delai de consultation|heures? de delegation|projet sans donnees|"
+            r"protocole electoral|mutualiser.*heures? de delegation|"
+            r"rupture du contrat.*(?:mutuelle|prevoyance)|"
+            r"arret maladie.*(?:salaire|prevoyance)",
             text,
         )
     )

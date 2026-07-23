@@ -80,6 +80,27 @@ def test_fallback_returns_exact_prior_report_and_diagnostics_are_confidential():
         assert forbidden not in serialized
 
 
+def test_server_converts_unexpected_cse_runtime_failure_to_fallback(monkeypatch):
+    server = load_server()
+    monkeypatch.setattr(server, "run_router", lambda *_args, **_kwargs: answer())
+    monkeypatch.setattr(server.orchestrator, "orchestrate", lambda _answer: experts())
+    monkeypatch.setattr(server.report_generator, "build_report", lambda _payload: {
+        "sections": [{"id": "legacy"}], "markdown": "unchanged",
+    })
+    monkeypatch.setenv("NEXUS_CSE_MEMORY_RUNTIME_ENABLED", "true")
+    monkeypatch.setattr(
+        server.RuntimeCSEMemoryIntegration,
+        "integrate",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(ValueError("synthetic")),
+    )
+    payload = server.analyze_question(answer()["query"])
+    cse = payload["cse_memory_runtime"]
+    assert cse["runtime_mode"] == "fallback"
+    assert cse["diagnostics"]["called"] is True
+    assert cse["diagnostics"]["fallback_code"] == "CSE_MEMORY_RUNTIME_FAILED"
+    assert payload["analysis_report"]["markdown"] == "unchanged"
+
+
 def test_success_report_exposes_counts_but_no_raw_document():
     report = {"sections": [], "markdown": "legacy"}
     result = RuntimeCSEMemoryResult(
