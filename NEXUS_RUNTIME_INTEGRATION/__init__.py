@@ -52,6 +52,7 @@ from .official_connectors_runtime import (
     RuntimeOfficialConnectorsIntegration,
     RuntimeOfficialConnectorsResult,
 )
+from .public_payload import sanitize_public_payload
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -91,6 +92,7 @@ __all__ = (
     "RuntimeRetirementMode",
     "RuntimeRetirementReportMapper",
     "RuntimeRetirementResult",
+    "sanitize_public_payload",
     "needs_retirement",
     "needs_protection_sociale",
 )

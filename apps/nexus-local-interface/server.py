@@ -49,6 +49,7 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeRetirementConfig,
     RuntimeRetirementIntegration,
     RuntimeRetirementReportMapper,
+    sanitize_public_payload,
 )
 
 
@@ -90,6 +91,8 @@ def run_router(query: str, source_limit: int = 6) -> dict[str, Any]:
 
 
 def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
+    """Build the complete internal payload used by Runtime integrations."""
+
     cleaned = (query or "").strip()
     if not cleaned:
         raise ValueError("Question vide.")
@@ -143,6 +146,12 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         retirement_report, protection_integration
     )
     return payload
+
+
+def analyze_public_question(query: str, source_limit: int = 6) -> dict[str, Any]:
+    """Return the user-facing payload without internal identifiers or paths."""
+
+    return sanitize_public_payload(analyze_question(query, source_limit))
 
 
 class NexusHandler(SimpleHTTPRequestHandler):
@@ -203,7 +212,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             body = self.rfile.read(length).decode("utf-8")
             payload = json.loads(body or "{}")
             source_limit = int(payload.get("source_limit") or 6)
-            result = analyze_question(str(payload.get("query") or ""), source_limit)
+            result = analyze_public_question(str(payload.get("query") or ""), source_limit)
             self.send_json(HTTPStatus.OK, result)
         except ValueError as exc:
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})

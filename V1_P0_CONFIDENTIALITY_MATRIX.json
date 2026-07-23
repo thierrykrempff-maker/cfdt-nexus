@@ -1,0 +1,99 @@
+{
+  "lot": "V1_STABILIZATION_P0_1_RUNTIME_CONFIDENTIALITY",
+  "branch": "nexus-v1-stabilization-p0-confidentiality",
+  "parent": "8287b848552acefaabf43ffbb92ea9602f36cae4",
+  "scope": {
+    "runtime_public_boundary_only": true,
+    "engines_modified": false,
+    "connectors_modified": false,
+    "routing_modified": false,
+    "corpora_modified": false
+  },
+  "root_causes": [
+    {
+      "code": "PUBLIC_PAYLOAD_SHARED_INTERNAL_REFERENCES",
+      "confirmed": true,
+      "description": "Le serveur publiait directement le payload Runtime interne."
+    },
+    {
+      "code": "FRONTEND_RENDERED_CHUNK_IDENTIFIER",
+      "confirmed": true,
+      "description": "Le frontend ajoutait l'identifiant de chunk aux métadonnées de source."
+    },
+    {
+      "code": "TECHNICAL_MODULE_NAMES_IN_REPORT_FLOW",
+      "confirmed": true,
+      "description": "Le rapport exposait des chemins de modules dans le flux généré."
+    },
+    {
+      "code": "WINDOWS_PATH_DETECTOR_MATCHED_HTTPS",
+      "confirmed": true,
+      "classification": "measurement_false_positive",
+      "description": "Le détecteur historique assimilait la séquence s:/ d'une URL HTTPS à un lecteur Windows."
+    }
+  ],
+  "public_boundary": {
+    "name": "sanitize_public_payload",
+    "internal_payload_mutated": false,
+    "http_route_protected": "POST /api/analyze",
+    "removes": [
+      "chunk_identifiers",
+      "storage_identifiers",
+      "runtime_identifiers",
+      "local_paths",
+      "technical_hashes",
+      "internal_diagnostics",
+      "internal_module_references",
+      "ranking_internals"
+    ],
+    "preserves": [
+      "business_titles",
+      "business_excerpts",
+      "official_references",
+      "official_urls",
+      "source_provenance"
+    ]
+  },
+  "campaign": {
+    "scenarios": 100,
+    "technical_successes": 100,
+    "technical_failures": 0,
+    "raw_responses_retained": false,
+    "privacy_scenarios_before": 100,
+    "privacy_scenarios_after": 0,
+    "p0_before": 100,
+    "p0_after": 0,
+    "forbidden_patterns_after": [],
+    "performance_ms": {
+      "mean": 4577.29,
+      "median": 2747.0,
+      "p95": 12794,
+      "maximum": 27488
+    }
+  },
+  "tests": {
+    "public_confidentiality_and_runner": {
+      "passed": 7,
+      "failed": 0
+    },
+    "runtime": {
+      "passed": 86,
+      "deselected": 661,
+      "failed": 0
+    },
+    "architecture_validation": {
+      "passed": 12,
+      "failed": 0
+    },
+    "http_interface": {
+      "passed": true
+    },
+    "full_suite": {
+      "passed": 2204,
+      "subtests_passed": 128,
+      "historical_failures": 3,
+      "new_failures": 0
+    }
+  },
+  "verdict": "P0_RESOLVED"
+}

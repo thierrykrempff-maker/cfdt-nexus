@@ -196,7 +196,6 @@ function renderSources(element, answer, orchestration) {
       const article = source.article || source.article_or_section;
       if (article) metaParts.push(article);
       if (source.source_layer_label) metaParts.push(source.source_layer_label);
-      if (source.chunk_id) metaParts.push(source.chunk_id);
       if (source.official_id) metaParts.push(source.official_id);
       if (source.etat) metaParts.push(`etat ${source.etat}`);
       if (source.is_in_force !== undefined && source.is_in_force !== null) {
