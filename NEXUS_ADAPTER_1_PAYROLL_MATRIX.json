@@ -1,0 +1,92 @@
+{
+  "adapter": {
+    "input": "automation.contracts.ExpertReport",
+    "name": "payroll",
+    "package": "NEXUS_ADAPTERS.payroll",
+    "schema_version": "1.0"
+  },
+  "dependencies": {
+    "allowed": [
+      "Expert_Paie",
+      "NEXUS_CORE",
+      "python_standard_library"
+    ],
+    "core_depends_on_adapter": false
+  },
+  "diagnostics": [
+    "PAYROLL_DATA_ABSENT",
+    "PAYROLL_DATA_INCOMPLETE",
+    "PAYROLL_SCHEMA_INCOMPATIBLE",
+    "PAYROLL_SOURCE_DIAGNOSTICS_PRESENT"
+  ],
+  "invariants": {
+    "business_calculation": false,
+    "business_rule": false,
+    "implicit_mapping": false,
+    "network_access": false,
+    "personal_data_in_diagnostics": false,
+    "source_engine_execution": false
+  },
+  "mappings": [
+    {
+      "source": "findings",
+      "targets": [
+        "Evidence",
+        "Finding"
+      ]
+    },
+    {
+      "source": "contradictions",
+      "targets": [
+        "Evidence",
+        "Finding"
+      ]
+    },
+    {
+      "source": "missing_information",
+      "targets": [
+        "Evidence",
+        "Finding"
+      ]
+    },
+    {
+      "source": "risks",
+      "targets": [
+        "Evidence",
+        "Finding"
+      ]
+    },
+    {
+      "source": "recommendations",
+      "targets": [
+        "Recommendation"
+      ]
+    },
+    {
+      "source": "proposed_actions",
+      "targets": [
+        "Recommendation"
+      ]
+    },
+    {
+      "source": "KnowledgeSource",
+      "targets": [
+        "DocumentReference",
+        "Provenance"
+      ]
+    },
+    {
+      "source": "SourceEvidence",
+      "targets": [
+        "Evidence"
+      ]
+    }
+  ],
+  "protocols": [
+    "ExecutableEngine",
+    "FactProducer",
+    "EvidenceProducer",
+    "FindingProducer",
+    "RecommendationProducer"
+  ]
+}

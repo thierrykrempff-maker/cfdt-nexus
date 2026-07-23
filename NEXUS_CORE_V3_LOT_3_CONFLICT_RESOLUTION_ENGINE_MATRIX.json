@@ -1,0 +1,67 @@
+{
+  "architecture": {
+    "dependencies": [
+      "NEXUS_CORE"
+    ],
+    "forbidden_dependencies": [
+      "automation",
+      "connectors",
+      "database",
+      "domain_engines",
+      "network"
+    ],
+    "package": "NEXUS_CORE.conflict_resolution",
+    "schema_version": "1.0"
+  },
+  "categories": [
+    "NO_CONFLICT",
+    "DOCUMENT_CONFLICT",
+    "TEMPORAL_CONFLICT",
+    "SOURCE_CONFLICT",
+    "MISSING_EVIDENCE",
+    "INSUFFICIENT_EVIDENCE",
+    "PARTIAL_CORROBORATION",
+    "STRONG_CORROBORATION",
+    "MULTIPLE_HYPOTHESES",
+    "UNRESOLVED"
+  ],
+  "coherence_dimensions": [
+    "temporal",
+    "documentary",
+    "corroboration",
+    "provenance",
+    "completeness"
+  ],
+  "inputs": [
+    "ReasoningReport",
+    "EvidenceGraph",
+    "Evidence",
+    "Finding",
+    "EvidenceConflict",
+    "Fact"
+  ],
+  "invariants": {
+    "automatic_decision": false,
+    "document_priority": false,
+    "evidence_selection": false,
+    "legal_rule": false,
+    "network_access": false,
+    "sensitive_values_in_diagnostics": false
+  },
+  "outputs": [
+    "ResolutionCandidate",
+    "ResolutionClassification",
+    "ResolutionDiagnostic",
+    "CoherenceAssessment",
+    "ResolutionSummary",
+    "ResolutionReport"
+  ],
+  "pipeline": [
+    "classify",
+    "explain",
+    "evaluate_coherence",
+    "diagnose_missing_evidence",
+    "build_report",
+    "serialize"
+  ]
+}

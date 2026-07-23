@@ -31,6 +31,29 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(EXPERTS_DIR))
 from experts import orchestrator, report_generator  # noqa: E402
 from employee_case_demo import build_demo_payload, public_scenarios  # noqa: E402
+from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
+    RuntimeCoreIntegration,
+    RuntimeCoreIntegrationInput,
+    RuntimeCoreReportMapper,
+    RuntimeConnectorConfig,
+    RuntimeConnectorPayloadMapper,
+    RuntimeCSEMemoryConfig,
+    RuntimeCSEMemoryDiagnostics,
+    RuntimeCSEMemoryIntegration,
+    RuntimeCSEMemoryMode,
+    RuntimeCSEMemoryReportMapper,
+    RuntimeCSEMemoryResult,
+    RuntimeIntegrationConfig,
+    RuntimeOfficialConnectorsConfig,
+    RuntimeOfficialConnectorsIntegration,
+    RuntimeProtectionSocialeConfig,
+    RuntimeProtectionSocialeIntegration,
+    RuntimeProtectionSocialeReportMapper,
+    RuntimeRetirementConfig,
+    RuntimeRetirementIntegration,
+    RuntimeRetirementReportMapper,
+    sanitize_public_payload,
+)
 
 
 def router_environment() -> dict[str, str]:
@@ -71,6 +94,8 @@ def run_router(query: str, source_limit: int = 6) -> dict[str, Any]:
 
 
 def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
+    """Build the complete internal payload used by Runtime integrations."""
+
     cleaned = (query or "").strip()
     if not cleaned:
         raise ValueError("Question vide.")
@@ -81,8 +106,66 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         "answer": answer,
         **expert_payload,
     }
-    payload["analysis_report"] = report_generator.build_report(payload)
+    connector_config = RuntimeConnectorConfig.from_env()
+    connector_mapping = RuntimeConnectorPayloadMapper(connector_config).map(answer)
+    official_config = RuntimeOfficialConnectorsConfig.from_env()
+    official_connectors = RuntimeOfficialConnectorsIntegration(official_config).integrate(answer)
+    payload["official_connectors_runtime"] = official_connectors.to_dict()
+    integration = RuntimeCoreIntegration(RuntimeIntegrationConfig.from_env()).integrate(
+        RuntimeCoreIntegrationInput(
+            answer=answer,
+            legal_payload=payload.get("expert_juriste"),
+            payroll_payload=payload.get("expert_paie"),
+            historical_orchestration=payload.get("orchestration") or {},
+            connector_inputs=connector_mapping.inputs + official_connectors.inputs,
+            connector_runtime_enabled=connector_config.enabled or official_config.enabled,
+            connector_mapping_fallback_code=connector_mapping.fallback_code,
+        )
+    )
+    payload["runtime_integration"] = integration.to_dict()
+    historical_report = report_generator.build_report(payload)
+    core_report = RuntimeCoreReportMapper().map(historical_report, integration)
+    cse_config = RuntimeCSEMemoryConfig.from_env(
+        default_root=ROOT / "CCSEMEMORYENGINE" / "PROCESSED" / "LOT_1D"
+    )
+    try:
+        cse_integration = RuntimeCSEMemoryIntegration(cse_config).integrate(answer)
+    except Exception:
+        cse_integration = RuntimeCSEMemoryResult(
+            RuntimeCSEMemoryMode.FALLBACK,
+            RuntimeCSEMemoryDiagnostics(
+                cse_config.enabled,
+                called=True,
+                fallback_triggered=True,
+                fallback_code="CSE_MEMORY_RUNTIME_FAILED",
+            ),
+        )
+    payload["cse_memory_runtime"] = cse_integration.to_dict()
+    cse_report = RuntimeCSEMemoryReportMapper().map(core_report, cse_integration)
+    retirement_integration = RuntimeRetirementIntegration(
+        RuntimeRetirementConfig.from_env()
+    ).integrate(answer)
+    payload["retirement_runtime"] = retirement_integration.to_dict()
+    retirement_report = RuntimeRetirementReportMapper().map(
+        cse_report, retirement_integration
+    )
+    protection_config = RuntimeProtectionSocialeConfig.from_env(
+        default_root=ROOT / "PROTECTION_SOCIALE_ENGINE" / "PROCESSED" / "LOT_1D"
+    )
+    protection_integration = RuntimeProtectionSocialeIntegration(
+        protection_config
+    ).integrate(answer)
+    payload["protection_sociale_runtime"] = protection_integration.to_dict()
+    payload["analysis_report"] = RuntimeProtectionSocialeReportMapper().map(
+        retirement_report, protection_integration
+    )
     return payload
+
+
+def analyze_public_question(query: str, source_limit: int = 6) -> dict[str, Any]:
+    """Return the user-facing payload without internal identifiers or paths."""
+
+    return sanitize_public_payload(analyze_question(query, source_limit))
 
 
 class NexusHandler(SimpleHTTPRequestHandler):
@@ -143,7 +226,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             body = self.rfile.read(length).decode("utf-8")
             payload = json.loads(body or "{}")
             source_limit = int(payload.get("source_limit") or 6)
-            result = analyze_question(str(payload.get("query") or ""), source_limit)
+            result = analyze_public_question(str(payload.get("query") or ""), source_limit)
             self.send_json(HTTPStatus.OK, result)
         except ValueError as exc:
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})

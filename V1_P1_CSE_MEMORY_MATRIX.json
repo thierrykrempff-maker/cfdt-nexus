@@ -1,0 +1,108 @@
+{
+  "lot": "V1_STABILISATION_P1_2_CSE_MEMORY",
+  "branch": "nexus-v1-stabilization-p1-cse-memory",
+  "base_head": "d0ad37e4114e6aa4059a4fb0954868cbdf34e8e8",
+  "scope": {
+    "cse_memory_selection_only": true,
+    "business_engines_modified": false,
+    "official_connectors_modified": false,
+    "agreements_modified": false,
+    "corpus_modified": false,
+    "core_v3_modified": false
+  },
+  "causes": [
+    {
+      "scenario_id": "V1-CSE-004",
+      "type": "TECHNICAL_IDENTIFIER_PRIVACY_FALSE_POSITIVE",
+      "detail": "A deterministic hexadecimal hash formed a ten-digit run after separator normalization.",
+      "resolution": "Alphabetic deterministic encoding for CSE Runtime hashes."
+    },
+    {
+      "scenario_id": "V1-IN-004",
+      "type": "MISSING_HISTORICAL_AGREEMENT_DOCUMENTARY_RULE",
+      "resolution": "Bounded old-agreement plus document/date condition."
+    },
+    {
+      "scenario_id": "V1-MD-006",
+      "type": "MISSING_CSE_PROJECT_IMPACT_RULE",
+      "resolution": "Project and impact markers under the detected CSE domain."
+    },
+    {
+      "scenario_id": "V1-PS-004",
+      "type": "MISSING_HEALTH_GUARANTEE_DOCUMENTARY_RULE",
+      "resolution": "Bounded health-guarantee plus change/document condition."
+    },
+    {
+      "scenario_id": "V1-RG-005",
+      "type": "MISSING_AUTOMATED_CLASSIFICATION_RULE",
+      "resolution": "Bounded tool plus automatic-classification condition."
+    },
+    {
+      "scenario_id": "V1-DT-013",
+      "type": "OVERBROAD_COLLECTIVE_ACTION_MARKER",
+      "resolution": "Generic collective-action marker removed."
+    },
+    {
+      "scenario_id": "V1-DT-018",
+      "type": "OVERBROAD_INTERNAL_INVESTIGATION_MARKER",
+      "resolution": "Generic internal-investigation marker removed."
+    }
+  ],
+  "metrics": {
+    "expected_scenarios": 13,
+    "before": {
+      "observed_scenarios": 10,
+      "correctly_enriched_scenarios": 8,
+      "effective_usage_rate_percent": 61.54,
+      "missing_expected_scenarios": 5,
+      "unjustified_activations": 2,
+      "cse_memory_fallbacks": 1
+    },
+    "after": {
+      "observed_scenarios": 13,
+      "correctly_enriched_scenarios": 13,
+      "effective_usage_rate_percent": 100.0,
+      "missing_expected_scenarios": 0,
+      "unjustified_activations": 0,
+      "cse_memory_fallbacks": 0
+    },
+    "corrected_scenarios": [
+      "V1-CSE-004",
+      "V1-IN-004",
+      "V1-MD-006",
+      "V1-PS-004",
+      "V1-RG-005"
+    ],
+    "remaining_cse_memory_anomalies": []
+  },
+  "transversal_impact": {
+    "campaign_technical_successes": 100,
+    "campaign_scenario_count": 100,
+    "routing_correct_before": 100,
+    "routing_correct_after": 100,
+    "fully_activated_connector_scenarios_before": 36,
+    "fully_activated_connector_scenarios_after": 39,
+    "other_connector_observation_changes": [],
+    "global_runtime_fallbacks_before": 66,
+    "global_runtime_fallbacks_after": 66
+  },
+  "tests": {
+    "cse_memory_targeted": {
+      "passed": 15
+    },
+    "runtime": {
+      "passed": 94,
+      "deselected": 668
+    },
+    "architecture": {
+      "passed": 12
+    },
+    "full_suite": {
+      "passed": 2219,
+      "subtests_passed": 128,
+      "historical_failures": 3,
+      "new_failures": 0
+    },
+    "git_diff_check": "PASS"
+  }
+}

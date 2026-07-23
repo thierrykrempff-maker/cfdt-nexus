@@ -1,0 +1,73 @@
+{
+  "architecture": {
+    "dependencies": [
+      "NEXUS_CORE",
+      "python_standard_library"
+    ],
+    "forbidden_dependencies": [
+      "automation",
+      "connectors",
+      "database",
+      "domain_engines",
+      "network"
+    ],
+    "package": "NEXUS_CORE.orchestration",
+    "schema_version": "1.0"
+  },
+  "components": [
+    "EngineRegistry",
+    "ExecutionPlanner",
+    "PipelineExecutor",
+    "ExecutionReportBuilder",
+    "JsonExecutionReporter"
+  ],
+  "cycle": [
+    "register_engines",
+    "verify_capabilities",
+    "build_plan",
+    "execute_sequentially",
+    "capture_diagnostics",
+    "aggregate_technical_results",
+    "build_report",
+    "serialize"
+  ],
+  "future": {
+    "core_5": "progressive_domain_engine_adapters",
+    "framework_domain_independence": true
+  },
+  "invariants": {
+    "api_calls": false,
+    "business_logic": false,
+    "business_payload_in_report": false,
+    "document_priority": false,
+    "generative_ai": false,
+    "legal_logic": false,
+    "network_access": false,
+    "sensitive_values": false,
+    "user_interface": false
+  },
+  "models": [
+    "EngineDescriptor",
+    "EngineCapability",
+    "ExecutionPlan",
+    "ExecutionStage",
+    "ExecutionContext",
+    "ExecutionResult",
+    "ExecutionSummary",
+    "ExecutionDiagnostics",
+    "ExecutionMetadata",
+    "ExecutionReport"
+  ],
+  "protocols": [
+    "ExecutableEngine",
+    "ExecutionReporter",
+    "ExecutionPlannerProtocol"
+  ],
+  "registry_api": [
+    "register",
+    "unregister",
+    "get",
+    "list",
+    "supports"
+  ]
+}

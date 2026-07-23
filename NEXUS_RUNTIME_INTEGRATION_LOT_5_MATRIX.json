@@ -1,0 +1,85 @@
+{
+  "lot": "RUNTIME_INTEGRATION_LOT_5",
+  "branch": "nexus-runtime-integration-lot-5-protection-sociale",
+  "starting_commit": "08a7262b1e68ff947d2fd8078663fec4ddebda61",
+  "created_files": [
+    "NEXUS_RUNTIME_INTEGRATION/protection_sociale_search.py",
+    "NEXUS_RUNTIME_INTEGRATION/protection_sociale_runtime.py",
+    "NEXUS_RUNTIME_INTEGRATION_LOT_5.md",
+    "NEXUS_RUNTIME_INTEGRATION_LOT_5_MATRIX.json",
+    "tests/test_runtime_protection_sociale_search.py",
+    "tests/test_runtime_protection_sociale_integration.py",
+    "tests/test_runtime_protection_sociale_core_and_confidentiality.py",
+    "tests/test_runtime_protection_sociale_server_integration.py"
+  ],
+  "modified_files": [
+    "NEXUS_RUNTIME_INTEGRATION/__init__.py",
+    "NEXUS_RUNTIME_INTEGRATION/config.py",
+    "NEXUS_RUNTIME_INTEGRATION/report_mapper.py",
+    "apps/nexus-local-interface/server.py"
+  ],
+  "feature_flag": {
+    "name": "NEXUS_PROTECTION_SOCIALE_RUNTIME_ENABLED",
+    "default": false,
+    "independent": true
+  },
+  "components_called": [
+    "Protection Sociale LOT 1D Chunk",
+    "GenericConnectorAdapter",
+    "PipelineExecutor",
+    "CommonExpertOrchestrator"
+  ],
+  "runtime_path": [
+    "router",
+    "protection_sociale_detection",
+    "lot_1d_metadata_lookup",
+    "runtime_mapper",
+    "generic_connector_adapter",
+    "pipeline_executor",
+    "common_expert_orchestrator",
+    "report_mapper"
+  ],
+  "diagnostics": [
+    "protection_sociale_called",
+    "protection_sociale_runtime_ms",
+    "protection_sociale_elements_used",
+    "protection_sociale_fallback"
+  ],
+  "fallbacks": [
+    "PROTECTION_SOCIALE_UNAVAILABLE",
+    "PROTECTION_SOCIALE_NO_RESULT",
+    "PROTECTION_SOCIALE_MAPPING_FAILED",
+    "PROTECTION_SOCIALE_ADAPTER_FAILED",
+    "PROTECTION_SOCIALE_CORE_FAILED",
+    "PROTECTION_SOCIALE_ORCHESTRATOR_FAILED"
+  ],
+  "tests": [
+    "feature_flag",
+    "detection",
+    "read_only_search",
+    "adapter",
+    "core_pipeline",
+    "common_orchestration",
+    "fallback",
+    "server",
+    "confidentiality"
+  ],
+  "confidentiality": {
+    "metadata_only": true,
+    "corpus_read_only": true,
+    "raw_content_exposed": false,
+    "paths_exposed": false,
+    "internal_identifiers_exposed": false,
+    "persistent_index_created": false
+  },
+  "out_of_scope": [
+    "cssct",
+    "cpam",
+    "external_connectors",
+    "new_api",
+    "semantic_search",
+    "benefit_calculation",
+    "router_refactor",
+    "business_engine_change"
+  ]
+}

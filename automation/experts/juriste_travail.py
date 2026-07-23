@@ -14,6 +14,8 @@ from .utils import has_any, normalize, route_domains, source_documents, unique
 
 
 JURISTE_DOMAINS = {
+    "droit_travail_general",
+    "rgpd_cnil",
     "cse",
     "cssct_securite",
     "droit_syndical",
@@ -83,6 +85,10 @@ LEGAL_SIGNAL_KEYWORDS = [
     "repos",
     "astreinte",
     "classification",
+    "coefficient",
+    "anciennete",
+    "transfert",
+    "cycle",
     "fiche de poste",
     "contester",
     "droit",

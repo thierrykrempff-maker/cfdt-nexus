@@ -1,0 +1,37 @@
+{
+  "adapter": "retirement",
+  "version": "1.0",
+  "source": "RETIREMENT_PENIBILITY_ENGINE",
+  "target": "NEXUS_CORE",
+  "domain": "retirement_penibility",
+  "moves_business_logic": false,
+  "protocols": [
+    "ExecutableEngine",
+    "EvidenceProducer",
+    "FindingProducer",
+    "RecommendationProducer",
+    "FactProducer"
+  ],
+  "mappings": [
+    {"from": "ExpertReport", "to": ["Evidence", "Finding", "Recommendation"]},
+    {"from": "CareerEvidenceItem", "to": ["Evidence", "DocumentReference", "Provenance"]},
+    {"from": "EvidenceItem", "to": ["Evidence"]},
+    {"from": "ReconstructedCareerPeriod", "to": ["EmploymentPeriod"]},
+    {"from": "MissingInformation", "to": ["Finding"]},
+    {"from": "ReasoningFinding", "to": ["Finding"]},
+    {"from": "recommended_actions", "to": ["Recommendation"]},
+    {"from": "ReconstructionConflict", "to": ["ReasoningConflict", "ResolutionCandidate"]},
+    {"from": "ReasoningConflict", "to": ["ReasoningConflict", "ResolutionCandidate"]}
+  ],
+  "invariants": {
+    "explicit_mapping": true,
+    "deterministic": true,
+    "immutable_result": true,
+    "no_calculation": true,
+    "no_arbitration": true,
+    "no_network": true,
+    "no_personal_data_in_diagnostics": true,
+    "retirement_engine_modified": false,
+    "nexus_core_modified": false
+  }
+}

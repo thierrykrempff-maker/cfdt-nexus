@@ -122,9 +122,9 @@ def assert_base_payload(payload: dict[str, object]) -> None:
     assert "niveau_de_confiance" in orchestration
     assert report["inputs"]["router_version"] == answer["route"]["router_version"]
     assert report["inputs"]["source_count"] == len(answer["sources"])
-    assert "automation/scripts/assistant_ds_router.py: ask --format json" in report["generated_from"]
-    assert "automation/experts/orchestrator.py: orchestrate" in report["generated_from"]
-    assert "automation/experts/report_generator.py: build_report" in report["generated_from"]
+    assert "Routeur Nexus" in report["generated_from"]
+    assert "Orchestration experte" in report["generated_from"]
+    assert "Rapport Nexus" in report["generated_from"]
     assert "TOPIC_RULES" not in report["markdown"]
     assert "CFDT_NEXUS_SALARY_ANALYSIS_V22" not in report["markdown"]
     assert report_section(report, "sources")["items"]
@@ -138,8 +138,8 @@ def assert_base_payload(payload: dict[str, object]) -> None:
         assert "source_layer_label" in source
         assert "excerpt" in source
         assert "article_or_section" in source
-        assert "chunk_id" in source
-        assert "ranking_reasons" in source
+        assert "chunk_id" not in source
+        assert "ranking_reasons" not in source
         assert "source_quality_warning" in source
     layers = source_layers(answer)
     if layers["code_travail"]["status"] == "present":
@@ -272,8 +272,8 @@ def main() -> None:
         assert_base_payload(juriste_payload)
         assert juriste_payload["expert_juriste"]["active"] is True
         assert juriste_payload["expert_paie"]["active"] is False
-        assert "automation/experts/juriste_travail.py: enrich" in juriste_payload["analysis_report"]["generated_from"]
-        assert "automation/experts/paie.py: enrich" not in juriste_payload["analysis_report"]["generated_from"]
+        assert "Juriste Travail" in juriste_payload["analysis_report"]["generated_from"]
+        assert "Expert Paie" not in juriste_payload["analysis_report"]["generated_from"]
         assert juriste_payload["expert_juriste"]["prompt_version"] == "EXPERT_JURISTE_CFDT_NEXUS_V1"
         assert juriste_payload["expert_juriste"]["strategie_de_defense"]["argument_principal"]
         assert isinstance(juriste_payload["expert_juriste"]["analyse_contradictoire_contentieux"], list)
@@ -338,8 +338,8 @@ def main() -> None:
         assert_base_payload(paie_payload)
         assert paie_payload["expert_juriste"]["active"] is False
         assert paie_payload["expert_paie"]["active"] is True
-        assert "automation/experts/juriste_travail.py: enrich" not in paie_payload["analysis_report"]["generated_from"]
-        assert "automation/experts/paie.py: enrich" in paie_payload["analysis_report"]["generated_from"]
+        assert "Juriste Travail" not in paie_payload["analysis_report"]["generated_from"]
+        assert "Expert Paie" in paie_payload["analysis_report"]["generated_from"]
         assert paie_payload["orchestration"]["experts_mobilises"] == ["Expert Paie V0"]
         paie_text = " ".join(paie_payload["expert_paie"]["elements_du_bulletin_concernes"])
         assert "nuit" in normalize(paie_text)
@@ -354,8 +354,8 @@ def main() -> None:
         assert_base_payload(mixed_payload)
         assert mixed_payload["expert_juriste"]["active"] is True
         assert mixed_payload["expert_paie"]["active"] is True
-        assert "automation/experts/juriste_travail.py: enrich" in mixed_payload["analysis_report"]["generated_from"]
-        assert "automation/experts/paie.py: enrich" in mixed_payload["analysis_report"]["generated_from"]
+        assert "Juriste Travail" in mixed_payload["analysis_report"]["generated_from"]
+        assert "Expert Paie" in mixed_payload["analysis_report"]["generated_from"]
         assert [group["id"] for group in mixed_payload["answer"]["issue_groups"]] == ["repos", "astreinte", "paie"]
         synthesis = normalize(mixed_payload["orchestration"]["reponse_synthetique_nexus"])
         assert "droit du travail" in synthesis

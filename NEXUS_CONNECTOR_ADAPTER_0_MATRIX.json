@@ -1,0 +1,48 @@
+{
+  "lot": "NEXUS_CONNECTOR_ADAPTER_0",
+  "version": "1.0",
+  "network_access": false,
+  "concrete_adapters": [],
+  "protocols": [
+    "ConnectorSnapshotProvider",
+    "ConnectorAdapter",
+    "ConnectorAdapterReporter",
+    "ConnectorAdapterValidatorProtocol",
+    "ExecutableEngine"
+  ],
+  "inputs": [
+    "ConnectorDescriptor",
+    "ConnectorSourceSnapshot",
+    "ConnectorDocumentSnapshot",
+    "ConnectorRecordSnapshot",
+    "ConnectorQuerySnapshot",
+    "ConnectorResponseSnapshot"
+  ],
+  "outputs": [
+    "DocumentReference",
+    "Evidence",
+    "Provenance",
+    "ConfidenceAssessment",
+    "Finding",
+    "ExecutionResult",
+    "ConnectorAdapterDiagnostics"
+  ],
+  "future_adapter_order": [
+    "legifrance",
+    "judilibre",
+    "code_du_travail_numerique",
+    "cnil",
+    "carsat",
+    "other_connectors"
+  ],
+  "invariants": {
+    "immutable_snapshots": true,
+    "stable_sha256_identifiers": true,
+    "no_inferred_legal_rule": true,
+    "no_inferred_recommendation": true,
+    "safe_diagnostics": true,
+    "deterministic_json": true,
+    "nexus_core_modified": false,
+    "existing_connectors_modified": false
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "version": "1.0",
+  "branch": "nexus-core-v3-lot-2-conflict-resolver",
+  "commit_base": "3a066aa643569324364867c55109a6dd1ef93def",
+  "module": "NEXUS_CORE.reasoning",
+  "pipeline": [
+    "evidence",
+    "facts",
+    "correlations",
+    "corroborations",
+    "conflicts",
+    "missing_evidence",
+    "confidence_assessment",
+    "reasoning_report"
+  ],
+  "models": [
+    "Fact",
+    "FactCollection",
+    "FactType",
+    "FactCorrelation",
+    "Corroboration",
+    "ReasoningConflict",
+    "ConflictExplanation",
+    "MissingEvidence",
+    "ConfidenceAssessment",
+    "ReasoningStep",
+    "ReasoningReport"
+  ],
+  "enums": [
+    "CorroborationStrength",
+    "MissingEvidenceReason",
+    "ReasoningConfidence"
+  ],
+  "engines": [
+    "FactExtractor",
+    "FactCorrelationEngine",
+    "CorroborationEngine",
+    "ConflictEngine",
+    "MissingEvidenceEngine",
+    "ConfidenceEngine",
+    "GenericReasoningPipeline",
+    "ReasoningReportBuilder",
+    "JsonReasoningReporter"
+  ],
+  "protocols": [
+    "FactProducer",
+    "ReasoningEngine",
+    "ReasoningReporter"
+  ],
+  "invariants": [
+    "one fact at most per evidence identifier",
+    "no invented fact",
+    "no fact merge",
+    "no conflict arbitration",
+    "no selected fact",
+    "missing evidence driven by explicit requirements",
+    "technical confidence only",
+    "diagnostics without inspected values"
+  ],
+  "dependencies_allowed": [
+    "NEXUS_CORE",
+    "Python 3.10 standard library"
+  ],
+  "dependencies_forbidden": [
+    "domain engines",
+    "automation",
+    "official connectors",
+    "network clients",
+    "web APIs",
+    "databases",
+    "persistent storage",
+    "generative AI"
+  ],
+  "serialization": {
+    "format": "deterministic JSON",
+    "dates": "ISO 8601",
+    "enums": "explicit string values",
+    "sensitive_values": "redacted",
+    "schema_version": "1.0"
+  },
+  "tests": [
+    "tests/test_reasoning_facts.py",
+    "tests/test_reasoning_correlation.py",
+    "tests/test_reasoning_corroboration.py",
+    "tests/test_reasoning_conflicts.py",
+    "tests/test_reasoning_missing_evidence.py",
+    "tests/test_reasoning_confidence.py",
+    "tests/test_reasoning_report.py"
+  ],
+  "out_of_scope": [
+    "business rules",
+    "legal rules",
+    "document priority",
+    "legal hierarchy",
+    "conflict resolution",
+    "automatic decision",
+    "orchestrator",
+    "API",
+    "user interface",
+    "generative AI"
+  ],
+  "next_lots": {
+    "CORE_3": "Conflict Resolver",
+    "CORE_4": "Nexus Orchestrator",
+    "CORE_5": "Cockpit DS"
+  }
+}

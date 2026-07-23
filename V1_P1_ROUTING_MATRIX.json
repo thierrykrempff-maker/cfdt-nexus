@@ -1,0 +1,158 @@
+{
+  "lot": "V1_STABILISATION_P1_1_ROUTING",
+  "branch": "nexus-v1-stabilization-p1-routing",
+  "base_head": "25d5fe07f1d65d5c66a70db9ef38e7afcc7f2413",
+  "scope": {
+    "routing_only": true,
+    "business_rules_modified": false,
+    "connectors_modified": false,
+    "corpora_modified": false,
+    "core_v3_modified": false
+  },
+  "campaign": {
+    "scenario_count": 100,
+    "technical_successes": 100,
+    "technical_failures": 0,
+    "expected_connector_scenarios": 94
+  },
+  "metrics": {
+    "routing": {
+      "before_correct": 75,
+      "before_rate_percent": 75.0,
+      "after_correct": 100,
+      "after_rate_percent": 100.0
+    },
+    "connector_activation": {
+      "before_fully_activated": 19,
+      "before_rate_percent": 20.21,
+      "after_fully_activated": 36,
+      "after_rate_percent": 38.3,
+      "missing_scenarios_before": 75,
+      "missing_scenarios_after": 58,
+      "missing_occurrences_before": 133,
+      "missing_occurrences_after": 73,
+      "unnecessary_occurrences_before": 79,
+      "unnecessary_occurrences_after": 13,
+      "unnecessary_scenarios_before": 64,
+      "unnecessary_scenarios_after": 13
+    },
+    "expert_selection": {
+      "expected_occurrences": 185,
+      "correct_occurrences_before": 117,
+      "correct_occurrences_after": 151,
+      "complete_scenarios_before": 43,
+      "complete_scenarios_after": 69
+    },
+    "fully_corrected_scenarios": {
+      "count": 22,
+      "criterion": "Previously anomalous, then routing correct and every expected connector observed",
+      "ids": [
+        "V1-CH-002",
+        "V1-CH-003",
+        "V1-CH-005",
+        "V1-CH-006",
+        "V1-CH-007",
+        "V1-CSE-006",
+        "V1-CSE-008",
+        "V1-CSE-010",
+        "V1-DT-005",
+        "V1-DT-007",
+        "V1-DT-012",
+        "V1-DT-013",
+        "V1-DT-016",
+        "V1-DT-020",
+        "V1-PA-003",
+        "V1-PA-011",
+        "V1-RE-005",
+        "V1-RG-002",
+        "V1-RG-003",
+        "V1-SE-001",
+        "V1-SE-004",
+        "V1-SE-006"
+      ]
+    },
+    "fallbacks": {
+      "before": 62,
+      "after": 66,
+      "out_of_scope": true
+    }
+  },
+  "connectors": {
+    "cdtn": {
+      "expected": 31,
+      "missing_before": 16,
+      "missing_after": 7,
+      "unnecessary_after": 0
+    },
+    "cnil": {
+      "expected": 7,
+      "missing_before": 7,
+      "missing_after": 1,
+      "unnecessary_after": 0
+    },
+    "cse_memory": {
+      "expected": 13,
+      "missing_before": 9,
+      "missing_after": 5,
+      "unnecessary_after": 2
+    },
+    "dreets_grand_est": {
+      "expected": 7,
+      "missing_before": 7,
+      "missing_after": 1,
+      "unnecessary_after": 1
+    },
+    "inrs": {
+      "expected": 19,
+      "missing_before": 19,
+      "missing_after": 4,
+      "unnecessary_after": 5
+    },
+    "judilibre": {
+      "expected": 23,
+      "missing_before": 7,
+      "missing_after": 0,
+      "unnecessary_after": 0
+    },
+    "legifrance": {
+      "expected": 85,
+      "missing_before": 56,
+      "missing_after": 43,
+      "unnecessary_after": 5
+    },
+    "protection_sociale_local": {
+      "expected": 16,
+      "missing_before": 12,
+      "missing_after": 12,
+      "unnecessary_after": 0
+    }
+  },
+  "remaining_anomalies": {
+    "routing_scenarios": 0,
+    "missing_connector_scenarios": 58,
+    "missing_connector_occurrences": 73,
+    "unnecessary_connector_scenarios": 13,
+    "unnecessary_connector_occurrences": 13,
+    "missing_expert_occurrences": 34,
+    "incomplete_expert_scenarios": 31,
+    "runtime_fallbacks": 66,
+    "new_test_failures": 0,
+    "historical_test_failures": 3
+  },
+  "tests": {
+    "runtime": {
+      "passed": 90,
+      "deselected": 668
+    },
+    "architecture": {
+      "passed": 12
+    },
+    "full_suite": {
+      "passed": 2215,
+      "subtests_passed": 128,
+      "historical_failures": 3,
+      "new_failures": 0
+    },
+    "git_diff_check": "PASS"
+  }
+}

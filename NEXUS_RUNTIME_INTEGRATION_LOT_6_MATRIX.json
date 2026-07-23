@@ -1,0 +1,38 @@
+{
+  "lot": "RUNTIME_INTEGRATION_LOT_6",
+  "feature_flag": {
+    "name": "NEXUS_OFFICIAL_CONNECTORS_RUNTIME_ENABLED",
+    "default": false
+  },
+  "inventory": [
+    {"id": "cnil", "implemented": true, "offline_metadata": true, "connected": true},
+    {"id": "dreets_grand_est", "implemented": true, "offline_metadata": true, "connected": true},
+    {"id": "inrs", "implemented": true, "offline_metadata": true, "connected": true},
+    {"id": "carsat", "implemented": "partial", "offline_metadata": true, "connected": false, "reason": "NO_PUBLIC_DISCOVERY_FACADE"},
+    {"id": "france_chimie", "implemented": "partial", "offline_metadata": true, "connected": false, "reason": "DOMAIN_POLICY_INACTIVE"},
+    {"id": "anact", "implemented": "partial", "offline_metadata": true, "connected": false, "reason": "PUBLIC_DISCOVERY_NOT_IMPLEMENTED"}
+  ],
+  "runtime_path": [
+    "router",
+    "official_connector_public_metadata_api",
+    "generic_connector_adapter",
+    "nexus_core_v3",
+    "pipeline_executor",
+    "common_expert_orchestrator",
+    "report"
+  ],
+  "diagnostics": [
+    "connector_runtime_called",
+    "connector_runtime_ms",
+    "connectors_used",
+    "connector_runtime_fallback"
+  ],
+  "constraints": {
+    "network": false,
+    "scraping": false,
+    "download": false,
+    "document_content": false,
+    "connector_changes": false,
+    "core_changes": false
+  }
+}
