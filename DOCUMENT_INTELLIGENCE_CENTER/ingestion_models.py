@@ -53,6 +53,12 @@ _SECRET = re.compile(
 _HTML = re.compile(r"<\s*(?:html|body|script|div|p|table|article)\b", re.I)
 
 
+def is_pseudonymous_id(value: str) -> bool:
+    """Return whether a value is safe to expose as a documentary identity."""
+
+    return bool(_PSEUDONYMOUS_ID.fullmatch(value))
+
+
 def validate_safe_metadata(value: str, field_name: str) -> str:
     """Reject content-like or sensitive values before graph ingestion."""
 
