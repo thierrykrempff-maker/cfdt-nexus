@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import json
 from typing import Any
 
-from DOCUMENT_INTELLIGENCE_CENTER.ingestion_models import is_pseudonymous_id
+from DOCUMENT_INTELLIGENCE_CENTER import is_pseudonymous_id
 
 from CSE_DECISION_TRACKER import TrackedCSEItem
 from CSE_KNOWLEDGE_ENGINE import CSEKnowledgeItem, RecurringSubject

@@ -6,10 +6,10 @@ from datetime import date
 from enum import Enum
 import re
 
-from DOCUMENT_INTELLIGENCE_CENTER.ingestion_models import validate_safe_metadata
+from DOCUMENT_INTELLIGENCE_CENTER import validate_safe_metadata
 
 from CSE_DECISION_TRACKER import TrackingStatus
-from CSE_KNOWLEDGE_ENGINE.policy import normalize_label
+from CSE_KNOWLEDGE_ENGINE import normalize_label
 
 
 class AgendaPriority(str, Enum):

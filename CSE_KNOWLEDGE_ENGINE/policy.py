@@ -5,8 +5,10 @@ from __future__ import annotations
 import re
 import unicodedata
 
-from DOCUMENT_INTELLIGENCE_CENTER import NavigationDocument
-from DOCUMENT_INTELLIGENCE_CENTER.ingestion_models import validate_safe_metadata
+from DOCUMENT_INTELLIGENCE_CENTER import (
+    NavigationDocument,
+    validate_safe_metadata,
+)
 
 
 DECISION_NATURE = "DECISION"
