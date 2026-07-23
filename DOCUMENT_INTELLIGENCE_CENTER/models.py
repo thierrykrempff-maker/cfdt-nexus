@@ -58,6 +58,10 @@ class DocumentDescriptor:
     effective_to: str | None = None
     version_label: str | None = None
     family: str | None = None
+    instance: str | None = None
+    nature: str | None = None
+    agreement_reference: str | None = None
+    status: str = "UNKNOWN"
     language: str = "fr"
     topics: tuple[str, ...] = field(default_factory=tuple)
     referenced_document_ids: tuple[str, ...] = field(default_factory=tuple)
@@ -74,6 +78,7 @@ class DocumentDescriptor:
         object.__setattr__(self, "title", self.title.strip())
         object.__setattr__(self, "provenance", self.provenance.strip())
         object.__setattr__(self, "language", self.language.strip().lower())
+        object.__setattr__(self, "status", self.status.strip().upper())
         object.__setattr__(self, "topics", _clean_tuple(self.topics))
         object.__setattr__(
             self,

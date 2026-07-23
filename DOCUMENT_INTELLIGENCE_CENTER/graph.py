@@ -39,6 +39,15 @@ class DocumentGraph:
             )
         self._documents[document.document_id] = document
 
+    def replace_document(self, document: DocumentDescriptor) -> None:
+        """Replace metadata for an existing node without changing its identity."""
+
+        if document.document_id not in self._documents:
+            raise DocumentGraphError(
+                f"cannot replace unknown document: {document.document_id}"
+            )
+        self._documents[document.document_id] = document
+
     def add_relation(self, relation: DocumentRelation) -> None:
         missing = {
             item
