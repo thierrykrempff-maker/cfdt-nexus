@@ -19,6 +19,8 @@ from .ingestion_models import (
     IssueSeverity,
     MeetingMinutesMetadataInput,
     MetadataStatus,
+    is_pseudonymous_id,
+    validate_safe_metadata,
 )
 from .ingestion_service import DocumentIngestionService
 from .metadata_index import MetadataIndex, MetadataQuery
@@ -74,6 +76,8 @@ __all__ = [
     "MetadataIndex",
     "MetadataQuery",
     "MetadataStatus",
+    "is_pseudonymous_id",
+    "validate_safe_metadata",
     "GraphPath",
     "GraphStatistics",
     "NavigationDirection",

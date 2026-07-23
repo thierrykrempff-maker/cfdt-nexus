@@ -10,6 +10,7 @@ from .models import (
     CSEMeetingSummary,
     RecurringSubject,
 )
+from .policy import normalize_label
 
 __all__ = [
     "AgendaItem",
@@ -20,4 +21,5 @@ __all__ = [
     "CSEKnowledgeReport",
     "CSEMeetingSummary",
     "RecurringSubject",
+    "normalize_label",
 ]

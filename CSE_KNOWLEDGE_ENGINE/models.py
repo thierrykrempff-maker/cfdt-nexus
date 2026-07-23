@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import json
 from typing import Any
 
-from DOCUMENT_INTELLIGENCE_CENTER.ingestion_models import (
+from DOCUMENT_INTELLIGENCE_CENTER import (
     is_pseudonymous_id,
     validate_safe_metadata,
 )

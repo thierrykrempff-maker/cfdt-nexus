@@ -74,6 +74,7 @@ class MetadataIndex:
             document.nature or "",
             document.family or "",
             document.version_label or "",
+            document.status,
         )
 
     def find_duplicate(

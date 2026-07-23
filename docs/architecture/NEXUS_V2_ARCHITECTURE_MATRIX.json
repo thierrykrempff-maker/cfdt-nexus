@@ -1,0 +1,170 @@
+{
+  "review": {
+    "name": "Nexus V2 Architecture Integration Review",
+    "scope": ["V2-1A", "V2-1B", "V2-1C", "V2-2A", "V2-2B", "V2-2C"],
+    "starting_head": "09fb2f5aa2a0362f9801ce0f11bd68a657d09184",
+    "recommendation": "READY WITH KNOWN LIMITATIONS"
+  },
+  "layers": [
+    {
+      "name": "DOCUMENT_INTELLIGENCE_CENTER",
+      "role": "document metadata ingestion, graph, index, versioning and navigation",
+      "depends_on_v2": []
+    },
+    {
+      "name": "CSE_KNOWLEDGE_ENGINE",
+      "role": "deterministic CSE knowledge projections",
+      "depends_on_v2": ["DOCUMENT_INTELLIGENCE_CENTER"]
+    },
+    {
+      "name": "CSE_DECISION_TRACKER",
+      "role": "decision, commitment and elected-action tracking",
+      "depends_on_v2": [
+        "DOCUMENT_INTELLIGENCE_CENTER",
+        "CSE_KNOWLEDGE_ENGINE"
+      ]
+    },
+    {
+      "name": "CSE_MEETING_ENGINE",
+      "role": "metadata-only CSE meeting preparation",
+      "depends_on_v2": [
+        "DOCUMENT_INTELLIGENCE_CENTER",
+        "CSE_KNOWLEDGE_ENGINE",
+        "CSE_DECISION_TRACKER"
+      ]
+    }
+  ],
+  "architecture_controls": {
+    "acyclic": true,
+    "reverse_dependencies": [],
+    "cross_package_internal_imports": [],
+    "runtime_dependencies": [],
+    "core_dependencies": [],
+    "expert_dependencies": [],
+    "network_dependencies": [],
+    "metadata_only": true,
+    "public_api_only": true
+  },
+  "public_apis": {
+    "DOCUMENT_INTELLIGENCE_CENTER": [
+      "DocumentGraph",
+      "DocumentIngestionService",
+      "DocumentNavigationService",
+      "MetadataIndex",
+      "is_pseudonymous_id",
+      "validate_safe_metadata"
+    ],
+    "CSE_KNOWLEDGE_ENGINE": [
+      "CSEKnowledgeAPI",
+      "CSEKnowledgeEngine",
+      "CSEKnowledgeQuery",
+      "CSEKnowledgeReport",
+      "normalize_label"
+    ],
+    "CSE_DECISION_TRACKER": [
+      "CSEDecisionTrackerAPI",
+      "CSEDecisionTracker",
+      "DecisionTrackerQuery",
+      "DecisionTrackingReport",
+      "TrackingStatus"
+    ],
+    "CSE_MEETING_ENGINE": [
+      "CSEMeetingPreparationAPI",
+      "CSEMeetingPreparationEngine",
+      "MeetingPreparationQuery",
+      "MeetingPreparationDossier"
+    ]
+  },
+  "findings": [
+    {
+      "id": "V2-REV-001",
+      "severity": "P1",
+      "status": "RESOLVED",
+      "title": "Cross-package imports bypassed public APIs",
+      "proof": "test_cross_package_imports_use_only_public_package_apis failed with eight violations",
+      "correction": "Export safe metadata helpers and label normalization from public facades, then import only from package roots"
+    },
+    {
+      "id": "V2-REV-002",
+      "severity": "P1",
+      "status": "RESOLVED",
+      "title": "Public ingestion status vocabulary could not represent tracker lifecycle states",
+      "proof": "test_closed_decision_is_not_reported_as_open raised ValueError for MetadataStatus('OPEN')",
+      "correction": "Add OPEN, IN_PROGRESS, CLOSED and CANCELLED to MetadataStatus"
+    },
+    {
+      "id": "V2-REV-003",
+      "severity": "P1",
+      "status": "RESOLVED",
+      "title": "Final meeting result depended on metadata insertion order",
+      "proof": "test_insertion_order_does_not_change_final_result failed",
+      "correction": "Include document status in the metadata deduplication key"
+    },
+    {
+      "id": "V2-REV-004",
+      "severity": "P2",
+      "status": "KNOWN_LIMITATION",
+      "title": "Deduplication key deliberately excludes normalized title",
+      "impact": "Distinct sources sharing every keyed metadata field may still be reconciled",
+      "recommendation": "Change only after a documented identity case demonstrates the need"
+    },
+    {
+      "id": "V2-REV-005",
+      "severity": "P3",
+      "status": "ACCEPTED",
+      "title": "Layer-specific document projections and serialization helpers are repetitive",
+      "impact": "Small amount of boilerplate",
+      "recommendation": "Keep separate to preserve least-data boundaries and avoid additional coupling"
+    }
+  ],
+  "integration_scenarios": [
+    "open decision reaches preparation dossier",
+    "due management commitment reaches agenda",
+    "closed decision is excluded from open decisions",
+    "recurring subject derives from explicit relations and metadata",
+    "linked agreement is joined to the meeting",
+    "ongoing consultation is counted",
+    "forbidden inherited metadata is rejected",
+    "identical executions produce identical JSON",
+    "insertion order does not change the result",
+    "orphan document is handled safely"
+  ],
+  "determinism": {
+    "explicit_business_dates": true,
+    "stable_serialization": true,
+    "insertion_order_invariant": true,
+    "implicit_clock_calls": [],
+    "random_uuid_calls": [],
+    "environment_reads": [],
+    "mutable_global_state_detected": false
+  },
+  "confidentiality": {
+    "full_text_exposed": false,
+    "pdf_exposed": false,
+    "html_exposed": false,
+    "chunks_exposed": false,
+    "local_paths_exposed": false,
+    "personal_data_exposed": false,
+    "raw_corpus_exposed": false,
+    "inherited_metadata_revalidated": true
+  },
+  "validation_results": {
+    "targeted_v2": {
+      "passed": 155,
+      "failed": 0
+    },
+    "new_integration_tests": {
+      "passed": 14,
+      "failed": 0
+    },
+    "full_suite": {
+      "passed": 2433,
+      "subtests_passed": 128,
+      "historical_failures": 3,
+      "new_failures": 0
+    },
+    "python_3_10_syntax": "PASS",
+    "json": "PASS",
+    "git_diff_check": "PASS"
+  }
+}

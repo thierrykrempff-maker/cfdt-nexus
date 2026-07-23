@@ -13,6 +13,10 @@ from .models import DocumentKind, RelationKind
 
 class MetadataStatus(str, Enum):
     ACTIVE = "ACTIVE"
+    OPEN = "OPEN"
+    IN_PROGRESS = "IN_PROGRESS"
+    CLOSED = "CLOSED"
+    CANCELLED = "CANCELLED"
     REPLACED = "REPLACED"
     EXPIRED = "EXPIRED"
     UNKNOWN = "UNKNOWN"
