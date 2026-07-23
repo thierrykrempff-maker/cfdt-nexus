@@ -5,8 +5,9 @@ from datetime import datetime, timezone
 import NEXUS_RUNTIME_INTEGRATION.cse_memory_runtime as runtime_module
 from NEXUS_RUNTIME_INTEGRATION import RuntimeCSEMemoryConfig
 from NEXUS_RUNTIME_INTEGRATION.cse_memory_runtime import (
-    RuntimeCSEMemoryIntegration, RuntimeCSEMemoryMode,
+    RuntimeCSEMemoryIntegration, RuntimeCSEMemoryMode, _stable,
 )
+from NEXUS_CORE import EntityId
 from NEXUS_RUNTIME_INTEGRATION.cse_memory_search import CSEMemorySearchResult
 from automation.cse_memory.document_models import DocumentRecord
 
@@ -96,6 +97,24 @@ def test_real_cse_adapter_core_and_common_orchestrator_are_called(monkeypatch):
     assert result.diagnostics.adapter_called is True
     assert result.diagnostics.core_pipeline_called is True
     assert result.diagnostics.common_orchestrator_called is True
+
+
+def test_privacy_gate_accepts_grouped_stable_runtime_identifiers():
+    gateway = Gateway(CSEMemorySearchResult((document(),), 1, 2, 3))
+    value = answer(
+        "La direction presente un projet sans donnees sur les effectifs ni les couts : "
+        "le CSE peut-il demander des complements ?"
+    )
+    result = integration(gateway).integrate(value)
+    assert result.mode is RuntimeCSEMemoryMode.SUCCEEDED
+    assert result.diagnostics.called is True
+    assert result.diagnostics.core_pipeline_called is True
+
+
+def test_known_campaign_identifier_cannot_resemble_direct_personal_data():
+    value = _stable("subject", "runtime-request-187eebeb6f893a46c7963693")
+    assert EntityId(value).value == value
+    assert not any(character.isdigit() for character in value.rsplit("-", 1)[-1])
 
 
 def test_empty_search_and_search_error_use_safe_fallback():

@@ -59,6 +59,25 @@ def test_detection_reuses_router_domain_and_closed_documentary_markers():
     assert needs_cse_memory({"query": "Retrouve le PV CSE", "route": {"domains": []}}) is True
 
 
+def test_detection_covers_bounded_cross_domain_documentary_needs():
+    cases = (
+        "Quels documents et dates verifier dans cet ancien accord INEOS ?",
+        "Les garanties sante changent sans document clair.",
+        "Un outil classe automatiquement les salaries selon leur performance.",
+    )
+    for query in cases:
+        assert needs_cse_memory({"query": query, "route": {"domains": []}}) is True
+
+
+def test_collective_action_and_internal_investigation_do_not_force_memory():
+    cases = (
+        "Quelles demarches collectives apres un incident dangereux ?",
+        "Quels garde-fous pour une enquete interne sur mon signalement ?",
+    )
+    for query in cases:
+        assert needs_cse_memory({"query": query, "route": {"domains": []}}) is False
+
+
 def test_read_only_gateway_finds_prepared_chunks_without_returning_text(tmp_path):
     write_chunks(tmp_path)
     result = RuntimeCSEMemoryGateway(RuntimeCSEMemoryConfig(True, tmp_path)).search(answer())

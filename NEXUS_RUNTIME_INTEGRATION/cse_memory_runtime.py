@@ -24,7 +24,10 @@ from .mappers import RuntimeExpertPayloadMapper
 
 def _stable(prefix: str, *parts: str) -> str:
     digest = hashlib.sha256("\x1f".join(parts).encode("utf-8")).hexdigest()[:24]
-    return f"runtime-cse-{prefix}-{digest}"
+    # Encode hexadecimal digits as letters so an incidental numeric run cannot
+    # be mistaken for personal data after Core normalizes separators.
+    alpha_digest = digest.translate(str.maketrans("0123456789", "ghijklmnop"))
+    return f"runtime-cse-{prefix}-{alpha_digest}"
 
 
 class RuntimeCSEMemoryMode(str, Enum):

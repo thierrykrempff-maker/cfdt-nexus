@@ -962,8 +962,11 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"\bdonnees?\b.*\bcse\b",
             r"\bavis du cse\b",
             r"\bdiscute\b.*\bcse\b",
-            r"\bdemarches? collectives?\b",
-            r"\benquete interne\b",
+            r"\bancien accord\b.*\bdocuments?\b",
+            r"\bdocuments?\b.*\bancien accord\b",
+            r"\bgaranties? sante\b.*(?:changent|document)",
+            r"\boutil\b.*\bclasse automatiquement\b",
+            r"\bprojet industriel\b.*(?:impacts?|\bcse\b)",
         ],
     },
 ]
@@ -2034,7 +2037,7 @@ def detect_intents(query: str, domains: list[str]) -> tuple[list[str], list[str]
         reasons.append("Le domaine sante-securite appelle une preparation CSSCT/CSE.")
     if "cse" in domains and re.search(
         r"ordre du jour|resolution|decision|engagement|dossier|consultation|expertise|"
-        r"historique|ancien|document|donnees?|avis",
+        r"historique|ancien|document|donnees?|avis|impacts?",
         text,
     ):
         scores.setdefault("rechercher_cse_memory", 1)

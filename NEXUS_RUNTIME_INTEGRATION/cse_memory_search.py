@@ -19,6 +19,7 @@ from .config import RuntimeCSEMemoryConfig
 _CSE_MARKERS = (
     "pv cse", "ancien pv", "decision cse", "consultation", "avis", "reunion",
     "ordre du jour", "commission", "historique", "vote", "resolution",
+    "projet", "impact",
 )
 _STRONG_CSE_MARKERS = ("pv cse", "ancien pv", "decision cse", "ordre du jour")
 _STOP_WORDS = frozenset({
@@ -44,7 +45,18 @@ def needs_cse_memory(answer: Mapping[str, Any]) -> bool:
         return True
     if "rechercher_cse_memory" in intents:
         return True
-    return any(marker in query for marker in _STRONG_CSE_MARKERS)
+    if any(marker in query for marker in _STRONG_CSE_MARKERS):
+        return True
+    return any(
+        all(marker in query for marker in markers)
+        for markers in (
+            ("ancien accord", "document"),
+            ("ancien accord", "date"),
+            ("garanties sante", "changent"),
+            ("garanties sante", "document"),
+            ("outil", "classe automatiquement"),
+        )
+    )
 
 
 @dataclass(frozen=True, slots=True)
