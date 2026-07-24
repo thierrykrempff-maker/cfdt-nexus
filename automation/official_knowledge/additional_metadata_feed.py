@@ -15,6 +15,10 @@ from automation.official_knowledge.connectors.anact import (
     GeographicScope,
 )
 from automation.official_knowledge.connectors.carsat import CarsatMetadata
+from automation.official_knowledge.connectors.complementary_official import (
+    COMPLEMENTARY_CONNECTOR_SPECS,
+    ComplementaryOfficialConnector,
+)
 from automation.official_knowledge.connectors.france_chimie import FranceChimieConnector
 from automation.official_knowledge.document_registry import (
     DocumentRecord,
@@ -30,20 +34,29 @@ SUPPORTED_ADDITIONAL_FEEDS = (
     "anact",
     "alsace_moselle_local_law",
     "carsat",
+    "defenseur_droits",
     "france_chimie",
+    "ministere_travail",
+    "service_public",
 )
 _ROOT = Path(__file__).resolve().parents[2]
 _CATALOGUES = {
     "anact": _ROOT / "automation/official_knowledge/connectors/anact/public_metadata.json",
     "alsace_moselle_local_law": _ROOT / "automation/local_law/public_metadata.json",
     "carsat": _ROOT / "automation/official_knowledge/connectors/carsat/public_metadata.json",
+    "defenseur_droits": _ROOT / "automation/official_knowledge/connectors/complementary_official/defenseur_droits_metadata.json",
     "france_chimie": _ROOT / "automation/official_knowledge/connectors/france_chimie/public_metadata.json",
+    "ministere_travail": _ROOT / "automation/official_knowledge/connectors/complementary_official/ministere_travail_metadata.json",
+    "service_public": _ROOT / "automation/official_knowledge/connectors/complementary_official/service_public_metadata.json",
 }
 _DOMAINS = {
     "anact": frozenset({"www.anact.fr"}),
     "alsace_moselle_local_law": frozenset({"www.legifrance.gouv.fr"}),
     "carsat": frozenset({"www.carsat-alsacemoselle.fr"}),
+    "defenseur_droits": COMPLEMENTARY_CONNECTOR_SPECS["defenseur_droits"].official_domains,
     "france_chimie": frozenset({"www.francechimie.fr"}),
+    "ministere_travail": COMPLEMENTARY_CONNECTOR_SPECS["ministere_travail"].official_domains,
+    "service_public": COMPLEMENTARY_CONNECTOR_SPECS["service_public"].official_domains,
 }
 _FORBIDDEN_FIELDS = frozenset({
     "body", "chunks", "content", "document_path", "excerpt", "full_text",
@@ -167,6 +180,11 @@ def _validate_documents(
         records = tuple(_anact_record(item, synchronized_at) for item in documents)
     elif connector_name == "alsace_moselle_local_law":
         records = tuple(_plain_record(connector_name, item, synchronized_at) for item in documents)
+    elif connector_name in COMPLEMENTARY_CONNECTOR_SPECS:
+        records = ComplementaryOfficialConnector(connector_name).validate_metadata(
+            documents,
+            synchronized_at,
+        )
     else:
         raise ValueError("unsupported additional official feed")
     validator = DocumentValidator({connector_name: _DOMAINS[connector_name]})

@@ -1,0 +1,42 @@
+{
+  "connector_name": "defenseur_droits",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.defenseurdesdroits.fr/fiche-pratique-le-harcelement-discriminatoire-au-travail-335",
+      "title": "Le harcèlement discriminatoire au travail",
+      "publication_date": "2018-09-27",
+      "category": "discrimination",
+      "family": "emploi",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.defenseurdesdroits.fr/recueil-et-traitement-des-signalements-de-discrimination-et-de-harcelement-sexuel-dans-lemploi-le",
+      "title": "Recueil et traitement des signalements de discrimination et de harcèlement sexuel dans l'emploi",
+      "publication_date": "2025-02-06",
+      "category": "harcelement",
+      "family": "emploi",
+      "document_type": "recommandation",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.defenseurdesdroits.fr/orienter-et-proteger-les-lanceurs-dalerte-180",
+      "title": "Orienter et protéger les lanceurs d'alerte",
+      "publication_date": null,
+      "category": "lanceur_alerte",
+      "family": "protection_droits",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.defenseurdesdroits.fr/emploi-des-personnes-en-situation-de-handicap-et-amenagement-raisonnable-339",
+      "title": "Emploi des personnes en situation de handicap et aménagement raisonnable",
+      "publication_date": "2017-12-05",
+      "category": "handicap",
+      "family": "emploi",
+      "document_type": "guide",
+      "language": "fr"
+    }
+  ]
+}

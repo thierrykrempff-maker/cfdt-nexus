@@ -41,7 +41,8 @@ from .config import RuntimeOfficialConnectorsConfig
 
 
 _ADDITIONAL = frozenset({
-    "anact", "alsace_moselle_local_law", "carsat", "france_chimie",
+    "anact", "alsace_moselle_local_law", "carsat", "defenseur_droits",
+    "france_chimie", "ministere_travail", "service_public",
 })
 _SUPPORTED = frozenset({"cnil", "dreets_grand_est", "inrs"}) | _ADDITIONAL
 _SOURCE_DETAILS = {
@@ -67,6 +68,21 @@ _SOURCE_DETAILS = {
         "FRANCE_CHIMIE",
         ConnectorSourceCategory.COLLECTIVE_AGREEMENT,
         "https://www.francechimie.fr",
+    ),
+    "defenseur_droits": (
+        "DEFENSEUR_DES_DROITS",
+        ConnectorSourceCategory.INDEPENDENT_AUTHORITY,
+        "https://www.defenseurdesdroits.fr",
+    ),
+    "ministere_travail": (
+        "MINISTERE_DU_TRAVAIL",
+        ConnectorSourceCategory.ADMINISTRATIVE_DOCTRINE,
+        "https://travail-emploi.gouv.fr",
+    ),
+    "service_public": (
+        "SERVICE_PUBLIC",
+        ConnectorSourceCategory.OTHER_OFFICIAL,
+        "https://www.service-public.fr",
     ),
 }
 _CONNECTOR_MARKERS = {
@@ -107,6 +123,24 @@ _CONNECTOR_MARKERS = {
         "droit local", "alsace moselle", "alsace-moselle",
         "repos dominical alsace", "repos dominical moselle",
         "jour ferie alsace", "jour ferie moselle",
+    ),
+    "defenseur_droits": (
+        "defenseur des droits", "discrimination au travail",
+        "harcelement discriminatoire", "harcelement au travail",
+        "egalite de traitement", "egalite professionnelle",
+        "liberte syndicale", "discrimination syndicale",
+        "handicap au travail", "amenagement raisonnable", "lanceur d alerte",
+    ),
+    "ministere_travail": (
+        "ministere du travail", "inspection du travail",
+        "procedure de licenciement", "licenciement salarie protege",
+        "rupture conventionnelle collective", "actualite reglementaire",
+        "interpretation administrative",
+    ),
+    "service_public": (
+        "service public", "service-public", "demarche salarie",
+        "formalite administrative", "formulaire cerfa",
+        "modele de lettre", "quelle demarche", "comment faire une demande",
     ),
 }
 
