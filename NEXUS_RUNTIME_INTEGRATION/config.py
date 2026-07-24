@@ -16,6 +16,7 @@ RETIREMENT_RUNTIME_ENV = "NEXUS_RETIREMENT_RUNTIME_ENABLED"
 PROTECTION_SOCIALE_RUNTIME_ENV = "NEXUS_PROTECTION_SOCIALE_RUNTIME_ENABLED"
 PROTECTION_SOCIALE_ROOT_ENV = "NEXUS_PROTECTION_SOCIALE_PROCESSED_ROOT"
 OFFICIAL_CONNECTORS_RUNTIME_ENV = "NEXUS_OFFICIAL_CONNECTORS_RUNTIME_ENABLED"
+SYNDICAL_REASONING_RUNTIME_ENV = "NEXUS_SYNDICAL_REASONING_RUNTIME_ENABLED"
 _TRUE_VALUES = frozenset({"1", "true", "yes", "on"})
 _FALSE_VALUES = frozenset({"", "0", "false", "no", "off"})
 
@@ -139,3 +140,21 @@ class RuntimeOfficialConnectorsConfig:
     def __post_init__(self) -> None:
         if not 1 <= self.max_documents_per_connector <= 100:
             raise ValueError("official connector limit must be between 1 and 100")
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeSyndicalReasoningConfig:
+    """Independent, backward-compatible switch for syndical reasoning."""
+
+    enabled: bool = False
+
+    @classmethod
+    def from_env(
+        cls, environ: Mapping[str, str] | None = None
+    ) -> "RuntimeSyndicalReasoningConfig":
+        source = os.environ if environ is None else environ
+        enabled = (
+            str(source.get(SYNDICAL_REASONING_RUNTIME_ENV, "")).strip().lower()
+            in _TRUE_VALUES
+        )
+        return cls(enabled)
