@@ -12,6 +12,10 @@ from .protection_sociale_runtime import (
     RuntimeProtectionSocialeMode,
     RuntimeProtectionSocialeResult,
 )
+from .syndical_reasoning_runtime import (
+    RuntimeSyndicalReasoningMode,
+    RuntimeSyndicalReasoningResult,
+)
 
 
 class RuntimeCoreReportMapper:
@@ -114,5 +118,37 @@ class RuntimeProtectionSocialeReportMapper:
             "Nexus Core V3",
             "Common Expert Orchestrator",
         ))
+        result["generated_from"] = list(dict.fromkeys(generated))
+        return result
+
+
+class RuntimeSyndicalReasoningReportMapper:
+    """Append the short union-reasoning view without altering legacy sections."""
+
+    def map(
+        self, report: dict[str, Any], integration: RuntimeSyndicalReasoningResult
+    ) -> dict[str, Any]:
+        if (
+            integration.mode is not RuntimeSyndicalReasoningMode.SUCCEEDED
+            or integration.report is None
+        ):
+            return report
+        result = deepcopy(report)
+        sections = list(result.get("sections") or ())
+        short_view = integration.report.short_view()
+        sections.append(
+            {
+                "id": "syndical_reasoning_runtime",
+                "title": "Aide au raisonnement syndical",
+                "items": [
+                    short_view["situation"],
+                    short_view["strategie"],
+                    *short_view["incertitudes"],
+                ],
+            }
+        )
+        result["sections"] = sections
+        generated = list(result.get("generated_from") or ())
+        generated.append("Syndical Reasoning Engine R0")
         result["generated_from"] = list(dict.fromkeys(generated))
         return result

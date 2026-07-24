@@ -52,6 +52,9 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeRetirementConfig,
     RuntimeRetirementIntegration,
     RuntimeRetirementReportMapper,
+    RuntimeSyndicalReasoningConfig,
+    RuntimeSyndicalReasoningIntegration,
+    RuntimeSyndicalReasoningReportMapper,
     sanitize_public_payload,
 )
 
@@ -156,8 +159,15 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         protection_config
     ).integrate(answer)
     payload["protection_sociale_runtime"] = protection_integration.to_dict()
-    payload["analysis_report"] = RuntimeProtectionSocialeReportMapper().map(
+    protection_report = RuntimeProtectionSocialeReportMapper().map(
         retirement_report, protection_integration
+    )
+    syndical_integration = RuntimeSyndicalReasoningIntegration(
+        RuntimeSyndicalReasoningConfig.from_env()
+    ).integrate(answer)
+    payload["syndical_reasoning_runtime"] = syndical_integration.to_dict()
+    payload["analysis_report"] = RuntimeSyndicalReasoningReportMapper().map(
+        protection_report, syndical_integration
     )
     return payload
 

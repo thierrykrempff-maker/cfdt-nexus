@@ -7,6 +7,7 @@ from .config import (
     RuntimeOfficialConnectorsConfig,
     RuntimeProtectionSocialeConfig,
     RuntimeRetirementConfig,
+    RuntimeSyndicalReasoningConfig,
 )
 from .connector_mapper import RuntimeConnectorMappingResult, RuntimeConnectorPayloadMapper
 from .integration import RuntimeCoreIntegration
@@ -53,6 +54,14 @@ from .official_connectors_runtime import (
     RuntimeOfficialConnectorsResult,
 )
 from .public_payload import sanitize_public_payload
+from .syndical_reasoning_runtime import (
+    RuntimeSyndicalReasoningDiagnostics,
+    RuntimeSyndicalReasoningIntegration,
+    RuntimeSyndicalReasoningMode,
+    RuntimeSyndicalReasoningResult,
+    needs_syndical_reasoning,
+)
+from .report_mapper import RuntimeSyndicalReasoningReportMapper
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -92,7 +101,14 @@ __all__ = (
     "RuntimeRetirementMode",
     "RuntimeRetirementReportMapper",
     "RuntimeRetirementResult",
+    "RuntimeSyndicalReasoningConfig",
+    "RuntimeSyndicalReasoningDiagnostics",
+    "RuntimeSyndicalReasoningIntegration",
+    "RuntimeSyndicalReasoningMode",
+    "RuntimeSyndicalReasoningReportMapper",
+    "RuntimeSyndicalReasoningResult",
     "sanitize_public_payload",
     "needs_retirement",
     "needs_protection_sociale",
+    "needs_syndical_reasoning",
 )
