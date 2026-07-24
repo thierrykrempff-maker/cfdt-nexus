@@ -8,6 +8,7 @@ from .config import (
     RuntimeProtectionSocialeConfig,
     RuntimeRetirementConfig,
     RuntimeSyndicalReasoningConfig,
+    RuntimeExpertPaieV2Config,
 )
 from .connector_mapper import RuntimeConnectorMappingResult, RuntimeConnectorPayloadMapper
 from .integration import RuntimeCoreIntegration
@@ -62,6 +63,13 @@ from .syndical_reasoning_runtime import (
     needs_syndical_reasoning,
 )
 from .report_mapper import RuntimeSyndicalReasoningReportMapper
+from .expert_paie_v2_runtime import (
+    RuntimeExpertPaieV2Diagnostics,
+    RuntimeExpertPaieV2Integration,
+    RuntimeExpertPaieV2Mode,
+    RuntimeExpertPaieV2Result,
+    needs_expert_paie_v2,
+)
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -79,6 +87,11 @@ __all__ = (
     "RuntimeCSEMemoryReportMapper",
     "RuntimeCSEMemoryResult",
     "RuntimeExpertPayloadMapper",
+    "RuntimeExpertPaieV2Config",
+    "RuntimeExpertPaieV2Diagnostics",
+    "RuntimeExpertPaieV2Integration",
+    "RuntimeExpertPaieV2Mode",
+    "RuntimeExpertPaieV2Result",
     "RuntimeIntegrationConfig",
     "RuntimeOfficialConnectorsConfig",
     "RuntimeOfficialConnectorsDiagnostics",
@@ -111,4 +124,5 @@ __all__ = (
     "needs_retirement",
     "needs_protection_sociale",
     "needs_syndical_reasoning",
+    "needs_expert_paie_v2",
 )
