@@ -16,6 +16,7 @@ from SYNDICAL_REASONING_ENGINE import (
     ContractChangeReasoningEngine,
     DiscriminationHarassmentReasoningEngine,
     DisciplinaryReasoningEngine,
+    HealthAbsenceReasoningEngine,
     SourceReference,
     SourceVerification,
     SyndicalCaseInput,
@@ -25,8 +26,10 @@ from SYNDICAL_REASONING_ENGINE import (
     WorkingTimeReasoningEngine,
     articulate_syndical_domains,
     articulate_discrimination_domains,
+    articulate_health_domains,
     needs_contract_change_reasoning,
     needs_discrimination_harassment_reasoning,
+    needs_health_absence_reasoning,
     needs_disciplinary_reasoning,
     needs_working_time_reasoning,
 )
@@ -105,6 +108,12 @@ def needs_syndical_reasoning(answer: Mapping[str, Any]) -> bool:
         "disciplinaire",
         "employee_protection",
         "licenciement",
+        "protection_sociale",
+        "maladie",
+        "absence",
+        "inaptitude",
+        "at_mp",
+        "reclassement",
     }
     if domains.intersection(explicit_domains):
         return True
@@ -126,6 +135,13 @@ def needs_syndical_reasoning(answer: Mapping[str, Any]) -> bool:
             "mise a pied",
             "licenciement pour faute",
             "entretien prealable",
+            "arret maladie",
+            "accident du travail",
+            "ijss",
+            "subrogation",
+            "inaptitude",
+            "reclassement",
+            "temps partiel therapeutique",
         )
     )
 
@@ -140,6 +156,7 @@ class RuntimeSyndicalReasoningIntegration:
         disciplinary_engine: DisciplinaryReasoningEngine | None = None,
         working_time_engine: WorkingTimeReasoningEngine | None = None,
         discrimination_engine: DiscriminationHarassmentReasoningEngine | None = None,
+        health_absence_engine: HealthAbsenceReasoningEngine | None = None,
         timer: Callable[[], float] | None = None,
     ) -> None:
         self._config = config or RuntimeSyndicalReasoningConfig()
@@ -156,6 +173,9 @@ class RuntimeSyndicalReasoningIntegration:
         self._discrimination_engine = (
             discrimination_engine
             or DiscriminationHarassmentReasoningEngine(self._engine)
+        )
+        self._health_absence_engine = (
+            health_absence_engine or HealthAbsenceReasoningEngine(self._engine)
         )
         self._timer = timer or time.perf_counter
 
@@ -176,11 +196,16 @@ class RuntimeSyndicalReasoningIntegration:
             domain_analysis = None
             working_time_relevant = needs_working_time_reasoning(case)
             discrimination_relevant = needs_discrimination_harassment_reasoning(case)
+            health_absence_relevant = needs_health_absence_reasoning(case)
             articulation = (
-                articulate_discrimination_domains(case)
-                if discrimination_relevant
-                else articulate_syndical_domains(
-                    case, working_time_relevant=working_time_relevant
+                articulate_health_domains(case)
+                if health_absence_relevant
+                else (
+                    articulate_discrimination_domains(case)
+                    if discrimination_relevant
+                    else articulate_syndical_domains(
+                        case, working_time_relevant=working_time_relevant
+                    )
                 )
             )
             if articulation.primary_domain == "R1B_DISCIPLINARY":
@@ -199,6 +224,10 @@ class RuntimeSyndicalReasoningIntegration:
                 specialized = self._discrimination_engine.analyze(case)
                 report = specialized.base_report
                 domain_analysis = specialized.to_dict()
+            elif articulation.primary_domain == "R1E_HEALTH_ABSENCE":
+                specialized = self._health_absence_engine.analyze(case)
+                report = specialized.base_report
+                domain_analysis = specialized.to_dict()
             else:
                 report = self._engine.analyze(case)
             complementary_analyses = {}
@@ -206,6 +235,8 @@ class RuntimeSyndicalReasoningIntegration:
                 complementary_analyses["working_time"] = self._working_time_engine.analyze(case).to_dict()
             if domain_analysis is not None and discrimination_relevant and articulation.primary_domain != "R1D_DISCRIMINATION_HARASSMENT":
                 complementary_analyses["discrimination_harassment"] = self._discrimination_engine.analyze(case).to_dict()
+            if domain_analysis is not None and health_absence_relevant and articulation.primary_domain != "R1E_HEALTH_ABSENCE":
+                complementary_analyses["health_absence"] = self._health_absence_engine.analyze(case).to_dict()
             if complementary_analyses:
                 domain_analysis = {
                     **domain_analysis,
