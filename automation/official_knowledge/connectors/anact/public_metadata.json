@@ -1,0 +1,37 @@
+{
+  "connector_name": "anact",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.anact.fr/themes",
+      "title": "Thèmes de l'ANACT",
+      "publication_date": null,
+      "category": "working_conditions",
+      "family": "national",
+      "document_type": "thematic_page",
+      "language": "fr",
+      "reference": "anact-themes"
+    },
+    {
+      "url": "https://www.anact.fr/regions",
+      "title": "Réseau régional ANACT-ARACT",
+      "publication_date": null,
+      "category": "social_dialogue",
+      "family": "national",
+      "document_type": "thematic_page",
+      "language": "fr",
+      "reference": "anact-regions"
+    },
+    {
+      "url": "https://www.anact.fr/grand-est",
+      "title": "ARACT Grand Est",
+      "publication_date": null,
+      "category": "qvct",
+      "family": "regional",
+      "document_type": "regional_resource",
+      "language": "fr",
+      "reference": "aract-grand-est",
+      "aract_name": "Grand Est"
+    }
+  ]
+}

@@ -20,6 +20,10 @@ from automation.official_knowledge.connectors.dreets_grand_est.dreets_connector 
 )
 from automation.official_knowledge.connectors.dreets_grand_est import DreetsDiscoveryItem
 from automation.official_knowledge.connectors.inrs import InrsConnector
+from automation.official_knowledge.additional_metadata_feed import (
+    load_additional_metadata_sources,
+    validate_additional_runtime_sources,
+)
 from automation.official_knowledge.document_registry import stable_document_id
 from NEXUS_ADAPTERS.connectors import (
     ConnectorAdapterInput,
@@ -36,7 +40,10 @@ from NEXUS_ADAPTERS.connectors import (
 from .config import RuntimeOfficialConnectorsConfig
 
 
-_SUPPORTED = frozenset({"cnil", "dreets_grand_est", "inrs"})
+_ADDITIONAL = frozenset({
+    "anact", "alsace_moselle_local_law", "carsat", "france_chimie",
+})
+_SUPPORTED = frozenset({"cnil", "dreets_grand_est", "inrs"}) | _ADDITIONAL
 _SOURCE_DETAILS = {
     "cnil": ("CNIL", ConnectorSourceCategory.INDEPENDENT_AUTHORITY, "https://cnil.fr"),
     "dreets_grand_est": (
@@ -45,6 +52,22 @@ _SOURCE_DETAILS = {
         "https://grand-est.dreets.gouv.fr",
     ),
     "inrs": ("INRS", ConnectorSourceCategory.OTHER_OFFICIAL, "https://www.inrs.fr"),
+    "anact": ("ANACT", ConnectorSourceCategory.OTHER_OFFICIAL, "https://www.anact.fr"),
+    "alsace_moselle_local_law": (
+        "DROIT_LOCAL_ALSACE_MOSELLE",
+        ConnectorSourceCategory.LEGISLATION,
+        "https://www.legifrance.gouv.fr",
+    ),
+    "carsat": (
+        "CARSAT",
+        ConnectorSourceCategory.SOCIAL_SECURITY_BODY,
+        "https://www.carsat-alsacemoselle.fr",
+    ),
+    "france_chimie": (
+        "FRANCE_CHIMIE",
+        ConnectorSourceCategory.COLLECTIVE_AGREEMENT,
+        "https://www.francechimie.fr",
+    ),
 }
 _CONNECTOR_MARKERS = {
     "cnil": (
@@ -65,6 +88,25 @@ _CONNECTOR_MARKERS = {
         "incident dangereux", "protocole electoral", "substance",
         "entreprise exterieure", "coactivite", "mesures d ambiance",
         "projet industriel", "risque grave",
+    ),
+    "carsat": (
+        "carsat", "assurance retraite", "carriere longue", "depart anticipe",
+        "c2p", "compte professionnel de prevention", "risque professionnel",
+        "accident du travail", "maladie professionnelle", "releve de carriere",
+    ),
+    "france_chimie": (
+        "france chimie", "branche chimie", "convention chimie",
+        "convention collective chimie", "classification chimie",
+        "coefficient chimie", "accord de branche chimie",
+    ),
+    "anact": (
+        "anact", "aract", "qvct", "qualite de vie et conditions de travail",
+        "transformation du travail", "risques psychosociaux", "charge de travail",
+    ),
+    "alsace_moselle_local_law": (
+        "droit local", "alsace moselle", "alsace-moselle",
+        "repos dominical alsace", "repos dominical moselle",
+        "jour ferie alsace", "jour ferie moselle",
     ),
 }
 
@@ -132,6 +174,14 @@ class RuntimeOfficialConnectorsIntegration:
         selected = self._selected_connectors(answer) | set(grouped)
         if not selected:
             return RuntimeOfficialConnectorsResult()
+        grouped = {
+            connector_id: grouped.get(connector_id)
+            or (
+                load_additional_metadata_sources(connector_id)
+                if connector_id in _ADDITIONAL else ()
+            )
+            for connector_id in selected
+        }
         started = self._timer()
         try:
             inputs = tuple(
@@ -179,6 +229,10 @@ class RuntimeOfficialConnectorsIntegration:
             selected.add("cnil")
         if "cssct_securite" in domains:
             selected.add("inrs")
+        if "retraite_penibilite" in domains:
+            selected.add("carsat")
+        if "droit_local" in domains or "alsace_moselle_local_law" in domains:
+            selected.add("alsace_moselle_local_law")
         return selected
 
     @staticmethod
@@ -225,6 +279,10 @@ class RuntimeOfficialConnectorsIntegration:
             metadata = InrsConnector(
                 enabled=True, limit=self._config.max_documents_per_connector
             ).discover_metadata(tuple(self._inrs_entry(item, discovered_at) for item in sources))
+        elif connector_id in _ADDITIONAL:
+            metadata = validate_additional_runtime_sources(
+                connector_id, sources, discovered_at
+            )
         else:  # pragma: no cover - guarded by _SUPPORTED
             raise ValueError("unsupported connector")
         documents = tuple(self._snapshot(connector_id, item) for item in metadata)
