@@ -1,0 +1,81 @@
+"""Public API for Expert Paie V2."""
+
+from .calculation import calculate
+from .comparisons import compare_payload
+from .engine import ExpertPaieV2Engine
+from .models import (
+    CalculationRefusal,
+    CalculationTrace,
+    ComparisonStatus,
+    ConfidenceLevel,
+    EvidencePriority,
+    KelioCounter,
+    NibelisRubric,
+    PayrollComparison,
+    PayrollEvent,
+    PayrollEventType,
+    PayrollEvidence,
+    PayrollPeriod,
+    PayrollPhase,
+    PayrollQuestion,
+    PayrollRule,
+    PayrollStrategy,
+    PayrollV2Analysis,
+    PayrollV2Input,
+    PayrollValue,
+    QuestionPriority,
+    RuleSelection,
+    RuleStatus,
+    SyntheticEmployee,
+    Unit,
+)
+from .normalization import (
+    PayrollNormalizationError,
+    decimal_value,
+    iso_date,
+    normalize_value,
+    values_by_name,
+)
+from .rules import SOURCE_RANK, select_rules, selected_rule
+from .scenarios import expert_paie_v2_scenarios
+from .validation import validate_calculation
+
+__all__ = (
+    "CalculationRefusal",
+    "CalculationTrace",
+    "ComparisonStatus",
+    "ConfidenceLevel",
+    "EvidencePriority",
+    "ExpertPaieV2Engine",
+    "KelioCounter",
+    "NibelisRubric",
+    "PayrollComparison",
+    "PayrollEvent",
+    "PayrollEventType",
+    "PayrollEvidence",
+    "PayrollNormalizationError",
+    "PayrollPeriod",
+    "PayrollPhase",
+    "PayrollQuestion",
+    "PayrollRule",
+    "PayrollStrategy",
+    "PayrollV2Analysis",
+    "PayrollV2Input",
+    "PayrollValue",
+    "QuestionPriority",
+    "RuleSelection",
+    "RuleStatus",
+    "SOURCE_RANK",
+    "SyntheticEmployee",
+    "Unit",
+    "calculate",
+    "compare_payload",
+    "decimal_value",
+    "expert_paie_v2_scenarios",
+    "iso_date",
+    "normalize_value",
+    "select_rules",
+    "selected_rule",
+    "validate_calculation",
+    "values_by_name",
+)

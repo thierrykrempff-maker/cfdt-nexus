@@ -17,6 +17,7 @@ PROTECTION_SOCIALE_RUNTIME_ENV = "NEXUS_PROTECTION_SOCIALE_RUNTIME_ENABLED"
 PROTECTION_SOCIALE_ROOT_ENV = "NEXUS_PROTECTION_SOCIALE_PROCESSED_ROOT"
 OFFICIAL_CONNECTORS_RUNTIME_ENV = "NEXUS_OFFICIAL_CONNECTORS_RUNTIME_ENABLED"
 SYNDICAL_REASONING_RUNTIME_ENV = "NEXUS_SYNDICAL_REASONING_RUNTIME_ENABLED"
+EXPERT_PAIE_V2_RUNTIME_ENV = "NEXUS_EXPERT_PAIE_V2_RUNTIME_ENABLED"
 _TRUE_VALUES = frozenset({"1", "true", "yes", "on"})
 _FALSE_VALUES = frozenset({"", "0", "false", "no", "off"})
 
@@ -155,6 +156,24 @@ class RuntimeSyndicalReasoningConfig:
         source = os.environ if environ is None else environ
         enabled = (
             str(source.get(SYNDICAL_REASONING_RUNTIME_ENV, "")).strip().lower()
+            in _TRUE_VALUES
+        )
+        return cls(enabled)
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeExpertPaieV2Config:
+    """Independent, fail-safe switch for Expert Paie V2."""
+
+    enabled: bool = False
+
+    @classmethod
+    def from_env(
+        cls, environ: Mapping[str, str] | None = None
+    ) -> "RuntimeExpertPaieV2Config":
+        source = os.environ if environ is None else environ
+        enabled = (
+            str(source.get(EXPERT_PAIE_V2_RUNTIME_ENV, "")).strip().lower()
             in _TRUE_VALUES
         )
         return cls(enabled)
