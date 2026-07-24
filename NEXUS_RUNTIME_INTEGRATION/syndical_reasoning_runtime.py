@@ -21,8 +21,11 @@ from SYNDICAL_REASONING_ENGINE import (
     SyndicalReasoningEngine,
     SyndicalReasoningReport,
     UrgencyLevel,
+    WorkingTimeReasoningEngine,
+    articulate_syndical_domains,
     needs_contract_change_reasoning,
     needs_disciplinary_reasoning,
+    needs_working_time_reasoning,
 )
 
 from .config import RuntimeSyndicalReasoningConfig
@@ -132,6 +135,7 @@ class RuntimeSyndicalReasoningIntegration:
         engine: SyndicalReasoningEngine | None = None,
         contract_change_engine: ContractChangeReasoningEngine | None = None,
         disciplinary_engine: DisciplinaryReasoningEngine | None = None,
+        working_time_engine: WorkingTimeReasoningEngine | None = None,
         timer: Callable[[], float] | None = None,
     ) -> None:
         self._config = config or RuntimeSyndicalReasoningConfig()
@@ -141,6 +145,9 @@ class RuntimeSyndicalReasoningIntegration:
         )
         self._disciplinary_engine = (
             disciplinary_engine or DisciplinaryReasoningEngine(self._engine)
+        )
+        self._working_time_engine = (
+            working_time_engine or WorkingTimeReasoningEngine(self._engine)
         )
         self._timer = timer or time.perf_counter
 
@@ -159,16 +166,44 @@ class RuntimeSyndicalReasoningIntegration:
         try:
             case = self._case_from_answer(answer)
             domain_analysis = None
-            if needs_disciplinary_reasoning(case):
+            working_time_relevant = needs_working_time_reasoning(case)
+            articulation = articulate_syndical_domains(
+                case, working_time_relevant=working_time_relevant
+            )
+            if articulation.primary_domain == "R1B_DISCIPLINARY":
                 specialized = self._disciplinary_engine.analyze(case)
                 report = specialized.base_report
                 domain_analysis = specialized.to_dict()
-            elif needs_contract_change_reasoning(case):
+            elif articulation.primary_domain == "R1A_CONTRACT_CHANGE":
                 specialized = self._contract_change_engine.analyze(case)
+                report = specialized.base_report
+                domain_analysis = specialized.to_dict()
+            elif articulation.primary_domain == "R1C_WORKING_TIME":
+                specialized = self._working_time_engine.analyze(case)
                 report = specialized.base_report
                 domain_analysis = specialized.to_dict()
             else:
                 report = self._engine.analyze(case)
+            if (
+                domain_analysis is not None
+                and working_time_relevant
+                and articulation.primary_domain != "R1C_WORKING_TIME"
+            ):
+                complementary = self._working_time_engine.analyze(case)
+                domain_analysis = {
+                    **domain_analysis,
+                    "articulation": {
+                        "primary_domain": articulation.primary_domain,
+                        "complementary_domains": list(
+                            articulation.complementary_domains
+                        ),
+                        "rationale": articulation.rationale,
+                        "common_caution": articulation.common_caution,
+                    },
+                    "complementary_analyses": {
+                        "working_time": complementary.to_dict()
+                    },
+                }
             return RuntimeSyndicalReasoningResult(
                 RuntimeSyndicalReasoningMode.SUCCEEDED,
                 RuntimeSyndicalReasoningDiagnostics(
