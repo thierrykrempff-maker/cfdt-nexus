@@ -16,6 +16,22 @@ from .models import ComplementaryConnectorSpec
 
 
 COMPLEMENTARY_CONNECTOR_SPECS = {
+    "agirc_arrco": ComplementaryConnectorSpec(
+        "agirc_arrco",
+        "Agirc-Arrco",
+        "Agirc-Arrco",
+        frozenset({"www.agirc-arrco.fr"}),
+        "supplementary_retirement_body",
+        ("supplementary_retirement", "points", "career", "retirement_rights"),
+    ),
+    "assurance_maladie": ComplementaryConnectorSpec(
+        "assurance_maladie",
+        "Assurance Maladie (CPAM)",
+        "Caisse nationale de l'Assurance Maladie",
+        frozenset({"www.ameli.fr"}),
+        "social_security_body",
+        ("health_insurance", "daily_allowances", "occupational_injury"),
+    ),
     "defenseur_droits": ComplementaryConnectorSpec(
         "defenseur_droits",
         "Défenseur des droits",
@@ -39,6 +55,14 @@ COMPLEMENTARY_CONNECTOR_SPECS = {
         frozenset({"www.service-public.fr"}),
         "official_practical_information",
         ("employee_procedures", "formalities", "practical_information"),
+    ),
+    "urssaf": ComplementaryConnectorSpec(
+        "urssaf",
+        "Urssaf",
+        "Urssaf Caisse nationale",
+        frozenset({"www.urssaf.fr"}),
+        "social_security_body",
+        ("contributions", "exemptions", "remuneration", "payroll"),
     ),
 }
 

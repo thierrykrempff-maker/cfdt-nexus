@@ -31,32 +31,41 @@ from automation.official_knowledge.document_registry import (
 
 
 SUPPORTED_ADDITIONAL_FEEDS = (
+    "agirc_arrco",
     "anact",
     "alsace_moselle_local_law",
+    "assurance_maladie",
     "carsat",
     "defenseur_droits",
     "france_chimie",
     "ministere_travail",
     "service_public",
+    "urssaf",
 )
 _ROOT = Path(__file__).resolve().parents[2]
 _CATALOGUES = {
+    "agirc_arrco": _ROOT / "automation/official_knowledge/connectors/complementary_official/agirc_arrco_metadata.json",
     "anact": _ROOT / "automation/official_knowledge/connectors/anact/public_metadata.json",
     "alsace_moselle_local_law": _ROOT / "automation/local_law/public_metadata.json",
+    "assurance_maladie": _ROOT / "automation/official_knowledge/connectors/complementary_official/assurance_maladie_metadata.json",
     "carsat": _ROOT / "automation/official_knowledge/connectors/carsat/public_metadata.json",
     "defenseur_droits": _ROOT / "automation/official_knowledge/connectors/complementary_official/defenseur_droits_metadata.json",
     "france_chimie": _ROOT / "automation/official_knowledge/connectors/france_chimie/public_metadata.json",
     "ministere_travail": _ROOT / "automation/official_knowledge/connectors/complementary_official/ministere_travail_metadata.json",
     "service_public": _ROOT / "automation/official_knowledge/connectors/complementary_official/service_public_metadata.json",
+    "urssaf": _ROOT / "automation/official_knowledge/connectors/complementary_official/urssaf_metadata.json",
 }
 _DOMAINS = {
+    "agirc_arrco": COMPLEMENTARY_CONNECTOR_SPECS["agirc_arrco"].official_domains,
     "anact": frozenset({"www.anact.fr"}),
     "alsace_moselle_local_law": frozenset({"www.legifrance.gouv.fr"}),
+    "assurance_maladie": COMPLEMENTARY_CONNECTOR_SPECS["assurance_maladie"].official_domains,
     "carsat": frozenset({"www.carsat-alsacemoselle.fr"}),
     "defenseur_droits": COMPLEMENTARY_CONNECTOR_SPECS["defenseur_droits"].official_domains,
     "france_chimie": frozenset({"www.francechimie.fr"}),
     "ministere_travail": COMPLEMENTARY_CONNECTOR_SPECS["ministere_travail"].official_domains,
     "service_public": COMPLEMENTARY_CONNECTOR_SPECS["service_public"].official_domains,
+    "urssaf": COMPLEMENTARY_CONNECTOR_SPECS["urssaf"].official_domains,
 }
 _FORBIDDEN_FIELDS = frozenset({
     "body", "chunks", "content", "document_path", "excerpt", "full_text",

@@ -17,9 +17,12 @@ from . import (
 
 
 EXPECTED = {
+    "agirc_arrco": 4,
+    "assurance_maladie": 4,
     "defenseur_droits": 4,
     "ministere_travail": 4,
     "service_public": 4,
+    "urssaf": 4,
 }
 
 

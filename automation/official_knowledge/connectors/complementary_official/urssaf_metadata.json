@@ -1,0 +1,42 @@
+{
+  "connector_name": "urssaf",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.urssaf.fr/accueil/employeur/cotisations/comprendre-cotisations/calcul-cotisations-employeur.html",
+      "title": "Comment sont calculées les cotisations et contributions sociales d'un employeur ?",
+      "publication_date": null,
+      "category": "cotisations",
+      "family": "assiettes",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.urssaf.fr/accueil/employeur/beneficier-exonerations/exonerations-heures/reduction-cotisations-salariales.html",
+      "title": "Réduction de cotisations salariales sur les heures supplémentaires",
+      "publication_date": "2026-03-13",
+      "category": "exonerations",
+      "family": "heures_supplementaires",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.urssaf.fr/accueil/employeur/cotisations/avantages-en-nature.html",
+      "title": "Les avantages en nature",
+      "publication_date": "2026-06-01",
+      "category": "avantages_nature",
+      "family": "remunerations",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.urssaf.fr/accueil/employeur/gerer-entreprise/comite-social-et-economique/prestations-cse-exo-conditions.html",
+      "title": "Les prestations du CSE exonérées de cotisations sous conditions",
+      "publication_date": null,
+      "category": "exonerations",
+      "family": "prestations_cse",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "connector_name": "agirc_arrco",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.agirc-arrco.fr/particuliers/ma-retraite/comprendre-ma-retraite/comment-se-constitue-ma-retraite-complementaire/",
+      "title": "Comment se constitue ma retraite complémentaire ?",
+      "publication_date": null,
+      "category": "retraite_complementaire",
+      "family": "droits_retraite",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.agirc-arrco.fr/particuliers/ma-retraite/comprendre-ma-retraite/points-de-retraite-comment-sont-ils-obtenus/",
+      "title": "Points de retraite : comment sont-ils obtenus ?",
+      "publication_date": null,
+      "category": "points",
+      "family": "carriere",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.agirc-arrco.fr/mes-services-particuliers/les-experts-retraite/parole-experts/la-retraite-progressive-travailler-moins-gagner-plus/",
+      "title": "La retraite progressive : travailler moins, gagner plus",
+      "publication_date": "2025-08-05",
+      "category": "retraite_progressive",
+      "family": "depart_retraite",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.agirc-arrco.fr/particuliers/ma-retraite/demander-ma-retraite/faire-ma-demande-de-retraite/",
+      "title": "La demande de retraite complémentaire Agirc-Arrco",
+      "publication_date": null,
+      "category": "demande_retraite",
+      "family": "depart_retraite",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    }
+  ]
+}

@@ -40,13 +40,16 @@ def test_existing_connector_platform_contracts_remain_registered_and_metadata_on
 
 def test_catalogues_are_non_empty_unique_https_and_content_free():
     expected = {
+        "agirc_arrco": 4,
         "anact": 3,
         "alsace_moselle_local_law": 2,
+        "assurance_maladie": 4,
         "carsat": 3,
         "defenseur_droits": 4,
         "france_chimie": 2,
         "ministere_travail": 4,
         "service_public": 4,
+        "urssaf": 4,
     }
     for connector_name, count in expected.items():
         documents = feed.load_additional_metadata_sources(connector_name)
@@ -65,21 +68,24 @@ def test_registry_sync_is_persistent_deterministic_and_idempotent(tmp_path):
     initial_bytes = path.read_bytes()
     second = feed.synchronize_additional_metadata(path)
     assert [(item.connector_name, item.document_count) for item in first] == [
+        ("agirc_arrco", 4),
         ("anact", 3),
         ("alsace_moselle_local_law", 2),
+        ("assurance_maladie", 4),
         ("carsat", 3),
         ("defenseur_droits", 4),
         ("france_chimie", 2),
         ("ministere_travail", 4),
         ("service_public", 4),
+        ("urssaf", 4),
     ]
     assert all(item.last_synchronized_at == "2026-07-24" for item in first)
     assert all(set(item.changes) == {"NEW"} for item in first)
     assert all(set(item.changes) == {"UNCHANGED"} for item in second)
     assert initial_bytes == path.read_bytes()
     records = JsonDocumentStorage(path).load()
-    assert len(records) == 22
-    assert len({item.document_id for item in records}) == 22
+    assert len(records) == 34
+    assert len({item.document_id for item in records}) == 34
     assert all(item.status is DocumentStatus.ACTIVE for item in records)
 
 

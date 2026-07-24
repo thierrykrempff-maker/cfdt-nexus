@@ -41,8 +41,9 @@ from .config import RuntimeOfficialConnectorsConfig
 
 
 _ADDITIONAL = frozenset({
-    "anact", "alsace_moselle_local_law", "carsat", "defenseur_droits",
-    "france_chimie", "ministere_travail", "service_public",
+    "agirc_arrco", "anact", "alsace_moselle_local_law", "assurance_maladie",
+    "carsat", "defenseur_droits", "france_chimie", "ministere_travail",
+    "service_public", "urssaf",
 })
 _SUPPORTED = frozenset({"cnil", "dreets_grand_est", "inrs"}) | _ADDITIONAL
 _SOURCE_DETAILS = {
@@ -83,6 +84,21 @@ _SOURCE_DETAILS = {
         "SERVICE_PUBLIC",
         ConnectorSourceCategory.OTHER_OFFICIAL,
         "https://www.service-public.fr",
+    ),
+    "assurance_maladie": (
+        "ASSURANCE_MALADIE_CPAM",
+        ConnectorSourceCategory.SOCIAL_SECURITY_BODY,
+        "https://www.ameli.fr",
+    ),
+    "urssaf": (
+        "URSSAF",
+        ConnectorSourceCategory.SOCIAL_SECURITY_BODY,
+        "https://www.urssaf.fr",
+    ),
+    "agirc_arrco": (
+        "AGIRC_ARRCO",
+        ConnectorSourceCategory.SOCIAL_SECURITY_BODY,
+        "https://www.agirc-arrco.fr",
     ),
 }
 _CONNECTOR_MARKERS = {
@@ -141,6 +157,23 @@ _CONNECTOR_MARKERS = {
         "service public", "service-public", "demarche salarie",
         "formalite administrative", "formulaire cerfa",
         "modele de lettre", "quelle demarche", "comment faire une demande",
+    ),
+    "assurance_maladie": (
+        "assurance maladie", "cpam", "ijss", "indemnite journaliere",
+        "arret maladie", "accident du travail", "maladie professionnelle",
+        "invalidite", "conge maternite", "temps partiel therapeutique",
+        "mi temps therapeutique",
+    ),
+    "urssaf": (
+        "urssaf", "cotisation sociale", "cotisations sociales",
+        "exoneration de cotisations", "reduction de cotisations",
+        "assiette de cotisations", "avantage en nature",
+        "avantages en nature", "cotisations heures supplementaires",
+    ),
+    "agirc_arrco": (
+        "agirc arrco", "agirc-arrco", "retraite complementaire",
+        "points retraite", "points de retraite", "retraite progressive",
+        "droits retraite complementaire",
     ),
 }
 
@@ -264,7 +297,9 @@ class RuntimeOfficialConnectorsIntegration:
         if "cssct_securite" in domains:
             selected.add("inrs")
         if "retraite_penibilite" in domains:
-            selected.add("carsat")
+            selected.update({"agirc_arrco", "carsat"})
+        if "protection_sociale" in domains or "social_protection" in domains:
+            selected.add("assurance_maladie")
         if "droit_local" in domains or "alsace_moselle_local_law" in domains:
             selected.add("alsace_moselle_local_law")
         return selected

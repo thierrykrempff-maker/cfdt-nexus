@@ -46,10 +46,10 @@ def test_each_relevant_connector_is_selected_with_exploitable_citations():
         assert all(item.title and item.source_url for item in documents)
 
 
-def test_route_domains_activate_carsat_and_local_law_without_forcing_others():
+def test_route_domains_activate_retirement_sources_and_local_law_without_forcing_others():
     retirement = integrate("Préparer mon dossier", ("retraite_penibilite",))
     local = integrate("Règle territoriale applicable", ("droit_local",))
-    assert retirement.diagnostics.connectors_used == ("carsat",)
+    assert retirement.diagnostics.connectors_used == ("agirc_arrco", "carsat")
     assert local.diagnostics.connectors_used == ("alsace_moselle_local_law",)
 
 
@@ -78,7 +78,10 @@ def test_duplicate_router_metadata_is_deduplicated():
     result = RuntimeOfficialConnectorsIntegration(
         RuntimeOfficialConnectorsConfig(True), clock=lambda: NOW
     ).integrate(payload)
-    assert len(result.inputs[0].response.documents) == 1
+    carsat = next(
+        item for item in result.inputs if item.descriptor.connector_id == "carsat"
+    )
+    assert len(carsat.response.documents) == 1
 
 
 def test_public_snapshots_are_metadata_only_and_confidential():
