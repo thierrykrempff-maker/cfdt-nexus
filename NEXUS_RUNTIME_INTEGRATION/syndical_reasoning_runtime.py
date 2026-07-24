@@ -14,6 +14,7 @@ from SYNDICAL_REASONING_ENGINE import (
     CaseFact,
     ConfidentialityLevel,
     ContractChangeReasoningEngine,
+    DiscriminationHarassmentReasoningEngine,
     DisciplinaryReasoningEngine,
     SourceReference,
     SourceVerification,
@@ -23,7 +24,9 @@ from SYNDICAL_REASONING_ENGINE import (
     UrgencyLevel,
     WorkingTimeReasoningEngine,
     articulate_syndical_domains,
+    articulate_discrimination_domains,
     needs_contract_change_reasoning,
+    needs_discrimination_harassment_reasoning,
     needs_disciplinary_reasoning,
     needs_working_time_reasoning,
 )
@@ -136,6 +139,7 @@ class RuntimeSyndicalReasoningIntegration:
         contract_change_engine: ContractChangeReasoningEngine | None = None,
         disciplinary_engine: DisciplinaryReasoningEngine | None = None,
         working_time_engine: WorkingTimeReasoningEngine | None = None,
+        discrimination_engine: DiscriminationHarassmentReasoningEngine | None = None,
         timer: Callable[[], float] | None = None,
     ) -> None:
         self._config = config or RuntimeSyndicalReasoningConfig()
@@ -148,6 +152,10 @@ class RuntimeSyndicalReasoningIntegration:
         )
         self._working_time_engine = (
             working_time_engine or WorkingTimeReasoningEngine(self._engine)
+        )
+        self._discrimination_engine = (
+            discrimination_engine
+            or DiscriminationHarassmentReasoningEngine(self._engine)
         )
         self._timer = timer or time.perf_counter
 
@@ -167,8 +175,13 @@ class RuntimeSyndicalReasoningIntegration:
             case = self._case_from_answer(answer)
             domain_analysis = None
             working_time_relevant = needs_working_time_reasoning(case)
-            articulation = articulate_syndical_domains(
-                case, working_time_relevant=working_time_relevant
+            discrimination_relevant = needs_discrimination_harassment_reasoning(case)
+            articulation = (
+                articulate_discrimination_domains(case)
+                if discrimination_relevant
+                else articulate_syndical_domains(
+                    case, working_time_relevant=working_time_relevant
+                )
             )
             if articulation.primary_domain == "R1B_DISCIPLINARY":
                 specialized = self._disciplinary_engine.analyze(case)
@@ -182,14 +195,18 @@ class RuntimeSyndicalReasoningIntegration:
                 specialized = self._working_time_engine.analyze(case)
                 report = specialized.base_report
                 domain_analysis = specialized.to_dict()
+            elif articulation.primary_domain == "R1D_DISCRIMINATION_HARASSMENT":
+                specialized = self._discrimination_engine.analyze(case)
+                report = specialized.base_report
+                domain_analysis = specialized.to_dict()
             else:
                 report = self._engine.analyze(case)
-            if (
-                domain_analysis is not None
-                and working_time_relevant
-                and articulation.primary_domain != "R1C_WORKING_TIME"
-            ):
-                complementary = self._working_time_engine.analyze(case)
+            complementary_analyses = {}
+            if domain_analysis is not None and working_time_relevant and articulation.primary_domain != "R1C_WORKING_TIME":
+                complementary_analyses["working_time"] = self._working_time_engine.analyze(case).to_dict()
+            if domain_analysis is not None and discrimination_relevant and articulation.primary_domain != "R1D_DISCRIMINATION_HARASSMENT":
+                complementary_analyses["discrimination_harassment"] = self._discrimination_engine.analyze(case).to_dict()
+            if complementary_analyses:
                 domain_analysis = {
                     **domain_analysis,
                     "articulation": {
@@ -200,9 +217,7 @@ class RuntimeSyndicalReasoningIntegration:
                         "rationale": articulation.rationale,
                         "common_caution": articulation.common_caution,
                     },
-                    "complementary_analyses": {
-                        "working_time": complementary.to_dict()
-                    },
+                    "complementary_analyses": complementary_analyses,
                 }
             return RuntimeSyndicalReasoningResult(
                 RuntimeSyndicalReasoningMode.SUCCEEDED,
