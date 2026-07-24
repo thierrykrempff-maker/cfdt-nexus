@@ -1,0 +1,42 @@
+{
+  "connector_name": "service_public",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F2339",
+      "title": "Modification du contrat de travail d'un salarié",
+      "publication_date": null,
+      "category": "contrat_travail",
+      "family": "demarches_salarie",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F1043",
+      "title": "Harcèlement sexuel au travail",
+      "publication_date": null,
+      "category": "harcelement",
+      "family": "demarches_salarie",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.service-public.fr/particuliers/vosdroits/R58712",
+      "title": "Modèle de lettre pour signaler des faits de harcèlement au travail",
+      "publication_date": "2022-12-20",
+      "category": "signalement",
+      "family": "formalites",
+      "document_type": "modele_document",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F2210",
+      "title": "Santé et sécurité au travail : obligations de l'employeur",
+      "publication_date": null,
+      "category": "sante_securite",
+      "family": "informations_administratives",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    }
+  ]
+}

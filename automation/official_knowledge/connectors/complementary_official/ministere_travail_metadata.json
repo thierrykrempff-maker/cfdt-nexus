@@ -1,0 +1,42 @@
+{
+  "connector_name": "ministere_travail",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://travail-emploi.gouv.fr/publications-et-ressources/fiches-pratiques",
+      "title": "Fiches pratiques du ministère du Travail",
+      "publication_date": null,
+      "category": "fiches_pratiques",
+      "family": "droit_travail",
+      "document_type": "catalogue",
+      "language": "fr"
+    },
+    {
+      "url": "https://travail-emploi.gouv.fr/droit-du-travail/la-rupture-du-contrat-de-travail/article/le-licenciement-pour-motif-personnel-les-causes-possibles-les-sanctions",
+      "title": "Le licenciement pour motif personnel : causes et sanctions",
+      "publication_date": "2015-09-17",
+      "category": "licenciement",
+      "family": "rupture_contrat",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://travail-emploi.gouv.fr/droit-du-travail/inspection-du-travail/article/les-missions-et-les-prerogatives-de-l-inspection-du-travail",
+      "title": "Les missions et les prérogatives de l'inspection du travail",
+      "publication_date": null,
+      "category": "inspection_travail",
+      "family": "procedures_officielles",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://travail-emploi.gouv.fr/actualites-presse-et-outils/actualites-et-breves",
+      "title": "Actualités et brèves du ministère du Travail",
+      "publication_date": null,
+      "category": "actualites_reglementaires",
+      "family": "droit_travail",
+      "document_type": "catalogue_actualites",
+      "language": "fr"
+    }
+  ]
+}

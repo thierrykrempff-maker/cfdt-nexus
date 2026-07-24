@@ -1,0 +1,33 @@
+{
+  "connector_name": "carsat",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.carsat-alsacemoselle.fr/home/entreprises/prevenir-vos-risques-professionn.html",
+      "title": "Prévenir vos risques professionnels",
+      "publication_date": null,
+      "category": "prévention",
+      "family": "risques_professionnels",
+      "document_type": "dossier_web",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.carsat-alsacemoselle.fr/home/nous-connaitre/presentation-de-la-carsat/missions.html",
+      "title": "Missions de la Carsat Alsace-Moselle",
+      "publication_date": null,
+      "category": "retraite_et_santé_au_travail",
+      "family": "missions",
+      "document_type": "page_institutionnelle",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.carsat-alsacemoselle.fr/home/entreprises/prevenir-vos-risques-professionn/par-type-de-risque/le-risque-routier-professionnel.html",
+      "title": "Le risque routier professionnel",
+      "publication_date": null,
+      "category": "prévention",
+      "family": "risques_professionnels",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    }
+  ]
+}

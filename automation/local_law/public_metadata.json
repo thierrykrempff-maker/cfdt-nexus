@@ -1,0 +1,24 @@
+{
+  "connector_name": "alsace_moselle_local_law",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.legifrance.gouv.fr/codes/id/LEGISCTA000006178008",
+      "title": "Code du travail — dispositions particulières Moselle, Bas-Rhin et Haut-Rhin",
+      "publication_date": null,
+      "category": "repos_dominical_et_jours_feries",
+      "family": "droit_local_alsace_moselle",
+      "document_type": "texte_legislatif",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.legifrance.gouv.fr/codes/id/LEGISCTA000018534347",
+      "title": "Code du travail — dispositions réglementaires Moselle, Bas-Rhin et Haut-Rhin",
+      "publication_date": null,
+      "category": "repos_dominical_et_jours_feries",
+      "family": "droit_local_alsace_moselle",
+      "document_type": "texte_reglementaire",
+      "language": "fr"
+    }
+  ]
+}

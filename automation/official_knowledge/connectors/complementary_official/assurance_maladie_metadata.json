@@ -1,0 +1,42 @@
+{
+  "connector_name": "assurance_maladie",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.ameli.fr/assure/remboursements/indemnites-journalieres-maladie-maternite-paternite/indemnites-journalieres-pour-maladie/arret-maladie-salarie",
+      "title": "Arrêt de travail pour maladie : indemnités journalières du salarié",
+      "publication_date": null,
+      "category": "ijss",
+      "family": "arret_maladie",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.ameli.fr/assure/remboursements/accident-travail",
+      "title": "Accident du travail : prise en charge et indemnités journalières",
+      "publication_date": "2026-01-20",
+      "category": "at_mp",
+      "family": "risques_professionnels",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.ameli.fr/assure/remboursements/pensions-allocations-rentes/invalidite",
+      "title": "Le montant de la pension d'invalidité",
+      "publication_date": "2026-03-31",
+      "category": "invalidite",
+      "family": "pensions",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.ameli.fr/assure/droits-demarches/maladie-accident-hospitalisation/arret-travail-maladie/reprendre-travail-apres-arret-maladie",
+      "title": "Reprendre le travail après un arrêt maladie",
+      "publication_date": "2026-03-06",
+      "category": "temps_partiel_therapeutique",
+      "family": "reprise_travail",
+      "document_type": "fiche_pratique",
+      "language": "fr"
+    }
+  ]
+}

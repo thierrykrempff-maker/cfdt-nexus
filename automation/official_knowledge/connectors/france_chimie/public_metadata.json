@@ -1,0 +1,24 @@
+{
+  "connector_name": "france_chimie",
+  "last_synchronized_at": "2026-07-24",
+  "documents": [
+    {
+      "url": "https://www.francechimie.fr/positions-expertises/affaires-sociales",
+      "title": "Affaires sociales de la branche Chimie",
+      "publication_date": null,
+      "category": "dialogue_social",
+      "family": "social_dialogue",
+      "document_type": "publication",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.francechimie.fr/",
+      "title": "France Chimie",
+      "publication_date": null,
+      "category": "branche_chimie",
+      "family": "publication",
+      "document_type": "publication",
+      "language": "fr"
+    }
+  ]
+}
