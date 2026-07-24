@@ -14,6 +14,7 @@ from SYNDICAL_REASONING_ENGINE import (
     CaseFact,
     ConfidentialityLevel,
     ContractChangeReasoningEngine,
+    CSEConsultationReasoningEngine,
     DiscriminationHarassmentReasoningEngine,
     DisciplinaryReasoningEngine,
     HealthAbsenceReasoningEngine,
@@ -28,6 +29,7 @@ from SYNDICAL_REASONING_ENGINE import (
     articulate_discrimination_domains,
     articulate_health_domains,
     needs_contract_change_reasoning,
+    needs_cse_consultation_reasoning,
     needs_discrimination_harassment_reasoning,
     needs_health_absence_reasoning,
     needs_disciplinary_reasoning,
@@ -153,6 +155,7 @@ class RuntimeSyndicalReasoningIntegration:
         *,
         engine: SyndicalReasoningEngine | None = None,
         contract_change_engine: ContractChangeReasoningEngine | None = None,
+        cse_consultation_engine: CSEConsultationReasoningEngine | None = None,
         disciplinary_engine: DisciplinaryReasoningEngine | None = None,
         working_time_engine: WorkingTimeReasoningEngine | None = None,
         discrimination_engine: DiscriminationHarassmentReasoningEngine | None = None,
@@ -163,6 +166,9 @@ class RuntimeSyndicalReasoningIntegration:
         self._engine = engine or SyndicalReasoningEngine()
         self._contract_change_engine = (
             contract_change_engine or ContractChangeReasoningEngine(self._engine)
+        )
+        self._cse_consultation_engine = (
+            cse_consultation_engine or CSEConsultationReasoningEngine(self._engine)
         )
         self._disciplinary_engine = (
             disciplinary_engine or DisciplinaryReasoningEngine(self._engine)
@@ -197,8 +203,11 @@ class RuntimeSyndicalReasoningIntegration:
             working_time_relevant = needs_working_time_reasoning(case)
             discrimination_relevant = needs_discrimination_harassment_reasoning(case)
             health_absence_relevant = needs_health_absence_reasoning(case)
+            cse_consultation_relevant = needs_cse_consultation_reasoning(case)
             articulation = (
-                articulate_health_domains(case)
+                self._cse_consultation_engine.analyze(case).articulation
+                if cse_consultation_relevant
+                else articulate_health_domains(case)
                 if health_absence_relevant
                 else (
                     articulate_discrimination_domains(case)
@@ -208,7 +217,11 @@ class RuntimeSyndicalReasoningIntegration:
                     )
                 )
             )
-            if articulation.primary_domain == "R1B_DISCIPLINARY":
+            if articulation.primary_domain == "R2A_CSE_CONSULTATION":
+                specialized = self._cse_consultation_engine.analyze(case)
+                report = specialized.base_report
+                domain_analysis = specialized.to_dict()
+            elif articulation.primary_domain == "R1B_DISCIPLINARY":
                 specialized = self._disciplinary_engine.analyze(case)
                 report = specialized.base_report
                 domain_analysis = specialized.to_dict()
@@ -237,6 +250,8 @@ class RuntimeSyndicalReasoningIntegration:
                 complementary_analyses["discrimination_harassment"] = self._discrimination_engine.analyze(case).to_dict()
             if domain_analysis is not None and health_absence_relevant and articulation.primary_domain != "R1E_HEALTH_ABSENCE":
                 complementary_analyses["health_absence"] = self._health_absence_engine.analyze(case).to_dict()
+            if domain_analysis is not None and cse_consultation_relevant and articulation.primary_domain != "R2A_CSE_CONSULTATION":
+                complementary_analyses["cse_consultation"] = self._cse_consultation_engine.analyze(case).to_dict()
             if complementary_analyses:
                 domain_analysis = {
                     **domain_analysis,
