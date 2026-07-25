@@ -437,6 +437,11 @@ DOMAIN_RULES: list[dict[str, Any]] = [
         "patterns": [
             r"\bcontrat\b",
             r"\bavenant\b",
+            r"\bcontraint(?:e|es|s)?\b",
+            r"\bimpose(?:e|es|s)?\b",
+            r"\bpas volontaire\b",
+            r"\bne souhaite pas\b",
+            r"passage (?:d[' ]?un rythme )?de jour (?:a|en|vers) (?:un )?(?:rythme )?poste",
             r"periode d'?essai",
             r"\bcdd\b",
             r"\bcdi\b",
@@ -561,6 +566,10 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"\bcycle\b",
             r"\bpostes?\s+en\s+5x8\b",
             r"travail poste",
+            r"rythme poste",
+            r"travail en equipes? postees?",
+            r"matin(?:s)?[ /-]+apres[- ]?midi",
+            r"week[- ]?ends?",
             r"salaries? postes?",
             r"fatigue des postes?",
             r"reprend son poste",
@@ -766,6 +775,11 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"expertise.*(?:decision|engagement)",
             r"la direction veut",
             r"reorganisation",
+            r"remplacement .*demission",
+            r"remplacer (?:un|une) salari(?:e|ee).*demission",
+            r"reduction (?:de |des )?(?:l[' ]?)?effectifs?",
+            r"reduire (?:l[' ]?)?equipe de jour",
+            r"equipe de jour .*redui",
             r"suppression de postes?",
             r"modification .*cycle",
             r"modification .*horaires?",
@@ -818,6 +832,10 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"presente au cse",
             r"la direction veut",
             r"reorganisation",
+            r"remplacement .*demission",
+            r"reduction (?:de |des )?(?:l[' ]?)?effectifs?",
+            r"reduire (?:l[' ]?)?equipe de jour",
+            r"equipe de jour .*redui",
             r"suppression de postes?",
             r"modification .*cycle",
             r"modification .*horaires?",
@@ -2019,6 +2037,94 @@ def primary_domain(domains: list[str]) -> str:
     return "bible_accords"
 
 
+def forced_day_to_shift_context(query: str) -> bool:
+    """Recognize an imposed day-to-shift change without inferring consent."""
+    text = normalize(query)
+    forced = any(
+        marker in text
+        for marker in (
+            "contraint",
+            "impose",
+            "pas volontaire",
+            "ne souhaite pas",
+            "oblige",
+            "sans son accord",
+        )
+    )
+    day_to_shift = (
+        any(marker in text for marker in ("travail de jour", "rythme de jour", "equipe de jour"))
+        and any(
+            marker in text
+            for marker in (
+                "rythme poste",
+                "travail poste",
+                "equipe postee",
+                "equipes postees",
+                "matin/apres-midi",
+                "matin apres-midi",
+            )
+        )
+    )
+    return forced and day_to_shift
+
+
+def payroll_control_requested(query: str) -> bool:
+    """Require an explicit pay-control objective before selecting Expert Paie."""
+    text = normalize(query)
+    return bool(
+        re.search(
+            r"\b(?:calcul(?:er)?|control(?:e|er)|verifi(?:e|er)|chiffr(?:e|er))\b"
+            r".{0,45}\b(?:paie|paye|salaire|remuneration|prime|majoration|bulletin|montant|taux)\b",
+            text,
+        )
+        or re.search(
+            r"\b(?:combien|quel montant|quel taux|mal paye|erreur de paie|bulletin de paie)\b",
+            text,
+        )
+    )
+
+
+def pay_is_explicitly_secondary(query: str) -> bool:
+    text = normalize(query)
+    secondary = any(
+        marker in text
+        for marker in (
+            "ce n est pas l objet principal",
+            "n est pas l objet principal",
+            "ce n'est pas l'objet principal",
+            "n'est pas l'objet principal",
+            "remuneration est secondaire",
+            "salaire est secondaire",
+            "prime est secondaire",
+        )
+    )
+    return secondary and not payroll_control_requested(query)
+
+
+def declared_case_facts(query: str) -> list[dict[str, object]]:
+    """Project only explicit user statements and preserve important negations."""
+    text = normalize(query)
+    facts: list[str] = []
+    if "laboratoire" in text and any(marker in text for marker in ("travail de jour", "rythme de jour")):
+        facts.append("La salariée travaille actuellement de jour au laboratoire.")
+    if "demission" in text and "remplac" in text:
+        facts.append("Le changement annoncé vise à remplacer un salarié démissionnaire.")
+    if forced_day_to_shift_context(query):
+        facts.append("La salariée indique que le passage en rythme posté lui est imposé.")
+    if any(marker in text for marker in ("pas volontaire", "ne souhaite pas", "sans son accord")):
+        facts.append("La salariée précise que ce changement n'est pas volontaire et qu'elle ne le souhaite pas.")
+    if any(marker in text for marker in ("week end", "week-end", "jours feries", "matin/apres-midi", "matin apres-midi")):
+        facts.append("Le rythme envisagé comprend des contraintes de postes, week-ends ou jours fériés à préciser.")
+    if "equipe de jour" in text and any(marker in text for marker in ("redui", "reduction", "dimin")):
+        facts.append("Une réduction de l'effectif de l'équipe de jour est évoquée.")
+    if pay_is_explicitly_secondary(query):
+        facts.append("Une rémunération plus élevée est évoquée, mais elle n'est pas l'objet principal de la demande.")
+    return [
+        {"statement": statement, "documented": False, "source": "user_statement"}
+        for statement in facts
+    ]
+
+
 def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
     text = normalize(query)
     scores: dict[str, int] = {}
@@ -2038,6 +2144,12 @@ def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
     if explicit_astreinte_exclusion(query):
         scores.pop("astreinte", None)
         reasons.append("La demande exclut explicitement l'astreinte.")
+
+    if pay_is_explicitly_secondary(query):
+        scores.pop("paie_remuneration", None)
+        reasons.append(
+            "La rémunération est explicitement secondaire : Expert Paie n'est pas sélectionné sans demande de calcul ou de contrôle."
+        )
 
     domains = [domain for domain in DOMAIN_ORDER if scores.get(domain)]
     if "droit_syndical" in domains and not re.search(
@@ -2063,6 +2175,9 @@ def detect_intents(query: str, domains: list[str]) -> tuple[list[str], list[str]
             continue
         scores[rule["intent"]] = scores.get(rule["intent"], 0) + len(matches)
         reasons.append(rule["reason"])
+
+    if pay_is_explicitly_secondary(query):
+        scores.pop("analyser_paie", None)
 
     if mandate_meeting_query(query):
         scores["question_simple"] = max(scores.get("question_simple", 0), 2)
@@ -2466,7 +2581,7 @@ def employee_path_for(
             text,
         )
     )
-    explicit_disciplinary = bool(
+    hard_disciplinary_signal = bool(
         re.search(
             r"\b(?:convocation|entretien prealable|sanction|avertissement|blame|"
             r"mise a pied|licenciement|faute|faits reproches|disciplinaire|"
@@ -2474,8 +2589,10 @@ def employee_path_for(
             text,
         )
         or re.search(r"\bdefen(?:se|dre) (?:du |le )?salarie\b", text)
-        or re.search(
-            r"\b(?:accompagnement|accompagner|preparer).{0,35}\bentretien\b",
+    )
+    interview_assistance_signal = bool(
+        re.search(
+            r"\b(?:accompagnement|accompagner).{0,35}\bentretien\b",
             text,
         )
     )
@@ -2485,7 +2602,9 @@ def employee_path_for(
             "Le parcours approfondi a été choisi explicitement.",
             None,
         )
-    if explicit_disciplinary and not non_disciplinary_interview:
+    if hard_disciplinary_signal or (
+        interview_assistance_signal and not non_disciplinary_interview
+    ):
         return (
             ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
             "Un signal explicite de procédure, sanction ou défense disciplinaire est détecté.",
@@ -2496,8 +2615,9 @@ def employee_path_for(
             QUESTION_SALARIE,
             "Le mot entretien seul ne suffit pas à qualifier une procédure disciplinaire.",
             (
-                "Si une convocation, des faits reprochés ou une sanction sont en cause, "
-                "utilisez le parcours « Préparer un entretien disciplinaire »."
+                "Un mode disciplinaire spécialisé peut être nécessaire si une convocation, "
+                "des faits reprochés ou une sanction sont en cause ; utilisez alors le "
+                "parcours « Préparer un entretien disciplinaire »."
             ),
         )
     return (
@@ -2603,6 +2723,17 @@ def default_documents(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
     query = normalize(route.get("query", ""))
     documents: list[str] = []
+    if forced_day_to_shift_context(route.get("query", "")):
+        documents.extend(
+            [
+                "contrat de travail et avenants",
+                "description écrite du changement, de sa durée et de sa date d'effet",
+                "planning actuel de jour et cycle posté envisagé",
+                "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+                "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+                "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+            ]
+        )
     if "classification_carriere" in domains:
         documents.extend(
             [
@@ -2712,6 +2843,20 @@ def default_questions(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
     query = normalize(route.get("query", ""))
     questions: list[str] = []
+    if forced_day_to_shift_context(route.get("query", "")):
+        questions.extend(
+            [
+                "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
+                "Le changement annoncé est-il temporaire ou permanent ?",
+                "Quel est le cycle exact : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+                "Quelle est la date de début et quel délai de prévenance est annoncé ?",
+                "Des volontaires ont-ils été recherchés et pourquoi cette salariée a-t-elle été choisie ?",
+                "Quel accord INEOS encadre ce changement et ses contreparties ?",
+                "L'effectif du laboratoire ou de l'équipe de jour sera-t-il durablement réduit ?",
+                "Le CSE a-t-il été informé ou consulté sur la réorganisation et les effectifs ?",
+                "Quelles contraintes personnelles, familiales, de transport ou de santé la salariée souhaite-t-elle signaler, sans diagnostic médical ?",
+            ]
+        )
     if "classification_carriere" in domains:
         questions.extend(
             [
@@ -2808,7 +2953,16 @@ def default_findings(route: dict[str, Any]) -> list[str]:
     query = normalize(route.get("query", ""))
     findings: list[str] = []
 
-    if mandate_meeting_query(route.get("query", "")):
+    if forced_day_to_shift_context(route.get("query", "")):
+        findings.extend(
+            [
+                "Qualifier d'abord le caractère imposé du changement de poste, d'horaires et de conditions de travail.",
+                "Analyser séparément le rythme posté, les week-ends, les jours fériés, les repos et le délai de prévenance.",
+                "Vérifier la dimension collective liée au remplacement d'une démission et à la réduction possible de l'équipe de jour.",
+                "Ne déduire ni promotion, ni acceptation, ni volontariat, ni caractère favorable d'une hausse de rémunération ou d'une prime de poste.",
+            ]
+        )
+    elif mandate_meeting_query(route.get("query", "")):
         findings.extend(
             [
                 "Qualifier d'abord la participation a la reunion CSE : mandat, convocation, invitation ou simple presence.",
@@ -2917,6 +3071,13 @@ def default_findings(route: dict[str, Any]) -> list[str]:
 def build_working_position(route: dict[str, Any], findings: list[str], engine_results: list[dict[str, Any]] | None = None) -> str:
     domains = set(route["domains"])
     intents = set(route["intents"])
+    if forced_day_to_shift_context(route.get("query", "")):
+        return (
+            "Défendre la salariée sans laisser entendre qu'elle a accepté : demander le projet et ses motifs par écrit, "
+            "comparer contrat, horaires et accord INEOS, documenter ses contraintes, l'accompagner dans les échanges "
+            "et porter au CSE la réduction éventuelle de l'équipe de jour. Éviter un refus non préparé comme toute "
+            "conclusion automatique sur la légalité du changement."
+        )
     if mandate_meeting_query(route.get("query", "")):
         return (
             "Traiter la demande comme une articulation entre mandat CSE et temps de travail : verifier la qualite du salarie, "
@@ -2998,6 +3159,11 @@ def position_for(route: dict[str, Any], findings: list[str]) -> str:
 
 def next_action_for(route: dict[str, Any]) -> str:
     domains = set(route["domains"])
+    if forced_day_to_shift_context(route.get("query", "")):
+        return (
+            "Demander immédiatement une présentation écrite du changement, du cycle, de sa durée, de sa date d'effet "
+            "et des effectifs avant/après, sans signer ni opposer un refus non préparé."
+        )
     if mandate_meeting_query(route.get("query", "")):
         return "Verifier la qualite du participant et le texte applicable aux reunions CSE avant de qualifier le traitement du temps."
     if "question_simple" in route["intents"] and route["engines"] == ["bible_accords"]:
@@ -3070,6 +3236,8 @@ def response_depth(route: dict[str, Any]) -> str:
     domains = set(route.get("domains", []))
     intents = set(route.get("intents", []))
     business = [domain for domain in business_domains(route) if domain != "cse"]
+    if forced_day_to_shift_context(route.get("query", "")):
+        return "multi_domain"
     if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains) or len(business) >= 3:
         return "multi_domain"
     if "preparer_cse" in intents:
@@ -3224,6 +3392,14 @@ def build_short_answer(answer: dict[str, Any]) -> str:
     query = normalize(route.get("query", ""))
     source_docs = normalize(" ".join(str(source.get("document") or "") for source in answer.get("sources", [])))
 
+    if forced_day_to_shift_context(route.get("query", "")):
+        return (
+            "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. "
+            "Il s'agit d'abord d'un changement imposé de poste, d'horaires et de conditions de travail à qualifier, "
+            "avec des effets sur le rythme posté, les week-ends, les jours fériés et les repos. "
+            "La rémunération éventuellement supérieure reste une conséquence secondaire et ne prouve ni accord, "
+            "ni volontariat, ni caractère favorable."
+        )
     if mandate_meeting_query(route.get("query", "")):
         return (
             "Nexus ne peut pas conclure automatiquement sur l'autorisation et le traitement de ce temps avec les seules sources selectionnees. "
@@ -3914,6 +4090,7 @@ def ask(
     retrieval_limit = max(limit, source_limit, 8)
     answer: dict[str, Any] = {
         "query": query,
+        "facts": declared_case_facts(query),
         "understanding": understanding_for(route),
         "short_answer": "",
         "route": route,

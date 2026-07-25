@@ -34,14 +34,21 @@ from .models import SyndicalCaseInput
 
 
 PROJECT_MARKERS = {
-    ProjectType.REORGANIZATION: ("reorganisation", "organisation de service", "restructure"),
+    ProjectType.REORGANIZATION: (
+        "reorganisation",
+        "organisation de service",
+        "restructure",
+        "remplacement d un salarie demissionnaire",
+        "reduire l equipe de jour",
+        "reduction de l effectif",
+    ),
     ProjectType.JOB_CHANGES: ("suppression de poste", "creation de poste", "transfert de salarie"),
     ProjectType.WORKING_TIME: ("changement d horaires", "change de cycle", "equipe postee", "travail poste"),
     ProjectType.OUTSOURCING: ("externalisation", "sous traitance", "prestataire", "transfert d activite"),
     ProjectType.RELOCATION: ("demenagement", "implantation"),
     ProjectType.MONITORING_TOOL: ("outil de controle", "logiciel de suivi", "surveillance"),
     ProjectType.WORK_METHOD: ("procedure de travail", "methodes de travail", "qualification", "classification"),
-    ProjectType.STAFFING: ("effectifs", "interim", "fermeture"),
+    ProjectType.STAFFING: ("effectifs", "effectif", "equipe de jour", "interim", "fermeture"),
     ProjectType.ECONOMIC_PROJECT: ("projet economique", "emploi et competences"),
 }
 
@@ -55,7 +62,11 @@ def needs_cse_consultation_reasoning(case_or_question: SyndicalCaseInput | str) 
         text = _case_text(case_or_question)
     else:
         text = _normalize(case_or_question)
-    collective = any(
+    staffing_reorganization = (
+        any(marker in text for marker in ("demission", "remplacement", "remplacer"))
+        and any(marker in text for marker in ("reduire", "reduction", "effectif", "equipe de jour"))
+    )
+    collective = staffing_reorganization or any(
         marker in text
         for marker in (
             "cse", "consultation", "reorganisation", "plusieurs salarie",
@@ -63,9 +74,12 @@ def needs_cse_consultation_reasoning(case_or_question: SyndicalCaseInput | str) 
             "nouvel outil", "logiciel de suivi", "ordre du jour", "plusieurs equipes",
         )
     )
-    return collective and any(
+    return collective and (
+        staffing_reorganization
+        or any(
         marker in text
         for marker in ("projet", "decision", "mise en oeuvre", "information", "avis", "poste", "horaire", "cycle", "outil", "service")
+        )
     )
 
 
@@ -130,7 +144,7 @@ def _project_facts(case: SyndicalCaseInput, text: str) -> CSEProjectFacts:
         ProjectType.UNKNOWN,
     )
     employees = None
-    if any(marker in text for marker in ("plusieurs salarie", "plusieurs postes", "plusieurs equipes", "effectifs")):
+    if any(marker in text for marker in ("plusieurs salarie", "plusieurs postes", "plusieurs equipes", "effectifs", "effectif", "reduire l equipe de jour")):
         employees = 2
     elif any(marker in text for marker in ("un seul salarie", "cas individuel isole", "une personne")):
         employees = 1
@@ -150,7 +164,7 @@ def _project_facts(case: SyndicalCaseInput, text: str) -> CSEProjectFacts:
         signal_origin="question et faits déclarés",
         employees_affected=employees,
         affected_services=("service concerné à confirmer",) if "service" in text else (),
-        decision_envisaged=True if "projet" in text or "annonce" in text else None,
+        decision_envisaged=True if any(marker in text for marker in ("projet", "annonce", "contraint", "impose", "reduire")) else None,
         decision_already_taken=decided,
         implementation_started=started,
         cse_information_known=information,
