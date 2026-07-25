@@ -44,6 +44,8 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCSEMemoryReportMapper,
     RuntimeCSEMemoryResult,
     RuntimeIntegrationConfig,
+    RuntimeFinalAssistantConfig,
+    RuntimeFinalAssistantIntegration,
     RuntimeOfficialConnectorsConfig,
     RuntimeOfficialConnectorsIntegration,
     RuntimeProtectionSocialeConfig,
@@ -166,9 +168,21 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
         RuntimeSyndicalReasoningConfig.from_env()
     ).integrate(answer)
     payload["syndical_reasoning_runtime"] = syndical_integration.to_dict()
-    payload["analysis_report"] = RuntimeSyndicalReasoningReportMapper().map(
+    syndical_report = RuntimeSyndicalReasoningReportMapper().map(
         protection_report, syndical_integration
     )
+    final_integration = RuntimeFinalAssistantIntegration(
+        RuntimeFinalAssistantConfig.from_env()
+    ).integrate(
+        answer,
+        syndical_report,
+        existing_results={
+            "syndical_reasoning": syndical_integration.to_dict(),
+            "cse_memory": cse_integration.to_dict(),
+        },
+    )
+    payload["final_assistant_runtime"] = final_integration.to_dict()
+    payload["analysis_report"] = final_integration.report
     return payload
 
 

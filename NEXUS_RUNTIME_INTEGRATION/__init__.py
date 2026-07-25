@@ -9,6 +9,7 @@ from .config import (
     RuntimeRetirementConfig,
     RuntimeSyndicalReasoningConfig,
     RuntimeExpertPaieV2Config,
+    RuntimeFinalAssistantConfig,
 )
 from .connector_mapper import RuntimeConnectorMappingResult, RuntimeConnectorPayloadMapper
 from .integration import RuntimeCoreIntegration
@@ -70,6 +71,12 @@ from .expert_paie_v2_runtime import (
     RuntimeExpertPaieV2Result,
     needs_expert_paie_v2,
 )
+from .final_assistant_runtime import (
+    RuntimeFinalAssistantDiagnostics,
+    RuntimeFinalAssistantIntegration,
+    RuntimeFinalAssistantMode,
+    RuntimeFinalAssistantResult,
+)
 
 __all__ = (
     "RuntimeCoreIntegration",
@@ -92,6 +99,11 @@ __all__ = (
     "RuntimeExpertPaieV2Integration",
     "RuntimeExpertPaieV2Mode",
     "RuntimeExpertPaieV2Result",
+    "RuntimeFinalAssistantConfig",
+    "RuntimeFinalAssistantDiagnostics",
+    "RuntimeFinalAssistantIntegration",
+    "RuntimeFinalAssistantMode",
+    "RuntimeFinalAssistantResult",
     "RuntimeIntegrationConfig",
     "RuntimeOfficialConnectorsConfig",
     "RuntimeOfficialConnectorsDiagnostics",

@@ -417,19 +417,40 @@ function renderResult(payload) {
   currentPayload = payload;
   const answer = payload.answer;
   const orchestration = payload.orchestration || {};
+  const finalAssistant = payload.final_assistant_runtime?.assistant || null;
+  const finalSummary = finalAssistant?.summary || {};
+  const finalTrace = finalAssistant?.trace || {};
   emptyState.hidden = true;
   resultContent.hidden = false;
   resultQuestion.textContent = orchestration.question_posee || answer.query;
-  setConfidence(confidenceValue, orchestration.niveau_de_confiance || answer.confidence);
-  fillInlineList(domainsList, orchestration.domaines_detectes || answer.route.domains || []);
-  fillInlineList(expertsList, orchestration.experts_mobilises || []);
+  setConfidence(confidenceValue, finalAssistant?.confidence || orchestration.niveau_de_confiance || answer.confidence);
+  const finalDomains = finalAssistant
+    ? [finalAssistant.primary_domain, ...(finalAssistant.complementary_domains || [])]
+    : null;
+  fillInlineList(domainsList, finalDomains || orchestration.domaines_detectes || answer.route.domains || []);
+  fillInlineList(expertsList, finalTrace.engines_called || orchestration.experts_mobilises || []);
   shortAnswer.textContent = orchestration.reponse_synthetique_nexus || answer.short_answer || "A completer.";
   workingPosition.textContent = orchestration.position_de_travail || answer.working_position || "A completer.";
   renderSources(sourcesList, answer, orchestration);
   fillList(findingsList, answer.findings || []);
-  fillList(documentsList, orchestration.documents_necessaires || answer.documents_to_request || []);
-  fillList(questionsList, orchestration.questions_utiles || answer.questions_to_ask || []);
-  fillList(warningsList, orchestration.limites || answer.warnings || []);
+  fillList(documentsList, finalSummary.documents_or_actions || orchestration.documents_necessaires || answer.documents_to_request || []);
+  fillList(
+    questionsList,
+    finalAssistant?.questions?.map((item) => `${item.priority}: ${item.text}`) ||
+      orchestration.questions_utiles ||
+      answer.questions_to_ask ||
+      []
+  );
+  fillList(
+    warningsList,
+    finalAssistant
+      ? [
+          ...(finalSummary.limits || []),
+          ...(finalAssistant.warnings || []),
+          `Assistant final: ${payload.final_assistant_runtime.mode}`
+        ]
+      : orchestration.limites || answer.warnings || []
+  );
   renderIssueGroups(answer.issue_groups || []);
   renderExperts(payload);
   resetReportState();

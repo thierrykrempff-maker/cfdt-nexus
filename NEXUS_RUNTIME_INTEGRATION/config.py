@@ -18,6 +18,7 @@ PROTECTION_SOCIALE_ROOT_ENV = "NEXUS_PROTECTION_SOCIALE_PROCESSED_ROOT"
 OFFICIAL_CONNECTORS_RUNTIME_ENV = "NEXUS_OFFICIAL_CONNECTORS_RUNTIME_ENABLED"
 SYNDICAL_REASONING_RUNTIME_ENV = "NEXUS_SYNDICAL_REASONING_RUNTIME_ENABLED"
 EXPERT_PAIE_V2_RUNTIME_ENV = "NEXUS_EXPERT_PAIE_V2_RUNTIME_ENABLED"
+FINAL_ASSISTANT_RUNTIME_ENV = "NEXUS_FINAL_ASSISTANT_RUNTIME_ENABLED"
 _TRUE_VALUES = frozenset({"1", "true", "yes", "on"})
 _FALSE_VALUES = frozenset({"", "0", "false", "no", "off"})
 
@@ -177,3 +178,26 @@ class RuntimeExpertPaieV2Config:
             in _TRUE_VALUES
         )
         return cls(enabled)
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeFinalAssistantConfig:
+    """Independent fail-safe switch for the final assistant orchestration."""
+
+    enabled: bool = False
+    max_engines: int = 4
+
+    @classmethod
+    def from_env(
+        cls, environ: Mapping[str, str] | None = None
+    ) -> "RuntimeFinalAssistantConfig":
+        source = os.environ if environ is None else environ
+        enabled = (
+            str(source.get(FINAL_ASSISTANT_RUNTIME_ENV, "")).strip().lower()
+            in _TRUE_VALUES
+        )
+        return cls(enabled)
+
+    def __post_init__(self) -> None:
+        if not 1 <= self.max_engines <= 8:
+            raise ValueError("final assistant engine limit must be between 1 and 8")
