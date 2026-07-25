@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CFDT Nexus - Cockpit V3 local</title>
-    <meta name="description" content="Interface locale privee pour interroger Nexus sans PowerShell.">
+    <title>CFDT Nexus — Portail métier</title>
+    <meta name="description" content="Portail local CFDT Nexus pour analyser une situation, préparer une réunion ou contrôler une paie.">
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
@@ -14,216 +14,381 @@
     <script src="app.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#employeeCasePanel">Aller au dossier salarie</a>
+    <a class="skip-link" href="#mainContent">Aller au contenu principal</a>
 
     <header class="app-header">
-      <div class="brand-block">
-        <span class="brand-mark">Cfdt.</span>
+      <a class="brand-block" href="#homeView" aria-label="CFDT Nexus, revenir à l’accueil">
+        <img
+          class="brand-logo"
+          src="assets/logo-cfdt-ineos-sarralbe.jpg"
+          alt="Logo CFDT INEOS Sarralbe"
+        >
         <span class="brand-copy">
           <strong>CFDT Nexus</strong>
-          <span>Cockpit V3 local</span>
+          <span>Votre assistant syndical pour analyser, préparer et agir</span>
         </span>
+      </a>
+      <div class="header-actions">
+        <span class="runtime-status" id="runtimeStatus">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="runtimeStatusLabel">Mode historique</span>
+        </span>
+        <button class="settings-button" type="button" id="settingsButton" aria-expanded="false" aria-controls="settingsPanel">
+          Paramètres
+        </button>
       </div>
-      <div class="status-line">
-        <span class="status-dot" aria-hidden="true"></span>
-        Local prive - aucun envoi externe
-      </div>
+      <aside class="settings-panel" id="settingsPanel" hidden aria-labelledby="settingsTitle">
+        <div class="settings-heading">
+          <h2 id="settingsTitle">État technique</h2>
+          <button class="icon-button" type="button" id="closeSettingsButton" aria-label="Fermer les paramètres">×</button>
+        </div>
+        <dl class="settings-list">
+          <div><dt>Analyse</dt><dd id="assistantStatusValue">Moteur historique</dd></div>
+          <div><dt>Contrôle paie</dt><dd id="payrollStatusValue">Analyse prudente</dd></div>
+          <div><dt>Stockage automatique</dt><dd>Désactivé</dd></div>
+          <div><dt>Envoi externe</dt><dd>Aucun</dd></div>
+        </dl>
+        <p>Les moteurs avancés ne sont jamais activés depuis cette interface.</p>
+      </aside>
     </header>
 
-    <main class="workspace">
-      <section class="employee-case-panel" id="employeeCasePanel" aria-labelledby="employeeCaseTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">LOT 5C - demonstration synthetique</p>
-            <h1 id="employeeCaseTitle">Dossier salarie</h1>
+    <main id="mainContent">
+      <section class="home-view" id="homeView" aria-labelledby="homeTitle">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Portail métier local et confidentiel</p>
+            <h1 id="homeTitle">Que souhaitez-vous préparer aujourd’hui&nbsp;?</h1>
+            <p class="hero-intro">
+              Choisissez le type de situation que vous souhaitez traiter. Nexus vous guidera et mobilisera uniquement les outils nécessaires.
+            </p>
+            <p class="safety-notice">
+              Les analyses doivent être vérifiées avant toute décision ou transmission.
+            </p>
           </div>
-          <div class="case-controls">
-            <label for="caseScenarioSelect">Scenario</label>
-            <select id="caseScenarioSelect" aria-describedby="caseSafetyNotice"></select>
-            <button class="primary-button" type="button" id="loadCaseButton">Charger le dossier</button>
+          <div class="hero-steps" aria-label="Parcours en trois étapes">
+            <span><strong>1</strong> Choisir</span>
+            <span><strong>2</strong> Décrire</span>
+            <span><strong>3</strong> Agir</span>
           </div>
         </div>
-        <p class="safety-notice" id="caseSafetyNotice">
-          Demonstrations fictives uniquement. Aucun document local reel ne peut etre charge.
-        </p>
-        <div class="case-error" id="caseError" role="alert" hidden></div>
-        <div class="case-content" id="caseContent" hidden>
-          <section class="case-header-card" aria-labelledby="caseHeaderTitle">
+
+        <section aria-labelledby="workspacesTitle">
+          <div class="section-heading portal-heading">
             <div>
-              <p class="eyebrow">Dossier</p>
-              <h2 id="caseHeaderTitle">-</h2>
-              <p id="caseHeaderMeta"></p>
+              <p class="eyebrow">Vos espaces</p>
+              <h2 id="workspacesTitle">Un point d’entrée pour chaque besoin</h2>
             </div>
-            <div class="case-badges">
-              <span class="status-badge" id="caseStatus">-</span>
-              <span class="status-badge" id="caseConfidentiality">-</span>
-              <span class="status-badge" id="caseConfidence">-</span>
-            </div>
-          </section>
-
-          <section class="case-section" aria-labelledby="pipelineTitle">
-            <h2 id="pipelineTitle">Progression du pipeline</h2>
-            <ol class="pipeline-steps" id="pipelineSteps"></ol>
-          </section>
-
-          <section class="case-section" aria-labelledby="completenessTitle">
-            <div class="section-heading">
-              <h2 id="completenessTitle">Completude documentaire</h2>
-              <strong id="completenessRate">-</strong>
-            </div>
-            <p id="completenessNotice" class="safety-notice"></p>
-            <div class="grid-four" id="documentSummary"></div>
-          </section>
-
-          <section class="case-section" aria-labelledby="pipelineDiagnosticTitle">
-            <h2 id="pipelineDiagnosticTitle">Diagnostic du dossier</h2>
-            <div id="caseDiagnosticSummary"></div>
-          </section>
-
-          <section class="case-section" aria-labelledby="caseReportTitle">
-            <div class="section-heading">
-              <div>
-                <h2 id="caseReportTitle">Rapport structure</h2>
-                <p class="view-description" id="caseViewDescription">Vue salarie simple et pedagogique.</p>
-              </div>
-              <div class="view-switch" role="group" aria-label="Choisir la vue du rapport">
-                <button class="secondary-button is-active" type="button" id="employeeViewButton" aria-pressed="true">Vue salarie</button>
-                <button class="secondary-button" type="button" id="expertViewButton" aria-pressed="false">Vue expert</button>
-              </div>
-            </div>
-            <div class="case-report-view" id="caseReportView"></div>
-          </section>
-        </div>
-      </section>
-
-      <section class="ask-panel" aria-labelledby="askTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Assistant Nexus V2.2 conserve</p>
-            <h1 id="askTitle">Question a analyser</h1>
+            <p>Vos réponses restent locales et aucune saisie n’est enregistrée automatiquement.</p>
           </div>
-          <div class="confidence-pill" id="statusPill">Pret</div>
-        </div>
 
-        <form id="questionForm" class="question-form">
-          <label for="questionInput">Question</label>
-          <textarea id="questionInput" name="query" rows="5" required></textarea>
-          <div class="form-row">
-            <label class="source-limit">
-              <span>Sources</span>
-              <input id="sourceLimitInput" type="number" min="3" max="12" value="6">
-            </label>
-            <button class="primary-button" type="submit">
-              <span aria-hidden="true">></span>
-              Analyser avec Nexus
+          <div class="workspace-grid">
+            <article class="workspace-card employee-card">
+              <div class="card-icon" aria-hidden="true">S</div>
+              <p class="card-kicker">Accompagnement individuel</p>
+              <h3>Questions salariés</h3>
+              <p>Analyser une situation individuelle, préparer un accompagnement ou défendre les droits d’un salarié.</p>
+              <ul>
+                <li>Changement de poste ou d’horaires</li>
+                <li>Sanction ou entretien disciplinaire</li>
+                <li>Temps de travail, santé ou égalité</li>
+              </ul>
+              <button class="card-button" type="button" data-open-workspace="employee">
+                Analyser une situation salarié
+              </button>
+              <div class="quick-links" aria-label="Accès rapides Questions salariés">
+                <button type="button" data-open-workspace="employee" data-preset="discipline">Sanction</button>
+                <button type="button" data-open-workspace="employee" data-preset="maladie">Maladie</button>
+                <button type="button" data-open-workspace="employee" data-preset="horaires">Horaires</button>
+              </div>
+            </article>
+
+            <article class="workspace-card cse-card">
+              <div class="card-icon" aria-hidden="true">C</div>
+              <p class="card-kicker">Action collective</p>
+              <h3>CSE</h3>
+              <p>Préparer les réunions, analyser les projets de la direction et organiser les actions collectives.</p>
+              <ul>
+                <li>Réunion, ordre du jour et questions</li>
+                <li>Consultation et réorganisation</li>
+                <li>Avis, résolution et anciens PV</li>
+              </ul>
+              <button class="card-button" type="button" data-open-workspace="cse">Ouvrir l’espace CSE</button>
+              <div class="quick-links" aria-label="Accès rapides CSE">
+                <button type="button" data-open-workspace="cse" data-preset="reunion">Réunion</button>
+                <button type="button" data-open-workspace="cse" data-preset="reorganisation">Réorganisation</button>
+                <button type="button" data-open-workspace="cse" data-preset="ancien-pv">Anciens PV</button>
+              </div>
+            </article>
+
+            <article class="workspace-card negotiation-card">
+              <div class="card-icon" aria-hidden="true">N</div>
+              <p class="card-kicker">Réunions paritaires et accords INEOS</p>
+              <h3>Négociations et accords</h3>
+              <p>Analyser les accords existants, préparer une négociation et construire des revendications.</p>
+              <ul>
+                <li>Clause, comparaison ou projet d’accord</li>
+                <li>Classification, salaires et primes</li>
+                <li>Égalité professionnelle et droit syndical</li>
+              </ul>
+              <button class="card-button" type="button" data-open-workspace="negotiation">Préparer une négociation</button>
+              <p class="capability-note">Analyse assistée à partir des accords et sources disponibles.</p>
+            </article>
+
+            <article class="workspace-card payroll-card">
+              <div class="card-icon" aria-hidden="true">€</div>
+              <p class="card-kicker">Contrôle et régularisation</p>
+              <h3>Paie et rémunération</h3>
+              <p>Contrôler une situation de paie, comprendre un écart ou préparer une demande de régularisation.</p>
+              <ul>
+                <li>Heures supplémentaires, primes et astreintes</li>
+                <li>Kelio, Nibelis et bulletin</li>
+                <li>Maladie, IJSS et subrogation</li>
+              </ul>
+              <button class="card-button" type="button" data-open-workspace="payroll">Analyser une situation de paie</button>
+              <p class="capability-note" id="payrollCapabilityNote">Le contrôle avancé n’est pas activé. Une analyse prudente reste disponible.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="secondary-tools" aria-labelledby="toolsTitle">
+          <div class="section-heading portal-heading">
+            <div>
+              <p class="eyebrow">Outils complémentaires</p>
+              <h2 id="toolsTitle">Retrouver, suivre et préparer</h2>
+            </div>
+          </div>
+          <div class="tool-grid">
+            <button class="tool-card" type="button" data-secondary-action="search">
+              <span aria-hidden="true">⌕</span><strong>Recherche documentaire</strong>
+              <small>Accords, convention, Code du travail, jurisprudence et anciens PV</small>
+            </button>
+            <button class="tool-card" type="button" data-secondary-action="cases">
+              <span aria-hidden="true">▣</span><strong>Dossiers en cours</strong>
+              <small>Aucun dossier enregistré dans cette version</small>
+            </button>
+            <button class="tool-card" type="button" data-secondary-action="history">
+              <span aria-hidden="true">↺</span><strong>Historique</strong>
+              <small>Analyses disponibles pendant cette session uniquement</small>
+            </button>
+            <button class="tool-card" type="button" data-secondary-action="templates">
+              <span aria-hidden="true">✎</span><strong>Outils et modèles</strong>
+              <small>Courriers, questions CSE, avis, résolutions et listes de preuves</small>
             </button>
           </div>
-        </form>
+          <div class="secondary-message" id="secondaryMessage" role="status" hidden></div>
+        </section>
+
+        <div class="privacy-banner">
+          <div aria-hidden="true">i</div>
+          <p><strong>Avant de commencer</strong> — anonymisez les situations. Ne saisissez ni NIR, ni coordonnées bancaires, ni diagnostic médical, ni mot de passe.</p>
+        </div>
       </section>
 
-      <section class="result-panel" aria-live="polite">
-        <div class="empty-state" id="emptyState">
-          <h2>Resultat Nexus</h2>
-          <p>Pose une question, puis lance l'analyse locale.</p>
+      <section class="wizard-view" id="wizardView" hidden aria-labelledby="wizardTitle">
+        <div class="view-toolbar">
+          <button class="back-button" type="button" data-return-home>← Revenir à l’accueil</button>
+          <span class="confidentiality-label">Session locale · aucune sauvegarde automatique</span>
         </div>
+        <div class="wizard-shell">
+          <aside class="wizard-sidebar">
+            <p class="eyebrow" id="wizardWorkspaceLabel">Espace métier</p>
+            <h1 id="wizardTitle">Décrire votre situation</h1>
+            <p id="wizardDescription"></p>
+            <ol class="wizard-progress" id="wizardProgress" aria-label="Progression du formulaire"></ol>
+            <div class="privacy-reminder">
+              <strong>Confidentialité</strong>
+              <p>Utilisez des initiales et retirez toute donnée personnelle inutile.</p>
+            </div>
+          </aside>
 
-        <div class="result-content" id="resultContent" hidden>
-          <div class="result-header">
+          <form id="questionForm" class="question-form" novalidate>
+            <div class="wizard-error" id="wizardError" role="alert" hidden></div>
+            <section class="wizard-step" data-step="1" aria-labelledby="stepOneTitle">
+              <p class="step-count">Étape 1 sur 5</p>
+              <h2 id="stepOneTitle">Quel est votre besoin&nbsp;?</h2>
+              <div class="choice-grid" id="situationChoices"></div>
+            </section>
+            <section class="wizard-step" data-step="2" hidden aria-labelledby="stepTwoTitle">
+              <p class="step-count">Étape 2 sur 5</p>
+              <h2 id="stepTwoTitle">Décrivez la situation</h2>
+              <label for="questionInput">Décrivez la situation avec vos propres mots</label>
+              <textarea id="questionInput" name="query" rows="8" maxlength="6000" required aria-describedby="privacyInputNotice"></textarea>
+              <p class="field-help" id="privacyInputNotice">N’indiquez aucune donnée personnelle inutile. Le texte n’est pas enregistré automatiquement.</p>
+            </section>
+            <section class="wizard-step" data-step="3" hidden aria-labelledby="stepThreeTitle">
+              <p class="step-count">Étape 3 sur 5</p>
+              <h2 id="stepThreeTitle">Ajoutez quelques repères</h2>
+              <div class="field-grid" id="contextFields"></div>
+            </section>
+            <section class="wizard-step" data-step="4" hidden aria-labelledby="stepFourTitle">
+              <p class="step-count">Étape 4 sur 5</p>
+              <h2 id="stepFourTitle">Quels éléments avez-vous&nbsp;?</h2>
+              <div class="checkbox-grid" id="documentChoices"></div>
+            </section>
+            <section class="wizard-step" data-step="5" hidden aria-labelledby="stepFiveTitle">
+              <p class="step-count">Étape 5 sur 5</p>
+              <h2 id="stepFiveTitle">Quel résultat souhaitez-vous&nbsp;?</h2>
+              <div class="choice-grid compact-choices" id="outcomeChoices"></div>
+              <fieldset class="response-mode">
+                <legend>Format de réponse</legend>
+                <label><input type="radio" name="responseMode" value="QUICK"> Réponse rapide</label>
+                <label><input type="radio" name="responseMode" value="CASE" checked> Analyse complète</label>
+                <label><input type="radio" name="responseMode" value="EXPERT"> Mode expert</label>
+              </fieldset>
+              <label for="confidentialityLevel">Niveau de confidentialité</label>
+              <select id="confidentialityLevel">
+                <option value="STANDARD">Standard — situation anonymisée</option>
+                <option value="SENSITIVE">Sensible — diffusion restreinte</option>
+              </select>
+              <label class="source-limit" for="sourceLimitInput">
+                Nombre maximal de sources
+                <input id="sourceLimitInput" type="number" min="3" max="12" value="6">
+              </label>
+              <div class="payroll-warning" id="payrollWarning" hidden>
+                Nexus ne doit pas inventer un taux ou une règle. Un calcul peut être refusé si les données ou les règles ne sont pas validées.
+              </div>
+            </section>
+
+            <div class="wizard-actions">
+              <button class="secondary-button" type="button" id="previousStepButton" hidden>Précédent</button>
+              <button class="primary-button" type="button" id="nextStepButton">Continuer</button>
+              <button class="primary-button submit-button" type="submit" id="analyzeButton" hidden>Analyser avec Nexus</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="analysis-state" id="analysisState" hidden aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <h1>Analyse en cours</h1>
+        <p>Nexus vérifie votre demande et mobilise uniquement les outils utiles.</p>
+      </section>
+
+      <section class="result-panel" id="resultView" hidden aria-live="polite">
+        <div class="view-toolbar">
+          <button class="back-button" type="button" id="editInformationButton">← Modifier les informations</button>
+          <button class="text-button" type="button" data-return-home>Revenir à l’accueil</button>
+        </div>
+        <div class="result-shell">
+          <div class="result-heading">
             <div>
-              <p class="eyebrow">Question posee</p>
-              <h2 id="resultQuestion">Question</h2>
+              <p class="eyebrow">Analyse Nexus</p>
+              <h1 id="resultQuestion">Résultat de votre analyse</h1>
+              <p id="resultModeNotice">Analyse avancée non activée : Nexus utilise le moteur historique.</p>
             </div>
             <div class="confidence-pill" id="confidenceValue">-</div>
           </div>
 
-          <div class="grid-two">
-            <section class="panel compact-panel">
-              <h3>Domaines detectes</h3>
-              <div class="inline-list" id="domainsList"></div>
-            </section>
-            <section class="panel compact-panel">
-              <h3>Experts mobilises</h3>
-              <div class="inline-list" id="expertsList"></div>
-            </section>
+          <div class="empty-state" id="emptyState">
+            <h2>Résultat Nexus</h2>
+            <p>Complétez le formulaire pour lancer une analyse locale.</p>
           </div>
 
-          <section class="response-band">
-            <h3>Reponse synthetique Nexus</h3>
-            <p id="shortAnswer"></p>
-          </section>
+          <div class="result-content" id="resultContent" hidden>
+            <div class="result-summary-grid">
+              <section class="response-band result-hero">
+                <p class="eyebrow">Ce qui peut être retenu</p>
+                <h2>Résumé de la situation</h2>
+                <p id="shortAnswer"></p>
+              </section>
+              <section class="panel domain-panel">
+                <h2>Domaine principal</h2>
+                <div class="inline-list" id="domainsList"></div>
+                <h3>Outils mobilisés</h3>
+                <div class="inline-list muted-list" id="expertsList"></div>
+              </section>
+            </div>
 
-          <section class="response-band">
-            <h3>Regles ou position de travail</h3>
-            <p id="workingPosition"></p>
-          </section>
+            <section class="response-band">
+              <h2>Position de travail</h2>
+              <p id="workingPosition"></p>
+            </section>
 
-          <div class="grid-two">
+            <div class="grid-two">
+              <section class="panel">
+                <h2>Ce qui manque</h2>
+                <ul id="documentsList"></ul>
+              </section>
+              <section class="panel">
+                <h2>Questions prioritaires</h2>
+                <ul id="questionsList"></ul>
+              </section>
+            </div>
+
             <section class="panel">
-              <h3>Sources par niveau juridique</h3>
+              <h2>Sources à vérifier</h2>
               <div id="sourcesList" class="source-layers"></div>
             </section>
-            <section class="panel">
-              <h3>Ce qu'il faut verifier</h3>
-              <ul id="findingsList"></ul>
+
+            <div class="grid-two">
+              <section class="panel">
+                <h2>Arguments et constats</h2>
+                <ul id="findingsList"></ul>
+              </section>
+              <section class="panel">
+                <h2>Risques, urgences et limites</h2>
+                <ul id="warningsList"></ul>
+              </section>
+            </div>
+
+            <section class="panel" id="issueGroupsPanel" hidden>
+              <h2>Domaines complémentaires</h2>
+              <div id="issueGroups"></div>
             </section>
+
+            <section class="expert-panel" id="expertPanel" hidden>
+              <div class="section-heading">
+                <div><p class="eyebrow">Mode expert</p><h2>Détails techniques repliables</h2></div>
+                <div class="confidence-pill" id="expertConfidence">-</div>
+              </div>
+              <div id="expertContent"></div>
+            </section>
+
+            <section class="report-panel" id="reportPanel">
+              <div class="section-heading">
+                <div><p class="eyebrow">Plan d’action</p><h2>Brouillons et fiche de travail</h2></div>
+                <div class="report-actions">
+                  <button class="secondary-button" type="button" id="generateReportButton" disabled>Générer un brouillon</button>
+                  <button class="secondary-button" type="button" id="copyReportButton" disabled>Copier</button>
+                  <button class="secondary-button" type="button" id="downloadReportButton" disabled>Télécharger .md</button>
+                </div>
+              </div>
+              <div class="report-output" id="reportOutput">Lancez une analyse, puis générez une fiche de travail.</div>
+            </section>
+
+            <div class="result-actions">
+              <button class="secondary-button" type="button" id="addDocumentButton">Ajouter un document</button>
+              <button class="secondary-button" type="button" id="newAnalysisButton">Nouvelle analyse</button>
+              <button class="primary-button" type="button" data-return-home>Revenir à l’accueil</button>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <section class="panel" id="issueGroupsPanel" hidden>
-            <h3>Enjeux separes</h3>
-            <div id="issueGroups"></div>
-          </section>
-
-          <div class="grid-two">
-            <section class="panel">
-              <h3>Documents a recuperer</h3>
-              <ul id="documentsList"></ul>
-            </section>
-            <section class="panel">
-              <h3>Questions utiles</h3>
-              <ul id="questionsList"></ul>
-            </section>
+      <section class="employee-case-panel legacy-cockpit" id="employeeCasePanel" aria-labelledby="employeeCaseTitle" hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">Démonstrations synthétiques</p><h1 id="employeeCaseTitle">Dossier salarié</h1></div>
+          <div class="case-controls">
+            <label for="caseScenarioSelect">Scénario</label>
+            <select id="caseScenarioSelect" aria-describedby="caseSafetyNotice"></select>
+            <button class="primary-button" type="button" id="loadCaseButton">Charger le dossier</button>
           </div>
-
-          <section class="expert-panel" id="expertPanel" hidden>
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">Experts</p>
-                <h3>Analyses par expertise</h3>
-              </div>
-              <div class="confidence-pill" id="expertConfidence">-</div>
-            </div>
-            <div id="expertContent"></div>
-          </section>
-
-          <section class="report-panel" id="reportPanel">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">Rapport</p>
-                <h3>Fiche d'analyse</h3>
-              </div>
-              <div class="report-actions">
-                <button class="secondary-button" type="button" id="generateReportButton" disabled>
-                  Generer un rapport
-                </button>
-                <button class="secondary-button" type="button" id="copyReportButton" disabled>
-                  Copier le rapport
-                </button>
-                <button class="secondary-button" type="button" id="downloadReportButton" disabled>
-                  Telecharger .md
-                </button>
-              </div>
-            </div>
-            <div class="report-output" id="reportOutput">
-              Lance une analyse Nexus, puis genere la fiche de travail a partir du resultat reel.
-            </div>
-          </section>
-
-          <section class="panel">
-            <h3>Prudence et limites</h3>
-            <ul id="warningsList"></ul>
+        </div>
+        <p class="safety-notice" id="caseSafetyNotice">Démonstrations fictives uniquement. Aucun document local réel ne peut être chargé.</p>
+        <div class="case-error" id="caseError" role="alert" hidden></div>
+        <div class="case-content" id="caseContent" hidden>
+          <section class="case-header-card"><div><h2 id="caseHeaderTitle">-</h2><p id="caseHeaderMeta"></p></div><div class="case-badges"><span class="status-badge" id="caseStatus">-</span><span class="status-badge" id="caseConfidentiality">-</span><span class="status-badge" id="caseConfidence">-</span></div></section>
+          <section class="case-section"><h2>Progression du pipeline</h2><ol class="pipeline-steps" id="pipelineSteps"></ol></section>
+          <section class="case-section"><div class="section-heading"><h2>Complétude documentaire</h2><strong id="completenessRate">-</strong></div><p id="completenessNotice" class="safety-notice"></p><div class="grid-four" id="documentSummary"></div></section>
+          <section class="case-section"><h2>Diagnostic du dossier</h2><div id="caseDiagnosticSummary"></div></section>
+          <section class="case-section">
+            <div class="section-heading"><div><h2>Rapport structuré</h2><p class="view-description" id="caseViewDescription">Vue salarié simple et pédagogique.</p></div><div class="view-switch" role="group" aria-label="Choisir la vue du rapport"><button class="secondary-button is-active" type="button" id="employeeViewButton" aria-pressed="true">Vue salarié</button><button class="secondary-button" type="button" id="expertViewButton" aria-pressed="false">Vue expert</button></div></div>
+            <div class="case-report-view" id="caseReportView"></div>
           </section>
         </div>
       </section>
     </main>
+
+    <div class="status-pill" id="statusPill" aria-live="polite">Prêt</div>
   </body>
 </html>

@@ -42,11 +42,46 @@ const employeeViewButton = document.getElementById("employeeViewButton");
 const expertViewButton = document.getElementById("expertViewButton");
 const caseViewDescription = document.getElementById("caseViewDescription");
 const caseReportView = document.getElementById("caseReportView");
+const homeView = document.getElementById("homeView");
+const wizardView = document.getElementById("wizardView");
+const resultView = document.getElementById("resultView");
+const analysisState = document.getElementById("analysisState");
+const settingsButton = document.getElementById("settingsButton");
+const settingsPanel = document.getElementById("settingsPanel");
+const closeSettingsButton = document.getElementById("closeSettingsButton");
+const runtimeStatus = document.getElementById("runtimeStatus");
+const runtimeStatusLabel = document.getElementById("runtimeStatusLabel");
+const assistantStatusValue = document.getElementById("assistantStatusValue");
+const payrollStatusValue = document.getElementById("payrollStatusValue");
+const wizardWorkspaceLabel = document.getElementById("wizardWorkspaceLabel");
+const wizardTitle = document.getElementById("wizardTitle");
+const wizardDescription = document.getElementById("wizardDescription");
+const wizardProgress = document.getElementById("wizardProgress");
+const situationChoices = document.getElementById("situationChoices");
+const contextFields = document.getElementById("contextFields");
+const documentChoices = document.getElementById("documentChoices");
+const outcomeChoices = document.getElementById("outcomeChoices");
+const previousStepButton = document.getElementById("previousStepButton");
+const nextStepButton = document.getElementById("nextStepButton");
+const analyzeButton = document.getElementById("analyzeButton");
+const wizardError = document.getElementById("wizardError");
+const confidentialityLevel = document.getElementById("confidentialityLevel");
+const payrollWarning = document.getElementById("payrollWarning");
+const resultModeNotice = document.getElementById("resultModeNotice");
+const editInformationButton = document.getElementById("editInformationButton");
+const addDocumentButton = document.getElementById("addDocumentButton");
+const newAnalysisButton = document.getElementById("newAnalysisButton");
+const secondaryMessage = document.getElementById("secondaryMessage");
 
 let currentPayload = null;
 let currentReportMarkdown = "";
 let currentCasePayload = null;
 let currentCaseView = "employee";
+let currentWorkspace = null;
+let currentWizardStep = 1;
+let selectedSituation = "";
+let selectedOutcome = "";
+let sessionHistoryCount = 0;
 
 const examples = [
   "classification",
@@ -55,7 +90,92 @@ const examples = [
   "Je pense qu'il manque des heures de nuit et une majoration dimanche sur mon bulletin. Que faut-il controler ?"
 ];
 
-queryInput.value = examples[1];
+queryInput.value = "";
+
+const workspaceDefinitions = {
+  employee: {
+    label: "Questions salariés",
+    title: "Analyser une situation salarié",
+    description: "Décrivez les faits utiles sans qualifier vous-même la situation juridiquement.",
+    situations: [
+      ["changement-poste", "Changement de poste"],
+      ["horaires", "Horaires"],
+      ["discipline", "Discipline"],
+      ["temps-travail", "Temps de travail"],
+      ["paie", "Paie"],
+      ["discrimination", "Harcèlement ou discrimination"],
+      ["maladie", "Maladie ou absence"],
+      ["accident-travail", "Accident du travail"],
+      ["inaptitude", "Inaptitude"],
+      ["autre", "Autre question individuelle"]
+    ],
+    documents: ["Contrat", "Avenant", "Fiche de poste", "Planning", "Bulletin de paie", "Courrier", "Convocation", "Accord", "Document administratif minimal", "Autre"],
+    outcomes: ["Comprendre la situation", "Préparer un entretien", "Préparer un courrier", "Identifier les preuves", "Préparer une contestation", "Vérifier la paie", "Autre"],
+    context: "employee"
+  },
+  cse: {
+    label: "CSE",
+    title: "Préparer une action CSE",
+    description: "Précisez le sujet collectif, le calendrier et les documents déjà reçus.",
+    situations: [
+      ["reunion", "Préparer une réunion"],
+      ["ordre-du-jour", "Ordre du jour"],
+      ["consultation", "Consultation"],
+      ["reorganisation", "Réorganisation"],
+      ["documents", "Demander des documents"],
+      ["avis", "Préparer un avis"],
+      ["resolution", "Préparer une résolution"],
+      ["engagement", "Suivre un engagement"],
+      ["alerte", "Étudier une alerte"],
+      ["expertise", "Préparer une expertise"],
+      ["ancien-pv", "Rechercher un ancien PV"],
+      ["autre", "Autre besoin CSE"]
+    ],
+    documents: ["Projet de la direction", "Ordre du jour", "Documents reçus", "Ancien PV", "Accord", "Courrier", "Données économiques agrégées", "Autre"],
+    outcomes: ["Poser des questions", "Demander des documents", "Préparer un avis", "Préparer une résolution", "Analyser une consultation", "Rechercher un précédent", "Préparer une action collective"],
+    context: "cse"
+  },
+  negotiation: {
+    label: "Négociations et accords",
+    title: "Préparer une négociation",
+    description: "Nexus recherche d’abord les accords et sources disponibles avant de mobiliser d’autres outils.",
+    situations: [
+      ["rechercher-clause", "Rechercher une clause"],
+      ["analyser-accord", "Analyser un accord"],
+      ["comparer-accords", "Comparer des accords"],
+      ["preparer-negociation", "Préparer une négociation"],
+      ["projet-accord", "Analyser un projet d’accord"],
+      ["revendications", "Préparer des revendications"],
+      ["engagement", "Suivre un engagement"]
+    ],
+    documents: ["Accord actuel", "Projet de la direction", "Anciennes versions", "PV ou compte rendu", "Convention collective", "Aucun document", "Autre"],
+    outcomes: ["Comprendre les règles existantes", "Comparer les positions", "Construire des revendications", "Préparer la réunion paritaire", "Identifier les points de vigilance"],
+    context: "negotiation"
+  },
+  payroll: {
+    label: "Paie et rémunération",
+    title: "Analyser une situation de paie",
+    description: "Décrivez l’écart observé. Aucun taux ni calcul ne sera inventé.",
+    situations: [
+      ["heures-supplementaires", "Heures supplémentaires"],
+      ["nuit", "Travail de nuit"],
+      ["dimanche", "Dimanche"],
+      ["jour-ferie", "Jour férié"],
+      ["prime-poste", "Prime de poste"],
+      ["astreinte", "Astreinte"],
+      ["intervention", "Intervention"],
+      ["conges-rtt", "Congés ou RTT"],
+      ["maladie", "Maladie"],
+      ["ijss", "IJSS"],
+      ["subrogation", "Subrogation"],
+      ["prevoyance", "Prévoyance"],
+      ["autre", "Autre anomalie de paie"]
+    ],
+    documents: ["Planning", "Kelio", "Nibelis", "Bulletin", "Accord", "Feuille d’intervention", "Décompte IJSS", "Autre"],
+    outcomes: ["Comprendre", "Vérifier un écart", "Préparer une question paie", "Demander une correction", "Préparer une régularisation"],
+    context: "payroll"
+  }
+};
 
 function setStatus(text, level) {
   statusPill.textContent = text;
@@ -422,7 +542,9 @@ function renderResult(payload) {
   const finalTrace = finalAssistant?.trace || {};
   emptyState.hidden = true;
   resultContent.hidden = false;
-  resultQuestion.textContent = orchestration.question_posee || answer.query;
+  resultQuestion.textContent = currentWorkspace
+    ? queryInput.value.trim()
+    : orchestration.question_posee || answer.query;
   setConfidence(confidenceValue, finalAssistant?.confidence || orchestration.niveau_de_confiance || answer.confidence);
   const finalDomains = finalAssistant
     ? [finalAssistant.primary_domain, ...(finalAssistant.complementary_domains || [])]
@@ -453,7 +575,26 @@ function renderResult(payload) {
   );
   renderIssueGroups(answer.issue_groups || []);
   renderExperts(payload);
+  const expertMode = document.querySelector('input[name="responseMode"]:checked')?.value === "EXPERT";
+  expertPanel.hidden = !expertMode;
+  const finalEnabled = payload.final_assistant_runtime?.mode !== "DISABLED";
+  runtimeStatus.dataset.advanced = String(finalEnabled);
+  runtimeStatusLabel.textContent = finalEnabled ? "Assistant avancé activé" : "Mode historique";
+  assistantStatusValue.textContent = finalEnabled ? "Assistant avancé activé" : "Moteur historique";
+  const paieV2Used = Boolean(
+    payload.final_assistant_runtime?.diagnostics?.engines_used?.includes("expert_paie_v2")
+  );
+  payrollStatusValue.textContent = paieV2Used ? "Contrôle avancé mobilisé" : "Analyse prudente";
+  resultModeNotice.textContent = finalEnabled
+    ? "L’Assistant avancé a enrichi cette analyse."
+    : "Analyse avancée non activée : Nexus utilise le moteur historique.";
+  analysisState.hidden = true;
+  wizardView.hidden = true;
+  homeView.hidden = true;
+  resultView.hidden = false;
+  sessionHistoryCount += 1;
   resetReportState();
+  resultView.focus?.();
 }
 
 function renderError(message) {
@@ -471,23 +612,244 @@ function renderError(message) {
   emptyState.appendChild(text);
 }
 
+function showOnly(view) {
+  homeView.hidden = view !== "home";
+  wizardView.hidden = view !== "wizard";
+  resultView.hidden = view !== "result";
+  analysisState.hidden = view !== "loading";
+  if (view === "home") {
+    document.getElementById("homeTitle").focus?.();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+function createChoiceButton(value, label, selected, handler) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "choice-button";
+  button.dataset.value = value;
+  button.setAttribute("aria-pressed", String(selected));
+  button.textContent = label;
+  button.addEventListener("click", () => handler(value));
+  return button;
+}
+
+function renderSituationChoices(definition) {
+  situationChoices.textContent = "";
+  for (const [value, label] of definition.situations) {
+    situationChoices.appendChild(
+      createChoiceButton(value, label, selectedSituation === value, (nextValue) => {
+        selectedSituation = nextValue;
+        renderSituationChoices(definition);
+        wizardError.hidden = true;
+      })
+    );
+  }
+}
+
+function renderOutcomeChoices(definition) {
+  outcomeChoices.textContent = "";
+  for (const label of definition.outcomes) {
+    outcomeChoices.appendChild(
+      createChoiceButton(label, label, selectedOutcome === label, (nextValue) => {
+        selectedOutcome = nextValue;
+        renderOutcomeChoices(definition);
+        wizardError.hidden = true;
+      })
+    );
+  }
+}
+
+function addField(container, id, label, type = "text", options = []) {
+  const wrapper = document.createElement("div");
+  wrapper.className = `field-control${type === "checkbox" ? " checkbox-control" : ""}`;
+  const fieldLabel = document.createElement("label");
+  fieldLabel.htmlFor = id;
+  fieldLabel.textContent = label;
+  const input = type === "select" ? document.createElement("select") : document.createElement("input");
+  input.id = id;
+  input.name = id;
+  if (type === "checkbox") {
+    input.type = "checkbox";
+    wrapper.appendChild(input);
+    wrapper.appendChild(fieldLabel);
+  } else {
+    if (type !== "select") input.type = type;
+    if (type === "select") {
+      for (const [value, text] of options) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = text;
+        input.appendChild(option);
+      }
+    }
+    wrapper.appendChild(fieldLabel);
+    wrapper.appendChild(input);
+  }
+  container.appendChild(wrapper);
+}
+
+function renderContextFields(definition) {
+  contextFields.textContent = "";
+  if (definition.context === "employee") {
+    addField(contextFields, "startDate", "Date de début", "date");
+    addField(contextFields, "eventFrequency", "Événement", "select", [["", "Non précisé"], ["ponctuel", "Ponctuel"], ["recurrent", "Récurrent"]]);
+    addField(contextFields, "stillEmployed", "Salarié encore en poste", "checkbox");
+    addField(contextFields, "procedureOngoing", "Procédure en cours", "checkbox");
+    addField(contextFields, "urgentSituation", "Situation urgente", "checkbox");
+    addField(contextFields, "knownDeadline", "Échéance connue", "date");
+  } else if (definition.context === "cse") {
+    addField(contextFields, "employeeCount", "Nombre approximatif de salariés", "number");
+    addField(contextFields, "services", "Services concernés");
+    addField(contextFields, "decisionAnnounced", "Décision déjà annoncée", "checkbox");
+    addField(contextFields, "implementationStarted", "Mise en œuvre commencée", "checkbox");
+    addField(contextFields, "meetingPlanned", "Réunion prévue", "checkbox");
+    addField(contextFields, "meetingDate", "Date de réunion", "date");
+  } else if (definition.context === "negotiation") {
+    addField(contextFields, "negotiationTheme", "Thème", "select", [
+      ["remuneration", "Rémunération"], ["classification", "Classification"], ["temps-travail", "Temps de travail"],
+      ["primes", "Primes"], ["egalite", "Égalité professionnelle"], ["droit-syndical", "Droit syndical"],
+      ["emploi", "Emploi"], ["formation", "Formation"], ["protection-sociale", "Protection sociale"], ["autre", "Autre"]
+    ]);
+    addField(contextFields, "meetingDate", "Date de réunion éventuelle", "date");
+    addField(contextFields, "directionProject", "Projet de la direction disponible", "checkbox");
+    addField(contextFields, "previousVersions", "Anciennes versions disponibles", "checkbox");
+  } else {
+    addField(contextFields, "payrollMonth", "Mois concerné", "month");
+    addField(contextFields, "periodDetails", "Période précise si connue");
+    addField(contextFields, "recurringGap", "Écart récurrent", "checkbox");
+    addField(contextFields, "alreadyReported", "Anomalie déjà signalée", "checkbox");
+  }
+}
+
+function renderDocumentChoices(definition) {
+  documentChoices.textContent = "";
+  definition.documents.forEach((label, index) => {
+    const item = document.createElement("label");
+    item.className = "checkbox-option";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.name = "availableDocument";
+    input.value = label;
+    input.id = `availableDocument${index}`;
+    item.appendChild(input);
+    item.appendChild(document.createTextNode(label));
+    documentChoices.appendChild(item);
+  });
+}
+
+function renderWizardProgress() {
+  const labels = ["Besoin", "Description", "Repères", "Éléments", "Résultat"];
+  wizardProgress.textContent = "";
+  labels.forEach((label, index) => {
+    const item = document.createElement("li");
+    const step = index + 1;
+    item.dataset.number = String(step);
+    item.dataset.active = String(step === currentWizardStep);
+    item.dataset.complete = String(step < currentWizardStep);
+    item.textContent = label;
+    wizardProgress.appendChild(item);
+  });
+  document.querySelectorAll(".wizard-step").forEach((section) => {
+    section.hidden = Number(section.dataset.step) !== currentWizardStep;
+  });
+  previousStepButton.hidden = currentWizardStep === 1;
+  nextStepButton.hidden = currentWizardStep === 5;
+  analyzeButton.hidden = currentWizardStep !== 5;
+}
+
+function validateCurrentStep() {
+  let message = "";
+  if (currentWizardStep === 1 && !selectedSituation) message = "Choisissez le type de situation à traiter.";
+  if (currentWizardStep === 2 && queryInput.value.trim().length < 12) message = "Décrivez la situation en quelques mots avant de continuer.";
+  if (currentWizardStep === 5 && !selectedOutcome) message = "Choisissez le résultat souhaité.";
+  wizardError.textContent = message;
+  wizardError.hidden = !message;
+  return !message;
+}
+
+function openWorkspace(workspace, preset = "") {
+  const definition = workspaceDefinitions[workspace];
+  if (!definition) return;
+  currentWorkspace = workspace;
+  currentWizardStep = 1;
+  selectedSituation = preset || "";
+  selectedOutcome = "";
+  queryInput.value = "";
+  wizardWorkspaceLabel.textContent = definition.label;
+  wizardTitle.textContent = definition.title;
+  wizardDescription.textContent = definition.description;
+  payrollWarning.hidden = workspace !== "payroll";
+  renderSituationChoices(definition);
+  renderContextFields(definition);
+  renderDocumentChoices(definition);
+  renderOutcomeChoices(definition);
+  renderWizardProgress();
+  wizardError.hidden = true;
+  showOnly("wizard");
+  wizardTitle.focus?.();
+}
+
+function getContextValues() {
+  const values = {};
+  contextFields.querySelectorAll("input, select").forEach((field) => {
+    if (field.type === "checkbox") values[field.name] = field.checked;
+    else if (field.value) values[field.name] = field.value;
+  });
+  return values;
+}
+
+function buildStructuredRequest() {
+  const definition = workspaceDefinitions[currentWorkspace];
+  const documents = Array.from(document.querySelectorAll('input[name="availableDocument"]:checked')).map((item) => item.value);
+  const responseMode = document.querySelector('input[name="responseMode"]:checked')?.value || "CASE";
+  const context = getContextValues();
+  const facts = Object.entries(context)
+    .filter(([, value]) => value !== false && value !== "")
+    .map(([key, value]) => `${key}: ${value === true ? "oui" : value}`);
+  const query = [
+    `[Espace métier: ${definition.label}]`,
+    `[Type de situation: ${selectedSituation}]`,
+    queryInput.value.trim(),
+    facts.length ? `Repères: ${facts.join("; ")}.` : "",
+    documents.length ? `Documents disponibles: ${documents.join(", ")}.` : "Documents disponibles: non précisés.",
+    `Résultat souhaité: ${selectedOutcome}.`,
+    `Mode de réponse: ${responseMode}.`
+  ].filter(Boolean).join("\n");
+  return {
+    query,
+    source_limit: Number(sourceLimitInput.value || 6),
+    portal_context: {
+      workspace: currentWorkspace,
+      situation_type: selectedSituation,
+      user_question: queryInput.value.trim(),
+      facts: context,
+      available_documents: documents,
+      period: context.payrollMonth || context.startDate || context.meetingDate || null,
+      urgency: Boolean(context.urgentSituation),
+      desired_outcome: selectedOutcome,
+      response_mode: responseMode,
+      allowed_engines: currentWorkspace === "payroll" ? ["historical_payroll_if_enabled"] : ["assistant_router"],
+      confidentiality: confidentialityLevel.value
+    }
+  };
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const query = queryInput.value.trim();
-  if (!query) return;
+  if (!validateCurrentStep()) return;
+  const requestPayload = buildStructuredRequest();
 
   setStatus("Analyse...", null);
-  const button = form.querySelector("button");
+  const button = analyzeButton;
   button.disabled = true;
+  showOnly("loading");
 
   try {
     const response = await fetch("/api/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query,
-        source_limit: Number(sourceLimitInput.value || 6)
-      })
+      body: JSON.stringify(requestPayload)
     });
     const payload = await response.json();
     if (!response.ok || !payload.ok) {
@@ -498,9 +860,59 @@ form.addEventListener("submit", async (event) => {
   } catch (error) {
     renderError(error.message);
     setStatus("Erreur", "faible");
+    showOnly("result");
   } finally {
     button.disabled = false;
   }
+});
+
+document.querySelectorAll("[data-open-workspace]").forEach((button) => {
+  button.addEventListener("click", () => openWorkspace(button.dataset.openWorkspace, button.dataset.preset || ""));
+});
+document.querySelectorAll("[data-return-home]").forEach((button) => {
+  button.addEventListener("click", () => showOnly("home"));
+});
+nextStepButton.addEventListener("click", () => {
+  if (!validateCurrentStep()) return;
+  currentWizardStep = Math.min(5, currentWizardStep + 1);
+  renderWizardProgress();
+  document.querySelector(`.wizard-step[data-step="${currentWizardStep}"]`)?.focus?.();
+});
+previousStepButton.addEventListener("click", () => {
+  currentWizardStep = Math.max(1, currentWizardStep - 1);
+  renderWizardProgress();
+});
+editInformationButton.addEventListener("click", () => showOnly("wizard"));
+addDocumentButton.addEventListener("click", () => {
+  currentWizardStep = 4;
+  renderWizardProgress();
+  showOnly("wizard");
+});
+newAnalysisButton.addEventListener("click", () => {
+  if (currentWorkspace) openWorkspace(currentWorkspace);
+  else showOnly("home");
+});
+settingsButton.addEventListener("click", () => {
+  const expanded = settingsButton.getAttribute("aria-expanded") === "true";
+  settingsButton.setAttribute("aria-expanded", String(!expanded));
+  settingsPanel.hidden = expanded;
+});
+closeSettingsButton.addEventListener("click", () => {
+  settingsPanel.hidden = true;
+  settingsButton.setAttribute("aria-expanded", "false");
+  settingsButton.focus();
+});
+document.querySelectorAll("[data-secondary-action]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const messages = {
+      search: "Utilisez l’espace Négociations et accords pour une recherche guidée dans les sources disponibles.",
+      cases: "Aucun dossier enregistré dans cette version. Aucune donnée personnelle n’est conservée.",
+      history: sessionHistoryCount ? `${sessionHistoryCount} analyse(s) réalisée(s) pendant cette session.` : "Aucune analyse dans cette session.",
+      templates: "Lancez une analyse puis utilisez « Générer un brouillon » dans le plan d’action."
+    };
+    secondaryMessage.textContent = messages[button.dataset.secondaryAction] || "";
+    secondaryMessage.hidden = false;
+  });
 });
 
 generateReportButton.addEventListener("click", renderReport);
