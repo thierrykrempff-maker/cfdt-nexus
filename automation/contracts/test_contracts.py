@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import importlib
 import json
+import subprocess
 import sys
 import unittest
 from datetime import date, datetime, timezone
@@ -330,9 +331,20 @@ class IsolationAndCompatibilityTests(unittest.TestCase):
             ast.parse(path.read_text(encoding="utf-8"), filename=str(path), feature_version=(3, 10))
 
     def test_import_does_not_load_domain_packages(self) -> None:
-        self.assertNotIn("automation.experts", sys.modules)
-        self.assertNotIn("automation.payroll", sys.modules)
-        self.assertNotIn("automation.connector_platform", sys.modules)
+        script = (
+            "import importlib, json, sys;"
+            "importlib.import_module('automation.contracts');"
+            "forbidden=('automation.experts','automation.payroll','automation.connector_platform');"
+            "print(json.dumps(sorted(name for name in sys.modules if name.startswith(forbidden))))"
+        )
+        completed = subprocess.run(
+            [sys.executable, "-B", "-c", script],
+            cwd=Path(__file__).resolve().parents[2],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(json.loads(completed.stdout), [])
 
 
 class SyntheticBusinessScenarioTests(unittest.TestCase):

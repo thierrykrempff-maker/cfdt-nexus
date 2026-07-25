@@ -6,6 +6,7 @@ import ast
 import copy
 import importlib
 import json
+import subprocess
 import sys
 import unittest
 from datetime import datetime, timezone
@@ -477,13 +478,20 @@ class DependencyTests(unittest.TestCase):
             self.assertNotIn(token, source)
 
     def test_import_does_not_load_forbidden_packages(self) -> None:
-        for name in list(sys.modules):
-            if name.startswith("automation.adapters"):
-                sys.modules.pop(name)
-        importlib.import_module("automation.adapters.payroll")
-        newly_loaded = set(sys.modules)
-        forbidden = ("automation.connector_platform", "automation.cse_memory", "automation.protection_sociale")
-        self.assertFalse(any(name.startswith(forbidden) for name in newly_loaded))
+        script = (
+            "import importlib, json, sys;"
+            "importlib.import_module('automation.adapters.payroll');"
+            "forbidden=('automation.connector_platform','automation.cse_memory','automation.protection_sociale');"
+            "print(json.dumps(sorted(name for name in sys.modules if name.startswith(forbidden))))"
+        )
+        completed = subprocess.run(
+            [sys.executable, "-B", "-c", script],
+            cwd=Path(__file__).resolve().parents[2],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(json.loads(completed.stdout), [])
 
 
 if __name__ == "__main__":

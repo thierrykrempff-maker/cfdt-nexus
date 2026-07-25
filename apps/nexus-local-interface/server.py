@@ -45,7 +45,6 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCSEMemoryResult,
     RuntimeIntegrationConfig,
     RuntimeFinalAssistantConfig,
-    RuntimeFinalAssistantIntegration,
     RuntimeOfficialConnectorsConfig,
     RuntimeOfficialConnectorsIntegration,
     RuntimeProtectionSocialeConfig,
@@ -171,18 +170,35 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
     syndical_report = RuntimeSyndicalReasoningReportMapper().map(
         protection_report, syndical_integration
     )
-    final_integration = RuntimeFinalAssistantIntegration(
-        RuntimeFinalAssistantConfig.from_env()
-    ).integrate(
-        answer,
-        syndical_report,
-        existing_results={
-            "syndical_reasoning": syndical_integration.to_dict(),
-            "cse_memory": cse_integration.to_dict(),
-        },
-    )
-    payload["final_assistant_runtime"] = final_integration.to_dict()
-    payload["analysis_report"] = final_integration.report
+    final_config = RuntimeFinalAssistantConfig.from_env()
+    if final_config.enabled:
+        from NEXUS_RUNTIME_INTEGRATION.final_assistant_runtime import (
+            RuntimeFinalAssistantIntegration,
+        )
+
+        final_integration = RuntimeFinalAssistantIntegration(final_config).integrate(
+            answer,
+            syndical_report,
+            existing_results={
+                "syndical_reasoning": syndical_integration.to_dict(),
+                "cse_memory": cse_integration.to_dict(),
+            },
+        )
+        payload["final_assistant_runtime"] = final_integration.to_dict()
+        payload["analysis_report"] = final_integration.report
+    else:
+        payload["final_assistant_runtime"] = {
+            "mode": "DISABLED",
+            "diagnostics": {
+                "enabled": False,
+                "called": False,
+                "runtime_ms": 0,
+                "engines_used": [],
+                "fallback_code": None,
+            },
+            "assistant": None,
+        }
+        payload["analysis_report"] = syndical_report
     return payload
 
 
