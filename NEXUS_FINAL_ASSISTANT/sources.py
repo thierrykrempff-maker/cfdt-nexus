@@ -6,15 +6,19 @@ from .models import SourceItem
 
 _PRIORITY = {
     "agreements_ineos": 100,
+    "accord_entreprise": 100,
     "collective_agreement": 90,
+    "convention_collective": 90,
     "labor_code": 80,
+    "code_travail": 80,
     "social_security_code": 80,
     "case_law": 70,
-    "official": 60,
-    "cse_document": 50,
+    "jurisprudence": 70,
+    "cse_document": 60,
+    "cse_history": 60,
+    "official": 50,
     "individual_document": 40,
     "factual_system": 30,
-    "cse_history": 20,
     "testimony": 10,
 }
 

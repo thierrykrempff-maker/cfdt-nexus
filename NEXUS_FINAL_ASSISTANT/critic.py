@@ -22,6 +22,15 @@ class FinalCritic:
         fragile = []
         corrections = []
         lowered = rendered_summary.lower()
+        forced_change = any(
+            marker in lowered
+            for marker in ("imposé", "impose", "pas volontaire", "ne souhaite pas")
+        )
+        if forced_change and "promotion" in lowered:
+            fragile.append("Une rémunération supérieure ne permet pas de qualifier le changement de promotion.")
+            corrections.append(
+                "Supprimer la qualification de promotion et conserver le caractère imposé à vérifier."
+            )
         for marker in _SENSITIVE_ASSERTIONS:
             if marker in lowered and not any(result.evidence for result in results):
                 fragile.append(f"Formulation insuffisamment étayée : {marker}")

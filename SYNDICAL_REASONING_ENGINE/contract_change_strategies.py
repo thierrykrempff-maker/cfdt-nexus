@@ -18,7 +18,7 @@ def build_contract_change_strategies(
         ContractChangeStrategy(
             1,
             "Obtenir toutes les informations",
-            "Clarifier le projet, sa date, sa durée et ses effets.",
+            "Demander par écrit le projet, son motif, sa date, sa durée, le cycle exact et ses effets, sans laisser entendre une acceptation.",
             ("réduit l'incertitude", "préserve une trace"),
             ("nécessite une réponse précise de l'employeur",),
             ("ne suspend pas un délai",),
@@ -38,7 +38,7 @@ def build_contract_change_strategies(
         ContractChangeStrategy(
             3,
             "Rencontrer la direction",
-            "Exposer les questions et rechercher une solution protectrice.",
+            "Exposer les questions et contraintes, rechercher une solution protectrice et éviter un refus non préparé.",
             ("permet un échange rapide", "peut éviter une escalade"),
             ("la position de la direction reste à formaliser",),
             ("ne pas renoncer implicitement à un droit",),
@@ -48,7 +48,7 @@ def build_contract_change_strategies(
         ContractChangeStrategy(
             4,
             "Préparer une intervention CSE",
-            "Traiter la dimension collective ou organisationnelle du projet.",
+            "Traiter la dimension collective, les effectifs avant/après et l'organisation du travail.",
             ("mobilise les informations collectives",),
             ("la compétence du CSE doit être vérifiée",),
             ("respecter le calendrier applicable",),

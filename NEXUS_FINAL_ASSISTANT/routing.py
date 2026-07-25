@@ -18,12 +18,12 @@ class DomainRule:
 
 
 _RULES = (
-    DomainRule(Domain.CONTRACT, "syndical_reasoning", ("contrat", "avenant", "modification", "poste", "mobilite"), ("contrat_travail",)),
+    DomainRule(Domain.CONTRACT, "syndical_reasoning", ("contrat", "avenant", "modification", "poste", "mobilite", "contraint", "impose", "pas volontaire", "ne souhaite pas"), ("contrat_travail", "droit_travail_general")),
     DomainRule(Domain.DISCIPLINE, "syndical_reasoning", ("sanction", "avertissement", "mise a pied", "entretien prealable", "faute"), ("disciplinaire", "disciplinary_procedure")),
     DomainRule(Domain.WORKING_TIME, "syndical_reasoning", ("horaire", "heures supplementaires", "astreinte", "repos", "poste", "nuit", "5x8"), ("temps_travail",)),
     DomainRule(Domain.DISCRIMINATION, "syndical_reasoning", ("harcelement", "discrimination", "traitement different", "liberte syndicale"), ("discrimination",)),
     DomainRule(Domain.HEALTH, "syndical_reasoning", ("arret maladie", "maladie", "inaptitude", "reclassement", "ijss", "accident du travail"), ("maladie", "absence", "inaptitude", "protection_sociale", "at_mp")),
-    DomainRule(Domain.CSE_CONSULTATION, "syndical_reasoning", ("reorganisation", "projet important", "consultation", "information consultation"), ("reorganisation",)),
+    DomainRule(Domain.CSE_CONSULTATION, "syndical_reasoning", ("reorganisation", "projet important", "consultation", "information consultation", "reduction de l effectif", "reduire l equipe de jour", "remplacement d un salarie demissionnaire"), ("reorganisation", "cse")),
     DomainRule(Domain.CSE_OPERATION, "syndical_reasoning", ("ordre du jour", "reunion cse", "avis cse", "proces verbal", "pv cse"), ("cse",), ("alerte", "expertise")),
     DomainRule(Domain.CSE_ALERTS, "syndical_reasoning", ("alerte", "expertise", "reclamation collective", "enquete cse", "danger grave"), ("cse",)),
     DomainRule(Domain.PAYROLL, "expert_paie_v2", ("paie", "bulletin", "salaire", "rubrique", "kelio", "nibelis", "compteur"), ("paie_remuneration",)),
@@ -37,6 +37,8 @@ class DomainDetector:
         hints = {normalize_text(item) for item in request.route_domains}
         matches: list[DomainMatch] = []
         for rule in _RULES:
+            if rule.domain is Domain.PAYROLL and _pay_is_secondary(text):
+                continue
             triggers = tuple(marker for marker in rule.markers if marker in text)
             route_hits = tuple(marker for marker in rule.route_hints if normalize_text(marker) in hints)
             contrary = tuple(marker for marker in rule.contrary if marker in text)
@@ -95,3 +97,28 @@ class DomainDetector:
             )
             for index, item in enumerate(matches)
         )
+
+
+def _pay_is_secondary(text: str) -> bool:
+    secondary = any(
+        marker in text
+        for marker in (
+            "ce n est pas l objet principal",
+            "n est pas l objet principal",
+            "remuneration est secondaire",
+            "salaire est secondaire",
+        )
+    )
+    explicit_control = any(
+        marker in text
+        for marker in (
+            "calculer",
+            "controler la paie",
+            "verifier la paie",
+            "bulletin de paie",
+            "quel montant",
+            "quel taux",
+            "mal paye",
+        )
+    )
+    return secondary and not explicit_control

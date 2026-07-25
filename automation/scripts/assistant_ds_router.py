@@ -53,6 +53,12 @@ PRUDENCE_WARNING = (
 ROUTER_VERSION = "1.2"
 DEFAULT_SOURCE_LIMIT = 6
 MAX_SOURCE_LIMIT = 12
+QUESTION_SALARIE = "QUESTION_SALARIE"
+ASSISTANCE_ENTRETIEN_DISCIPLINAIRE = "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+EMPLOYEE_PATHS = {
+    QUESTION_SALARIE,
+    ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
+}
 
 BUSINESS_DOMAIN_EXCLUSIONS = {"bible_accords"}
 
@@ -67,6 +73,7 @@ SOURCE_LAYER_ORDER = [
     "convention_collective",
     "code_travail",
     "jurisprudence",
+    "historique_cse",
     "prudhommes",
     "pratique_officielle",
     "pratique",
@@ -78,6 +85,7 @@ SOURCE_LAYER_LABELS = {
     "convention_collective": "Convention collective",
     "code_travail": "Code du travail",
     "jurisprudence": "Jurisprudence",
+    "historique_cse": "Historique et débats du CSE",
     "prudhommes": "Prud'hommes",
     "pratique_officielle": "Explication pratique officielle",
     "pratique": "Points pratiques",
@@ -87,6 +95,7 @@ SOURCE_LAYER_LABELS = {
 SOURCE_LAYER_ABSENT_MESSAGES = {
     "code_travail": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
     "jurisprudence": "Jurisprudence absente du socle documentaire local actuel.",
+    "historique_cse": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
     "prudhommes": "Decisions prud'homales absentes du socle documentaire local actuel.",
     "pratique_officielle": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
     "pratique": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
@@ -428,6 +437,11 @@ DOMAIN_RULES: list[dict[str, Any]] = [
         "patterns": [
             r"\bcontrat\b",
             r"\bavenant\b",
+            r"\bcontraint(?:e|es|s)?\b",
+            r"\bimpose(?:e|es|s)?\b",
+            r"\bpas volontaire\b",
+            r"\bne souhaite pas\b",
+            r"passage (?:d[' ]?un rythme )?de jour (?:a|en|vers) (?:un )?(?:rythme )?poste",
             r"periode d'?essai",
             r"\bcdd\b",
             r"\bcdi\b",
@@ -552,6 +566,10 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"\bcycle\b",
             r"\bpostes?\s+en\s+5x8\b",
             r"travail poste",
+            r"rythme poste",
+            r"travail en equipes? postees?",
+            r"matin(?:s)?[ /-]+apres[- ]?midi",
+            r"week[- ]?ends?",
             r"salaries? postes?",
             r"fatigue des postes?",
             r"reprend son poste",
@@ -757,6 +775,11 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"expertise.*(?:decision|engagement)",
             r"la direction veut",
             r"reorganisation",
+            r"remplacement .*demission",
+            r"remplacer (?:un|une) salari(?:e|ee).*demission",
+            r"reduction (?:de |des )?(?:l[' ]?)?effectifs?",
+            r"reduire (?:l[' ]?)?equipe de jour",
+            r"equipe de jour .*redui",
             r"suppression de postes?",
             r"modification .*cycle",
             r"modification .*horaires?",
@@ -809,6 +832,10 @@ INTENT_RULES: list[dict[str, Any]] = [
             r"presente au cse",
             r"la direction veut",
             r"reorganisation",
+            r"remplacement .*demission",
+            r"reduction (?:de |des )?(?:l[' ]?)?effectifs?",
+            r"reduire (?:l[' ]?)?equipe de jour",
+            r"equipe de jour .*redui",
             r"suppression de postes?",
             r"modification .*cycle",
             r"modification .*horaires?",
@@ -837,8 +864,7 @@ INTENT_RULES: list[dict[str, Any]] = [
         "intent": "analyser_situation_individuelle",
         "reason": "La demande concerne un dossier ou une situation de salarie.",
         "patterns": [
-            r"\bsalarie\b",
-            r"\bsalaries\b",
+            r"\bsalari(?:e|ee|es|ees)\b",
             r"\binapte\b",
             r"\binaptitude\b",
             r"\breclassement\b",
@@ -1434,6 +1460,18 @@ def source_layer_for_source(source: dict[str, Any]) -> str:
         return "code_travail"
     if "jurisprudence" in doc_type or "cour de cassation" in document:
         return "jurisprudence"
+    if any(
+        marker in f"{doc_type} {document}"
+        for marker in (
+            "pv cse",
+            "proces verbal cse",
+            "proces-verbal cse",
+            "compte rendu cse",
+            "historique cse",
+            "decision cse",
+        )
+    ):
+        return "historique_cse"
     if "prudhom" in doc_type and ("decision" in doc_type or "jugement" in doc_type):
         return "prudhommes"
     if "pratique_officielle" in doc_type or "explication pratique officielle" in document:
@@ -1857,8 +1895,20 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             if len(selected) >= minimum_sources:
                 break
 
-    protected_layers = {"code_travail", "jurisprudence", "convention_collective"}
-    for required_layer in ["convention_collective", "code_travail", "jurisprudence"]:
+    protected_layers = {
+        "accord_entreprise",
+        "convention_collective",
+        "code_travail",
+        "jurisprudence",
+        "historique_cse",
+    }
+    for required_layer in [
+        "accord_entreprise",
+        "convention_collective",
+        "code_travail",
+        "jurisprudence",
+        "historique_cse",
+    ]:
         layer_candidates = [source for source in ranked if source.get("source_layer") == required_layer]
         if required_layer == "code_travail":
             layer_candidates = [source for source in layer_candidates if legifrance_source_is_retained(source)]
@@ -1911,6 +1961,14 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             selected[replace_at] = practice_source
             selected_keys.add(key)
 
+    hierarchy = {layer: index for index, layer in enumerate(SOURCE_LAYER_ORDER)}
+    selected.sort(
+        key=lambda source: (
+            hierarchy.get(str(source.get("source_layer") or "autre"), len(hierarchy)),
+            -float(source.get("_router_score") or 0),
+            normalize(str(source.get("document") or "")),
+        )
+    )
     return [clean_source(source) for source in selected[:limit]]
 
 
@@ -1979,6 +2037,94 @@ def primary_domain(domains: list[str]) -> str:
     return "bible_accords"
 
 
+def forced_day_to_shift_context(query: str) -> bool:
+    """Recognize an imposed day-to-shift change without inferring consent."""
+    text = normalize(query)
+    forced = any(
+        marker in text
+        for marker in (
+            "contraint",
+            "impose",
+            "pas volontaire",
+            "ne souhaite pas",
+            "oblige",
+            "sans son accord",
+        )
+    )
+    day_to_shift = (
+        any(marker in text for marker in ("travail de jour", "rythme de jour", "equipe de jour"))
+        and any(
+            marker in text
+            for marker in (
+                "rythme poste",
+                "travail poste",
+                "equipe postee",
+                "equipes postees",
+                "matin/apres-midi",
+                "matin apres-midi",
+            )
+        )
+    )
+    return forced and day_to_shift
+
+
+def payroll_control_requested(query: str) -> bool:
+    """Require an explicit pay-control objective before selecting Expert Paie."""
+    text = normalize(query)
+    return bool(
+        re.search(
+            r"\b(?:calcul(?:er)?|control(?:e|er)|verifi(?:e|er)|chiffr(?:e|er))\b"
+            r".{0,45}\b(?:paie|paye|salaire|remuneration|prime|majoration|bulletin|montant|taux)\b",
+            text,
+        )
+        or re.search(
+            r"\b(?:combien|quel montant|quel taux|mal paye|erreur de paie|bulletin de paie)\b",
+            text,
+        )
+    )
+
+
+def pay_is_explicitly_secondary(query: str) -> bool:
+    text = normalize(query)
+    secondary = any(
+        marker in text
+        for marker in (
+            "ce n est pas l objet principal",
+            "n est pas l objet principal",
+            "ce n'est pas l'objet principal",
+            "n'est pas l'objet principal",
+            "remuneration est secondaire",
+            "salaire est secondaire",
+            "prime est secondaire",
+        )
+    )
+    return secondary and not payroll_control_requested(query)
+
+
+def declared_case_facts(query: str) -> list[dict[str, object]]:
+    """Project only explicit user statements and preserve important negations."""
+    text = normalize(query)
+    facts: list[str] = []
+    if "laboratoire" in text and any(marker in text for marker in ("travail de jour", "rythme de jour")):
+        facts.append("La salariée travaille actuellement de jour au laboratoire.")
+    if "demission" in text and "remplac" in text:
+        facts.append("Le changement annoncé vise à remplacer un salarié démissionnaire.")
+    if forced_day_to_shift_context(query):
+        facts.append("La salariée indique que le passage en rythme posté lui est imposé.")
+    if any(marker in text for marker in ("pas volontaire", "ne souhaite pas", "sans son accord")):
+        facts.append("La salariée précise que ce changement n'est pas volontaire et qu'elle ne le souhaite pas.")
+    if any(marker in text for marker in ("week end", "week-end", "jours feries", "matin/apres-midi", "matin apres-midi")):
+        facts.append("Le rythme envisagé comprend des contraintes de postes, week-ends ou jours fériés à préciser.")
+    if "equipe de jour" in text and any(marker in text for marker in ("redui", "reduction", "dimin")):
+        facts.append("Une réduction de l'effectif de l'équipe de jour est évoquée.")
+    if pay_is_explicitly_secondary(query):
+        facts.append("Une rémunération plus élevée est évoquée, mais elle n'est pas l'objet principal de la demande.")
+    return [
+        {"statement": statement, "documented": False, "source": "user_statement"}
+        for statement in facts
+    ]
+
+
 def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
     text = normalize(query)
     scores: dict[str, int] = {}
@@ -1998,6 +2144,12 @@ def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
     if explicit_astreinte_exclusion(query):
         scores.pop("astreinte", None)
         reasons.append("La demande exclut explicitement l'astreinte.")
+
+    if pay_is_explicitly_secondary(query):
+        scores.pop("paie_remuneration", None)
+        reasons.append(
+            "La rémunération est explicitement secondaire : Expert Paie n'est pas sélectionné sans demande de calcul ou de contrôle."
+        )
 
     domains = [domain for domain in DOMAIN_ORDER if scores.get(domain)]
     if "droit_syndical" in domains and not re.search(
@@ -2023,6 +2175,9 @@ def detect_intents(query: str, domains: list[str]) -> tuple[list[str], list[str]
             continue
         scores[rule["intent"]] = scores.get(rule["intent"], 0) + len(matches)
         reasons.append(rule["reason"])
+
+    if pay_is_explicitly_secondary(query):
+        scores.pop("analyser_paie", None)
 
     if mandate_meeting_query(query):
         scores["question_simple"] = max(scores.get("question_simple", 0), 2)
@@ -2412,9 +2567,99 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
     return engines, plan, dedupe(warnings)
 
 
-def route_query(query: str) -> dict[str, Any]:
+def employee_path_for(
+    query: str,
+    requested_path: str | None = None,
+) -> tuple[str, str, str | None]:
+    """Select one explicit employee path without treating every interview as discipline."""
+    if requested_path is not None and requested_path not in EMPLOYEE_PATHS:
+        raise ValueError("Parcours salarié inconnu.")
+    text = normalize(query)
+    non_disciplinary_interview = bool(
+        re.search(
+            r"\bentretien (?:professionnel|annuel|d evaluation|devaluation|de recrutement)\b",
+            text,
+        )
+    )
+    hard_disciplinary_signal = bool(
+        re.search(
+            r"\b(?:convocation|entretien prealable|sanction|avertissement|blame|"
+            r"mise a pied|licenciement|faute|faits reproches|disciplinaire|"
+            r"insubordination)\b",
+            text,
+        )
+        or re.search(r"\bdefen(?:se|dre) (?:du |le )?salarie\b", text)
+    )
+    interview_assistance_signal = bool(
+        re.search(
+            r"\b(?:accompagnement|accompagner).{0,35}\bentretien\b",
+            text,
+        )
+    )
+    if requested_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE:
+        return (
+            ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
+            "Le parcours approfondi a été choisi explicitement.",
+            None,
+        )
+    if hard_disciplinary_signal or (
+        interview_assistance_signal and not non_disciplinary_interview
+    ):
+        return (
+            ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
+            "Un signal explicite de procédure, sanction ou défense disciplinaire est détecté.",
+            None,
+        )
+    if "entretien" in text and not non_disciplinary_interview:
+        return (
+            QUESTION_SALARIE,
+            "Le mot entretien seul ne suffit pas à qualifier une procédure disciplinaire.",
+            (
+                "Un mode disciplinaire spécialisé peut être nécessaire si une convocation, "
+                "des faits reprochés ou une sanction sont en cause ; utilisez alors le "
+                "parcours « Préparer un entretien disciplinaire »."
+            ),
+        )
+    return (
+        QUESTION_SALARIE,
+        (
+            "La demande relève du parcours salarié général."
+            if requested_path != QUESTION_SALARIE
+            else "Le parcours salarié général a été choisi explicitement."
+        ),
+        None,
+    )
+
+
+def route_query(
+    query: str,
+    employee_path: str | None = None,
+) -> dict[str, Any]:
+    selected_path, path_reason, path_advisory = employee_path_for(
+        query, employee_path
+    )
     domains, domain_reasons, domain_scores = detect_domains(query)
     intents, intent_reasons, intent_scores = detect_intents(query, domains)
+    if (
+        selected_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
+        and "disciplinaire" not in domains
+    ):
+        domains.append("disciplinaire")
+        domain_scores["disciplinaire"] = max(domain_scores.get("disciplinaire", 0), 1)
+        domain_reasons.append(
+            "Le parcours d'assistance disciplinaire impose une analyse disciplinaire."
+        )
+    if (
+        selected_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
+        and "analyser_situation_individuelle" not in intents
+    ):
+        intents.append("analyser_situation_individuelle")
+        intent_scores["analyser_situation_individuelle"] = max(
+            intent_scores.get("analyser_situation_individuelle", 0), 1
+        )
+        intent_reasons.append(
+            "Le dossier disciplinaire requiert une analyse individuelle approfondie."
+        )
     engines, execution_plan, warnings = choose_engines(query, domains, intents)
     score_total = sum(domain_scores.values()) + sum(intent_scores.values())
     confidence = "fort" if score_total >= 5 else "moyen" if score_total >= 2 else "faible"
@@ -2428,6 +2673,15 @@ def route_query(query: str) -> dict[str, Any]:
         "primary_domain": main_domain,
         "secondary_domains": secondary_domains,
         "intents": intents,
+        "employee_path": selected_path,
+        "functional_intent": selected_path,
+        "employee_path_reason": path_reason,
+        "employee_path_advisory": path_advisory,
+        "response_profile": (
+            "syndical_defense_deep"
+            if selected_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
+            else "public_pedagogical"
+        ),
         "engines": engines,
         "confidence": confidence,
         "reasoning_summary": dedupe(domain_reasons + intent_reasons)[:8],
@@ -2469,6 +2723,17 @@ def default_documents(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
     query = normalize(route.get("query", ""))
     documents: list[str] = []
+    if forced_day_to_shift_context(route.get("query", "")):
+        documents.extend(
+            [
+                "contrat de travail et avenants",
+                "description écrite du changement, de sa durée et de sa date d'effet",
+                "planning actuel de jour et cycle posté envisagé",
+                "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+                "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+                "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+            ]
+        )
     if "classification_carriere" in domains:
         documents.extend(
             [
@@ -2578,6 +2843,20 @@ def default_questions(route: dict[str, Any]) -> list[str]:
     domains = set(route["domains"])
     query = normalize(route.get("query", ""))
     questions: list[str] = []
+    if forced_day_to_shift_context(route.get("query", "")):
+        questions.extend(
+            [
+                "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
+                "Le changement annoncé est-il temporaire ou permanent ?",
+                "Quel est le cycle exact : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+                "Quelle est la date de début et quel délai de prévenance est annoncé ?",
+                "Des volontaires ont-ils été recherchés et pourquoi cette salariée a-t-elle été choisie ?",
+                "Quel accord INEOS encadre ce changement et ses contreparties ?",
+                "L'effectif du laboratoire ou de l'équipe de jour sera-t-il durablement réduit ?",
+                "Le CSE a-t-il été informé ou consulté sur la réorganisation et les effectifs ?",
+                "Quelles contraintes personnelles, familiales, de transport ou de santé la salariée souhaite-t-elle signaler, sans diagnostic médical ?",
+            ]
+        )
     if "classification_carriere" in domains:
         questions.extend(
             [
@@ -2674,7 +2953,16 @@ def default_findings(route: dict[str, Any]) -> list[str]:
     query = normalize(route.get("query", ""))
     findings: list[str] = []
 
-    if mandate_meeting_query(route.get("query", "")):
+    if forced_day_to_shift_context(route.get("query", "")):
+        findings.extend(
+            [
+                "Qualifier d'abord le caractère imposé du changement de poste, d'horaires et de conditions de travail.",
+                "Analyser séparément le rythme posté, les week-ends, les jours fériés, les repos et le délai de prévenance.",
+                "Vérifier la dimension collective liée au remplacement d'une démission et à la réduction possible de l'équipe de jour.",
+                "Ne déduire ni promotion, ni acceptation, ni volontariat, ni caractère favorable d'une hausse de rémunération ou d'une prime de poste.",
+            ]
+        )
+    elif mandate_meeting_query(route.get("query", "")):
         findings.extend(
             [
                 "Qualifier d'abord la participation a la reunion CSE : mandat, convocation, invitation ou simple presence.",
@@ -2783,6 +3071,13 @@ def default_findings(route: dict[str, Any]) -> list[str]:
 def build_working_position(route: dict[str, Any], findings: list[str], engine_results: list[dict[str, Any]] | None = None) -> str:
     domains = set(route["domains"])
     intents = set(route["intents"])
+    if forced_day_to_shift_context(route.get("query", "")):
+        return (
+            "Défendre la salariée sans laisser entendre qu'elle a accepté : demander le projet et ses motifs par écrit, "
+            "comparer contrat, horaires et accord INEOS, documenter ses contraintes, l'accompagner dans les échanges "
+            "et porter au CSE la réduction éventuelle de l'équipe de jour. Éviter un refus non préparé comme toute "
+            "conclusion automatique sur la légalité du changement."
+        )
     if mandate_meeting_query(route.get("query", "")):
         return (
             "Traiter la demande comme une articulation entre mandat CSE et temps de travail : verifier la qualite du salarie, "
@@ -2864,6 +3159,11 @@ def position_for(route: dict[str, Any], findings: list[str]) -> str:
 
 def next_action_for(route: dict[str, Any]) -> str:
     domains = set(route["domains"])
+    if forced_day_to_shift_context(route.get("query", "")):
+        return (
+            "Demander immédiatement une présentation écrite du changement, du cycle, de sa durée, de sa date d'effet "
+            "et des effectifs avant/après, sans signer ni opposer un refus non préparé."
+        )
     if mandate_meeting_query(route.get("query", "")):
         return "Verifier la qualite du participant et le texte applicable aux reunions CSE avant de qualifier le traitement du temps."
     if "question_simple" in route["intents"] and route["engines"] == ["bible_accords"]:
@@ -2936,6 +3236,8 @@ def response_depth(route: dict[str, Any]) -> str:
     domains = set(route.get("domains", []))
     intents = set(route.get("intents", []))
     business = [domain for domain in business_domains(route) if domain != "cse"]
+    if forced_day_to_shift_context(route.get("query", "")):
+        return "multi_domain"
     if {"temps_travail", "astreinte", "paie_remuneration"}.issubset(domains) or len(business) >= 3:
         return "multi_domain"
     if "preparer_cse" in intents:
@@ -3090,6 +3392,14 @@ def build_short_answer(answer: dict[str, Any]) -> str:
     query = normalize(route.get("query", ""))
     source_docs = normalize(" ".join(str(source.get("document") or "") for source in answer.get("sources", [])))
 
+    if forced_day_to_shift_context(route.get("query", "")):
+        return (
+            "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. "
+            "Il s'agit d'abord d'un changement imposé de poste, d'horaires et de conditions de travail à qualifier, "
+            "avec des effets sur le rythme posté, les week-ends, les jours fériés et les repos. "
+            "La rémunération éventuellement supérieure reste une conséquence secondaire et ne prouve ni accord, "
+            "ni volontariat, ni caractère favorable."
+        )
     if mandate_meeting_query(route.get("query", "")):
         return (
             "Nexus ne peut pas conclure automatiquement sur l'autorisation et le traitement de ce temps avec les seules sources selectionnees. "
@@ -3124,6 +3434,279 @@ def build_short_answer(answer: dict[str, Any]) -> str:
     if answer.get("sources"):
         return "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites."
     return "Nexus ne trouve pas de source locale suffisante pour conclure ; il faut completer les faits ou la base documentaire."
+
+
+def build_employee_method_analysis(answer: dict[str, Any]) -> dict[str, Any]:
+    """Expose the mandatory employee-question method without inventing sources."""
+    sources = [
+        source for source in answer.get("sources", ()) if isinstance(source, dict)
+    ]
+    main_source = sources[:1]
+    case_law = [
+        source
+        for source in sources
+        if source.get("source_layer") == "jurisprudence"
+    ]
+    cse_sources = [
+        source
+        for source in sources
+        if source.get("source_layer") == "historique_cse"
+    ]
+
+    def source_reference(source: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "title": source.get("document") or source.get("title"),
+            "article_or_clause": source.get("article")
+            or source.get("article_or_section"),
+            "date": source.get("decision_date") or source.get("date"),
+            "jurisdiction": source.get("juridiction")
+            or source.get("jurisdiction")
+            or source.get("chamber"),
+            "decision_number": source.get("case_number"),
+            "principle": source.get("principle_summary"),
+            "comparison_required": True,
+        }
+
+    document_rows = []
+    for index, document in enumerate(answer.get("documents_to_request", ())):
+        document_rows.append(
+            {
+                "document": document,
+                "priority": "indispensable" if index < 3 else "utile",
+                "utility": (
+                    "Confirmer les faits déterminants et le champ de la règle."
+                    if index < 3
+                    else "Affiner l'analyse ou documenter la pratique."
+                ),
+            }
+        )
+    return {
+        "understanding": answer.get("understanding"),
+        "factual_answer": answer.get("short_answer"),
+        "primary_source": [source_reference(source) for source in main_source],
+        "source_hierarchy": [
+            "Accords d'entreprise INEOS",
+            "Convention collective nationale des industries chimiques — IDCC 44",
+            "Code du travail",
+            "Jurisprudence comparable",
+            "Historique et débats du CSE",
+        ],
+        "comparative_analysis": answer.get("working_position"),
+        "case_law": [source_reference(source) for source in case_law],
+        "case_law_status": (
+            "présente et à comparer aux faits"
+            if case_law
+            else "aucune jurisprudence comparable vérifiée retrouvée"
+        ),
+        "cse_elements": [
+            {
+                **source_reference(source),
+                "meeting_date": source.get("decision_date") or source.get("date"),
+                "body": source.get("instance") or "CSE",
+                "exact_excerpt": source.get("excerpt"),
+                "legal_role": "contexte, preuve, engagement ou pratique ; jamais règle juridique",
+            }
+            for source in cse_sources
+        ],
+        "cse_status": (
+            "éléments vérifiés retrouvés"
+            if cse_sources
+            else "aucun passage vérifié de procès-verbal du CSE retrouvé"
+        ),
+        "employee_arguments": list(answer.get("findings", ()))[:5],
+        "employer_arguments": [
+            "L'employeur peut invoquer son pouvoir d'organisation, sous réserve du contrat, des accords, des faits et des garanties applicables.",
+            "Toute justification de l'employeur doit être demandée et vérifiée loyalement.",
+        ],
+        "solutions": [
+            answer.get("next_action"),
+            *list(answer.get("questions_to_ask", ()))[:4],
+        ],
+        "expert_advice": {
+            "immediate": answer.get("next_action"),
+            "individual_strategy": answer.get("working_position"),
+            "collective_strategy": (
+                "Porter le sujet au CSE lorsqu'une dimension collective ou organisationnelle est objectivée."
+            ),
+            "risks": list(answer.get("warnings", ()))[:4],
+            "evidence_to_preserve": list(answer.get("documents_to_request", ()))[:5],
+        },
+        "documents_after_analysis": document_rows,
+        "documents_not_required": [
+            "Toute pièce sans lien expliqué avec un fait ou une règle à vérifier."
+        ],
+    }
+
+
+def build_disciplinary_assistance(answer: dict[str, Any]) -> dict[str, Any]:
+    """Build an operational A-to-G dossier without deciding the merits of a sanction."""
+    query = str(answer.get("query") or "")
+    text = normalize(query)
+    measure_markers = (
+        ("mise à pied disciplinaire", "mise a pied"),
+        ("licenciement envisagé ou notifié", "licenciement"),
+        ("avertissement", "avertissement"),
+        ("blâme", "blame"),
+        ("sanction non précisée", "sanction"),
+    )
+    measure = next(
+        (label for label, marker in measure_markers if marker in text),
+        "mesure à préciser",
+    )
+    alleged_facts = (
+        "Des faits reprochés sont mentionnés, mais leur teneur et leur preuve restent à vérifier."
+        if any(marker in text for marker in ("fait", "faute", "incident", "insubordination"))
+        else "Les faits reprochés ne sont pas décrits avec assez de précision."
+    )
+    documents = list(answer.get("documents_to_request", ()))
+    questions = list(answer.get("questions_to_ask", ()))
+    return {
+        "analysis_type": ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
+        "notice": (
+            "Dossier de préparation syndicale approfondi. Il ne qualifie pas "
+            "automatiquement la sanction d'illégale et ne présume aucun fait reconnu."
+        ),
+        "A_qualification": {
+            "procedure": (
+                "procédure disciplinaire à contrôler"
+                if "disciplinaire" in text or "sanction" in text
+                else "nature de la procédure à confirmer"
+            ),
+            "measure": measure,
+            "alleged_facts": alleged_facts,
+            "potential_seriousness": "à qualifier après vérification contradictoire",
+            "employee_risks": [
+                "sanction dont la nature et les effets doivent être précisés",
+                "délais de réaction ou de contestation à préserver",
+            ],
+        },
+        "B_timeline": {
+            "facts_date": None,
+            "employer_awareness_date": None,
+            "summons_date": None,
+            "interview_date": None,
+            "notification_date": None,
+            "deadline_check": (
+                "Impossible à conclure sans les dates ; relever chaque date et sa source."
+            ),
+        },
+        "C_procedure_control": [
+            "Vérifier l'objet, la date, l'heure, le lieu et les mentions de la convocation.",
+            "Vérifier les délais applicables sans présumer leur irrégularité.",
+            "Vérifier le droit à assistance et les modalités concrètes.",
+            "Identifier le règlement intérieur et l'échelle des sanctions applicables.",
+            "Comparer la mesure envisagée aux faits établis et au contexte.",
+            "Vérifier qu'une sanction n'a pas déjà été prononcée pour les mêmes faits.",
+            "Consigner séparément toute irrégularité seulement après vérification.",
+        ],
+        "D_facts_analysis": {
+            "recognized_facts": [],
+            "contested_facts": [],
+            "unproven_facts": [alleged_facts],
+            "contradictions": [],
+            "witnesses": [],
+            "work_context": [],
+            "training_gaps": [],
+            "unclear_instructions": [],
+            "workload_or_organization": [],
+            "management_responsibilities": [],
+            "mitigating_circumstances": [],
+            "guardrail": (
+                "Aucun fait n'est classé comme reconnu sans déclaration explicite et vérifiée du salarié."
+            ),
+        },
+        "E_interview_preparation": {
+            "questions_for_employee": [
+                "Quels faits précis, dates, lieux et personnes sont mentionnés ?",
+                "Que reconnaissez-vous exactement, que contestez-vous et pourquoi ?",
+                "Quelles consignes, formations, contraintes ou alertes existaient ?",
+                *questions[:3],
+            ],
+            "questions_for_employer": [
+                "Quels faits précis et quelles pièces fondent la procédure ?",
+                "Quand l'employeur a-t-il eu connaissance de chaque fait ?",
+                "Quelle mesure est envisagée et quel texte interne est invoqué ?",
+                "Quels éléments contradictoires ont été vérifiés ?",
+            ],
+            "documents_after_initial_analysis": [
+                {
+                    "document": document,
+                    "priority": "indispensable" if index < 3 else "utile",
+                    "utility": (
+                        "Vérifier un fait, une date, une règle interne ou une preuve invoquée."
+                    ),
+                }
+                for index, document in enumerate(documents)
+            ],
+            "main_arguments": list(answer.get("findings", ()))[:4],
+            "fallback_arguments": [
+                "À défaut de contester le fait, discuter son contexte, sa preuve et la proportionnalité.",
+                "Demander qu'aucune décision ne soit prise avant examen des observations et pièces.",
+            ],
+            "do_not_admit_without_evidence": [
+                "la matérialité précise des faits",
+                "leur caractère fautif",
+                "leur gravité",
+                "l'absence de cause organisationnelle ou de formation",
+            ],
+            "prudent_wording": [
+                "« À ce stade, le salarié demande que les faits et les pièces soient précisés. »",
+                "« Cette observation ne vaut pas reconnaissance d'un fait non établi. »",
+                "« Le salarié souhaite compléter ses observations après vérification des documents. »",
+            ],
+            "defense_strategy": (
+                "Faire préciser, établir la chronologie, répondre factuellement, préserver "
+                "le contradictoire puis formuler une demande proportionnée."
+            ),
+            "risks_and_limits": list(answer.get("warnings", ()))[:4],
+        },
+        "F_during_interview": {
+            "points_to_clarify": [
+                "faits exacts, qualification envisagée et origine de chaque information",
+            ],
+            "dates_to_record": [
+                "faits",
+                "connaissance par l'employeur",
+                "convocation",
+                "entretien",
+                "notification éventuelle",
+            ],
+            "documents_to_request": documents[:6],
+            "contradictions_to_note": [
+                "écarts entre convocation, déclarations, pièces et chronologie",
+            ],
+            "prudent_responses": [
+                "répondre sur les faits connus ; réserver les points non vérifiés",
+            ],
+            "pause_requests": [
+                "demander une suspension ou un temps de réflexion si une pièce nouvelle est présentée",
+            ],
+            "essential_notes": [
+                "participants, questions, réponses, documents cités, demandes et incidents",
+            ],
+        },
+        "G_after_interview": [
+            "Rédiger un compte rendu factuel et daté.",
+            "Adresser, si utile, les observations complémentaires du salarié.",
+            "Examiner toute notification avant de choisir contestation, retrait ou réduction.",
+            "Évaluer l'action syndicale et, si le problème est collectif, une saisine du CSE.",
+            "Orienter selon le besoin vers l'inspection du travail, un défenseur syndical ou un avocat.",
+        ],
+        "source_hierarchy": [
+            "Accords d'entreprise INEOS",
+            "Convention collective nationale des industries chimiques — IDCC 44",
+            "Code du travail",
+            "Jurisprudence réellement comparable",
+            "Historique et débats vérifiés du CSE",
+        ],
+        "priority_material": [
+            "règlement intérieur",
+            "procédure disciplinaire interne",
+            "précédents comparables vérifiés dans l'entreprise",
+            "décisions ou échanges CSE vérifiés sur le sujet",
+            "éléments de preuve du dossier",
+        ],
+    }
 
 
 def merge_bible_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
@@ -3485,14 +4068,29 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     if is_incomplete_prime_route(route):
         answer["confidence"] = "faible"
     answer["response_depth"] = response_depth(route)
+    if route.get("employee_path") == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE:
+        answer["employee_method_analysis"] = None
+        answer["disciplinary_assistance"] = build_disciplinary_assistance(answer)
+    else:
+        answer["employee_method_analysis"] = build_employee_method_analysis(answer)
+        answer["disciplinary_assistance"] = None
+        advisory = route.get("employee_path_advisory")
+        if advisory:
+            answer["warnings"] = semantic_dedupe([*answer["warnings"], advisory])
     return answer
 
 
-def ask(query: str, limit: int, source_limit: int = DEFAULT_SOURCE_LIMIT) -> dict[str, Any]:
-    route = route_query(query)
+def ask(
+    query: str,
+    limit: int,
+    source_limit: int = DEFAULT_SOURCE_LIMIT,
+    employee_path: str | None = None,
+) -> dict[str, Any]:
+    route = route_query(query, employee_path)
     retrieval_limit = max(limit, source_limit, 8)
     answer: dict[str, Any] = {
         "query": query,
+        "facts": declared_case_facts(query),
         "understanding": understanding_for(route),
         "short_answer": "",
         "route": route,
@@ -4042,10 +4640,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_ask.add_argument("--query", required=True)
     p_ask.add_argument("--limit", type=int, default=6)
     p_ask.add_argument("--source-limit", type=int, default=DEFAULT_SOURCE_LIMIT)
+    p_ask.add_argument("--employee-path", choices=sorted(EMPLOYEE_PATHS))
     p_ask.add_argument("--format", choices=["text", "json"], default="text")
 
     p_route = sub.add_parser("route")
     p_route.add_argument("--query", required=True)
+    p_route.add_argument("--employee-path", choices=sorted(EMPLOYEE_PATHS))
     p_route.add_argument("--format", choices=["text", "json"], default="text")
 
     p_diagnose = sub.add_parser("diagnose")
@@ -4059,9 +4659,17 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = build_parser().parse_args()
     if args.command == "route":
-        emit(route_query(args.query), args.format, format_route_text)
+        emit(
+            route_query(args.query, args.employee_path),
+            args.format,
+            format_route_text,
+        )
     elif args.command == "ask":
-        emit(ask(args.query, args.limit, args.source_limit), args.format, format_answer_text)
+        emit(
+            ask(args.query, args.limit, args.source_limit, args.employee_path),
+            args.format,
+            format_answer_text,
+        )
     elif args.command == "diagnose":
         emit(diagnose(), args.format, format_diagnose_text)
     elif args.command == "run-scenarios":

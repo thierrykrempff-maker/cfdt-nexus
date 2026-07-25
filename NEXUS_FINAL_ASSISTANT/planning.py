@@ -5,18 +5,26 @@ from __future__ import annotations
 from .models import AnalysisPlan, AssistantRequest, Domain, DomainMatch, ResponseMode
 
 
+_EMPLOYEE_SOURCE_SEQUENCE = (
+    "Accords d'entreprise INEOS",
+    "Convention collective nationale des industries chimiques — IDCC 44",
+    "Code du travail",
+    "Jurisprudence comparable",
+    "Historique et débats du CSE",
+)
+
 _SOURCES = {
-    Domain.CONTRACT: ("Accords INEOS", "Convention collective Chimie", "Code du travail", "Contrat"),
-    Domain.DISCIPLINE: ("Code du travail", "Convention collective Chimie", "Jurisprudence"),
-    Domain.WORKING_TIME: ("Accords INEOS", "Convention collective Chimie", "Code du travail", "Kelio"),
-    Domain.DISCRIMINATION: ("Code du travail", "Jurisprudence", "Défenseur des droits"),
-    Domain.HEALTH: ("Code de la sécurité sociale", "Accords INEOS", "Sources officielles"),
-    Domain.CSE_CONSULTATION: ("Code du travail", "Documents CSE", "Accords INEOS"),
-    Domain.CSE_OPERATION: ("Code du travail", "Documents CSE", "Historique CSE"),
-    Domain.CSE_ALERTS: ("Code du travail", "Documents CSE", "INRS"),
-    Domain.PAYROLL: ("Accords INEOS", "Convention collective Chimie", "Bulletin", "Kelio", "Nibelis"),
-    Domain.DOCUMENTARY: ("Sources officielles", "Documents CSE"),
-    Domain.TRANSVERSAL: ("Sources officielles",),
+    Domain.CONTRACT: (*_EMPLOYEE_SOURCE_SEQUENCE, "Contrat de travail"),
+    Domain.DISCIPLINE: (*_EMPLOYEE_SOURCE_SEQUENCE, "Règlement intérieur"),
+    Domain.WORKING_TIME: (*_EMPLOYEE_SOURCE_SEQUENCE, "Relevés horaires vérifiés"),
+    Domain.DISCRIMINATION: (*_EMPLOYEE_SOURCE_SEQUENCE, "Défenseur des droits"),
+    Domain.HEALTH: (*_EMPLOYEE_SOURCE_SEQUENCE, "Code de la sécurité sociale"),
+    Domain.CSE_CONSULTATION: (*_EMPLOYEE_SOURCE_SEQUENCE, "Documents de consultation du CSE"),
+    Domain.CSE_OPERATION: (*_EMPLOYEE_SOURCE_SEQUENCE, "Procès-verbaux du CSE"),
+    Domain.CSE_ALERTS: (*_EMPLOYEE_SOURCE_SEQUENCE, "INRS"),
+    Domain.PAYROLL: (*_EMPLOYEE_SOURCE_SEQUENCE, "Bulletin", "Kelio", "Nibelis"),
+    Domain.DOCUMENTARY: _EMPLOYEE_SOURCE_SEQUENCE,
+    Domain.TRANSVERSAL: _EMPLOYEE_SOURCE_SEQUENCE,
 }
 
 

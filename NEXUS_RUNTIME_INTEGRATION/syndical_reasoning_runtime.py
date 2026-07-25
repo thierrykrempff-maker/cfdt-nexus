@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 import hashlib
 import time
@@ -218,8 +218,29 @@ class RuntimeSyndicalReasoningIntegration:
             cse_consultation_relevant = needs_cse_consultation_reasoning(case)
             cse_operation_relevant = needs_cse_operation_reasoning(case)
             cse_alerts_relevant = needs_cse_alerts_reasoning(case)
+            individual_articulation = articulate_syndical_domains(
+                case, working_time_relevant=working_time_relevant
+            )
             articulation = (
-                self._cse_consultation_engine.analyze(case).articulation
+                replace(
+                    individual_articulation,
+                    complementary_domains=tuple(
+                        dict.fromkeys(
+                            (
+                                *individual_articulation.complementary_domains,
+                                "R2A_CSE_CONSULTATION",
+                            )
+                        )
+                    ),
+                    rationale=(
+                        "Le changement individuel imposé reste principal ; la réduction possible "
+                        "des effectifs et la réorganisation sont analysées en complément par R2A."
+                    ),
+                )
+                if cse_consultation_relevant
+                and individual_articulation.primary_domain == "R1A_CONTRACT_CHANGE"
+                and _is_imposed_individual_change(case.question)
+                else self._cse_consultation_engine.analyze(case).articulation
                 if cse_consultation_relevant
                 else self._cse_alerts_engine.analyze(case).articulation
                 if cse_alerts_relevant
@@ -230,9 +251,7 @@ class RuntimeSyndicalReasoningIntegration:
                 else (
                     articulate_discrimination_domains(case)
                     if discrimination_relevant
-                    else articulate_syndical_domains(
-                        case, working_time_relevant=working_time_relevant
-                    )
+                    else individual_articulation
                 )
             )
             if articulation.primary_domain == "R2A_CSE_CONSULTATION":
@@ -326,12 +345,7 @@ class RuntimeSyndicalReasoningIntegration:
         )
         return SyndicalCaseInput(
             question=query,
-            declared_facts=(
-                CaseFact(
-                    "La question constitue une déclaration à vérifier ; aucun fait "
-                    "n'est automatiquement tenu pour établi."
-                ),
-            ),
+            declared_facts=RuntimeSyndicalReasoningIntegration._declared_facts(query),
             suspected_domains=tuple(
                 sorted(
                     str(item).strip().lower()
@@ -342,9 +356,39 @@ class RuntimeSyndicalReasoningIntegration:
             available_sources=sources,
             urgency=RuntimeSyndicalReasoningIntegration._urgency(answer),
             confidentiality=ConfidentialityLevel.INTERNAL,
-            desired_outcome="structurer l'analyse et les prochaines actions",
+            desired_outcome=(
+                "défendre la salariée et structurer les prochaines actions"
+                if any(marker in _normalize(query) for marker in ("defendre", "proteger", "accompagner"))
+                else "structurer l'analyse et les prochaines actions"
+            ),
             missing_information=missing,
         )
+
+    @staticmethod
+    def _declared_facts(query: str) -> tuple[CaseFact, ...]:
+        """Retain explicit facts and negations without treating them as established."""
+        text = _normalize(query)
+        statements = []
+        if "laboratoire" in text and any(marker in text for marker in ("travail de jour", "rythme de jour")):
+            statements.append("La salariée travaille actuellement de jour au laboratoire.")
+        if "demission" in text and "remplac" in text:
+            statements.append("Le changement annoncé vise à remplacer un salarié démissionnaire.")
+        if any(marker in text for marker in ("contraint", "impose", "oblige")) and any(
+            marker in text for marker in ("rythme poste", "travail poste", "equipe postee")
+        ):
+            statements.append("La salariée déclare que le passage en rythme posté lui est imposé.")
+        if any(marker in text for marker in ("pas volontaire", "ne souhaite pas", "sans son accord")):
+            statements.append("La salariée déclare que le changement n'est pas volontaire et qu'elle ne le souhaite pas.")
+        if "equipe de jour" in text and any(marker in text for marker in ("redui", "reduction", "dimin")):
+            statements.append("Une réduction de l'effectif de l'équipe de jour est évoquée.")
+        if any(marker in text for marker in ("week end", "week-end", "jours feries", "matin/apres-midi", "matin apres-midi")):
+            statements.append("Le rythme annoncé comporte des contraintes de postes, week-ends ou jours fériés à préciser.")
+        if "remuneration" in text and "pas l objet principal" in text:
+            statements.append("Une rémunération supérieure est évoquée, mais elle n'est pas l'objet principal.")
+        statements.append(
+            "Ces éléments sont déclarés et doivent être vérifiés ; aucun n'est automatiquement tenu pour établi."
+        )
+        return tuple(CaseFact(statement) for statement in dict.fromkeys(statements))
 
     @staticmethod
     def _sources(answer: Mapping[str, Any]) -> tuple[SourceReference, ...]:
@@ -396,6 +440,17 @@ def _normalize(value: str) -> str:
         "".join(char for char in normalized if not unicodedata.combining(char))
         .lower()
         .split()
+    )
+
+
+def _is_imposed_individual_change(value: str) -> bool:
+    text = _normalize(value)
+    return any(
+        marker in text
+        for marker in ("contraint", "impose", "oblige", "pas volontaire", "ne souhaite pas")
+    ) and any(
+        marker in text
+        for marker in ("rythme poste", "travail poste", "equipe postee", "passage de jour")
     )
 
 

@@ -187,18 +187,49 @@ def _map_report(
     result = deepcopy(dict(historical_report))
     summary = assistant.get("summary") if isinstance(assistant.get("summary"), Mapping) else {}
     items = []
+    labels = {
+        "understanding": "Compréhension de la situation",
+        "factual_answer": "Réponse factuelle",
+        "primary_source": "Source principale",
+        "comparative_analysis": "Analyse comparée",
+        "comparable_case_law": "Jurisprudence comparable",
+        "cse_elements": "Éléments issus du CSE",
+        "employee_arguments": "Arguments du salarié",
+        "employer_arguments": "Arguments possibles de l'employeur",
+        "solutions": "Solutions concrètes",
+        "expert_advice": "Conseil d'expert",
+        "documents_indispensable": "Documents indispensables",
+        "documents_useful": "Documents utiles",
+        "documents_not_required": "Documents non nécessaires",
+        "missing": "Points restant à vérifier",
+        "limits": "Limites",
+    }
     for key in (
         "understanding",
+        "factual_answer",
+        "primary_source",
+        "comparative_analysis",
+        "comparable_case_law",
+        "cse_elements",
+        "employee_arguments",
+        "employer_arguments",
+        "solutions",
+        "expert_advice",
         "qualifications",
-        "missing",
         "sources_to_verify",
         "risks_and_urgencies",
         "action_plan",
+        "documents_indispensable",
+        "documents_useful",
+        "documents_not_required",
+        "missing",
         "limits",
     ):
         values = summary.get(key)
         if isinstance(values, (list, tuple)):
-            items.extend(str(value) for value in values[:4])
+            items.extend(
+                f"{labels.get(key, key)} : {value}" for value in values[:4]
+            )
     sections = list(result.get("sections") or ())
     sections.append(
         {
