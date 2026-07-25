@@ -22,6 +22,7 @@ def adapt_engine_payload(engine: str, domain: Domain, payload: Mapping[str, Any]
     qualifications = _strings(
         analysis.get("findings")
         or domain_analysis.get("qualifications")
+        or domain_analysis.get("qualification_candidates")
         or short.get("hypotheses")
     )
     missing = _strings(
@@ -39,10 +40,27 @@ def adapt_engine_payload(engine: str, domain: Domain, payload: Mapping[str, Any]
         domain=domain,
         available=available,
         possible_qualifications=qualifications,
+        retained_facts=_strings(
+            analysis.get("retained_facts")
+            or domain_analysis.get("retained_facts")
+            or short.get("situation")
+        ),
         missing_information=missing,
         questions=missing,
         sources=_source_items(payload),
         strategies=strategies,
+        employee_arguments=_position_strings(
+            analysis.get("employee_arguments")
+            or domain_analysis.get("employee_position")
+        ),
+        employer_arguments=_position_strings(
+            analysis.get("employer_arguments")
+            or domain_analysis.get("employer_position")
+        ),
+        possible_actions=_strings(
+            analysis.get("possible_actions")
+            or domain_analysis.get("document_requests")
+        ),
         confidence=Confidence.MEDIUM if available else Confidence.LOW,
         limits=("Résultat partiel à vérifier.",) if not available else (),
         technical_errors=errors,
@@ -72,13 +90,32 @@ def _strings(value: Any) -> tuple[str, ...]:
         output = []
         for item in value:
             if isinstance(item, Mapping):
-                text = item.get("message") or item.get("title") or item.get("label") or item.get("description")
+                text = (
+                    item.get("message")
+                    or item.get("title")
+                    or item.get("label")
+                    or item.get("description")
+                    or item.get("rationale")
+                    or item.get("question")
+                )
                 if text:
                     output.append(str(text))
             elif str(item).strip():
                 output.append(str(item))
         return tuple(output)
     return (str(value),)
+
+
+def _position_strings(value: Any) -> tuple[str, ...]:
+    if not isinstance(value, Mapping):
+        return _strings(value)
+    output = []
+    for items in value.values():
+        if isinstance(items, (list, tuple)):
+            output.extend(str(item) for item in items if str(item).strip())
+        elif isinstance(items, str) and items.strip():
+            output.append(items)
+    return tuple(dict.fromkeys(output))
 
 
 def _source_items(payload: Mapping[str, Any]) -> tuple[SourceItem, ...]:
@@ -91,5 +128,25 @@ def _source_items(payload: Mapping[str, Any]) -> tuple[SourceItem, ...]:
             continue
         title = str(item.get("title") or item.get("label") or item.get("source") or "").strip()
         if title:
-            output.append(SourceItem(str(item.get("type") or "official"), title))
+            source_type = str(
+                item.get("source_layer")
+                or item.get("type")
+                or item.get("origin")
+                or "official"
+            )
+            output.append(
+                SourceItem(
+                    source_type,
+                    title,
+                    str(item.get("decision_date") or item.get("date") or "") or None,
+                    reasoning_role=str(item.get("reasoning_role") or "to_verify"),
+                    document_to_verify=str(
+                        item.get("article")
+                        or item.get("article_or_section")
+                        or item.get("case_number")
+                        or ""
+                    )
+                    or None,
+                )
+            )
     return tuple(output)
