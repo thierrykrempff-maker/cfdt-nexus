@@ -1,0 +1,1144 @@
+{
+  "below_70": [],
+  "below_80": [],
+  "case_count": 34,
+  "category_distribution": {
+    "PAYROLL": 3,
+    "R1A": 3,
+    "R1B": 3,
+    "R1C": 4,
+    "R1D": 4,
+    "R1E": 4,
+    "R2A": 3,
+    "R2B": 3,
+    "R2C": 3,
+    "TRANSVERSAL": 4
+  },
+  "configuration": {
+    "expert_paie_v2": true,
+    "final_assistant": true
+  },
+  "fallbacks": 1,
+  "flag_matrix": [
+    {
+      "configuration": "A",
+      "contamination": false,
+      "expert_paie_v2": false,
+      "expert_paie_v2_loaded": false,
+      "fallback": "historical_runtime",
+      "final_assistant": false,
+      "final_assistant_loaded": false,
+      "privacy": "enforced",
+      "response": "historical_runtime"
+    },
+    {
+      "configuration": "B",
+      "contamination": false,
+      "expert_paie_v2": false,
+      "expert_paie_v2_loaded": false,
+      "fallback": "historical_runtime",
+      "final_assistant": true,
+      "final_assistant_loaded": true,
+      "privacy": "enforced",
+      "response": "final_assistant"
+    },
+    {
+      "configuration": "C",
+      "contamination": false,
+      "expert_paie_v2": true,
+      "expert_paie_v2_loaded": true,
+      "fallback": "historical_runtime",
+      "final_assistant": true,
+      "final_assistant_loaded": true,
+      "privacy": "enforced",
+      "response": "final_assistant"
+    },
+    {
+      "configuration": "D",
+      "contamination": false,
+      "expert_paie_v2": true,
+      "expert_paie_v2_loaded": false,
+      "fallback": "historical_runtime",
+      "final_assistant": false,
+      "final_assistant_loaded": false,
+      "privacy": "enforced",
+      "response": "historical_runtime"
+    }
+  ],
+  "forbidden_calculations": 0,
+  "global_crashes": 0,
+  "privacy_incidents": 0,
+  "recommendation": "PRÊT POUR ACTIVATION CONTRÔLÉE",
+  "results": [
+    {
+      "acceptable": true,
+      "case_id": "CV-R1A-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "contract_conditions",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1A-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "contract_conditions",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1A-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "contract_conditions",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1B-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discipline",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1B-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discipline",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1B-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discipline",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1C-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "working_time",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1C-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "working_time",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1C-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "working_time",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1C-04",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "working_time",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1D-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discrimination_harassment",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1D-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discrimination_harassment",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1D-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discrimination_harassment",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1D-04",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discrimination_harassment",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1E-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "health_absence",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1E-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "health_absence",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1E-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "health_absence",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R1E-04",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "health_absence",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2A-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_consultation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2A-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_consultation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2A-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_consultation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2B-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_operation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2B-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory",
+        "documentary"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory",
+        "documentary"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_operation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2B-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_operation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2C-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_alerts",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2C-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_alerts",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-R2C-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_alerts",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-PAY-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "payroll",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-PAY-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "payroll",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-PAY-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "payroll",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-TR-01",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory",
+        "expert_paie_v2"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory",
+        "expert_paie_v2"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_consultation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-TR-02",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "engines_failed": [
+        "cse_memory"
+      ],
+      "engines_planned": [
+        "syndical_reasoning",
+        "cse_memory"
+      ],
+      "failures": [],
+      "fallback": true,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "cse_consultation",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-TR-03",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "documentary",
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "documentary",
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "documentary",
+      "privacy": "ALLOWED",
+      "score": 100
+    },
+    {
+      "acceptable": true,
+      "case_id": "CV-TR-04",
+      "confidence": "MEDIUM",
+      "criteria": {
+        "actions": true,
+        "contradictions": true,
+        "factual_understanding": true,
+        "legal_prudence": true,
+        "missing_questions": true,
+        "privacy": true,
+        "readability": true,
+        "routing": true,
+        "sources": true,
+        "strategy": true
+      },
+      "engines_called": [
+        "syndical_reasoning"
+      ],
+      "engines_failed": [],
+      "engines_planned": [
+        "syndical_reasoning"
+      ],
+      "failures": [],
+      "fallback": false,
+      "mode": "FINAL_ASSISTANT",
+      "primary_domain": "discipline",
+      "privacy": "ALLOWED",
+      "score": 100
+    }
+  ],
+  "routing_errors": 0,
+  "schema_version": "1.0",
+  "score_average": 100.0,
+  "score_distribution": {
+    "excellent": 34
+  },
+  "score_minimum": 100,
+  "synthetic_only": true,
+  "unacceptable_cases": [],
+  "unresolved_contradictions": 0
+}

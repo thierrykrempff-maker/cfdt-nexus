@@ -64,19 +64,30 @@ from .syndical_reasoning_runtime import (
     needs_syndical_reasoning,
 )
 from .report_mapper import RuntimeSyndicalReasoningReportMapper
-from .expert_paie_v2_runtime import (
-    RuntimeExpertPaieV2Diagnostics,
-    RuntimeExpertPaieV2Integration,
-    RuntimeExpertPaieV2Mode,
-    RuntimeExpertPaieV2Result,
-    needs_expert_paie_v2,
-)
-from .final_assistant_runtime import (
-    RuntimeFinalAssistantDiagnostics,
-    RuntimeFinalAssistantIntegration,
-    RuntimeFinalAssistantMode,
-    RuntimeFinalAssistantResult,
-)
+_LAZY_EXPORTS = {
+    "RuntimeExpertPaieV2Diagnostics": (".expert_paie_v2_runtime", "RuntimeExpertPaieV2Diagnostics"),
+    "RuntimeExpertPaieV2Integration": (".expert_paie_v2_runtime", "RuntimeExpertPaieV2Integration"),
+    "RuntimeExpertPaieV2Mode": (".expert_paie_v2_runtime", "RuntimeExpertPaieV2Mode"),
+    "RuntimeExpertPaieV2Result": (".expert_paie_v2_runtime", "RuntimeExpertPaieV2Result"),
+    "needs_expert_paie_v2": (".expert_paie_v2_runtime", "needs_expert_paie_v2"),
+    "RuntimeFinalAssistantDiagnostics": (".final_assistant_runtime", "RuntimeFinalAssistantDiagnostics"),
+    "RuntimeFinalAssistantIntegration": (".final_assistant_runtime", "RuntimeFinalAssistantIntegration"),
+    "RuntimeFinalAssistantMode": (".final_assistant_runtime", "RuntimeFinalAssistantMode"),
+    "RuntimeFinalAssistantResult": (".final_assistant_runtime", "RuntimeFinalAssistantResult"),
+}
+
+
+def __getattr__(name: str):
+    """Load optional engines only when their public symbol is explicitly requested."""
+    target = _LAZY_EXPORTS.get(name)
+    if target is None:
+        raise AttributeError(name)
+    from importlib import import_module
+
+    module = import_module(target[0], __name__)
+    value = getattr(module, target[1])
+    globals()[name] = value
+    return value
 
 __all__ = (
     "RuntimeCoreIntegration",

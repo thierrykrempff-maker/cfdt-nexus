@@ -15,8 +15,7 @@ from NEXUS_FINAL_ASSISTANT import (
     NexusFinalAssistant,
 )
 
-from .config import RuntimeExpertPaieV2Config, RuntimeFinalAssistantConfig
-from .expert_paie_v2_runtime import RuntimeExpertPaieV2Integration
+from .config import RuntimeFinalAssistantConfig
 
 
 class RuntimeFinalAssistantMode(str, Enum):
@@ -92,9 +91,7 @@ class RuntimeFinalAssistantIntegration:
                 "cse_memory": lambda _: supplied.get(
                     "cse_memory", {"mode": "DISABLED"}
                 ),
-                "expert_paie_v2": lambda _: RuntimeExpertPaieV2Integration(
-                    RuntimeExpertPaieV2Config.from_env()
-                ).integrate(answer).to_dict(),
+                "expert_paie_v2": lambda _: _run_expert_paie_v2(answer),
                 "documentary": lambda _: _documentary_payload(answer),
             }
             response = NexusFinalAssistant(
@@ -124,6 +121,16 @@ class RuntimeFinalAssistantIntegration:
                 ),
                 historical_report,
             )
+
+
+def _run_expert_paie_v2(answer: Mapping[str, Any]) -> dict[str, Any]:
+    """Import Expert Paie V2 only when the plan actually executes this runner."""
+    from .config import RuntimeExpertPaieV2Config
+    from .expert_paie_v2_runtime import RuntimeExpertPaieV2Integration
+
+    return RuntimeExpertPaieV2Integration(
+        RuntimeExpertPaieV2Config.from_env()
+    ).integrate(answer).to_dict()
 
 
 def _request_from_answer(answer: Mapping[str, Any]) -> AssistantRequest:

@@ -7,11 +7,11 @@ from typing import Any
 
 from .utils import collect_issue_values, has_any, normalize, route_domains, source_documents, unique
 
-try:  # Used when automation/ is inserted directly in sys.path by the local UI.
-    from payroll import payroll_referential_integration, payroll_rule_engine
-except Exception:  # pragma: no cover - fallback for package-style imports.
+try:
+    from automation.payroll import payroll_referential_integration, payroll_rule_engine
+except Exception:  # pragma: no cover - fallback when automation/ alone is on sys.path.
     try:
-        from automation.payroll import payroll_referential_integration, payroll_rule_engine  # type: ignore[no-redef]
+        from payroll import payroll_referential_integration, payroll_rule_engine  # type: ignore[no-redef]
     except Exception:  # pragma: no cover - handled as a safe runtime fallback.
         payroll_rule_engine = None  # type: ignore[assignment]
         payroll_referential_integration = None  # type: ignore[assignment]

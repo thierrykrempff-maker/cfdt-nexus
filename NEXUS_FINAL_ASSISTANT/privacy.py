@@ -16,6 +16,11 @@ _ANONYMIZE_PATTERNS = (
     re.compile(r"(?<!\d)(?:\+33|0)[1-9](?:[ .-]?\d{2}){4}(?!\d)"),
     re.compile(r"\b(?:matricule|identifiant\s+(?:kelio|nibelis|rh))\s*[:=]\s*\S+", re.IGNORECASE),
     re.compile(r"\b(?:salaire|net à payer)\s*[:=]?\s*\d+(?:[.,]\d+)?\s*(?:€|euros?)", re.IGNORECASE),
+    re.compile(
+        r"\b(?:nom\s+complet|adresse|diagnostic|rib|contenu\s+(?:du|de)\s+pv|"
+        r"sanction\s+disciplinaire)\s*[:=]\s*[^;\n]+",
+        re.IGNORECASE,
+    ),
 )
 _FORBIDDEN_OUTPUT = ("chunk_id", "storage_id", "local_path", "c:\\", "/home/", "/users/", "/tmp/")
 
