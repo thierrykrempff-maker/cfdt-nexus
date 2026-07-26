@@ -182,6 +182,25 @@ def test_local_interface_exposes_two_distinct_employee_choices() -> None:
     assert "employee_path: currentEmployeePath" in script
 
 
+def test_employee_questionnaire_collects_and_explicitly_exports_answers() -> None:
+    html = (ROOT / "apps" / "nexus-local-interface" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    script = (ROOT / "apps" / "nexus-local-interface" / "app.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'id="employeeInterview"' in html
+    assert 'id="downloadInterviewButton"' in html
+    assert "Aucune sauvegarde automatique" in html
+    assert "const employeeInterviewSections" in script
+    assert "Principe appliqué" in script
+    assert "employee_interview_answers: interviewAnswers" in script
+    assert "function downloadInterview()" in script
+    assert "localStorage" not in script
+    assert "sessionStorage" not in script
+
+
 def test_server_passes_explicit_employee_path_to_router(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

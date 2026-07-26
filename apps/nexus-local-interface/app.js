@@ -75,6 +75,10 @@ const secondaryMessage = document.getElementById("secondaryMessage");
 const disciplinaryPanel = document.getElementById("disciplinaryPanel");
 const disciplinaryContent = document.getElementById("disciplinaryContent");
 const generalFollowupGrid = document.getElementById("generalFollowupGrid");
+const employeeInterview = document.getElementById("employeeInterview");
+const interviewSaveActions = document.getElementById("interviewSaveActions");
+const downloadInterviewButton = document.getElementById("downloadInterviewButton");
+const interviewSaveStatus = document.getElementById("interviewSaveStatus");
 
 let currentPayload = null;
 let currentReportMarkdown = "";
@@ -207,6 +211,71 @@ const employeePathDefinitions = {
     outcomes: ["Préparer la défense", "Préparer l’entretien", "Contrôler la procédure", "Identifier les preuves", "Préparer la suite"]
   }
 };
+
+const employeeInterviewSections = [
+  {
+    title: "1. Demande et faits",
+    principle: "Recueillir les faits sans les qualifier juridiquement.",
+    questions: [
+      ["employeeRequest", "Que demande précisément le salarié aujourd’hui ?", "textarea"],
+      ["factsCertain", "Quels faits le salarié présente-t-il comme certains ?", "textarea"],
+      ["factsUncertain", "Quels points sont supposés, contestés ou encore inconnus ?", "textarea"],
+      ["eventTimeline", "Quelles sont les dates et étapes importantes ?", "textarea"]
+    ]
+  },
+  {
+    title: "2. Situation contractuelle",
+    principle: "Comparer la situation réelle avec le contrat et ses avenants.",
+    questions: [
+      ["currentJob", "Quel est le poste, le service et la qualification actuels ?", "text"],
+      ["contractTerms", "Que prévoient le contrat et les avenants sur le poste, le lieu et les horaires ?", "textarea"],
+      ["proposedChange", "Quel changement exact l’employeur veut-il appliquer ?", "textarea"],
+      ["temporaryOrPermanent", "Le changement est-il temporaire ou définitif ?", "select", [["", "Non précisé"], ["temporary", "Temporaire"], ["permanent", "Définitif"], ["disputed", "Information contestée"]]]
+    ]
+  },
+  {
+    title: "3. Décision de l’employeur",
+    principle: "Identifier le fondement, le calendrier et la marge de choix réelle.",
+    questions: [
+      ["employerReason", "Quel motif l’employeur donne-t-il ?", "textarea"],
+      ["writtenDecision", "La décision ou proposition a-t-elle été remise par écrit ?", "select", [["", "Non précisé"], ["yes", "Oui"], ["no", "Non"]]],
+      ["effectiveDate", "Quelle date d’application a été annoncée ?", "date"],
+      ["employeeChoice", "Le salarié peut-il réellement accepter ou refuser ?", "textarea"],
+      ["volunteersSought", "Des volontaires ou solutions alternatives ont-ils été recherchés ?", "textarea"]
+    ]
+  },
+  {
+    title: "4. Horaires et conséquences",
+    principle: "Mesurer concrètement le changement et ses effets.",
+    questions: [
+      ["currentSchedule", "Quels sont les horaires actuels exacts ?", "text"],
+      ["futureSchedule", "Quels seraient les horaires et le cycle exacts ?", "textarea"],
+      ["weekendsHolidaysNights", "Y aurait-il des nuits, week-ends ou jours fériés ?", "textarea"],
+      ["personalConsequences", "Quelles seraient les conséquences sur la santé, le transport ou la vie personnelle et familiale ?", "textarea"],
+      ["payConsequences", "Quelles conséquences salariales sont annoncées ?", "textarea"]
+    ]
+  },
+  {
+    title: "5. Dimension collective et preuves",
+    principle: "Rechercher les règles locales, les précédents et les éléments vérifiables.",
+    questions: [
+      ["teamImpact", "Quels seraient les effectifs et la charge de travail avant et après ?", "textarea"],
+      ["otherEmployees", "D’autres salariés sont-ils concernés ou dans une situation comparable ?", "textarea"],
+      ["cseInformation", "Le CSE ou la CSSCT ont-ils été informés ou consultés ?", "textarea"],
+      ["localPrecedents", "Existe-t-il des précédents, engagements ou débats connus dans les PV CSE ?", "textarea"],
+      ["supportingEvidence", "Quels écrits, plannings, courriels ou témoignages confirment les faits ?", "textarea"]
+    ]
+  },
+  {
+    title: "6. Position du salarié",
+    principle: "Construire une action adaptée sans présumer la conclusion juridique.",
+    questions: [
+      ["employeePosition", "Quelle est la position actuelle du salarié ?", "textarea"],
+      ["urgentRisk", "Existe-t-il une urgence, une échéance ou un risque disciplinaire ?", "textarea"],
+      ["desiredSolution", "Quelle solution souhaite prioritairement le salarié ?", "textarea"]
+    ]
+  }
+];
 
 function workspaceDefinition(workspace) {
   const definition = workspaceDefinitions[workspace];
@@ -775,8 +844,60 @@ function addField(container, id, label, type = "text", options = []) {
   container.appendChild(wrapper);
 }
 
+function renderEmployeeInterview() {
+  employeeInterview.textContent = "";
+  const enabled = currentWorkspace === "employee" && currentEmployeePath === "QUESTION_SALARIE";
+  employeeInterview.hidden = !enabled;
+  interviewSaveActions.hidden = !enabled;
+  if (!enabled) return;
+
+  for (const section of employeeInterviewSections) {
+    const fieldset = document.createElement("fieldset");
+    fieldset.className = "interview-section";
+    const legend = document.createElement("legend");
+    legend.textContent = section.title;
+    const principle = document.createElement("p");
+    principle.className = "interview-principle";
+    principle.textContent = `Principe appliqué : ${section.principle}`;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(principle);
+    for (const [id, label, type, options = []] of section.questions) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "interview-question";
+      const fieldLabel = document.createElement("label");
+      fieldLabel.htmlFor = id;
+      fieldLabel.textContent = label;
+      let field;
+      if (type === "textarea") {
+        field = document.createElement("textarea");
+        field.rows = 3;
+        field.maxLength = 2000;
+      } else if (type === "select") {
+        field = document.createElement("select");
+        for (const [value, text] of options) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = text;
+          field.appendChild(option);
+        }
+      } else {
+        field = document.createElement("input");
+        field.type = type;
+      }
+      field.id = id;
+      field.name = id;
+      field.dataset.interviewAnswer = "true";
+      wrapper.appendChild(fieldLabel);
+      wrapper.appendChild(field);
+      fieldset.appendChild(wrapper);
+    }
+    employeeInterview.appendChild(fieldset);
+  }
+}
+
 function renderContextFields(definition) {
   contextFields.textContent = "";
+  renderEmployeeInterview();
   if (definition.context === "employee") {
     addField(contextFields, "startDate", "Date de début", "date");
     addField(contextFields, "eventFrequency", "Événement", "select", [["", "Non précisé"], ["ponctuel", "Ponctuel"], ["recurrent", "Récurrent"]]);
@@ -806,6 +927,50 @@ function renderContextFields(definition) {
     addField(contextFields, "recurringGap", "Écart récurrent", "checkbox");
     addField(contextFields, "alreadyReported", "Anomalie déjà signalée", "checkbox");
   }
+}
+
+function getInterviewAnswers() {
+  const answers = {};
+  employeeInterview.querySelectorAll("[data-interview-answer]").forEach((field) => {
+    if (field.value.trim()) answers[field.name] = field.value.trim();
+  });
+  return answers;
+}
+
+function interviewQuestionLabel(id) {
+  for (const section of employeeInterviewSections) {
+    const question = section.questions.find(([questionId]) => questionId === id);
+    if (question) return question[1];
+  }
+  return id;
+}
+
+function downloadInterview() {
+  const answers = getInterviewAnswers();
+  const dossier = {
+    format: "CFDT Nexus - questionnaire salarié",
+    version: 1,
+    exported_at: new Date().toISOString(),
+    confidentiality_notice: "Document local à conserver et transmettre avec prudence.",
+    situation_type: selectedSituation || null,
+    initial_question: queryInput.value.trim() || null,
+    answers: Object.fromEntries(
+      Object.entries(answers).map(([id, answer]) => [
+        id,
+        { question: interviewQuestionLabel(id), answer }
+      ])
+    )
+  };
+  const blob = new Blob([JSON.stringify(dossier, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `questionnaire-salarie-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  interviewSaveStatus.textContent = `${Object.keys(answers).length} réponse(s) enregistrée(s) dans le fichier local.`;
 }
 
 function renderDocumentChoices(definition) {
@@ -899,6 +1064,7 @@ function buildStructuredRequest() {
   const documents = Array.from(document.querySelectorAll('input[name="availableDocument"]:checked')).map((item) => item.value);
   const responseMode = document.querySelector('input[name="responseMode"]:checked')?.value || "CASE";
   const context = getContextValues();
+  const interviewAnswers = getInterviewAnswers();
   const facts = Object.entries(context)
     .filter(([, value]) => value !== false && value !== "")
     .map(([key, value]) => `${key}: ${value === true ? "oui" : value}`);
@@ -907,6 +1073,9 @@ function buildStructuredRequest() {
     `[Type de situation: ${selectedSituation}]`,
     queryInput.value.trim(),
     facts.length ? `Repères: ${facts.join("; ")}.` : "",
+    ...Object.entries(interviewAnswers).map(
+      ([id, answer]) => `Question salarié — ${interviewQuestionLabel(id)} Réponse : ${answer}`
+    ),
     documents.length ? `Documents disponibles: ${documents.join(", ")}.` : "Documents disponibles: non précisés.",
     `Résultat souhaité: ${selectedOutcome}.`,
     `Mode de réponse: ${responseMode}.`
@@ -921,6 +1090,7 @@ function buildStructuredRequest() {
       situation_type: selectedSituation,
       user_question: queryInput.value.trim(),
       facts: context,
+      employee_interview_answers: interviewAnswers,
       available_documents: documents,
       period: context.payrollMonth || context.startDate || context.meetingDate || null,
       urgency: Boolean(context.urgentSituation),
@@ -1015,6 +1185,7 @@ document.querySelectorAll("[data-secondary-action]").forEach((button) => {
 generateReportButton.addEventListener("click", renderReport);
 copyReportButton.addEventListener("click", copyReport);
 downloadReportButton.addEventListener("click", downloadReport);
+downloadInterviewButton.addEventListener("click", downloadInterview);
 
 const pipelineLabels = {
   validate_case: "Validation du dossier",

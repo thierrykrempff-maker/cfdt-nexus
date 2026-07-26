@@ -142,6 +142,14 @@ label, legend { display: block; margin-bottom: 8px; font-weight: 750; }
 textarea, input, select { width: 100%; padding: 12px 13px; border: 1px solid #b9c2bd; border-radius: 9px; background: white; color: var(--ink); }
 textarea { resize: vertical; }
 .field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.employee-interview { display: grid; gap: 16px; margin-bottom: 24px; }
+.interview-section { display: grid; gap: 14px; margin: 0; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: #fbfaf7; }
+.interview-section legend { padding: 0 7px; color: var(--orange-dark); font-size: 17px; }
+.interview-principle { margin: 0; padding: 10px 12px; border-left: 3px solid var(--orange); background: var(--orange-soft); color: #68431f; font-size: 13px; }
+.interview-question label { line-height: 1.4; }
+.interview-question textarea { min-height: 86px; }
+.interview-save-actions { margin: 22px 0; padding: 16px; border: 1px dashed #9ca9a2; border-radius: 12px; background: #f5f8f6; }
+.interview-save-actions .field-help { margin: 10px 0 0; }
 .field-control.checkbox-control { display: flex; align-items: center; gap: 10px; min-height: 46px; }
 .field-control.checkbox-control input, .checkbox-option input, .response-mode input { width: auto; }
 .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
