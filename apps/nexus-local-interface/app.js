@@ -72,12 +72,16 @@ const editInformationButton = document.getElementById("editInformationButton");
 const addDocumentButton = document.getElementById("addDocumentButton");
 const newAnalysisButton = document.getElementById("newAnalysisButton");
 const secondaryMessage = document.getElementById("secondaryMessage");
+const disciplinaryPanel = document.getElementById("disciplinaryPanel");
+const disciplinaryContent = document.getElementById("disciplinaryContent");
+const generalFollowupGrid = document.getElementById("generalFollowupGrid");
 
 let currentPayload = null;
 let currentReportMarkdown = "";
 let currentCasePayload = null;
 let currentCaseView = "employee";
 let currentWorkspace = null;
+let currentEmployeePath = null;
 let currentWizardStep = 1;
 let selectedSituation = "";
 let selectedOutcome = "";
@@ -177,6 +181,40 @@ const workspaceDefinitions = {
   }
 };
 
+const employeePathDefinitions = {
+  QUESTION_SALARIE: {
+    label: "Questions salariés",
+    title: "Poser une question salarié",
+    description: "Obtenez une première analyse pédagogique avant de préciser les documents utiles.",
+    situations: workspaceDefinitions.employee.situations.filter(([value]) => value !== "discipline"),
+    outcomes: ["Comprendre la situation", "Connaître mes droits", "Préparer un courrier", "Identifier les preuves", "Vérifier la paie", "Autre"]
+  },
+  ASSISTANCE_ENTRETIEN_DISCIPLINAIRE: {
+    label: "Assistance entretien disciplinaire",
+    title: "Préparer un entretien disciplinaire",
+    description: "Construisez un dossier syndical approfondi avant, pendant et après l’entretien, sans présumer les faits ni l’issue.",
+    situations: [
+      ["entretien-prealable", "Entretien préalable"],
+      ["avertissement", "Avertissement"],
+      ["blame", "Blâme"],
+      ["mise-a-pied", "Mise à pied"],
+      ["licenciement", "Licenciement disciplinaire"],
+      ["faute", "Faute ou faits reprochés"],
+      ["insubordination", "Insubordination"],
+      ["incident-securite", "Incident de sécurité"],
+      ["autre-discipline", "Autre procédure disciplinaire"]
+    ],
+    outcomes: ["Préparer la défense", "Préparer l’entretien", "Contrôler la procédure", "Identifier les preuves", "Préparer la suite"]
+  }
+};
+
+function workspaceDefinition(workspace) {
+  const definition = workspaceDefinitions[workspace];
+  if (workspace !== "employee") return definition;
+  const pathDefinition = employeePathDefinitions[currentEmployeePath] || employeePathDefinitions.QUESTION_SALARIE;
+  return { ...definition, ...pathDefinition };
+}
+
 function setStatus(text, level) {
   statusPill.textContent = text;
   if (level) {
@@ -250,6 +288,53 @@ function renderIssueGroups(groups) {
     fillList(findings, group.findings || []);
     section.appendChild(findings);
     issueGroups.appendChild(section);
+  }
+}
+
+function renderDisciplinaryAssistance(dossier) {
+  disciplinaryContent.textContent = "";
+  disciplinaryPanel.hidden = !dossier;
+  generalFollowupGrid.hidden = Boolean(dossier);
+  if (!dossier) return;
+  const labels = {
+    A_qualification: "A. Qualification de la situation",
+    B_timeline: "B. Chronologie",
+    C_procedure_control: "C. Contrôle de la procédure",
+    D_facts_analysis: "D. Analyse des faits",
+    E_interview_preparation: "E. Préparation de l’entretien",
+    F_during_interview: "F. Fiche pendant l’entretien",
+    G_after_interview: "G. Après l’entretien"
+  };
+  for (const [key, title] of Object.entries(labels)) {
+    const value = dossier[key];
+    const section = document.createElement("section");
+    section.className = "disciplinary-section";
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+    section.appendChild(heading);
+    if (Array.isArray(value)) {
+      const list = document.createElement("ul");
+      value.forEach((item) => {
+        const row = document.createElement("li");
+        row.textContent = String(item);
+        list.appendChild(row);
+      });
+      section.appendChild(list);
+    } else {
+      Object.entries(value || {}).forEach(([name, item]) => {
+        const row = document.createElement("p");
+        const headingLabel = document.createElement("strong");
+        headingLabel.textContent = `${name.replaceAll("_", " ")} : `;
+        row.appendChild(headingLabel);
+        row.appendChild(document.createTextNode(
+          Array.isArray(item)
+            ? item.map((entry) => typeof entry === "object" ? entry.document || JSON.stringify(entry) : entry).join(" · ") || "À compléter"
+            : String(item ?? "À vérifier")
+        ));
+        section.appendChild(row);
+      });
+    }
+    disciplinaryContent.appendChild(section);
   }
 }
 
@@ -574,6 +659,7 @@ function renderResult(payload) {
       : orchestration.limites || answer.warnings || []
   );
   renderIssueGroups(answer.issue_groups || []);
+  renderDisciplinaryAssistance(answer.disciplinary_assistance || null);
   renderExperts(payload);
   const expertMode = document.querySelector('input[name="responseMode"]:checked')?.value === "EXPERT";
   expertPanel.hidden = !expertMode;
@@ -768,12 +854,21 @@ function validateCurrentStep() {
   return !message;
 }
 
-function openWorkspace(workspace, preset = "") {
-  const definition = workspaceDefinitions[workspace];
+function openWorkspace(workspace, preset = "", employeePath = "") {
+  if (workspace === "employee") {
+    currentEmployeePath = employeePath || currentEmployeePath || "QUESTION_SALARIE";
+  } else {
+    currentEmployeePath = null;
+  }
+  const definition = workspaceDefinition(workspace);
   if (!definition) return;
   currentWorkspace = workspace;
   currentWizardStep = 1;
-  selectedSituation = preset || "";
+  selectedSituation = preset || (
+    currentEmployeePath === "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      ? "entretien-prealable"
+      : ""
+  );
   selectedOutcome = "";
   queryInput.value = "";
   wizardWorkspaceLabel.textContent = definition.label;
@@ -800,7 +895,7 @@ function getContextValues() {
 }
 
 function buildStructuredRequest() {
-  const definition = workspaceDefinitions[currentWorkspace];
+  const definition = workspaceDefinition(currentWorkspace);
   const documents = Array.from(document.querySelectorAll('input[name="availableDocument"]:checked')).map((item) => item.value);
   const responseMode = document.querySelector('input[name="responseMode"]:checked')?.value || "CASE";
   const context = getContextValues();
@@ -819,8 +914,10 @@ function buildStructuredRequest() {
   return {
     query,
     source_limit: Number(sourceLimitInput.value || 6),
+    employee_path: currentEmployeePath,
     portal_context: {
       workspace: currentWorkspace,
+      employee_path: currentEmployeePath,
       situation_type: selectedSituation,
       user_question: queryInput.value.trim(),
       facts: context,
@@ -867,7 +964,7 @@ form.addEventListener("submit", async (event) => {
 });
 
 document.querySelectorAll("[data-open-workspace]").forEach((button) => {
-  button.addEventListener("click", () => openWorkspace(button.dataset.openWorkspace, button.dataset.preset || ""));
+  button.addEventListener("click", () => openWorkspace(button.dataset.openWorkspace, button.dataset.preset || "", button.dataset.employeePath || ""));
 });
 document.querySelectorAll("[data-return-home]").forEach((button) => {
   button.addEventListener("click", () => showOnly("home"));
@@ -889,7 +986,7 @@ addDocumentButton.addEventListener("click", () => {
   showOnly("wizard");
 });
 newAnalysisButton.addEventListener("click", () => {
-  if (currentWorkspace) openWorkspace(currentWorkspace);
+  if (currentWorkspace) openWorkspace(currentWorkspace, "", currentEmployeePath || "");
   else showOnly("home");
 });
 settingsButton.addEventListener("click", () => {

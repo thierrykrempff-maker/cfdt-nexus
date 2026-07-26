@@ -68,7 +68,11 @@ def router_environment() -> dict[str, str]:
     return env
 
 
-def run_router(query: str, source_limit: int = 6) -> dict[str, Any]:
+def run_router(
+    query: str,
+    source_limit: int = 6,
+    employee_path: str | None = None,
+) -> dict[str, Any]:
     command = [
         sys.executable,
         "-B",
@@ -81,6 +85,8 @@ def run_router(query: str, source_limit: int = 6) -> dict[str, Any]:
         "--format",
         "json",
     ]
+    if employee_path:
+        command.extend(["--employee-path", employee_path])
     completed = subprocess.run(
         command,
         cwd=str(ROOT),
@@ -97,13 +103,21 @@ def run_router(query: str, source_limit: int = 6) -> dict[str, Any]:
     return json.loads(completed.stdout)
 
 
-def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
+def analyze_question(
+    query: str,
+    source_limit: int = 6,
+    employee_path: str | None = None,
+) -> dict[str, Any]:
     """Build the complete internal payload used by Runtime integrations."""
 
     cleaned = (query or "").strip()
     if not cleaned:
         raise ValueError("Question vide.")
-    answer = run_router(cleaned, source_limit)
+    answer = (
+        run_router(cleaned, source_limit, employee_path)
+        if employee_path
+        else run_router(cleaned, source_limit)
+    )
     expert_payload = orchestrator.orchestrate(answer)
     payload = {
         "ok": True,
@@ -202,10 +216,19 @@ def analyze_question(query: str, source_limit: int = 6) -> dict[str, Any]:
     return payload
 
 
-def analyze_public_question(query: str, source_limit: int = 6) -> dict[str, Any]:
+def analyze_public_question(
+    query: str,
+    source_limit: int = 6,
+    employee_path: str | None = None,
+) -> dict[str, Any]:
     """Return the user-facing payload without internal identifiers or paths."""
 
-    return sanitize_public_payload(analyze_question(query, source_limit))
+    result = (
+        analyze_question(query, source_limit, employee_path)
+        if employee_path
+        else analyze_question(query, source_limit)
+    )
+    return sanitize_public_payload(result)
 
 
 class NexusHandler(SimpleHTTPRequestHandler):
@@ -266,7 +289,19 @@ class NexusHandler(SimpleHTTPRequestHandler):
             body = self.rfile.read(length).decode("utf-8")
             payload = json.loads(body or "{}")
             source_limit = int(payload.get("source_limit") or 6)
-            result = analyze_public_question(str(payload.get("query") or ""), source_limit)
+            portal_context = (
+                payload.get("portal_context")
+                if isinstance(payload.get("portal_context"), dict)
+                else {}
+            )
+            employee_path = payload.get("employee_path") or portal_context.get(
+                "employee_path"
+            )
+            result = analyze_public_question(
+                str(payload.get("query") or ""),
+                source_limit,
+                str(employee_path) if employee_path else None,
+            )
             self.send_json(HTTPStatus.OK, result)
         except ValueError as exc:
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})

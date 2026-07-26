@@ -86,17 +86,25 @@
               <div class="card-icon" aria-hidden="true">S</div>
               <p class="card-kicker">Accompagnement individuel</p>
               <h3>Questions salariés</h3>
-              <p>Analyser une situation individuelle, préparer un accompagnement ou défendre les droits d’un salarié.</p>
+              <p>Choisissez une première réponse pédagogique ou un dossier syndical approfondi.</p>
               <ul>
-                <li>Changement de poste ou d’horaires</li>
-                <li>Sanction ou entretien disciplinaire</li>
-                <li>Temps de travail, santé ou égalité</li>
+                <li>Droits, contrat, horaires, paie et congés</li>
+                <li>Conditions de travail et questions individuelles</li>
+                <li>Préparation dédiée des procédures disciplinaires</li>
               </ul>
-              <button class="card-button" type="button" data-open-workspace="employee">
-                Analyser une situation salarié
-              </button>
+              <div class="employee-paths" aria-label="Choisir un parcours salarié">
+                <button class="employee-path-button" type="button" data-open-workspace="employee" data-employee-path="QUESTION_SALARIE">
+                  <strong>Poser une question salarié</strong>
+                  <span>Obtenez une première analyse sur vos droits, votre contrat, vos horaires, votre paie, vos congés ou vos conditions de travail.</span>
+                </button>
+                <button class="employee-path-button deep-path" type="button" data-open-workspace="employee" data-employee-path="ASSISTANCE_ENTRETIEN_DISCIPLINAIRE">
+                  <strong>Préparer un entretien disciplinaire</strong>
+                  <span>Analysez une convocation, préparez la défense du salarié et construisez une stratégie avant, pendant et après l’entretien.</span>
+                  <small>Outil de préparation syndicale approfondie</small>
+                </button>
+              </div>
               <div class="quick-links" aria-label="Accès rapides Questions salariés">
-                <button type="button" data-open-workspace="employee" data-preset="discipline">Sanction</button>
+                <button type="button" data-open-workspace="employee" data-preset="discipline" data-employee-path="ASSISTANCE_ENTRETIEN_DISCIPLINAIRE">Sanction</button>
                 <button type="button" data-open-workspace="employee" data-preset="maladie">Maladie</button>
                 <button type="button" data-open-workspace="employee" data-preset="horaires">Horaires</button>
               </div>
@@ -304,7 +312,13 @@
               <p id="workingPosition"></p>
             </section>
 
-            <div class="grid-two">
+            <section class="panel disciplinary-panel" id="disciplinaryPanel" hidden>
+              <p class="eyebrow">Préparation syndicale approfondie</p>
+              <h2>Dossier entretien disciplinaire</h2>
+              <div id="disciplinaryContent"></div>
+            </section>
+
+            <div class="grid-two" id="generalFollowupGrid">
               <section class="panel">
                 <h2>Ce qui manque</h2>
                 <ul id="documentsList"></ul>
