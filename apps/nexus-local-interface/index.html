@@ -225,8 +225,14 @@
             </section>
             <section class="wizard-step" data-step="3" hidden aria-labelledby="stepThreeTitle">
               <p class="step-count">Étape 3 sur 5</p>
-              <h2 id="stepThreeTitle">Ajoutez quelques repères</h2>
+              <h2 id="stepThreeTitle">Interrogez le salarié</h2>
+              <p class="field-help" id="employeeInterviewHelp">Posez les questions dans l’ordre. Distinguez les faits certains, les propos rapportés et les points encore inconnus.</p>
+              <div class="employee-interview" id="employeeInterview" aria-describedby="employeeInterviewHelp" hidden></div>
               <div class="field-grid" id="contextFields"></div>
+              <div class="interview-save-actions" id="interviewSaveActions" hidden>
+                <button class="secondary-button" type="button" id="downloadInterviewButton">Enregistrer les réponses sur ce poste</button>
+                <p class="field-help" id="interviewSaveStatus" role="status">Enregistrement volontaire dans un fichier JSON. Aucune sauvegarde automatique.</p>
+              </div>
             </section>
             <section class="wizard-step" data-step="4" hidden aria-labelledby="stepFourTitle">
               <p class="step-count">Étape 4 sur 5</p>
