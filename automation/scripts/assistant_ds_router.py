@@ -2052,7 +2052,17 @@ def forced_day_to_shift_context(query: str) -> bool:
         )
     )
     day_to_shift = (
-        any(marker in text for marker in ("travail de jour", "rythme de jour", "equipe de jour"))
+        any(
+            marker in text
+            for marker in (
+                "travail de jour",
+                "travaillant de jour",
+                "travaille de jour",
+                "de jour au laboratoire",
+                "rythme de jour",
+                "equipe de jour",
+            )
+        )
         and any(
             marker in text
             for marker in (
@@ -2848,11 +2858,13 @@ def default_questions(route: dict[str, Any]) -> list[str]:
             [
                 "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
                 "Le changement annoncé est-il temporaire ou permanent ?",
-                "Quel est le cycle exact : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+                "Quels sont les horaires exacts de début et de fin de chaque poste ?",
+                "Quel est le cycle exact et son type : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
                 "Quelle est la date de début et quel délai de prévenance est annoncé ?",
-                "Des volontaires ont-ils été recherchés et pourquoi cette salariée a-t-elle été choisie ?",
+                "Quel motif précis justifie le choix de cette salariée et des volontaires ont-ils été recherchés ?",
                 "Quel accord INEOS encadre ce changement et ses contreparties ?",
-                "L'effectif du laboratoire ou de l'équipe de jour sera-t-il durablement réduit ?",
+                "Quels sont les effectifs du laboratoire avant et après le changement ?",
+                "Quel sera l'impact sur le service, la charge de travail et la continuité des analyses ?",
                 "Le CSE a-t-il été informé ou consulté sur la réorganisation et les effectifs ?",
                 "Quelles contraintes personnelles, familiales, de transport ou de santé la salariée souhaite-t-elle signaler, sans diagnostic médical ?",
             ]

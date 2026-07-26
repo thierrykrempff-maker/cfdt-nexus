@@ -16,9 +16,10 @@ _CNIL_DOMAINS=("cnil.fr","linc.cnil.fr","data.gouv.fr","legifrance.gouv.fr")
 SOURCES=tuple(SourceDefinition(source_id=sid,display_name=name,publisher=publisher,
     source_type="targeted_pages" if sid=="cnil" else "existing_internal_connector" if sid in _EXISTING_DOMAINS else "unknown",
     official_domains=_CNIL_DOMAINS if sid=="cnil" else _EXISTING_DOMAINS.get(sid,()),
-    allowed_access_modes=("targeted_pages","open_data_catalog","legifrance_reference") if sid=="cnil" else (),
-    authority_level="official_guidance" if sid=="cnil" else "unknown", domain_tags=("personal_data","work",) if sid=="cnil" else (),
-    kill_switch_key=sid.upper(), connector_status="architecture_only", enabled=False) for sid,name,publisher in _NAMES) + (
+    allowed_access_modes=("targeted_pages","open_data_catalog","legifrance_reference") if sid=="cnil" else ("official_api",) if sid in {"legifrance","judilibre"} else (),
+    authority_level="official_guidance" if sid=="cnil" else "primary_law" if sid=="legifrance" else "official_case_law" if sid=="judilibre" else "unknown",
+    domain_tags=("personal_data","work",) if sid=="cnil" else ("law","collective_agreements") if sid=="legifrance" else ("case_law","employment_law") if sid=="judilibre" else (),
+    kill_switch_key=sid.upper(), connector_status="implemented" if sid in {"legifrance","judilibre"} else "architecture_only", enabled=False) for sid,name,publisher in _NAMES) + (
  SourceDefinition(source_id="alsace_moselle_local_law",display_name="Droit local d'Alsace-Moselle — textes",
     publisher="République française",source_type="existing_internal_connector",official_domains=("legifrance.gouv.fr",),
     authority_level="primary_law",domain_tags=("ALSACE_MOSELLE_LOCAL_LAW",),kill_switch_key="ALSACE_MOSELLE_LOCAL_LAW",enabled=False,connector_status="architecture_only"),
