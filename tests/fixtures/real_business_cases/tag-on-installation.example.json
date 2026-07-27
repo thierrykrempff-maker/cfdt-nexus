@@ -1,0 +1,273 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-03-TAG_INSTALLATION",
+  "title": "Tag grossier sur une installation dans un contexte de souffrance au travail",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "limitations": [
+      "La fixture permet une analyse initiale mais pas une conclusion définitive sur la sanction ou le temps de travail.",
+      "Les documents, dates, durées et termes exacts de la décision patronale restent à obtenir."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+      "Le salarié indique que l'inscription ne visait personne en particulier.",
+      "Il relie son geste à une journée difficile et à une ambiance de travail dégradée.",
+      "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis."
+    ],
+    "facts_recognized": [
+      "Le salarié reconnaît être l'auteur de l'inscription.",
+      "Le salarié reconnaît le caractère grossier des termes rapportés."
+    ],
+    "facts_contested": [
+      "Le salarié conteste avoir visé une personne déterminée.",
+      "Aucune volonté de menace ou de harcèlement n'est reconnue."
+    ],
+    "missing_information": [
+      {
+        "item": "La phrase complète, son support exact et son emplacement",
+        "importance": "high",
+        "reason": "Le contenu, le support et le lieu influencent la qualification, la visibilité et les conséquences."
+      },
+      {
+        "item": "Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur",
+        "importance": "high",
+        "reason": "Il faut vérifier si quelqu'un pouvait raisonnablement se sentir visé et mesurer la diffusion."
+      },
+      {
+        "item": "Les preuves détenues par l'employeur et la chronologie exacte",
+        "importance": "high",
+        "reason": "La reconnaissance ne dispense pas de vérifier le grief précis, la preuve et la procédure."
+      },
+      {
+        "item": "L'existence d'une dégradation durable, le nettoyage nécessaire et son coût",
+        "importance": "high",
+        "reason": "Une inscription effaçable et un dommage matériel durable ne présentent pas les mêmes risques."
+      },
+      {
+        "item": "Le caractère isolé ou répété et les éventuels antécédents disciplinaires",
+        "importance": "high",
+        "reason": "Ces éléments influencent directement la proportionnalité d'une mesure."
+      },
+      {
+        "item": "La mesure envisagée, les actes déjà notifiés et leurs dates",
+        "importance": "high",
+        "reason": "Il faut distinguer demande d'explication, recadrage et sanction et contrôler la chronologie."
+      },
+      {
+        "item": "Les faits précis décrivant l'ambiance dégradée ou la souffrance et les signalements antérieurs",
+        "importance": "high",
+        "reason": "Le contexte doit être documenté sans conclure automatiquement à un harcèlement ou à un manquement de l'employeur."
+      },
+      {
+        "item": "Toute demande de nettoyage : auteur de l'ordre, horaire, durée, badgeage et rémunération",
+        "importance": "high",
+        "reason": "Ces données sont nécessaires pour déterminer si une tâche a été accomplie hors temps enregistré."
+      }
+    ]
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Comportement injurieux, grossier ou inapproprié susceptible de relever de la discipline",
+      "Qualification et proportionnalité d'une mesure disciplinaire",
+      "Preuve du grief et respect des droits de la défense",
+      "Respect des locaux ou du matériel, seulement si le support et les conséquences sont établis",
+      "Santé au travail et risques psychosociaux, sans qualification automatique de harcèlement",
+      "Temps de travail et rémunération d'une tâche imposée hors horaire, si les faits le confirment"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quelle est la phrase complète, où et sur quel support a-t-elle été écrite ?",
+        "why_it_matters": "Délimiter exactement le grief et distinguer propos grossiers, personne visée et éventuel dommage."
+      },
+      {
+        "priority": 2,
+        "question": "Qui pouvait voir l'inscription et la direction désigne-t-elle une personne qui aurait été visée ?",
+        "why_it_matters": "Évaluer la diffusion et le risque d'une injure dirigée sans reprendre l'hypothèse patronale comme un fait."
+      },
+      {
+        "priority": 3,
+        "question": "Quelles preuves et quels documents la direction invoque-t-elle, et quelle mesure précise envisage-t-elle ?",
+        "why_it_matters": "Contrôler l'attribution, le grief notifié, la procédure et la proportionnalité."
+      },
+      {
+        "priority": 4,
+        "question": "L'inscription était-elle effaçable ou a-t-elle causé une dégradation durable et un coût ?",
+        "why_it_matters": "Séparer un nettoyage d'un dommage matériel."
+      },
+      {
+        "priority": 5,
+        "question": "S'agit-il d'un fait isolé et existe-t-il des antécédents pour des faits comparables ?",
+        "why_it_matters": "Évaluer les facteurs aggravants ou atténuants."
+      },
+      {
+        "priority": 6,
+        "question": "Quels faits précis caractérisent la journée difficile, l'ambiance dégradée ou la souffrance alléguée, et avaient-ils été signalés ?",
+        "why_it_matters": "Documenter le contexte sans l'utiliser comme excuse automatique ni inventer une qualification."
+      },
+      {
+        "priority": 7,
+        "question": "Un nettoyage a-t-il été ordonné, par qui, quand, pendant combien de temps et avec quel enregistrement horaire ?",
+        "why_it_matters": "Identifier séparément un éventuel problème de temps de travail."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Identifier les obligations de comportement, de respect des personnes et des installations ainsi que l'échelle des mesures.",
+          "query_or_document": "Règlement intérieur INEOS en vigueur et annexes disciplinaires",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Vérifier les règles locales relatives à la santé au travail, aux RPS et aux signalements.",
+          "query_or_document": "Accords, plans d'action ou procédures INEOS concernant QVCT, RPS, santé et alertes",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Contrôler la tâche de nettoyage et son enregistrement.",
+          "query_or_document": "Règles locales de temps de travail, badgeage, heures accomplies à la demande de l'employeur et relevés correspondants",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Établir le grief et la chronologie sans supposer la nature juridique des actes.",
+          "query_or_document": "Convocation, demande d'explication, lettre remise au salarié, photographie, témoignages et relevés horaires",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Retrouver les textes en vigueur sur la procédure et la proportionnalité disciplinaires.",
+          "query_or_document": "Code du travail : sanction disciplinaire, procédure, délai, faits déjà sanctionnés et règlement intérieur",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les textes applicables à la protection de la santé et aux risques psychosociaux sans préjuger de la qualification.",
+          "query_or_document": "Code du travail : obligation de sécurité, santé mentale, prévention et alerte",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les textes applicables à une tâche imposée hors horaire.",
+          "query_or_document": "Code du travail : temps de travail effectif, preuve des heures et rémunération",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Vérifier si la convention collective IDCC 44 contient une garantie directement pertinente.",
+          "query_or_document": "Convention collective nationale des industries chimiques IDCC 44 : discipline, temps de travail et santé",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Trouver des décisions factuellement comparables sur une inscription grossière reconnue.",
+          "query_or_document": "salarié inscription injurieuse graffiti entreprise propos grossiers fait isolé sanction proportionnalité",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer l'importance d'une personne visée, de la diffusion, des antécédents et du dommage.",
+          "query_or_document": "injure non adressée directement salarié personne visée diffusion antécédents dégradation",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Trouver des décisions sur une tâche demandée hors horaire uniquement si le nettoyage est confirmé.",
+          "query_or_document": "travail demandé employeur hors horaire nettoyage preuve heures supplémentaires",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Rechercher des alertes ou débats antérieurs sur l'ambiance de travail du secteur concerné.",
+          "query_or_document": "PV CSE et CSSCT : ambiance dégradée, souffrance au travail, RPS, charge de travail et alertes",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Rechercher des informations collectives sur les pratiques disciplinaires sans exposer de données individuelles.",
+          "query_or_document": "PV CSE : bilan disciplinaire, règlement intérieur et pratiques de recadrage",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Rechercher d'éventuels débats sur du travail demandé hors badgeage.",
+          "query_or_document": "PV CSE : badgeage, temps de travail non enregistré, tâches avant ou après poste",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Transformer le tag en erreur de manipulation technique.",
+      "Chercher un défaut de formation, d'habilitation, de mode opératoire ou de consigne de production sans fait technique.",
+      "Présumer qu'une personne déterminée était visée.",
+      "Présumer une menace, une violence ou un harcèlement.",
+      "Présumer une dégradation matérielle durable à partir de la seule existence d'une inscription.",
+      "Affirmer qu'aucune faute n'est possible parce qu'aucune personne n'est nommée.",
+      "Conseiller de nier les faits malgré leur reconnaissance.",
+      "Présenter l'ambiance dégradée comme une justification automatique du geste.",
+      "Qualifier une lettre de recadrage de sanction sans examiner son contenu et ses effets.",
+      "Affirmer l'existence d'heures non payées sans vérifier l'ordre, la durée et l'enregistrement du nettoyage."
+    ],
+    "employee_arguments": [
+      "Reconnaissance mesurée d'un geste déplacé et expression de regrets, si cette position est confirmée.",
+      "Absence de personne intentionnellement visée et absence de menace, sous réserve des faits établis.",
+      "Caractère isolé, absence d'antécédent et conséquences matérielles limitées, si les vérifications le confirment.",
+      "Nécessité de prendre en compte le contexte de travail documenté sans excuser automatiquement le geste.",
+      "Contrôle de la proportionnalité, de la procédure et de l'interdiction d'une double sanction pour les mêmes faits.",
+      "Paiement ou régularisation du temps de nettoyage s'il a été imposé et accompli hors temps enregistré."
+    ],
+    "possible_employer_arguments": [
+      "Les propos sont incompatibles avec les obligations de respect et avec le règlement intérieur.",
+      "Une inscription sur une installation de l'entreprise peut affecter les personnes, l'image, les locaux ou le matériel même sans destinataire nommé.",
+      "La visibilité, la persistance ou un coût de nettoyage peuvent aggraver les faits.",
+      "Le contexte de tension n'autorise pas un comportement grossier.",
+      "Une mesure peut être justifiée par la prévention d'une répétition et le maintien d'un cadre collectif.",
+      "Le nettoyage aurait réparé immédiatement les conséquences du geste, sous réserve que ses conditions aient été régulières."
+    ],
+    "risks": [
+      "Sous-estimation du risque disciplinaire parce qu'aucune personne n'est nommée.",
+      "Surqualification en harcèlement, menace ou dégradation sans éléments suffisants.",
+      "Double sanction si plusieurs actes patronaux de nature disciplinaire portent sur les mêmes faits.",
+      "Confusion entre contexte atténuant et justification du comportement.",
+      "Absence de preuve ou de traçabilité d'un temps de nettoyage réalisé hors horaire.",
+      "Utilisation de sources disciplinaires lexicalement proches mais factuellement non comparables.",
+      "Divulgation inutile de données individuelles dans une recherche de PV CSE."
+    ],
+    "possible_outcomes": [
+      "Absence de mesure après explications ou rappel informel.",
+      "Recadrage non disciplinaire, sous réserve du contenu et des effets réels de l'écrit.",
+      "Avertissement ou autre sanction proportionnée.",
+      "Sanction plus lourde si une personne visée, une répétition, des antécédents ou une dégradation sont établis.",
+      "Contestation d'une sanction pour vice de procédure, double sanction, défaut de preuve ou disproportion.",
+      "Effacement ou nettoyage de l'inscription dans des conditions régulières.",
+      "Régularisation d'un temps de travail si une tâche a été imposée hors temps enregistré.",
+      "Traitement séparé d'un signalement de souffrance ou de risques psychosociaux."
+    ],
+    "response_quality_criteria": [
+      "Restituer le tag grossier comme fait central et non comme erreur technique.",
+      "Séparer strictement faits reconnus, faits contestés et informations manquantes.",
+      "Ne conclure ni à l'absence de faute ni à une faute grave sans éléments déterminants.",
+      "Comparer chaque règle ou décision retenue aux faits du dossier.",
+      "Indiquer pour chaque famille de sources ce qui est disponible, indisponible ou encore à rechercher.",
+      "Adapter la stratégie à la reconnaissance du geste sans conseiller un déni artificiel.",
+      "Présenter loyalement les arguments possibles de l'employeur.",
+      "Traiter séparément le volet disciplinaire, la souffrance alléguée et l'éventuel temps de nettoyage.",
+      "Ne citer aucune jurisprudence ou clause non réellement retrouvée.",
+      "Proposer des questions, documents et actions immédiatement utilisables."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "partially_known",
+      "facts": [
+        "Une lettre présentée comme une lettre de recadrage fait partie de l'issue rapportée.",
+        "Un nettoyage hors temps de travail fait partie de l'issue rapportée.",
+        "La teneur exacte de la lettre, la personne ayant ordonné le nettoyage, sa durée, son enregistrement et sa rémunération ne sont pas connus."
+      ],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

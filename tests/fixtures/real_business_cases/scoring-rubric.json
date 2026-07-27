@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "total_points": 100,
+  "passing_score": 75,
+  "dimensions": [
+    {
+      "id": "factual_understanding",
+      "label": "Compréhension des faits",
+      "max_points": 20,
+      "minimum_to_pass": 14,
+      "anchors": {
+        "0": "Le fait principal est inversé, remplacé ou transformé en un autre dossier.",
+        "10": "Le fait principal est compris mais des distinctions déterminantes sont omises.",
+        "14": "Les faits fournis, reconnus, contestés et inconnus sont correctement séparés.",
+        "20": "La restitution est fidèle, hiérarchisée et ne présente aucune hypothèse comme acquise."
+      }
+    },
+    {
+      "id": "question_relevance",
+      "label": "Pertinence des questions",
+      "max_points": 10,
+      "minimum_to_pass": 5,
+      "anchors": {
+        "0": "Questions génériques ou hors sujet.",
+        "5": "Quelques questions déterminantes sont posées.",
+        "10": "Les questions sont prioritaires, factuelles et susceptibles de changer l'analyse ou la stratégie."
+      }
+    },
+    {
+      "id": "source_relevance",
+      "label": "Pertinence des sources",
+      "max_points": 15,
+      "minimum_to_pass": 7,
+      "anchors": {
+        "0": "Sources absentes, inventées ou seulement lexicalement proches.",
+        "7": "Les niveaux de sources pertinents sont recherchés avec disponibilité explicite.",
+        "15": "Chaque source est factuellement pertinente, traçable et ses limites sont indiquées."
+      }
+    },
+    {
+      "id": "rule_fact_comparison",
+      "label": "Comparaison texte/faits",
+      "max_points": 15,
+      "minimum_to_pass": 7,
+      "anchors": {
+        "0": "Les textes sont récités sans comparaison avec le dossier.",
+        "7": "Au moins les règles principales sont rapprochées des faits connus et manquants.",
+        "15": "Chaque règle retenue est comparée aux faits, avec conditions d'application, écarts et vérifications restantes."
+      }
+    },
+    {
+      "id": "strategy_realism",
+      "label": "Réalisme de la stratégie",
+      "max_points": 15,
+      "minimum_to_pass": 7,
+      "anchors": {
+        "0": "Stratégie abstraite, impossible ou incompatible avec la position du salarié.",
+        "7": "Une ligne de défense utilisable est proposée avec prudence.",
+        "15": "La stratégie est conditionnelle, concrète, proportionnée et adaptée aux preuves et objectifs."
+      }
+    },
+    {
+      "id": "adversarial_analysis",
+      "label": "Analyse contradictoire",
+      "max_points": 10,
+      "minimum_to_pass": 5,
+      "anchors": {
+        "0": "Seule la thèse du salarié est présentée.",
+        "5": "Les principaux arguments de l'employeur sont identifiés.",
+        "10": "Forces, faiblesses, réponses adverses et conséquences possibles sont mises en regard."
+      }
+    },
+    {
+      "id": "no_invention",
+      "label": "Absence d'invention",
+      "max_points": 10,
+      "minimum_to_pass": 8,
+      "anchors": {
+        "0": "Référence, fait, preuve ou issue inventé.",
+        "8": "Aucune invention matérielle ; les incertitudes sont signalées.",
+        "10": "Sources disponibles, indisponibles et points à vérifier sont distingués systématiquement."
+      }
+    },
+    {
+      "id": "practical_usefulness",
+      "label": "Utilité pratique",
+      "max_points": 5,
+      "minimum_to_pass": 2,
+      "anchors": {
+        "0": "Aucune action concrète utilisable.",
+        "2": "Quelques prochaines étapes sont proposées.",
+        "5": "La réponse permet de préparer immédiatement questions, pièces, entretien et suivi."
+      }
+    }
+  ],
+  "hard_failures": [
+    {
+      "code": "FACTUAL_MISUNDERSTANDING",
+      "rule": "Échec si factual_understanding est inférieur à 14/20, indépendamment du total."
+    },
+    {
+      "code": "PRIMARY_FACT_CONTRADICTION",
+      "rule": "Échec si la réponse contredit, inverse ou remplace le fait principal."
+    },
+    {
+      "code": "KNOWN_OUTCOME_LEAKAGE",
+      "rule": "Échec si l'issue connue apparaît dans la réponse alors qu'elle ne figurait pas dans case_input."
+    },
+    {
+      "code": "INVENTED_AUTHORITY_OR_EVIDENCE",
+      "rule": "Échec si une jurisprudence, une référence, une clause, une preuve ou un fait manquant est inventé."
+    },
+    {
+      "code": "FORBIDDEN_FALSE_LEAD",
+      "rule": "Échec si une fausse piste interdite devient un axe de l'analyse sans fait nouveau qui la justifie."
+    },
+    {
+      "code": "INCOMPLETE_CASE_OVERCLAIM",
+      "rule": "Échec si un cas marqué incomplet reçoit une conclusion définitive ou une fin inventée."
+    },
+    {
+      "code": "TEN_PERCENT_RULE_NOT_CLARIFIED",
+      "rule": "Pour le cas 6, échec si Nexus analyse le fond sans demander d'abord ce que désigne la « règle des 10 % »."
+    }
+  ],
+  "decision": {
+    "pass": "Aucun échec éliminatoire, total supérieur ou égal à 75 et minimum de chaque dimension atteint.",
+    "fail": "Au moins un échec éliminatoire, total inférieur à 75 ou minimum d'une dimension non atteint.",
+    "source_override_forbidden": "Un bon score de sources ne compense jamais une compréhension factuelle insuffisante."
+  },
+  "known_outcome_protocol": {
+    "visible_during_response_generation": false,
+    "opened_after_core_scoring": true,
+    "may_add_points": false,
+    "purpose": "Vérifier seulement que l'issue connue appartient aux options réalistes envisagées, sans exiger sa prédiction."
+  }
+}

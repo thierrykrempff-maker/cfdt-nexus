@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfdt-nexus.local/schemas/real-business-case-v1.schema.json",
+  "title": "Fixture de cas métier réel Nexus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "title",
+    "completeness",
+    "privacy",
+    "case_input",
+    "evaluation_expectations",
+    "evaluation_only"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^REAL-[0-9]{2}-[A-Z0-9_-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "limitations"],
+      "properties": {
+        "status": {
+          "enum": ["complete_for_initial_analysis", "incomplete"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "anonymized", "direct_identifiers"],
+      "properties": {
+        "classification": {
+          "const": "restricted_validation_fixture"
+        },
+        "anonymized": {
+          "const": true
+        },
+        "direct_identifiers": {
+          "type": "array",
+          "maxItems": 0
+        }
+      }
+    },
+    "case_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "facts_provided",
+        "facts_recognized",
+        "facts_contested",
+        "missing_information"
+      ],
+      "properties": {
+        "facts_provided": {
+          "$ref": "#/$defs/stringList"
+        },
+        "facts_recognized": {
+          "$ref": "#/$defs/stringList"
+        },
+        "facts_contested": {
+          "$ref": "#/$defs/stringList"
+        },
+        "missing_information": {
+          "$ref": "#/$defs/missingInformation"
+        }
+      }
+    },
+    "evaluation_expectations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "possible_legal_categories",
+        "priority_questions",
+        "expected_searches",
+        "forbidden_false_leads",
+        "employee_arguments",
+        "possible_employer_arguments",
+        "risks",
+        "possible_outcomes",
+        "response_quality_criteria"
+      ],
+      "properties": {
+        "possible_legal_categories": {
+          "$ref": "#/$defs/stringList"
+        },
+        "priority_questions": {
+          "$ref": "#/$defs/prioritizedItems"
+        },
+        "expected_searches": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["local_sources", "legifrance", "judilibre", "cse_minutes"],
+          "properties": {
+            "local_sources": {
+              "$ref": "#/$defs/searchItems"
+            },
+            "legifrance": {
+              "$ref": "#/$defs/searchItems"
+            },
+            "judilibre": {
+              "$ref": "#/$defs/searchItems"
+            },
+            "cse_minutes": {
+              "$ref": "#/$defs/searchItems"
+            }
+          }
+        },
+        "forbidden_false_leads": {
+          "$ref": "#/$defs/stringList"
+        },
+        "employee_arguments": {
+          "$ref": "#/$defs/stringList"
+        },
+        "possible_employer_arguments": {
+          "$ref": "#/$defs/stringList"
+        },
+        "risks": {
+          "$ref": "#/$defs/stringList"
+        },
+        "possible_outcomes": {
+          "$ref": "#/$defs/stringList"
+        },
+        "response_quality_criteria": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "evaluation_only": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["never_include_in_initial_prompt", "known_outcome"],
+      "properties": {
+        "never_include_in_initial_prompt": {
+          "const": true
+        },
+        "known_outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "facts", "evaluation_use_only"],
+          "properties": {
+            "status": {
+              "enum": ["known", "partially_known", "unknown"]
+            },
+            "facts": {
+              "$ref": "#/$defs/stringList"
+            },
+            "evaluation_use_only": {
+              "const": "realism_check_after_response"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stringList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "missingInformation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item", "importance", "reason"],
+        "properties": {
+          "item": {
+            "type": "string",
+            "minLength": 1
+          },
+          "importance": {
+            "enum": ["blocking", "high", "medium", "low"]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "prioritizedItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["priority", "question", "why_it_matters"],
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "why_it_matters": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "searchItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["objective", "query_or_document", "availability"],
+        "properties": {
+          "objective": {
+            "type": "string",
+            "minLength": 1
+          },
+          "query_or_document": {
+            "type": "string",
+            "minLength": 1
+          },
+          "availability": {
+            "enum": ["available", "unavailable", "unknown"]
+          }
+        }
+      }
+    }
+  }
+}
