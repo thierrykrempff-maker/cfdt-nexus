@@ -1,0 +1,272 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+  "title": "Passage non volontaire d'horaires de jour à des horaires postés au laboratoire",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Les horaires exacts, le cycle, la durée et les documents contractuels ne sont pas fournis.",
+      "Aucun poste de nuit n'est précisé et aucune issue définitive n'est connue."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Une salariée travaille en horaire de jour au laboratoire.",
+      "La direction veut la faire passer en horaires postés.",
+      "Les postes mentionnés sont le matin et l'après-midi.",
+      "Les week-ends et jours fériés sont concernés.",
+      "Aucun poste de nuit n'est précisé.",
+      "La salariée n'est pas volontaire.",
+      "Elle est partie en pleurs.",
+      "Aucune suite définitive n'est encore connue."
+    ],
+    "facts_recognized": [
+      "La salariée confirme travailler actuellement en horaire de jour.",
+      "La salariée indique ne pas être volontaire pour le passage en horaires postés."
+    ],
+    "facts_contested": [
+      "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+      "La salariée n'a pas accepté le changement du seul fait de la présentation du projet."
+    ],
+    "facts_alleged": [
+      "La direction présente le passage en horaires postés comme nécessaire.",
+      "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+    ],
+    "missing_information": [
+      {
+        "item": "Heures exactes de début et de fin de chaque poste",
+        "importance": "blocking",
+        "reason": "Il est interdit de supposer un travail de nuit et les contraintes dépendent des horaires exacts."
+      },
+      {
+        "item": "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+        "importance": "blocking",
+        "reason": "Le changement doit être comparé concrètement à l'organisation actuelle."
+      },
+      {
+        "item": "Caractère temporaire ou permanent et date de mise en œuvre",
+        "importance": "high",
+        "reason": "La durée et le préavis influencent la qualification et la stratégie."
+      },
+      {
+        "item": "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+        "importance": "blocking",
+        "reason": "Il faut distinguer changement des conditions de travail et modification contractuelle."
+      },
+      {
+        "item": "Accords INEOS applicables au laboratoire, au travail posté et aux horaires",
+        "importance": "high",
+        "reason": "Les règles locales peuvent prévoir champ, volontariat, cycle, prévenance ou contreparties."
+      },
+      {
+        "item": "Motifs et critères ayant conduit au choix de cette salariée",
+        "importance": "high",
+        "reason": "Vérifier objectivité, égalité de traitement et solutions alternatives."
+      },
+      {
+        "item": "Recherche de volontaires et autres possibilités de remplacement",
+        "importance": "high",
+        "reason": "Évaluer la nécessité et la proportionnalité de la désignation."
+      },
+      {
+        "item": "Effectifs du laboratoire avant et après, notamment en journée",
+        "importance": "high",
+        "reason": "Identifier une réorganisation collective et son impact sur la charge."
+      },
+      {
+        "item": "Information ou consultation du CSE et documents transmis",
+        "importance": "high",
+        "reason": "Le projet peut affecter organisation, effectifs et conditions de travail."
+      },
+      {
+        "item": "Contraintes personnelles, familiales, transport et santé",
+        "importance": "high",
+        "reason": "Ces conséquences doivent être documentées pour rechercher des alternatives et mesures de prévention."
+      }
+    ]
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Modification du contrat ou changement des conditions de travail",
+      "Organisation et aménagement du temps de travail",
+      "Travail posté sans présomption de travail de nuit",
+      "Réorganisation collective, effectifs et consultation du CSE",
+      "Santé, sécurité et articulation avec la vie personnelle",
+      "Égalité de traitement et critères de sélection"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quelles sont les heures exactes de prise et de fin des postes du matin et de l'après-midi ?",
+        "why_it_matters": "Ne pas inventer de travail de nuit et identifier les contraintes réelles."
+      },
+      {
+        "priority": 2,
+        "question": "Quel cycle exact est prévu, avec quelle fréquence de week-ends et de jours fériés ?",
+        "why_it_matters": "Comparer l'organisation projetée à l'horaire de jour actuel."
+      },
+      {
+        "priority": 3,
+        "question": "Le changement est-il temporaire ou permanent et à quelle date doit-il commencer ?",
+        "why_it_matters": "Qualifier la portée du changement et préparer la réponse."
+      },
+      {
+        "priority": 4,
+        "question": "Que prévoient le contrat, les avenants et les accords INEOS applicables au laboratoire ?",
+        "why_it_matters": "Identifier le fondement contractuel et collectif réel."
+      },
+      {
+        "priority": 5,
+        "question": "Pourquoi cette salariée a-t-elle été choisie et des volontaires ont-ils été recherchés ?",
+        "why_it_matters": "Examiner critères, alternatives et égalité de traitement."
+      },
+      {
+        "priority": 6,
+        "question": "Quels seront les effectifs de jour et postés avant et après le changement ?",
+        "why_it_matters": "Mesurer l'impact collectif et la charge du service de jour."
+      },
+      {
+        "priority": 7,
+        "question": "Le CSE a-t-il été informé ou consulté et sur quels documents ?",
+        "why_it_matters": "Contrôler la dimension de réorganisation collective."
+      },
+      {
+        "priority": 8,
+        "question": "Quelles contraintes de transport, de famille ou de santé la salariée doit-elle signaler ?",
+        "why_it_matters": "Préparer des alternatives concrètes et la prévention."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Vérifier le régime applicable aux salariés du laboratoire.",
+          "query_or_document": "Accord 35 heures LABO, avenants et versions signées en vigueur",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer horaires de jour et horaires postés.",
+          "query_or_document": "Annexes horaires jour et horaires postes, calendriers et accord 5x8",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Établir le cadre individuel et collectif.",
+          "query_or_document": "Contrat, avenants, fiche de poste, projet de réorganisation et dossier CSE",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Retrouver les textes sur contrat et changement d'horaires.",
+          "query_or_document": "Code du travail : contrat, aménagement du temps de travail et horaires collectifs",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver le cadre du travail de nuit seulement si les horaires le justifient.",
+          "query_or_document": "Code du travail : définition et garanties du travail de nuit, recherche conditionnelle",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les textes sur consultation du CSE.",
+          "query_or_document": "Code du travail : organisation, effectifs, conditions de travail et consultation CSE",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Vérifier les garanties de branche pertinentes.",
+          "query_or_document": "Convention collective nationale des industries chimiques IDCC 44 : travail posté, dimanche et jours fériés",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Comparer des changements de jour vers cycles postés sans présumer la nuit.",
+          "query_or_document": "passage horaire jour horaires postés cycle matin après-midi modification contrat",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer horaires fixes et horaires variables avec week-ends.",
+          "query_or_document": "horaire fixe cycle variable week-end modification contrat salarié",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Examiner le refus et les conséquences sans conseiller un refus immédiat.",
+          "query_or_document": "refus changement horaires modification contrat sanction",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Rechercher des précédents au laboratoire.",
+          "query_or_document": "PV CSE et CSSCT : laboratoire, passage jour poste, volontariat et remplacement",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Rechercher l'impact sur effectifs et charge.",
+          "query_or_document": "PV CSE : effectifs laboratoire, charge de travail, réorganisation et horaires postés",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Supposer ou affirmer l'existence de travail de nuit sans horaires exacts.",
+      "Déduire qu'une rémunération supérieure prouve le volontariat ou l'acceptation.",
+      "Conclure définitivement à une modification contractuelle sans contrat ni cycle exact.",
+      "Conseiller un refus immédiat non préparé.",
+      "Limiter l'analyse au salaire et ignorer les contraintes personnelles et collectives.",
+      "Affirmer qu'un accord INEOS autorise le changement sans clause retrouvée.",
+      "Ignorer l'impact sur l'effectif de jour et la consultation du CSE."
+    ],
+    "employee_arguments": [
+      "Absence de volontariat et demande écrite du fondement du changement.",
+      "Comparaison du contrat, de l'horaire actuel et du cycle projeté.",
+      "Importance des week-ends, jours fériés et alternances dans la vie personnelle.",
+      "Demande des critères de sélection et des recherches de volontaires.",
+      "Examen des effectifs, de la charge et de la consultation du CSE.",
+      "Recherche d'alternatives avant toute position définitive."
+    ],
+    "possible_employer_arguments": [
+      "Le remplacement et la continuité du laboratoire nécessitent une nouvelle affectation.",
+      "Les horaires relèveraient du pouvoir d'organisation ou d'un accord collectif.",
+      "Le cycle ne comporterait pas de nuit et serait compensé financièrement.",
+      "Le choix reposerait sur les compétences et les besoins du service.",
+      "La mesure pourrait être temporaire."
+    ],
+    "risks": [
+      "Acceptation implicite alléguée en cas d'exécution non réservée.",
+      "Refus précipité sans qualification contractuelle.",
+      "Atteinte à la santé ou à la vie personnelle insuffisamment documentée.",
+      "Réduction de l'effectif de jour et surcharge.",
+      "Absence d'information ou consultation collective.",
+      "Jurisprudence sur le travail de nuit utilisée hors sujet."
+    ],
+    "possible_outcomes": [
+      "Maintien en horaire de jour.",
+      "Passage temporaire négocié avec garanties.",
+      "Passage permanent accepté par avenant.",
+      "Désignation d'un volontaire ou mise en place d'une rotation.",
+      "Report du projet pendant l'examen contractuel et collectif.",
+      "Contentieux ou sanction en cas de désaccord non résolu."
+    ],
+    "response_quality_criteria": [
+      "Ne jamais inventer un poste de nuit.",
+      "Demander horaires, cycle, durée, contrat, volontaires et effectifs.",
+      "Distinguer individuel, organisation du travail et réorganisation collective.",
+      "Comparer les sources réellement retrouvées aux faits.",
+      "Intégrer santé, famille, transport et charge.",
+      "Préparer une position écrite sans conseiller un refus immédiat."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

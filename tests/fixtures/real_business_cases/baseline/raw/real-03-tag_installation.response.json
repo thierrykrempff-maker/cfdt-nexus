@@ -1,0 +1,1460 @@
+{
+  "baseline_schema_version": "1.0",
+  "captured_at": "2026-07-27T09:39:07.516129+00:00",
+  "case_id": "REAL-03-TAG_INSTALLATION",
+  "case_input_sha256": "3e6fb483654033e268ff0a9bb21cd708f07ce49760c52b2b97a9b217c7b3d80f",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/tag-on-installation.example.json",
+  "prompt_sha256": "8d2c9c3312cfe9b5a376c1c25ed60d9e9549a24e63883892de690176368c7762",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [],
+        "paie": [
+          {
+            "items": [
+              "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: cet",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "rubriques du bulletin concernees",
+              "base de calcul",
+              "taux",
+              "montant verse"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Orchestration experte",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - droit_travail_general, disciplinaire, temps_travail"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».\n- Le salarié indique que l'inscription ne visait personne en particulier.\n- Il relie son geste à une journée difficile et à une ambiance de travail dégradée.\n- Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur de l'inscription.\n- Le salarié reconnaît le caractère grossier des termes rapportés.\n\nFaits contestés :\n- Le salarié conteste avoir visé une personne déterminée.\n- Aucune volonté de menace ou de harcèlement n'est reconnue.\n\nFaits allégués :\n- Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.\n- Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- La phrase complète, son support exact et son emplacement [importance: high] — Le contenu, le support et le lieu influencent la qualification, la visibilité et les conséquences.\n- Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur [importance: high] — Il faut vérifier si quelqu'un pouvait raisonnablement se sentir visé et mesurer la diffusion.\n- Les preuves détenues par l'employeur et la chronologie exacte [importance: high] — La reconnaissance ne dispense pas de vérifier le grief précis, la preuve et la procédure.\n- L'existence d'une dégradation durable, le nettoyage nécessaire et son coût [importance: high] — Une inscription effaçable et un dommage matériel durable ne présentent pas les mêmes risques.\n- Le caractère isolé ou répété et les éventuels antécédents disciplinaires [importance: high] — Ces éléments influencent directement la proportionnalité d'une mesure.\n- La mesure envisagée, les actes déjà notifiés et leurs dates [importance: high] — Il faut distinguer demande d'explication, recadrage et sanction et contrôler la chronologie.\n- Les faits précis décrivant l'ambiance dégradée ou la souffrance et les signalements antérieurs [importance: high] — Le contexte doit être documenté sans conclure automatiquement à un harcèlement ou à un manquement de l'employeur.\n- Toute demande de nettoyage : auteur de l'ordre, horaire, durée, badgeage et rémunération [importance: high] — Ces données sont nécessaires pour déterminer si une tâche a été accomplie hors temps enregistré."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur droit du travail, avec enjeux associes de disciplinaire, temps de travail, paie/remuneration. L'analyse vise recherche de droit local, situation individuelle, controle paie, controle de conformite."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "droit_travail_general",
+            "disciplinaire",
+            "temps_travail",
+            "paie_remuneration"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "Nexus peut proposer une methode de controle paie, mais pas un calcul fiable sans bulletin detaille, pointage, compteurs, taux applicable et source locale confirmee."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "Des sources ont ete remontees par le routeur Nexus."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "releves de pointage",
+            "compteurs d'heures",
+            "heures validees et refusees",
+            "regles de majoration et de recuperation",
+            "contingent et repos compensateur",
+            "parametrage logiciel et periode a controler",
+            "libelle exact de la prime ou rubrique contestee",
+            "bulletins de paie de la periode controlee",
+            "periode concernee par l'ecart constate",
+            "montant verse et montant attendu",
+            "detail des majorations appliquees",
+            "historique des paiements et recuperations",
+            "convocation",
+            "reglement interieur"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Comment les heures effectuees sont-elles rapprochees du pointage, des compteurs et de la paie ?",
+            "Quelles heures ont ete validees, refusees, payees ou recuperees ?",
+            "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
+            "Quel est le libelle exact de la prime ou de la rubrique contestee ?",
+            "Quelle periode de paie est concernee ?",
+            "Quel montant a ete verse et quel montant est attendu ?",
+            "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
+            "Quels faits precis sont reproches ?",
+            "Quels delais et droits de defense ont ete respectes ?",
+            "Quels relevés de pointage ou de badgeage couvrent la période concernée ?",
+            "Quel est le solde des compteurs d'heures au début et à la fin de la période ?",
+            "Quelles règles de majoration sont appliquées aux heures supplémentaires ?"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier la proportionnalite d'une eventuelle sanction."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. Nexus peut proposer une methode de controle paie, mais pas un calcul fiable sans bulletin detaille, pointage, compteurs, taux applicable et source locale confirmee."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "Aucune explication pratique officielle pertinente n'a ete retenue pour cette question."
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: 3 source(s) remontee(s).",
+            "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Code du travail | L1332-2 | Code du travail | couche Code du travail | origine Légifrance | référence interne non publiée | id officiel LEGIARTI000025560074 | etat VIGUEUR | en vigueur True | version 2012-03-24 -> 2999-01-01 | recupere le 2026-07-27T09:39:05+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074 | extrait: Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretien. Elle est motivée et notifiée à l'intéressé.",
+            "Code du travail | L1331-1 | Code du travail | couche Code du travail | origine Légifrance | référence interne non publiée | id officiel LEGIARTI000006901445 | etat VIGUEUR | en vigueur True | version 2008-05-01 -> 2999-01-01 | recupere le 2026-07-27T09:38:58+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445 | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+            "Code du travail | L1332-1 | Code du travail | couche Code du travail | origine Légifrance | référence interne non publiée | id officiel LEGIARTI000006901447 | etat VIGUEUR | en vigueur True | version 2008-05-01 -> 2999-01-01 | recupere le 2026-07-27T09:39:00+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447 | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui."
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+            "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+            "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+            "La periode concernee n'est pas renseignee.",
+            "La population ou le salarie concerne n'est pas identifie."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - droit_travail_general, disciplinaire, temps_travail",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": {
+        "10_after_interview": [
+          "Rédiger un compte rendu factuel et daté sans dupliquer les arguments.",
+          "Demander la communication des preuves ou pièces encore manquantes.",
+          "Contrôler le motif, la date et la proportionnalité de toute sanction notifiée.",
+          "Adresser si nécessaire une contestation écrite ciblée.",
+          "Évaluer avec un défenseur syndical ou un avocat la suite adaptée."
+        ],
+        "1_facts_understood": {
+          "facts_from_request": [
+            "fils de pute",
+            "Le salarié reconnaît être l'auteur selon la demande transmise.",
+            "Aucune personne n'est présentée comme précisément visée.",
+            "Lieu indiqué : installation de l'entreprise.",
+            "Contexte allégué : journée difficile, ambiance de travail dégradée.",
+            "La demande indique l'absence de dégradation matérielle durable."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "2_points_to_verify": {
+          "chronology": [
+            "date des faits",
+            "date de connaissance par l'employeur",
+            "date de convocation",
+            "date de l'entretien",
+            "date de notification éventuelle"
+          ],
+          "decisive_missing_facts": [
+            "visibilité de l'acte",
+            "preuves invoquées par l'employeur",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ]
+        },
+        "3_provisional_qualification": {
+          "act_category": "THREAT_OR_VIOLENCE",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [
+                {
+                  "article_or_clause": "L1332-2",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                },
+                {
+                  "article_or_clause": "L1331-1",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                },
+                {
+                  "article_or_clause": "L1332-1",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                }
+              ],
+              "status": "disponible et factuellement pertinent"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Qualification provisoire : threat or violence. La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "faits répétés",
+            "menace ou violence alléguée"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "absence de personne précisément identifiée comme visée",
+            "absence de dommage matériel durable indiquée",
+            "journée difficile",
+            "ambiance de travail dégradée"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "faits reconnus",
+          "strategy": "Le salarié reconnaît un geste déplacé et regrettable commis sous le coup de l'énervement. Il conteste toutefois toute volonté de menacer, harceler ou viser personnellement un collègue si ces éléments correspondent aux faits. La défense porte sur le caractère isolé, les conséquences réelles, les antécédents et la proportionnalité de la sanction.",
+          "supporting_points": [
+            "reconnaissance mesurée du geste et regrets",
+            "absence de personne nommément visée si elle est confirmée",
+            "absence de menace ou de violence si elle est confirmée",
+            "caractère isolé et absence d'antécédent à vérifier",
+            "conséquences matérielles et visibilité réelles",
+            "contexte documenté sans le présenter comme une autorisation",
+            "réparation, nettoyage ou suppression rapide à vérifier",
+            "proportionnalité de la sanction"
+          ]
+        },
+        "6_questions_for_employee": [
+          "Existe-t-il une notification écrite et précisément motivée ?",
+          "Le salarié était-il assisté lors de l'entretien ?",
+          "Les faits sont-ils reconnus, partiellement reconnus ou contestés ?",
+          "Quand et comment le salarié a-t-il été convoqué ?",
+          "Quand l'employeur a-t-il eu connaissance des faits ?",
+          "Quelle est la date précise des faits reprochés ?",
+          "Quelle est la nature exacte de la mesure annoncée ou notifiée ?",
+          "Des situations similaires ont-elles donné lieu à des mesures comparables ?",
+          "Existe-t-il des témoins ou des écrits contemporains des faits ?",
+          "La sanction paraît-elle proportionnée aux faits allégués ?",
+          "Le règlement intérieur prévoit-il cette sanction et la procédure applicable ?",
+          "Existe-t-il une jurisprudence réellement comparable et à jour ?",
+          "Quels accords INEOS et dispositions conventionnelles sont applicables ?"
+        ],
+        "7_questions_for_management": [
+          "Quel est le grief exact retenu contre le salarié ?",
+          "Quelles preuves établissent l'acte et son attribution au salarié ?",
+          "Une personne précise est-elle considérée comme visée et sur quels éléments ?",
+          "Quelles conséquences concrètes l'inscription ou le comportement a-t-il produites ?",
+          "Quelle clause précise du règlement intérieur est invoquée ?",
+          "Quels précédents réellement comparables ont été traités dans l'entreprise ?",
+          "Quelle sanction est envisagée ?",
+          "Comment sa proportionnalité est-elle appréciée au regard du contexte, des conséquences et des antécédents ?"
+        ],
+        "8_interview_preparation": {
+          "documents_to_request": [
+            "releves de pointage",
+            "compteurs d'heures",
+            "heures validees et refusees",
+            "regles de majoration et de recuperation",
+            "contingent et repos compensateur",
+            "parametrage logiciel et periode a controler",
+            "libelle exact de la prime ou rubrique contestee",
+            "bulletins de paie de la periode controlee",
+            "periode concernee par l'ecart constate",
+            "montant verse et montant attendu",
+            "detail des majorations appliquees",
+            "historique des paiements et recuperations",
+            "convocation",
+            "reglement interieur"
+          ],
+          "notes_to_record": [
+            "participants et qualité de chacun",
+            "grief exact et qualification avancée",
+            "preuves citées ou présentées",
+            "réponses du salarié",
+            "demandes de communication et réponse de la direction"
+          ],
+          "suggested_wording": [
+            "« Je reconnais un geste déplacé et je le regrette. »",
+            "« Je n'ai voulu menacer ni harceler personne ; je demande que la personne prétendument visée et les conséquences exactes soient précisées. »",
+            "« Je souhaite que mon parcours, mes éventuels antécédents, le contexte et les conséquences réelles soient pris en compte. »"
+          ]
+        },
+        "9_points_not_to_say": [
+          "« Ce n'est pas grave. »",
+          "« Il avait le droit parce qu'il était énervé. »",
+          "« Personne n'était nommée donc aucune faute n'existe. »",
+          "« Il faut nier même si une preuve existe. »"
+        ],
+        "analysis_type": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "fact_extraction": {
+          "act_category": "THREAT_OR_VIOLENCE",
+          "alleged_act": "fils de pute",
+          "context_claimed": [
+            "journée difficile",
+            "ambiance de travail dégradée"
+          ],
+          "employee_admission": true,
+          "employer_evidence": [],
+          "exact_words_or_behavior": "fils de pute",
+          "facts_missing": [
+            "visibilité de l'acte",
+            "preuves invoquées par l'employeur",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ],
+          "location": "installation de l'entreprise",
+          "material_damage": false,
+          "prior_warnings": null,
+          "public_visibility": null,
+          "repetition": true,
+          "sanction_considered": null,
+          "target_identified": false,
+          "target_type": "aucune personne précisément identifiée",
+          "threat_or_violence": true
+        },
+        "notice": "Dossier de préparation syndicale fondé sur les faits fournis. Toute qualification et toute appréciation de gravité restent provisoires."
+      },
+      "documents_to_request": [
+        "releves de pointage",
+        "compteurs d'heures",
+        "heures validees et refusees",
+        "regles de majoration et de recuperation",
+        "contingent et repos compensateur",
+        "parametrage logiciel et periode a controler",
+        "libelle exact de la prime ou rubrique contestee",
+        "bulletins de paie de la periode controlee",
+        "periode concernee par l'ecart constate",
+        "montant verse et montant attendu",
+        "detail des majorations appliquees",
+        "historique des paiements et recuperations",
+        "convocation",
+        "reglement interieur"
+      ],
+      "employee_method_analysis": null,
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        }
+      ],
+      "facts": [],
+      "findings": [
+        "Verifier les faits reproches, les preuves, les dates et les delais de procedure.",
+        "Controler les droits de defense et les garanties prevues par le reglement interieur.",
+        "À vérifier dans une source locale à identifier : relevés de pointage, badgeage et compteurs d'heures.",
+        "À vérifier dans une source locale à identifier : heures effectuées, validées, refusées, payées ou récupérées.",
+        "À vérifier dans une source locale à identifier : règles de majoration, contingent et repos compensateur.",
+        "À vérifier dans une source locale à identifier : modulation, annualisation ou temps de travail effectif applicables.",
+        "À vérifier dans une source locale à identifier : paramétrage logiciel et période à contrôler.",
+        "risque d'écart paie non régularisé",
+        "risque de données insuffisantes pour contrôler la période",
+        "risque de récupération insuffisante",
+        "risque d'heures effectuées non validées",
+        "risque d'heures supplémentaires non payées ou non majorées"
+      ],
+      "issue_groups": [
+        {
+          "documents": [
+            "releves de pointage",
+            "contingent et repos compensateur",
+            "planning de travail",
+            "historique des heures et repos"
+          ],
+          "findings": [
+            "À vérifier dans une source locale à identifier : relevés de pointage, badgeage et compteurs d'heures.",
+            "À vérifier dans une source locale à identifier : règles de majoration, contingent et repos compensateur.",
+            "Verifier l'heure reelle de fin d'intervention et l'heure de reprise du poste.",
+            "Identifier la regle de repos applicable et toute derogation invoquee.",
+            "Verifier la compensation ou le repos associe si le repos normal n'a pas ete respecte."
+          ],
+          "id": "repos",
+          "name": "Repos et reprise du poste",
+          "questions": [
+            "Comment les heures effectuees sont-elles rapprochees du pointage, des compteurs et de la paie ?",
+            "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
+            "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
+            "Quels relevés de pointage ou de badgeage couvrent la période concernée ?"
+          ]
+        },
+        {
+          "documents": [
+            "regles de majoration et de recuperation",
+            "libelle exact de la prime ou rubrique contestee",
+            "bulletins de paie de la periode controlee",
+            "detail des majorations appliquees",
+            "historique des paiements et recuperations"
+          ],
+          "findings": [
+            "À vérifier dans une source locale à identifier : heures effectuées, validées, refusées, payées ou récupérées.",
+            "À vérifier dans une source locale à identifier : règles de majoration, contingent et repos compensateur.",
+            "risque d'écart paie non régularisé",
+            "risque de récupération insuffisante",
+            "risque d'heures supplémentaires non payées ou non majorées"
+          ],
+          "id": "paie",
+          "name": "Paie et majorations",
+          "questions": [
+            "Comment les heures effectuees sont-elles rapprochees du pointage, des compteurs et de la paie ?",
+            "Quelles heures ont ete validees, refusees, payees ou recuperees ?",
+            "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
+            "Quel est le libelle exact de la prime ou de la rubrique contestee ?"
+          ]
+        }
+      ],
+      "jurisprudence_audit": [],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [
+            {
+              "article": "L3131-1",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000033020918",
+              "relevance_score": 4.45
+            }
+          ],
+          "sources_received": 5,
+          "sources_retained": 4,
+          "status": "retained",
+          "warnings": []
+        }
+      ],
+      "next_action": "Fixer une periode de controle puis rapprocher pointage, compteurs, recuperation et bulletins.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».\n- Le salarié indique que l'inscription ne visait personne en particulier.\n- Il relie son geste à une journée difficile et à une ambiance de travail dégradée.\n- Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur de l'inscription.\n- Le salarié reconnaît le caractère grossier des termes rapportés.\n\nFaits contestés :\n- Le salarié conteste avoir visé une personne déterminée.\n- Aucune volonté de menace ou de harcèlement n'est reconnue.\n\nFaits allégués :\n- Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.\n- Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- La phrase complète, son support exact et son emplacement [importance: high] — Le contenu, le support et le lieu influencent la qualification, la visibilité et les conséquences.\n- Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur [importance: high] — Il faut vérifier si quelqu'un pouvait raisonnablement se sentir visé et mesurer la diffusion.\n- Les preuves détenues par l'employeur et la chronologie exacte [importance: high] — La reconnaissance ne dispense pas de vérifier le grief précis, la preuve et la procédure.\n- L'existence d'une dégradation durable, le nettoyage nécessaire et son coût [importance: high] — Une inscription effaçable et un dommage matériel durable ne présentent pas les mêmes risques.\n- Le caractère isolé ou répété et les éventuels antécédents disciplinaires [importance: high] — Ces éléments influencent directement la proportionnalité d'une mesure.\n- La mesure envisagée, les actes déjà notifiés et leurs dates [importance: high] — Il faut distinguer demande d'explication, recadrage et sanction et contrôler la chronologie.\n- Les faits précis décrivant l'ambiance dégradée ou la souffrance et les signalements antérieurs [importance: high] — Le contexte doit être documenté sans conclure automatiquement à un harcèlement ou à un manquement de l'employeur.\n- Toute demande de nettoyage : auteur de l'ordre, horaire, durée, badgeage et rémunération [importance: high] — Ces données sont nécessaires pour déterminer si une tâche a été accomplie hors temps enregistré.",
+      "questions_to_ask": [
+        "Comment les heures effectuees sont-elles rapprochees du pointage, des compteurs et de la paie ?",
+        "Quelles heures ont ete validees, refusees, payees ou recuperees ?",
+        "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
+        "Quel est le libelle exact de la prime ou de la rubrique contestee ?",
+        "Quelle periode de paie est concernee ?",
+        "Quel montant a ete verse et quel montant est attendu ?",
+        "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quels relevés de pointage ou de badgeage couvrent la période concernée ?",
+        "Quel est le solde des compteurs d'heures au début et à la fin de la période ?",
+        "Quelles règles de majoration sont appliquées aux heures supplémentaires ?"
+      ],
+      "response_depth": "multi_domain",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "disciplinaire",
+          "temps_travail",
+          "paie_remuneration"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours approfondi a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "intents": [
+          "rechercher_droit_local",
+          "analyser_situation_individuelle",
+          "analyser_paie",
+          "verifier_conformite"
+        ],
+        "main_domain": "droit_travail_general",
+        "primary_domain": "droit_travail_general",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».\n- Le salarié indique que l'inscription ne visait personne en particulier.\n- Il relie son geste à une journée difficile et à une ambiance de travail dégradée.\n- Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur de l'inscription.\n- Le salarié reconnaît le caractère grossier des termes rapportés.\n\nFaits contestés :\n- Le salarié conteste avoir visé une personne déterminée.\n- Aucune volonté de menace ou de harcèlement n'est reconnue.\n\nFaits allégués :\n- Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.\n- Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- La phrase complète, son support exact et son emplacement [importance: high] — Le contenu, le support et le lieu influencent la qualification, la visibilité et les conséquences.\n- Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur [importance: high] — Il faut vérifier si quelqu'un pouvait raisonnablement se sentir visé et mesurer la diffusion.\n- Les preuves détenues par l'employeur et la chronologie exacte [importance: high] — La reconnaissance ne dispense pas de vérifier le grief précis, la preuve et la procédure.\n- L'existence d'une dégradation durable, le nettoyage nécessaire et son coût [importance: high] — Une inscription effaçable et un dommage matériel durable ne présentent pas les mêmes risques.\n- Le caractère isolé ou répété et les éventuels antécédents disciplinaires [importance: high] — Ces éléments influencent directement la proportionnalité d'une mesure.\n- La mesure envisagée, les actes déjà notifiés et leurs dates [importance: high] — Il faut distinguer demande d'explication, recadrage et sanction et contrôler la chronologie.\n- Les faits précis décrivant l'ambiance dégradée ou la souffrance et les signalements antérieurs [importance: high] — Le contexte doit être documenté sans conclure automatiquement à un harcèlement ou à un manquement de l'employeur.\n- Toute demande de nettoyage : auteur de l'ordre, horaire, durée, badgeage et rémunération [importance: high] — Ces données sont nécessaires pour déterminer si une tâche a été accomplie hors temps enregistré.",
+        "reasoning_summary": [
+          "La demande porte sur la relation de travail ou une garantie legale generale.",
+          "La demande concerne le temps de travail, les repos, horaires ou compteurs.",
+          "La demande implique paie, remuneration, prime, majoration ou indemnisation.",
+          "La demande porte sur une procedure ou sanction disciplinaire.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande concerne un dossier ou une situation de salarie.",
+          "La demande appelle une methode de controle paie.",
+          "La demande vise une verification ou un controle."
+        ],
+        "response_profile": "syndical_defense_deep",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "disciplinaire",
+          "temps_travail",
+          "paie_remuneration"
+        ],
+        "warnings": [
+          "Module paie dedie non connecte : controle realise via sources locales et methode metier."
+        ]
+      },
+      "short_answer": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": null,
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [
+            {
+              "article": "L1332-2",
+              "article_or_section": "L1332-2",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2012-03-24",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretien. Elle est motivée et notifiée à l'intéressé.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000025560074",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L1332-2",
+              "match_score": null,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000025560074",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T09:39:05+00:00",
+              "score": null,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2012-03-24"
+            },
+            {
+              "article": "L1331-1",
+              "article_or_section": "L1331-1",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2008-05-01",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000006901445",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L1331-1",
+              "match_score": null,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000006901445",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T09:38:58+00:00",
+              "score": null,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2008-05-01"
+            },
+            {
+              "article": "L1332-1",
+              "article_or_section": "L1332-1",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2008-05-01",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000006901447",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L1332-1",
+              "match_score": null,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000006901447",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T09:39:00+00:00",
+              "score": null,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2008-05-01"
+            }
+          ],
+          "status": "present"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [
+        {
+          "article": "L1332-2",
+          "article_or_section": "L1332-2",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2012-03-24",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretien. Elle est motivée et notifiée à l'intéressé.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000025560074",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1332-2",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000025560074",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:39:05+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2012-03-24"
+        },
+        {
+          "article": "L1331-1",
+          "article_or_section": "L1331-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901445",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1331-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901445",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:38:58+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": "L1332-1",
+          "article_or_section": "L1332-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901447",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1332-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901447",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:39:00+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        }
+      ],
+      "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de disciplinaire, temps de travail, paie/remuneration. L'analyse vise recherche de droit local, situation individuelle, controle paie, controle de conformite.",
+      "warnings": [
+        "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier la proportionnalite d'une eventuelle sanction."
+    },
+    "expert_juriste": {
+      "active": false
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "releves de pointage",
+        "compteurs d'heures",
+        "heures validees et refusees",
+        "regles de majoration et de recuperation",
+        "contingent et repos compensateur",
+        "parametrage logiciel et periode a controler",
+        "libelle exact de la prime ou rubrique contestee"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin"
+      ],
+      "elements_du_bulletin_concernes": [
+        "rubriques du bulletin concernees",
+        "base de calcul",
+        "taux",
+        "montant verse"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales.",
+      "regles_ou_sources_disponibles": [
+        "Source locale a verifier: Code du travail | L1332-2 | Code du travail",
+        "Source locale a verifier: Code du travail | L1331-1 | Code du travail",
+        "Source locale a verifier: Code du travail | L1332-1 | Code du travail"
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "releves de pointage",
+        "compteurs d'heures",
+        "heures validees et refusees",
+        "regles de majoration et de recuperation",
+        "contingent et repos compensateur",
+        "parametrage logiciel et periode a controler",
+        "libelle exact de la prime ou rubrique contestee",
+        "bulletins de paie de la periode controlee",
+        "periode concernee par l'ecart constate",
+        "montant verse et montant attendu",
+        "detail des majorations appliquees",
+        "historique des paiements et recuperations",
+        "convocation",
+        "reglement interieur"
+      ],
+      "domaines_detectes": [
+        "droit_travail_general",
+        "disciplinaire",
+        "temps_travail",
+        "paie_remuneration"
+      ],
+      "experts_mobilises": [
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier la proportionnalite d'une eventuelle sanction.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».\n- Le salarié indique que l'inscription ne visait personne en particulier.\n- Il relie son geste à une journée difficile et à une ambiance de travail dégradée.\n- Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur de l'inscription.\n- Le salarié reconnaît le caractère grossier des termes rapportés.\n\nFaits contestés :\n- Le salarié conteste avoir visé une personne déterminée.\n- Aucune volonté de menace ou de harcèlement n'est reconnue.\n\nFaits allégués :\n- Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.\n- Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- La phrase complète, son support exact et son emplacement [importance: high] — Le contenu, le support et le lieu influencent la qualification, la visibilité et les conséquences.\n- Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur [importance: high] — Il faut vérifier si quelqu'un pouvait raisonnablement se sentir visé et mesurer la diffusion.\n- Les preuves détenues par l'employeur et la chronologie exacte [importance: high] — La reconnaissance ne dispense pas de vérifier le grief précis, la preuve et la procédure.\n- L'existence d'une dégradation durable, le nettoyage nécessaire et son coût [importance: high] — Une inscription effaçable et un dommage matériel durable ne présentent pas les mêmes risques.\n- Le caractère isolé ou répété et les éventuels antécédents disciplinaires [importance: high] — Ces éléments influencent directement la proportionnalité d'une mesure.\n- La mesure envisagée, les actes déjà notifiés et leurs dates [importance: high] — Il faut distinguer demande d'explication, recadrage et sanction et contrôler la chronologie.\n- Les faits précis décrivant l'ambiance dégradée ou la souffrance et les signalements antérieurs [importance: high] — Le contexte doit être documenté sans conclure automatiquement à un harcèlement ou à un manquement de l'employeur.\n- Toute demande de nettoyage : auteur de l'ordre, horaire, durée, badgeage et rémunération [importance: high] — Ces données sont nécessaires pour déterminer si une tâche a été accomplie hors temps enregistré.",
+      "questions_utiles": [
+        "Comment les heures effectuees sont-elles rapprochees du pointage, des compteurs et de la paie ?",
+        "Quelles heures ont ete validees, refusees, payees ou recuperees ?",
+        "Quel parametre logiciel applique les majorations, contingents et repos compensateurs ?",
+        "Quel est le libelle exact de la prime ou de la rubrique contestee ?",
+        "Quelle periode de paie est concernee ?",
+        "Quel montant a ete verse et quel montant est attendu ?",
+        "Comment le bulletin se rapproche-t-il des compteurs et releves horaires ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quels relevés de pointage ou de badgeage couvrent la période concernée ?",
+        "Quel est le solde des compteurs d'heures au début et à la fin de la période ?",
+        "Quelles règles de majoration sont appliquées aux heures supplémentaires ?"
+      ],
+      "reponse_synthetique_nexus": "Nexus peut proposer une methode de controle paie, mais pas un calcul fiable sans bulletin detaille, pointage, compteurs, taux applicable et source locale confirmee.",
+      "sources": [
+        {
+          "article": "L1332-2",
+          "article_or_section": "L1332-2",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2012-03-24",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretien. Elle est motivée et notifiée à l'intéressé.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000025560074",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1332-2",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000025560074",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:39:05+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025560074",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2012-03-24"
+        },
+        {
+          "article": "L1331-1",
+          "article_or_section": "L1331-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901445",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1331-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901445",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:38:58+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": "L1332-1",
+          "article_or_section": "L1332-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901447",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1332-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901447",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:39:00+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        }
+      ]
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}
