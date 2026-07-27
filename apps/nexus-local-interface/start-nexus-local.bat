@@ -9,7 +9,8 @@ set "NEXUS_PORT_STATE=%ERRORLEVEL%"
 if "%NEXUS_PORT_STATE%"=="0" (
   echo.
   echo Une instance Nexus est deja active.
-  echo Ouvrez : %NEXUS_LOCAL_URL%
+  echo Ouverture de : %NEXUS_LOCAL_URL%
+  start "" "%NEXUS_LOCAL_URL%"
   exit /b 0
 )
 
@@ -52,15 +53,31 @@ set PYTHONIOENCODING=utf-8
 set PYTHONDONTWRITEBYTECODE=1
 
 if defined CFDT_NEXUS_PYTHON (
-  "%CFDT_NEXUS_PYTHON%" apps\nexus-local-interface\server.py --open
+  start "" /b "%CFDT_NEXUS_PYTHON%" apps\nexus-local-interface\server.py
 ) else (
-  python apps\nexus-local-interface\server.py --open
+  start "" /b python apps\nexus-local-interface\server.py
 )
 
-if errorlevel 1 (
-  echo.
-  echo Python est introuvable ou l'interface Nexus n'a pas pu demarrer.
-  echo Lancer depuis le depot avec: python apps\nexus-local-interface\server.py --open
-  pause
-  exit /b 1
-)
+set "NEXUS_WAIT_ATTEMPTS=20"
+
+:WAIT_FOR_NEXUS
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $health = Invoke-RestMethod -Uri 'http://127.0.0.1:8765/health' -TimeoutSec 1; if ($health.service -eq 'nexus-local-interface') { exit 0 } } catch {}; exit 1" >nul 2>&1
+if not errorlevel 1 goto OPEN_NEXUS
+
+set /a NEXUS_WAIT_ATTEMPTS-=1
+if %NEXUS_WAIT_ATTEMPTS% LEQ 0 goto NEXUS_START_FAILED
+timeout /t 1 /nobreak >nul
+goto WAIT_FOR_NEXUS
+
+:OPEN_NEXUS
+echo.
+echo Nexus est pret. Ouverture de : %NEXUS_LOCAL_URL%
+start "" "%NEXUS_LOCAL_URL%"
+exit /b 0
+
+:NEXUS_START_FAILED
+echo.
+echo L'interface Nexus n'a pas repondu sur le port 8765.
+echo Verifiez Python puis relancez le raccourci.
+pause
+exit /b 1
