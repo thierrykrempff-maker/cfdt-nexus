@@ -1,0 +1,648 @@
+{
+  "baseline_schema_version": "1.0",
+  "assessment_method": "Relecture sémantique de la réponse publique brute, dimension par dimension, avant ouverture de l'issue connue. Les issues connues ne modifient aucun score.",
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "dimensions": {
+        "factual_understanding": {
+          "score": 8,
+          "evidence": [
+            "L'extraction remplace le fait central — des courriels insultants reconnus — par la catégorie ALCOHOL_OR_DRUGS.",
+            "Le moteur indique une répétition et construit une absence de personne visée alors qu'un collègue destinataire est fourni."
+          ]
+        },
+        "question_relevance": {
+          "score": 4,
+          "evidence": [
+            "Les questions de procédure et de proportionnalité sont utiles.",
+            "Les termes, le nombre et la diffusion des courriels, la mutation, le cumul de mesures et la confidentialité du suivi ne sont pas correctement explorés."
+          ]
+        },
+        "source_relevance": {
+          "score": 6,
+          "evidence": [
+            "Les extraits du Code du travail sur la sanction sont pertinents mais génériques.",
+            "La jurisprudence retenue porte surtout sur les garanties de procédure et la mise à pied conservatoire, sans comparaison avec des courriels insultants, l'alcool ou une mutation."
+          ]
+        },
+        "rule_fact_comparison": {
+          "score": 4,
+          "evidence": [
+            "La procédure disciplinaire est évoquée, mais les sources ne sont pas comparées aux courriels, au lien absent avec le mandat, à la mutation ou au suivi."
+          ]
+        },
+        "strategy_realism": {
+          "score": 5,
+          "evidence": [
+            "Reconnaissance et proportionnalité sont mentionnées.",
+            "La stratégie est un modèle de tag ou d'injure non ciblée parlant de nettoyage, et non une défense sur des courriels adressés à un collègue."
+          ]
+        },
+        "adversarial_analysis": {
+          "score": 4,
+          "evidence": [
+            "La direction et la proportionnalité sont évoquées de façon générale.",
+            "Les arguments liés à l'écrit, à la diffusion, au mandat sans lien syndical, à la mutation et au suivi sont absents."
+          ]
+        },
+        "no_invention": {
+          "score": 5,
+          "evidence": [
+            "Les sources citées sont traçables et des indisponibilités sont signalées.",
+            "Le moteur invente une répétition, un geste sous le coup de l'énervement et des pistes de formation, habilitation ou nettoyage."
+          ]
+        },
+        "practical_usefulness": {
+          "score": 2,
+          "evidence": [
+            "Quelques vérifications procédurales sont utilisables.",
+            "La réponse ne prépare pas concrètement la discussion sur la mutation, le suivi ou le cumul des mesures."
+          ]
+        }
+      },
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "successes": [
+        "Reconnaissance des faits et proportionnalité ne sont pas totalement ignorées.",
+        "Le statut du destinataire ne conduit pas à une affirmation expresse de discrimination ou d'entrave.",
+        "Une jurisprudence sur deux sanctions pour les mêmes faits est remontée, mais elle n'est pas intégrée au raisonnement du cas."
+      ],
+      "errors": [
+        "Le grief est classé comme alcool ou stupéfiants au lieu de courriels insultants.",
+        "La mutation et le suivi relatif à l'alcool ne sont pas qualifiés.",
+        "L'absence de lien entre les courriels et le mandat n'est pas réellement analysée.",
+        "Le contrôle postérieur de l'issue connue montre que l'éventail proposé ne couvre pas correctement la mutation ni la confidentialité du suivi."
+      ],
+      "irrelevant_sources": [
+        "Cass. soc., 18 mars 2009, 07-44.185 est utilisée sans établir de mise à pied conservatoire comparable dans les faits initiaux.",
+        "Les moyens syndicaux et crédits d'heures sont recherchés sans lien factuel avec le contenu des courriels."
+      ],
+      "invented_facts": [
+        "Faits présentés comme répétés.",
+        "Geste commis sous le coup de l'énervement.",
+        "Absence de personne nommément visée.",
+        "Réparation, nettoyage ou suppression rapide."
+      ],
+      "missing_essential_questions": [
+        "Termes exacts, nombre, dates, destinataires et diffusion des courriels.",
+        "Lien réel ou absence de lien avec le mandat.",
+        "Nature contractuelle et disciplinaire d'une éventuelle mutation.",
+        "Cumul de mesures pour les mêmes faits.",
+        "Nature, auteur et confidentialité d'un éventuel suivi relatif à l'alcool."
+      ],
+      "unrealistic_strategies": [
+        "Stratégie de tag non ciblé appliquée à des courriels adressés à un collègue.",
+        "Piste de formation, habilitation et mode opératoire sans fait technique."
+      ],
+      "important_repetitions": [
+        "Questions générales sur les faits, la preuve et la proportionnalité répétées entre routeur, dossier disciplinaire et Expert Juriste."
+      ],
+      "correction_priority": "Très haute — préserver le fait disciplinaire principal et traiter l'alcool comme contexte distinct."
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "dimensions": {
+        "factual_understanding": {
+          "score": 5,
+          "evidence": [
+            "L'extraction conclut à des faits disciplinaires non précisés malgré la reconnaissance explicite de pauses excessives.",
+            "La finalité de sécurité Seveso et le débat sur l'usage disciplinaire du badge ne sont pas compris."
+          ]
+        },
+        "question_relevance": {
+          "score": 4,
+          "evidence": [
+            "Les relevés de badgeage et la période sont demandés.",
+            "Les questions dérivent vers les heures supplémentaires, compteurs et majorations et omettent finalité, information, consultation CSE, tolérances et consentement."
+          ]
+        },
+        "source_relevance": {
+          "score": 5,
+          "evidence": [
+            "Deux textes disciplinaires généraux sont retenus.",
+            "Aucune source RGPD, CNIL, contrôle des salariés, pauses ou consultation CSE n'est fournie."
+          ]
+        },
+        "rule_fact_comparison": {
+          "score": 3,
+          "evidence": [
+            "La réponse ne compare pas la finalité déclarée du tourniquet à son usage envisagé comme preuve disciplinaire."
+          ]
+        },
+        "strategy_realism": {
+          "score": 3,
+          "evidence": [
+            "Une prudence générique sur la preuve subsiste.",
+            "La ligne de défense porte sur attribution, personne visée et diffusion comme dans un dossier d'injure, pas sur des pauses reconnues et la loyauté de la preuve."
+          ]
+        },
+        "adversarial_analysis": {
+          "score": 2,
+          "evidence": [
+            "Les justifications sécurité Seveso, désorganisation, règles de pause et tolérances ne sont pas mises en regard."
+          ]
+        },
+        "no_invention": {
+          "score": 3,
+          "evidence": [
+            "La disponibilité limitée des sources est signalée.",
+            "Le rapport introduit un projet d'accord, une réduction du repos à neuf heures, une erreur de manipulation et des enjeux de paie étrangers au dossier."
+          ]
+        },
+        "practical_usefulness": {
+          "score": 2,
+          "evidence": [
+            "Demander les données brutes peut être utile.",
+            "La réponse ne permet pas de préparer le contrôle de finalité, la chronologie disciplinaire ou une éventuelle négociation."
+          ]
+        }
+      },
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "successes": [
+        "La procédure disciplinaire et la proportionnalité sont mentionnées.",
+        "Nexus ne traite pas l'issue négociée connue comme un fait initial."
+      ],
+      "errors": [
+        "Les pauses reconnues ne sont pas extraites.",
+        "La finalité du tourniquet, le RGPD, la CNIL, l'information des salariés et la consultation du CSE sont absents.",
+        "Le contrôle postérieur de l'issue connue montre que mise à pied, arrêt maladie, menace de licenciement et consentement à la rupture ne font pas partie des options analysées."
+      ],
+      "irrelevant_sources": [
+        "Les seules sources portent sur la définition et l'information de la sanction, sans cadre du badgeage ni des pauses."
+      ],
+      "invented_facts": [
+        "Projet d'accord ou d'avenant.",
+        "Réduction du repos à neuf heures.",
+        "Erreur de manipulation et défaut de formation.",
+        "Problème d'heures supplémentaires et de majorations."
+      ],
+      "missing_essential_questions": [
+        "Finalité déclarée du tourniquet et information des salariés.",
+        "Consultation du CSE et registre du traitement.",
+        "Règles, durées et tolérances de pauses.",
+        "Chronologie des mesures et risque de double sanction.",
+        "Arrêt maladie traité séparément.",
+        "Consentement libre à une éventuelle rupture conventionnelle."
+      ],
+      "unrealistic_strategies": [
+        "Stratégie d'injure ou d'attribution d'un acte appliquée à des pauses reconnues.",
+        "Conclusion sur une perte de repos sans lien avec les faits."
+      ],
+      "important_repetitions": [
+        "Questions de paie, compteurs et majorations répétées dans plusieurs blocs."
+      ],
+      "correction_priority": "Critique — distinguer immédiatement le fait reconnu de la licéité et de la finalité de la preuve."
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "dimensions": {
+        "factual_understanding": {
+          "score": 9,
+          "evidence": [
+            "Le texte grossier, l'auteur reconnu, le lieu, l'absence de personne visée et le contexte sont partiellement restitués.",
+            "La catégorie devient THREAT_OR_VIOLENCE, la menace est mise à true et la répétition à true malgré des faits initiaux contraires ou manquants."
+          ]
+        },
+        "question_relevance": {
+          "score": 6,
+          "evidence": [
+            "Les questions à la direction sur grief, preuve, personne visée, conséquences et proportionnalité sont pertinentes.",
+            "Les questions au salarié restent génériques et l'interface principale affiche surtout des questions de paie."
+          ]
+        },
+        "source_relevance": {
+          "score": 7,
+          "evidence": [
+            "Les trois extraits du Code du travail sur procédure et sanction sont pertinents.",
+            "Aucun règlement intérieur, jurisprudence comparable, source santé au travail ou source temps de travail n'est disponible."
+          ]
+        },
+        "rule_fact_comparison": {
+          "score": 5,
+          "evidence": [
+            "La procédure et la proportionnalité sont rapprochées du dossier.",
+            "La qualification erronée de menace et l'absence de comparaison avec le nettoyage ou la souffrance limitent fortement l'analyse."
+          ]
+        },
+        "strategy_realism": {
+          "score": 10,
+          "evidence": [
+            "La stratégie de reconnaissance mesurée, regrets, absence de cible, conséquences réelles et proportionnalité est utilisable.",
+            "Elle est affaiblie par une qualification de menace et par la contamination paie de la restitution principale."
+          ]
+        },
+        "adversarial_analysis": {
+          "score": 6,
+          "evidence": [
+            "Les demandes à la direction couvrent preuve, grief, conséquences, règlement et précédents.",
+            "La thèse patronale sur la visibilité, le respect des installations et le contexte collectif reste peu développée."
+          ]
+        },
+        "no_invention": {
+          "score": 4,
+          "evidence": [
+            "Les indisponibilités documentaires sont indiquées.",
+            "Nexus invente une menace, une violence, une répétition et transforme l'absence de dommage établi en absence de dommage."
+          ]
+        },
+        "practical_usefulness": {
+          "score": 3,
+          "evidence": [
+            "Le dossier disciplinaire contient des formulations et actions concrètes.",
+            "La vue principale demande bulletins, compteurs, primes et heures supplémentaires, ce qui rend l'ensemble difficile à utiliser."
+          ]
+        }
+      },
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "successes": [
+        "La reconnaissance, l'absence de personne identifiée, le contexte et la proportionnalité alimentent une stratégie réaliste.",
+        "La réponse évite une conclusion automatique de faute grave.",
+        "Les sources réellement indisponibles sont signalées."
+      ],
+      "errors": [
+        "Le tag grossier est classé comme menace ou violence.",
+        "Le fait est présenté comme répété alors que ce point est manquant.",
+        "La réponse principale bascule sur un contrôle paie sans rapport direct.",
+        "Le contrôle postérieur de l'issue connue confirme que lettre de recadrage et nettoyage figuraient parmi les options réalistes, sans justifier les inventions factuelles."
+      ],
+      "irrelevant_sources": [
+        "Aucune source citée n'est manifestement fausse, mais les blocs paie sont hors sujet et dominent la restitution."
+      ],
+      "invented_facts": [
+        "Menace ou violence alléguée.",
+        "Faits répétés.",
+        "Absence de dommage matériel durable indiquée, alors que le dommage est seulement inconnu."
+      ],
+      "missing_essential_questions": [
+        "Phrase complète, support et visibilité.",
+        "Effaçabilité, dommage, nettoyage, ordre, durée et badgeage.",
+        "Faits précis de souffrance et signalements antérieurs.",
+        "Caractère isolé ou répété posé comme question plutôt que déduit."
+      ],
+      "unrealistic_strategies": [
+        "Qualification de menace malgré la contestation explicite de toute menace.",
+        "Contrôle de paie générique substitué à la synthèse disciplinaire."
+      ],
+      "important_repetitions": [
+        "Procédure, preuve et proportionnalité reviennent dans plusieurs sections.",
+        "Questions et documents de paie sont répétés entre routeur, orchestration et rapport."
+      ],
+      "correction_priority": "Critique — fiabiliser l'extraction avant l'agrégation et empêcher les domaines secondaires de remplacer le dossier principal."
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "dimensions": {
+        "factual_understanding": {
+          "score": 12,
+          "evidence": [
+            "Le passage imposé de jour à un rythme posté, l'absence de volontariat, les week-ends et jours fériés sont compris.",
+            "Les postes matin et après-midi, l'absence de nuit précisée, les pleurs et l'absence d'issue sont omis de l'extraction, tandis qu'une démission et une réduction d'effectif sont ajoutées."
+          ]
+        },
+        "question_relevance": {
+          "score": 9,
+          "evidence": [
+            "Contrat, durée, horaires exacts, cycle, volontaires, accord, effectifs, CSE et contraintes personnelles sont demandés.",
+            "Une question sur la classification est ajoutée sans nécessité."
+          ]
+        },
+        "source_relevance": {
+          "score": 2,
+          "evidence": [
+            "Aucune source n'est effectivement retenue.",
+            "La Bible Accords est indisponible et aucune jurisprudence ou source Légifrance pertinente n'est fournie."
+          ]
+        },
+        "rule_fact_comparison": {
+          "score": 3,
+          "evidence": [
+            "La distinction contrat, horaires et dimension collective est annoncée sans texte disponible.",
+            "L'Expert Juriste compare le dossier à une réduction du repos à neuf heures et à une classification, étrangères aux faits."
+          ]
+        },
+        "strategy_realism": {
+          "score": 9,
+          "evidence": [
+            "La position écrite, la collecte des documents, la prudence avant refus et la recherche d'alternatives sont réalistes.",
+            "La stratégie est contaminée par des faits provenant d'un autre scénario."
+          ]
+        },
+        "adversarial_analysis": {
+          "score": 5,
+          "evidence": [
+            "Le pouvoir d'organisation de l'employeur est évoqué.",
+            "Les besoins réels, la durée, les critères de choix et les réponses patronales ne sont pas développés contradictoirement."
+          ]
+        },
+        "no_invention": {
+          "score": 3,
+          "evidence": [
+            "La réponse reste prudente sur la légalité définitive.",
+            "Elle ajoute une démission, une réduction de l'équipe de jour, une hausse de rémunération, une réduction du repos à neuf heures et des équipements SNCC/PROVOX absents de case_input."
+          ]
+        },
+        "practical_usefulness": {
+          "score": 4,
+          "evidence": [
+            "La liste centrale de questions et documents est immédiatement utilisable.",
+            "Les nombreuses pistes étrangères réduisent la lisibilité."
+          ]
+        }
+      },
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "successes": [
+        "Les questions prioritaires essentielles sont presque toutes présentes.",
+        "Aucun travail de nuit n'est affirmé comme un fait ; les horaires exacts sont demandés.",
+        "Nexus déconseille un refus immédiat non préparé."
+      ],
+      "errors": [
+        "Des faits historiques d'un autre dossier jour-vers-poste sont injectés dans cette fixture.",
+        "Aucune source réelle ne permet la comparaison demandée.",
+        "Classification, équipements techniques et repos de neuf heures contaminent le rapport.",
+        "La salariée partie en pleurs n'est pas intégrée aux faits ou à la stratégie de santé."
+      ],
+      "irrelevant_sources": [
+        "Aucune source n'est retenue ; les thèmes classification et équipements techniques apparaissent sans source ni lien avec case_input."
+      ],
+      "invented_facts": [
+        "Remplacement d'un salarié démissionnaire.",
+        "Réduction possible de l'équipe de jour.",
+        "Rémunération supérieure ou prime de poste.",
+        "Réduction du repos à neuf heures.",
+        "Locaux SNCC/PROVOX, analyseurs et stock de pièces critiques."
+      ],
+      "missing_essential_questions": [
+        "Les pleurs et les besoins immédiats de soutien ou de prévention.",
+        "Confirmation explicite que seuls matin et après-midi sont annoncés."
+      ],
+      "unrealistic_strategies": [
+        "Analyse de classification et de maintenance technique mêlée à la défense du changement d'horaires."
+      ],
+      "important_repetitions": [
+        "Les listes de documents et questions sont dupliquées dans la méthode salarié et l'orchestration."
+      ],
+      "correction_priority": "Haute — conserver la bonne trame de questions mais supprimer toute mémoire factuelle ou contamination inter-scénario."
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "dimensions": {
+        "factual_understanding": {
+          "score": 7,
+          "evidence": [
+            "Le mandat, la convocation et la nature réunion ou délégation sont partiellement identifiés.",
+            "Nexus suppose une réunion pendant un repos, un régime 5x8 et un dossier disciplinaire, sans marquer le récit comme incomplet."
+          ]
+        },
+        "question_relevance": {
+          "score": 3,
+          "evidence": [
+            "La qualité du salarié et la nature de la réunion sont évoquées dans la réponse courte.",
+            "La liste visible demande surtout paie, compteurs, DUERP et griefs disciplinaires et ne demande pas la fin manquante."
+          ]
+        },
+        "source_relevance": {
+          "score": 3,
+          "evidence": [
+            "Un texte général sur le temps de travail effectif est cité.",
+            "Aucune source CSSCT, temps de réunion, délégation, accord CSE ou entrave n'est fournie."
+          ]
+        },
+        "rule_fact_comparison": {
+          "score": 2,
+          "evidence": [
+            "Le texte sur le temps de travail n'est pas comparé aux qualités, convocation, horaire ou canal encore inconnus."
+          ]
+        },
+        "strategy_realism": {
+          "score": 2,
+          "evidence": [
+            "La prudence avant qualification existe dans la réponse courte.",
+            "Le rapport final conclut à un projet réduisant le repos et adopte une stratégie disciplinaire étrangère au cas."
+          ]
+        },
+        "adversarial_analysis": {
+          "score": 2,
+          "evidence": [
+            "Les arguments possibles sur le canal, le délai, la qualité de l'élu et la convocation ne sont pas réellement mis en regard."
+          ]
+        },
+        "no_invention": {
+          "score": 2,
+          "evidence": [
+            "L'insuffisance des sources est signalée.",
+            "Le repos, le 5x8, la réduction à neuf heures, le projet d'accord, l'erreur technique et la discipline sont inventés."
+          ]
+        },
+        "practical_usefulness": {
+          "score": 1,
+          "evidence": [
+            "La réponse visible ne fournit pas la série de questions indispensables au dossier incomplet."
+          ]
+        }
+      },
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD",
+        "INCOMPLETE_CASE_OVERCLAIM"
+      ],
+      "successes": [
+        "La réponse courte indique qu'une conclusion automatique est impossible.",
+        "La distinction entre mandat, convocation et nature de la réunion apparaît brièvement."
+      ],
+      "errors": [
+        "Le mot convocation vers une CSSCT déclenche à tort le parcours disciplinaire malgré le parcours QUESTION_SALARIE demandé.",
+        "Le caractère incomplet et la fin manquante ne sont pas signalés.",
+        "Le rapport conclut à une position défavorable sur une réduction du repos inexistante."
+      ],
+      "irrelevant_sources": [
+        "Article général sur le temps de travail effectif sans source spécifique CSSCT ou délégation."
+      ],
+      "invented_facts": [
+        "Réunion pendant un repos.",
+        "Régime 5x8.",
+        "Réduction du repos à neuf heures.",
+        "Projet d'accord ou d'avenant.",
+        "Faute disciplinaire et erreur de manipulation."
+      ],
+      "missing_essential_questions": [
+        "Quelle est la fin manquante du récit ?",
+        "L'élu est-il membre de la CSSCT et officiellement convoqué ?",
+        "Réunion pendant travail ou repos ?",
+        "Temps de réunion ou crédit d'heures ?",
+        "Canal prévu par quel texte ?",
+        "Empêchement effectif et retenue de salaire ?"
+      ],
+      "unrealistic_strategies": [
+        "Défense disciplinaire sur attribution, personne visée et antécédents.",
+        "Négociation d'un projet réduisant le repos."
+      ],
+      "important_repetitions": [
+        "Questions de paie et de procédure disciplinaire répétées sans lien avec le mandat."
+      ],
+      "correction_priority": "Critique — respecter le parcours explicite et bloquer toute conclusion tant que le récit incomplet n'est pas clarifié."
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "dimensions": {
+        "factual_understanding": {
+          "score": 4,
+          "evidence": [
+            "Le thème congés payés est détecté.",
+            "Nexus suppose immédiatement la règle légale du dixième, route le dossier en disciplinaire à cause de l'expression « faute de connaître » et ignore l'ambiguïté explicitement bloquante."
+          ]
+        },
+        "question_relevance": {
+          "score": 2,
+          "evidence": [
+            "La période et la méthode actuelle sont demandées.",
+            "La première question obligatoire — définir la règle des 10 % — et les quatre significations possibles sont absentes."
+          ]
+        },
+        "source_relevance": {
+          "score": 1,
+          "evidence": [
+            "Aucune source n'est retenue et les documents demandés présupposent le dixième légal."
+          ]
+        },
+        "rule_fact_comparison": {
+          "score": 1,
+          "evidence": [
+            "Aucune comparaison valide n'est possible puisque Nexus choisit une signification non établie."
+          ]
+        },
+        "strategy_realism": {
+          "score": 1,
+          "evidence": [
+            "La stratégie porte sur une sanction, une réduction du repos et un contrôle paie au lieu de demander la clarification préalable."
+          ]
+        },
+        "adversarial_analysis": {
+          "score": 1,
+          "evidence": [
+            "Les hypothèses employeur possibles selon les quatre sens de la règle ne sont pas examinées."
+          ]
+        },
+        "no_invention": {
+          "score": 1,
+          "evidence": [
+            "Nexus invente la signification légale du dixième, une discipline, un projet d'accord et une réduction du repos à neuf heures."
+          ]
+        },
+        "practical_usefulness": {
+          "score": 1,
+          "evidence": [
+            "La réponse oriente immédiatement vers des bulletins et calculs non justifiés au lieu d'obtenir la définition indispensable."
+          ]
+        }
+      },
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD",
+        "INCOMPLETE_CASE_OVERCLAIM",
+        "TEN_PERCENT_RULE_NOT_CLARIFIED"
+      ],
+      "successes": [
+        "Nexus indique qu'aucune source locale suffisante ne permet de conclure.",
+        "Aucun calcul chiffré n'est effectué."
+      ],
+      "errors": [
+        "La règle des 10 % est assimilée directement à l'indemnité légale du dixième.",
+        "Le parcours QUESTION_SALARIE demandé est remplacé par le parcours disciplinaire parce que le texte contient « faute de connaître ».",
+        "Le caractère unresolved n'est pas affiché.",
+        "Le rapport conclut malgré tout à une position défavorable sur une réduction du repos inexistante."
+      ],
+      "irrelevant_sources": [
+        "Aucune source affichée ; les règles paie listées dans l'Expert Paie concernent plusieurs thèmes 5x8 et jours fériés étrangers à la clarification préalable."
+      ],
+      "invented_facts": [
+        "Application de la règle légale du dixième.",
+        "Existence d'un grief disciplinaire.",
+        "Réduction du repos à neuf heures.",
+        "Projet d'accord à négocier.",
+        "Éléments propres aux salariés postés."
+      ],
+      "missing_essential_questions": [
+        "Que signifie exactement la règle des 10 % ?",
+        "Dixième légal, quota d'absence, report ou règle locale de pose ?",
+        "Quelle était sa source ?",
+        "Quel accord a modifié la période ?",
+        "Perte financière ou changement d'organisation ?"
+      ],
+      "unrealistic_strategies": [
+        "Contrôle de l'assiette du dixième avant définition de la règle.",
+        "Défense disciplinaire et négociation d'une réduction du repos."
+      ],
+      "important_repetitions": [
+        "Questions de paie et discipline répétées dans le routeur, l'orchestration et les experts."
+      ],
+      "correction_priority": "Critique — imposer la clarification sémantique avant tout routage juridique ou paie."
+    }
+  ],
+  "transversal": {
+    "recurring_understanding_errors": [
+      "Le moteur choisit un mot secondaire comme fait principal : alcool, convocation, nettoyage, dixième ou faute dans une locution.",
+      "Les faits reconnus, contestés et explicitement inconnus sont parfois remplacés par des valeurs booléennes affirmatives.",
+      "Des éléments d'autres scénarios apparaissent dans les réponses : repos à neuf heures, démission, réduction d'équipe, SNCC/PROVOX."
+    ],
+    "recurring_false_leads": [
+      "Erreur de manipulation, formation, habilitation et modes opératoires dans des dossiers non techniques.",
+      "Paie, compteurs, majorations et bulletins dès qu'un temps ou une rémunération potentielle est mentionné.",
+      "Projet d'accord et réduction du repos à neuf heures appliqués à plusieurs cas individuels.",
+      "Discipline déclenchée par « convocation » CSSCT ou « faute de connaître »."
+    ],
+    "document_selection_problems": [
+      "La Bible Accords est indisponible ou vide pendant toute la baseline.",
+      "Les sources locales attendues ne sont donc pas comparées aux faits.",
+      "Des listes génériques de documents de paie ou de classification remplacent les pièces propres au dossier."
+    ],
+    "jurisprudence_problems": [
+      "Les décisions Judilibre retenues sont procédurales ou lexicalement proches mais rarement comparées aux faits précis.",
+      "Aucune jurisprudence factuellement comparable n'est fournie pour pauses/badgeage, tag ou changement d'horaires.",
+      "L'absence de jurisprudence est parfois correctement signalée."
+    ],
+    "strategy_problems": [
+      "Des stratégies spécialisées sont appliquées au mauvais type de fait.",
+      "La bonne stratégie disciplinaire du tag est masquée par l'agrégation paie.",
+      "Les cas incomplets reçoivent des conclusions ou positions défavorables au lieu d'un arrêt sur clarification."
+    ],
+    "interface_or_rendering_problems": [
+      "La vue principale agrège findings, questions et experts hors sujet alors qu'un sous-dossier métier peut être meilleur.",
+      "Les réponses brutes publiques font entre 127 et 391 Ko, avec répétitions importantes.",
+      "Le statut final assistant est DISABLED pour les six cas ; la baseline mesure donc le moteur historique et son orchestration actuelle."
+    ],
+    "weakest_case_families": [
+      "Ambiguïté lexicale préalable : règle des 10 %.",
+      "Mandat/CSSCT avec récit incomplet.",
+      "Preuve numérique/RGPD dans un dossier disciplinaire.",
+      "Extraction disciplinaire lorsque plusieurs thèmes coexistent."
+    ],
+    "top_three_priorities": [
+      "Fiabiliser l'extraction et le routage sur le fait principal, avec respect du parcours explicite et arrêt obligatoire sur ambiguïté bloquante.",
+      "Empêcher toute contamination inter-scénario et toute agrégation d'un domaine secondaire qui remplace le dossier principal.",
+      "Sélectionner questions, documents et sources par comparaison factuelle, puis dédupliquer la restitution visible."
+    ]
+  }
+}

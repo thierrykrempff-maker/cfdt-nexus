@@ -29,10 +29,13 @@
     "completeness": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "limitations"],
+      "required": ["status", "analysis_state", "limitations"],
       "properties": {
         "status": {
           "enum": ["complete_for_initial_analysis", "incomplete"]
+        },
+        "analysis_state": {
+          "enum": ["ready_for_initial_analysis", "unresolved_pending_clarification"]
         },
         "limitations": {
           "type": "array",
@@ -66,6 +69,7 @@
         "facts_provided",
         "facts_recognized",
         "facts_contested",
+        "facts_alleged",
         "missing_information"
       ],
       "properties": {
@@ -76,6 +80,9 @@
           "$ref": "#/$defs/stringList"
         },
         "facts_contested": {
+          "$ref": "#/$defs/stringList"
+        },
+        "facts_alleged": {
           "$ref": "#/$defs/stringList"
         },
         "missing_information": {

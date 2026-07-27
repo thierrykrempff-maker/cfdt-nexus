@@ -1,0 +1,2024 @@
+{
+  "baseline_schema_version": "1.0",
+  "captured_at": "2026-07-27T09:39:02.703353+00:00",
+  "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+  "case_input_sha256": "bf4c84cfa505017106f688e8cc9537194cd4ad3d361f4d4892cb9f41c62dee50",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/insulting-emails-alcohol.json",
+  "prompt_sha256": "651847b58e00d087465bd2c93e8c5678dc293d964db3b0c04270cb33b62ba1ab",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [
+          {
+            "items": [
+              "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute."
+            ],
+            "title": "Reponse courte Juriste"
+          },
+          {
+            "items": [
+              "Source principale: Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armée - terme utile: sanction; terme utile: disciplinaire; terme utile: faute; terme utile: procedure; terme utile: entretien",
+              "Source complementaire: Code du travail | L1332-1 | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui. - terme utile: sanction; terme utile: disciplinaire; terme utile: grief; terme utile: information; source normative Code du travail",
+              "Source complementaire: Code du travail | L1331-1 | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter imm - terme utile: sanction; terme utile: disciplinaire; source normative Code du travail; cible directement la procedure ou sanction disciplinaire; utile pour le contexte d'impact, mais non determinante sur les droits CSE",
+              "Source complementaire: Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28 - terme utile: sanction; terme utile: disciplinaire; terme utile: faute; terme utile: procedure; terme utile: entretien"
+            ],
+            "title": "Selection juridique des sources"
+          },
+          {
+            "items": [
+              "Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite."
+            ],
+            "title": "Qualification juridique"
+          },
+          {
+            "items": [
+              "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armée: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables. Apport: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits",
+              "Code du travail | L1332-1 | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite. Extrait utile: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+              "Code du travail | L1331-1 | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter imm: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite. Extrait utile: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié",
+              "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables. Apport: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui reti"
+            ],
+            "title": "Regle applicable"
+          },
+          {
+            "items": [
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee."
+            ],
+            "title": "Application aux faits"
+          },
+          {
+            "items": [
+              "Position probable: plutot favorable a une defense",
+              "Pourquoi: une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables."
+            ],
+            "title": "Conclusion provisoire juridique"
+          },
+          {
+            "items": [
+              "Argument principal salarie: Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, des consignes claires et une sanction proportionnee.",
+              "Arguments complementaires: Verifier si la procedure, les delais et les droits de defense ont ete respectes.",
+              "Arguments complementaires: Documenter le contexte de l'erreur: formation, urgence, charge, effectifs, consignes contradictoires.",
+              "Arguments complementaires: Comparer la reaction de la direction avec les pratiques anterieures pour des faits comparables.",
+              "Appui jurisprudentiel: Dans cette decision (Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8), l'appui utile est: Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "Appui jurisprudentiel: Dans cette decision (Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03), l'appui utile est: Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "Argument probable employeur: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+              "Argument employeur sur jurisprudence: Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8: decision ancienne a contextualiser: 2009",
+              "Argument employeur sur jurisprudence: Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8: Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation.",
+              "Argument employeur sur jurisprudence: Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03: decision ancienne a contextualiser: 2009",
+              "Argument employeur sur jurisprudence: Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03: Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation.",
+              "Reponse a l'employeur: Demander les preuves exactes et la consigne applicable au moment des faits.",
+              "Reponse a l'employeur: Rappeler qu'une erreur ne suffit pas sans faute et proportionnalite demontrees.",
+              "Contre-argument jurisprudence: Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8: utiliser la decision seulement comme comparaison factuelle et juridique, en la reliant aux pieces du dossier.",
+              "Contre-argument jurisprudence: Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03: utiliser la decision seulement comme comparaison factuelle et juridique, en la reliant aux pieces du dossier.",
+              "Faiblesse du dossier: La faiblesse serait une faute clairement prouvee, grave, repetee ou precedee de consignes non ambigues.",
+              "Preuve decisive: La preuve qui fait basculer: absence de formation/consigne claire, pression d'organisation ou incoherence des griefs.",
+              "Preuve prioritaire: Convocation, griefs ecrits, preuves direction, consignes applicables, formation et elements de contexte."
+            ],
+            "title": "Argumentation de defense"
+          },
+          {
+            "items": [
+              "Action immediate: ne pas repondre a chaud; reconstituer les faits et demander les preuves reprochees.",
+              "Demande ecrite: demander griefs precis, procedure suivie, consignes et preuves.",
+              "Pieces a securiser: formation, habilitations, modes operatoires, contexte de charge, mails et temoignages utiles.",
+              "Intervention DS/CSE si pertinente: alerter sur consignes ou organisation si l'erreur vient du systeme de travail.",
+              "Contestation: contester la sanction si preuve, procedure ou proportionnalite sont insuffisantes.",
+              "Escalade eventuelle: appui juridique en cas de sanction lourde ou de risque licenciement."
+            ],
+            "title": "Strategie d'action"
+          },
+          {
+            "items": [
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - identification: Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - question: Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - faits utiles: non determine a partir des donnees disponibles",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - position salarie/representants: non determine a partir des donnees disponibles",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - position employeur: non determine a partir des donnees disponibles",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - solution/apport: rejet: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - principe/apport utile: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - apport defense: Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - ressemblance dossier: meme notion juridique: sanction, disciplinaire, faute, entretien prealable",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - ressemblance dossier: faits proches: formation, preuve",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - difference a verifier: decision ancienne a contextualiser: 2009",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - difference a verifier: Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation.",
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - limite: decision ancienne a contextualiser: 2009",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - identification: Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - question: Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - faits utiles: non determine a partir des donnees disponibles",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - position salarie/representants: non determine a partir des donnees disponibles",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - position employeur: non determine a partir des donnees disponibles",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - solution/apport: cassation: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - principe/apport utile: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - apport defense: Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - ressemblance dossier: meme notion juridique: sanction, disciplinaire, faute, procedure",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - ressemblance dossier: faits proches: procedure, preuve",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - difference a verifier: decision ancienne a contextualiser: 2009",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - difference a verifier: Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation.",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - limite: decision ancienne a contextualiser: 2009"
+            ],
+            "title": "Jurisprudence retenue"
+          },
+          {
+            "items": [
+              "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+              "Regle applicable: Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armée: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables. Apport: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits",
+              "Regle applicable: Code du travail | L1332-1 | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite. Extrait utile: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+              "Regle applicable: Code du travail | L1331-1 | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter imm: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite. Extrait utile: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié",
+              "Regle applicable: Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables. Apport: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui reti",
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+              "Conclusion provisoire: plutot favorable a une defense - une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables.",
+              "Regle certaine: une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
+              "Interpretation: une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident.",
+              "Hypothese: la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+              "Information manquante: convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur."
+            ],
+            "title": "Analyse et raisonnement"
+          },
+          {
+            "items": [
+              "Cour de cassation | Chambre sociale | 2009-03-11 | pourvoi 08-40.453 | 6079b6319ba5988459c56df8 - statut procedural: Information non disponible dans les metadonnees Nexus.",
+              "Argumentation salarie: non determine a partir des donnees disponibles",
+              "Argumentation employeur: non determine a partir des donnees disponibles",
+              "Raisonnement du juge: rejet: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "Preuves determinantes: Preuves determinantes non identifiees automatiquement par Nexus.",
+              "Argument reutilisable: A verifier et reformuler comme argument: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis e",
+              "Argument adverse a anticiper: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+              "Faiblesse a eviter: Presenter une proximite de mots comme une proximite juridique.",
+              "Faiblesse a eviter: Transformer l'argument d'une partie en regle de droit.",
+              "Cour de cassation | Chambre sociale | 2009-03-18 | pourvoi 07-44.185 | 6079b6489ba5988459c56e03 - statut procedural: Information non disponible dans les metadonnees Nexus.",
+              "Raisonnement du juge: cassation: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "Argument reutilisable: A verifier et reformuler comme argument: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventu"
+            ],
+            "title": "Analyse contradictoire et retour contentieux"
+          },
+          {
+            "items": [
+              "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+              "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles."
+            ],
+            "title": "Risques et vigilance"
+          }
+        ],
+        "paie": [
+          {
+            "items": [
+              "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: cet",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "rubriques du bulletin concernees",
+              "base de calcul",
+              "taux",
+              "montant verse"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Orchestration experte",
+        "Juriste Travail",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - droit_travail_general, rgpd_cnil, disciplinaire"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié est convoqué après l'envoi de courriels insultants à un collègue.\n- Le collègue destinataire est secrétaire du CSE.\n- Aucun lien avec l'activité syndicale ou le mandat n'est allégué.\n- Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur des courriels.\n- Le salarié reconnaît le caractère insultant des courriels rapportés.\n\nFaits contestés :\n- Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.\n\nFaits allégués :\n- Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.\n- Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Contenu exact, nombre, dates, destinataires et diffusion des courriels [importance: blocking] — La teneur, la répétition et la publicité déterminent la qualification et la gravité.\n- Contexte et objet de l'échange avec le collègue [importance: high] — Il faut vérifier si le différend était personnel, professionnel ou réellement lié au mandat.\n- Preuves communiquées, procédure suivie et mesure précise envisagée [importance: high] — La défense doit porter sur le grief exact, la preuve, la procédure et la proportionnalité.\n- Antécédents, caractère isolé ou répété et comportement professionnel habituel [importance: high] — Ces éléments peuvent aggraver ou atténuer le risque.\n- Nature, durée, lieu et effets d'une éventuelle mutation [importance: high] — Il faut distinguer organisation, modification contractuelle et mesure disciplinaire.\n- Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations [importance: high] — La santé, la confidentialité et le rôle de la médecine du travail doivent être distingués de la discipline.\n- Existence d'autres mesures déjà prises pour les mêmes faits [importance: high] — Plusieurs mesures peuvent soulever un risque de cumul ou de double sanction."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur droit du travail, avec enjeux associes de RGPD/CNIL, disciplinaire, droit syndical. L'analyse vise recherche de droit local, situation individuelle, controle de conformite."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "droit_travail_general",
+            "rgpd_cnil",
+            "disciplinaire",
+            "droit_syndical",
+            "cse"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Juriste droit du travail V0 renforce",
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Mode principal: Defense salarie",
+            "Modes mobilises: Defense salarie"
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: plutot favorable a une defense."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "Defense salarie: La defense doit partir des faits precis reproches, des preuves communiquees, du respect de la procedure et de la proportionnalite de la sanction eventuelle. A ce stade, il faut securiser le dossier avant toute position definitive.",
+            "Defense salarie - Contradictoire: argument salarie/representants: Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, des consignes claires et une sanction proportionnee.",
+            "Defense salarie - Contradictoire: argument direction: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+            "Defense salarie - Contradictoire: preuve necessaire: Chronologie precise des faits et dates concernees.",
+            "Defense salarie - Qualification: Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite.",
+            "Defense salarie - Meilleur argument salarie: Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, des consignes claires et une sanction proportionnee.",
+            "Defense salarie - Position probable employeur: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+            "Defense salarie - Preuves indispensables: Chronologie precise des faits et dates concernees.",
+            "Defense salarie - Preuves indispensables: Convocation et eventuelle notification de sanction.",
+            "Defense salarie - Preuves indispensables: Pieces permettant de verifier la procedure disciplinaire et les delais.",
+            "Defense salarie - Preuves indispensables: Faits reproches dates et decrits precisement.",
+            "Defense salarie - Risques: Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+            "Defense salarie - Risques: Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles.",
+            "Defense salarie - Action immediate: Recuperer la convocation, les faits reproches, les preuves et construire une chronologie avant l'entretien ou la reponse."
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "le routage Nexus qualifie la demande sur droit_travail_general, rgpd_cnil, disciplinaire, droit_syndical, cse.",
+            "des sources locales principales ont ete retrouvees et doivent encadrer l'analyse.",
+            "Source locale identifiee: Code du travail | L1332-1 | Code du travail",
+            "Source locale identifiee: Code du travail | L1331-1 | Code du travail",
+            "Source locale identifiee: Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | Jurisprudence",
+            "Source locale identifiee: Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | Jurisprudence",
+            "l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+            "une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
+            "Des sources ont ete remontees par le routeur Nexus."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "date, champ d'application et remplacement eventuel des textes cites.",
+            "articulation entre accord local, convention collective et norme superieure applicable.",
+            "convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur.",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "accords ou usages sur heures de delegation",
+            "regles de fonctionnement CSE",
+            "moyens syndicaux applicables",
+            "accord ou règle de fonctionnement applicable",
+            "état actuel des moyens",
+            "projet de modification des moyens",
+            "garanties proposées",
+            "éléments reprochés",
+            "témoignages ou éléments de contexte",
+            "accord CSE ou droit syndical applicable"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Quels faits precis sont reproches ?",
+            "Quels delais et droits de defense ont ete respectes ?",
+            "Quels éléments de preuve ont été communiqués au salarié ?",
+            "La sanction envisagée est-elle proportionnée aux faits établis ?",
+            "Quels mandats et quels représentants sont concernés ?",
+            "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+            "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+            "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Position juridique probable: plutot favorable a une defense. une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: plutot favorable a une defense."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "Aucune explication pratique officielle pertinente n'a ete retenue pour cette question."
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: 2 source(s) remontee(s).",
+            "Jurisprudence: 2 source(s) remontee(s).",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Code du travail | L1332-1 | Code du travail | couche Code du travail | origine Légifrance | référence interne non publiée | id officiel LEGIARTI000006901447 | etat VIGUEUR | en vigueur True | version 2008-05-01 -> 2999-01-01 | recupere le 2026-07-27T09:39:00+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447 | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+            "Code du travail | L1331-1 | Code du travail | couche Code du travail | origine Légifrance | référence interne non publiée | id officiel LEGIARTI000006901445 | etat VIGUEUR | en vigueur True | version 2008-05-01 -> 2999-01-01 | recupere le 2026-07-27T09:38:58+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445 | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+            "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | Jurisprudence | couche Jurisprudence | origine JUDILIBRE | score 0.9961831438498051 | référence interne non publiée | id officiel 6079b6319ba5988459c56df8 | recupere le 2026-07-27T09:39:00+00:00 | url/id https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armées (IGESA), a été licencié le 3 mars 2003 pour faute grave ; Attendu que l'IGESA fait grief à l'arrêt de dire le licenciement sans cause réelle et sérieuse et de la condamner à payer au salarié diverses sommes à ce titre, alors, selon le moyen : 1°/ qu'elle exposait dans ses conclusions d'appel qu'il résultait du procès-verbal du 28 janvier 2003 signé par M. X... que ce dernier avait au cours d'une audition, datée du même jour, pris connaissance des éléments et fourni ses explications, qu'il avait en conséquence bénéficié d'une information complète, ce qu'il avait reconnu dans son courrier en date du 20 février 2003, postérieur à l'entretien préalable, adressé à l'adminis...",
+            "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | Jurisprudence | couche Jurisprudence | origine JUDILIBRE | score 0.995209227899448 | référence interne non publiée | id officiel 6079b6489ba5988459c56e03 | recupere le 2026-07-27T09:39:01+00:00 | url/id https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28 octobre 1987 par la société Berger en qualité de représentant et dont le contrat avait été repris le 7 juin 1995 par la société Marie Brizard, a été convoqué le 9 décembre 2003 à un entretien préalable fixé au 12 décembre pour un éventuel licenciement avec mise à pied conservatoire de trois jours ; qu'après vérification de ses explications par l'employeur, il a été licencié le 9 janvier 2004 pour faute grave ; qu'il a saisi la juridiction prud'homale d'une demande de paiement de diverses sommes au titre de la rupture ; Attendu que pour condamner l'employeur au paiement d'un rappel de salaire pour la période de mise à pied et de diverses indemnités au titre du licencieme..."
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "JUDILIBRE: 6 decision(s) ecartee(s) car la proximite juridique, les faits ou la portee etaient insuffisants.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert juriste ne remplace pas une validation juridique humaine.",
+            "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+            "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+            "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+            "La periode concernee n'est pas renseignee."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - droit_travail_general, rgpd_cnil, disciplinaire",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": {
+        "10_after_interview": [
+          "Rédiger un compte rendu factuel et daté sans dupliquer les arguments.",
+          "Demander la communication des preuves ou pièces encore manquantes.",
+          "Contrôler le motif, la date et la proportionnalité de toute sanction notifiée.",
+          "Adresser si nécessaire une contestation écrite ciblée.",
+          "Évaluer avec un défenseur syndical ou un avocat la suite adaptée."
+        ],
+        "1_facts_understood": {
+          "facts_from_request": [
+            "fait lié à l'alcool ou aux stupéfiants",
+            "Le salarié reconnaît être l'auteur selon la demande transmise."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "2_points_to_verify": {
+          "chronology": [
+            "date des faits",
+            "date de connaissance par l'employeur",
+            "date de convocation",
+            "date de l'entretien",
+            "date de notification éventuelle"
+          ],
+          "decisive_missing_facts": [
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ]
+        },
+        "3_provisional_qualification": {
+          "act_category": "ALCOHOL_OR_DRUGS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [
+                {
+                  "article_or_clause": "L1332-1",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                },
+                {
+                  "article_or_clause": "L1331-1",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                }
+              ],
+              "status": "disponible et factuellement pertinent"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [
+                {
+                  "article_or_clause": "pourvoi 08-40.453",
+                  "case_number": "08-40.453",
+                  "decision_date": "2009-03-11",
+                  "document": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+                },
+                {
+                  "article_or_clause": "pourvoi 07-44.185",
+                  "case_number": "07-44.185",
+                  "decision_date": "2009-03-18",
+                  "document": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185"
+                }
+              ],
+              "status": "disponible et factuellement pertinent"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Qualification provisoire : alcohol or drugs. La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "faits répétés"
+          ],
+          "case_law_comparison": [
+            {
+              "case_number": "08-40.453",
+              "context": [
+                "meme notion juridique: sanction, disciplinaire, faute, entretien prealable",
+                "faits proches: formation, preuve",
+                "type de litige proche: licenciement, grief"
+              ],
+              "date": "2009-03-11",
+              "decision": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453",
+              "exact_words": "non determine a partir des donnees disponibles",
+              "public_or_private": "à comparer dans la décision",
+              "repetition": "à comparer dans la décision",
+              "sanction": "rejet: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "seniority_and_prior_warnings": "à comparer dans la décision",
+              "target": "à comparer dans la décision"
+            },
+            {
+              "case_number": "07-44.185",
+              "context": [
+                "meme notion juridique: sanction, disciplinaire, faute, procedure",
+                "faits proches: procedure, preuve",
+                "type de litige proche: licenciement, mise a pied"
+              ],
+              "date": "2009-03-18",
+              "decision": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185",
+              "exact_words": "non determine a partir des donnees disponibles",
+              "public_or_private": "à comparer dans la décision",
+              "repetition": "à comparer dans la décision",
+              "sanction": "cassation: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "seniority_and_prior_warnings": "à comparer dans la décision",
+              "target": "à comparer dans la décision"
+            }
+          ],
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "faits reconnus",
+          "strategy": "Le salarié reconnaît un geste déplacé et regrettable commis sous le coup de l'énervement. Il conteste toutefois toute volonté de menacer, harceler ou viser personnellement un collègue si ces éléments correspondent aux faits. La défense porte sur le caractère isolé, les conséquences réelles, les antécédents et la proportionnalité de la sanction.",
+          "supporting_points": [
+            "reconnaissance mesurée du geste et regrets",
+            "absence de personne nommément visée si elle est confirmée",
+            "absence de menace ou de violence si elle est confirmée",
+            "caractère isolé et absence d'antécédent à vérifier",
+            "conséquences matérielles et visibilité réelles",
+            "contexte documenté sans le présenter comme une autorisation",
+            "réparation, nettoyage ou suppression rapide à vérifier",
+            "proportionnalité de la sanction"
+          ]
+        },
+        "6_questions_for_employee": [
+          "Existe-t-il une notification écrite et précisément motivée ?",
+          "Le salarié était-il assisté lors de l'entretien ?",
+          "Les faits sont-ils reconnus, partiellement reconnus ou contestés ?",
+          "Quand et comment le salarié a-t-il été convoqué ?",
+          "Quand l'employeur a-t-il eu connaissance des faits ?",
+          "Quelle est la date précise des faits reprochés ?",
+          "Quelle est la nature exacte de la mesure annoncée ou notifiée ?",
+          "Des situations similaires ont-elles donné lieu à des mesures comparables ?",
+          "Existe-t-il des témoins ou des écrits contemporains des faits ?",
+          "La sanction paraît-elle proportionnée aux faits allégués ?",
+          "Le règlement intérieur prévoit-il cette sanction et la procédure applicable ?",
+          "Existe-t-il une jurisprudence réellement comparable et à jour ?",
+          "Quels accords INEOS et dispositions conventionnelles sont applicables ?"
+        ],
+        "7_questions_for_management": [
+          "Quel est le grief exact retenu contre le salarié ?",
+          "Quelles preuves établissent l'acte et son attribution au salarié ?",
+          "Une personne précise est-elle considérée comme visée et sur quels éléments ?",
+          "Quelles conséquences concrètes l'inscription ou le comportement a-t-il produites ?",
+          "Quelle clause précise du règlement intérieur est invoquée ?",
+          "Quels précédents réellement comparables ont été traités dans l'entreprise ?",
+          "Quelle sanction est envisagée ?",
+          "Comment sa proportionnalité est-elle appréciée au regard du contexte, des conséquences et des antécédents ?"
+        ],
+        "8_interview_preparation": {
+          "documents_to_request": [
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "accords ou usages sur heures de delegation",
+            "regles de fonctionnement CSE",
+            "moyens syndicaux applicables",
+            "accord ou règle de fonctionnement applicable",
+            "état actuel des moyens",
+            "projet de modification des moyens",
+            "garanties proposées",
+            "éléments reprochés",
+            "témoignages ou éléments de contexte",
+            "accord CSE ou droit syndical applicable"
+          ],
+          "notes_to_record": [
+            "participants et qualité de chacun",
+            "grief exact et qualification avancée",
+            "preuves citées ou présentées",
+            "réponses du salarié",
+            "demandes de communication et réponse de la direction"
+          ],
+          "suggested_wording": [
+            "« Je reconnais un geste déplacé et je le regrette. »",
+            "« Je n'ai voulu menacer ni harceler personne ; je demande que la personne prétendument visée et les conséquences exactes soient précisées. »",
+            "« Je souhaite que mon parcours, mes éventuels antécédents, le contexte et les conséquences réelles soient pris en compte. »"
+          ]
+        },
+        "9_points_not_to_say": [
+          "« Ce n'est pas grave. »",
+          "« Il avait le droit parce qu'il était énervé. »",
+          "« Personne n'était nommée donc aucune faute n'existe. »",
+          "« Il faut nier même si une preuve existe. »"
+        ],
+        "analysis_type": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "fact_extraction": {
+          "act_category": "ALCOHOL_OR_DRUGS",
+          "alleged_act": "fait lié à l'alcool ou aux stupéfiants",
+          "context_claimed": [],
+          "employee_admission": true,
+          "employer_evidence": [
+            "trace écrite"
+          ],
+          "exact_words_or_behavior": "fait lié à l'alcool ou aux stupéfiants",
+          "facts_missing": [
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ],
+          "location": null,
+          "material_damage": null,
+          "prior_warnings": null,
+          "public_visibility": null,
+          "repetition": true,
+          "sanction_considered": null,
+          "target_identified": null,
+          "target_type": "collègue",
+          "threat_or_violence": null
+        },
+        "notice": "Dossier de préparation syndicale fondé sur les faits fournis. Toute qualification et toute appréciation de gravité restent provisoires."
+      },
+      "documents_to_request": [
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "accords ou usages sur heures de delegation",
+        "regles de fonctionnement CSE",
+        "moyens syndicaux applicables",
+        "accord ou règle de fonctionnement applicable",
+        "état actuel des moyens",
+        "projet de modification des moyens",
+        "garanties proposées",
+        "éléments reprochés",
+        "témoignages ou éléments de contexte",
+        "accord CSE ou droit syndical applicable"
+      ],
+      "employee_method_analysis": null,
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des decisions Cour de cassation via l'API officielle JUDILIBRE",
+          "engine": "JUDILIBRE",
+          "status": "connected"
+        }
+      ],
+      "facts": [],
+      "findings": [
+        "Verifier les faits reproches, les preuves, les dates et les delais de procedure.",
+        "Controler les droits de defense et les garanties prevues par le reglement interieur.",
+        "À vérifier dans une source locale à identifier : procédure disciplinaire applicable et garanties de défense.",
+        "À vérifier dans une source locale à identifier : sanctions prévues, délais et modalités de convocation.",
+        "À vérifier dans une source locale à identifier : crédits d'heures, mandats concernés et moyens syndicaux existants.",
+        "À vérifier dans une source locale à identifier : modalités d'utilisation, suivi et garanties des représentants.",
+        "risque de procédure insuffisamment documentée",
+        "risque de sanction disproportionnée à vérifier"
+      ],
+      "issue_groups": [],
+      "jurisprudence_audit": [
+        {
+          "candidate_count": 8,
+          "query": "sanction disciplinaire faute preuve entretien prealable",
+          "rejected": [
+            {
+              "case_number": "18-18.317",
+              "chamber": "Chambre sociale",
+              "decision_date": "2020-07-08",
+              "document": "Cour de cassation, Chambre sociale, 2020-07-08, 18-18.317",
+              "exclusion_reason": "decision moins utile que les decisions retenues pour cette question",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 96,
+              "official_id": "5fca4b962fd47d5ae944e989",
+              "theme": "statut collectif du travail conventions et accords collectifs accords collectifs accords d'entreprise air france règlement intérieur annexe ii relative aux dispositions propres au personnel navigant commercial article 4.2 procédure d'entre..."
+            },
+            {
+              "case_number": "18-22.204",
+              "chamber": "Chambre sociale",
+              "decision_date": "2021-09-22",
+              "document": "Cour de cassation, Chambre sociale, 2021-09-22, 18-22.204",
+              "exclusion_reason": "decision moins utile que les decisions retenues pour cette question",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 94,
+              "official_id": "614ac6c83fb6491d18e80d18",
+              "theme": "contrat de travail, execution employeur pouvoir disciplinaire sanction conditions formalités légales domaine d'application avertissement cas détermination portée"
+            },
+            {
+              "case_number": "13-26.916",
+              "chamber": "Chambre sociale",
+              "decision_date": "2015-05-19",
+              "document": "Cour de cassation, Chambre sociale, 2015-05-19, 13-26.916",
+              "exclusion_reason": "decision moins utile que les decisions retenues pour cette question",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 94,
+              "official_id": "6079c72a9ba5988459c57550",
+              "theme": "contrat de travail, execution employeur pouvoir disciplinaire sanction caractérisation portée"
+            },
+            {
+              "case_number": "19-16.117",
+              "chamber": "Chambre sociale",
+              "decision_date": "2021-05-27",
+              "document": "Cour de cassation, Chambre sociale, 2021-05-27, 19-16.117",
+              "exclusion_reason": "decision moins utile que les decisions retenues pour cette question",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 88,
+              "official_id": "60af35f210a3048b8b576578",
+              "theme": "contrat de travail, rupture licenciement licenciement disciplinaire formalités préalables prescriptions du guide mémento des règles de gestion rh px 10 de la poste respect défaut portée"
+            },
+            {
+              "case_number": "16-11.173",
+              "chamber": "Chambre sociale",
+              "decision_date": "2017-10-25",
+              "document": "Cour de cassation, Chambre sociale, 2017-10-25, 16-11.173",
+              "exclusion_reason": "decision moins utile que les decisions retenues pour cette question",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 88,
+              "official_id": "5fd8f4e2c2fd5c88d1dafa2c",
+              "theme": "contrat de travail, rupture licenciement cause cause réelle et sérieuse appréciation office du juge etendue détermination applications diverses licenciement disciplinaire faute du salarié portée"
+            },
+            {
+              "case_number": "14-18.169",
+              "chamber": "Chambre sociale",
+              "decision_date": "2015-11-12",
+              "document": "Cour de cassation, Chambre sociale, 2015-11-12, 14-18.169",
+              "exclusion_reason": "decision moins utile que les decisions retenues pour cette question",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 88,
+              "official_id": "6079c88a9ba5988459c575eb",
+              "theme": "contrat de travail, execution employeur pouvoir disciplinaire sanction formalités préalables formalités prévues par une convention collective ou un règlement intérieur consultation d'un organisme pour avis décision notification délai point..."
+            }
+          ],
+          "retained": [
+            {
+              "document": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185",
+              "jurisprudence_relevance_score": 97,
+              "official_id": "6079b6489ba5988459c56e03"
+            },
+            {
+              "document": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453",
+              "jurisprudence_relevance_score": 97,
+              "official_id": "6079b6319ba5988459c56df8"
+            }
+          ],
+          "theme": "Discipline sanction et preuve"
+        }
+      ],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [
+            {
+              "article": "L2312-8",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000043975196",
+              "relevance_score": 12
+            },
+            {
+              "article": "L2312-14",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000036262404",
+              "relevance_score": 12
+            },
+            {
+              "article": "L2312-15",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000038791194",
+              "relevance_score": 12
+            }
+          ],
+          "sources_received": 5,
+          "sources_retained": 2,
+          "status": "retained",
+          "warnings": []
+        }
+      ],
+      "next_action": "Completer les faits, relire les sources citees puis choisir la suite syndicale adaptee.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié est convoqué après l'envoi de courriels insultants à un collègue.\n- Le collègue destinataire est secrétaire du CSE.\n- Aucun lien avec l'activité syndicale ou le mandat n'est allégué.\n- Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur des courriels.\n- Le salarié reconnaît le caractère insultant des courriels rapportés.\n\nFaits contestés :\n- Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.\n\nFaits allégués :\n- Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.\n- Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Contenu exact, nombre, dates, destinataires et diffusion des courriels [importance: blocking] — La teneur, la répétition et la publicité déterminent la qualification et la gravité.\n- Contexte et objet de l'échange avec le collègue [importance: high] — Il faut vérifier si le différend était personnel, professionnel ou réellement lié au mandat.\n- Preuves communiquées, procédure suivie et mesure précise envisagée [importance: high] — La défense doit porter sur le grief exact, la preuve, la procédure et la proportionnalité.\n- Antécédents, caractère isolé ou répété et comportement professionnel habituel [importance: high] — Ces éléments peuvent aggraver ou atténuer le risque.\n- Nature, durée, lieu et effets d'une éventuelle mutation [importance: high] — Il faut distinguer organisation, modification contractuelle et mesure disciplinaire.\n- Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations [importance: high] — La santé, la confidentialité et le rôle de la médecine du travail doivent être distingués de la discipline.\n- Existence d'autres mesures déjà prises pour les mêmes faits [importance: high] — Plusieurs mesures peuvent soulever un risque de cumul ou de double sanction.",
+      "questions_to_ask": [
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quels éléments de preuve ont été communiqués au salarié ?",
+        "La sanction envisagée est-elle proportionnée aux faits établis ?",
+        "Quels mandats et quels représentants sont concernés ?"
+      ],
+      "response_depth": "multi_domain",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "rgpd_cnil",
+          "disciplinaire",
+          "droit_syndical",
+          "cse"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours approfondi a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des decisions Cour de cassation via l'API officielle JUDILIBRE",
+            "engine": "JUDILIBRE",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "intents": [
+          "rechercher_droit_local",
+          "analyser_situation_individuelle",
+          "verifier_conformite"
+        ],
+        "main_domain": "droit_travail_general",
+        "primary_domain": "droit_travail_general",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié est convoqué après l'envoi de courriels insultants à un collègue.\n- Le collègue destinataire est secrétaire du CSE.\n- Aucun lien avec l'activité syndicale ou le mandat n'est allégué.\n- Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur des courriels.\n- Le salarié reconnaît le caractère insultant des courriels rapportés.\n\nFaits contestés :\n- Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.\n\nFaits allégués :\n- Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.\n- Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Contenu exact, nombre, dates, destinataires et diffusion des courriels [importance: blocking] — La teneur, la répétition et la publicité déterminent la qualification et la gravité.\n- Contexte et objet de l'échange avec le collègue [importance: high] — Il faut vérifier si le différend était personnel, professionnel ou réellement lié au mandat.\n- Preuves communiquées, procédure suivie et mesure précise envisagée [importance: high] — La défense doit porter sur le grief exact, la preuve, la procédure et la proportionnalité.\n- Antécédents, caractère isolé ou répété et comportement professionnel habituel [importance: high] — Ces éléments peuvent aggraver ou atténuer le risque.\n- Nature, durée, lieu et effets d'une éventuelle mutation [importance: high] — Il faut distinguer organisation, modification contractuelle et mesure disciplinaire.\n- Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations [importance: high] — La santé, la confidentialité et le rôle de la médecine du travail doivent être distingués de la discipline.\n- Existence d'autres mesures déjà prises pour les mêmes faits [importance: high] — Plusieurs mesures peuvent soulever un risque de cumul ou de double sanction.",
+        "reasoning_summary": [
+          "La demande porte sur la relation de travail ou une garantie legale generale.",
+          "La demande porte sur les donnees personnelles ou la vie privee au travail.",
+          "La demande porte sur une procedure ou sanction disciplinaire.",
+          "La demande vise explicitement mandat, elu CSE ou moyens syndicaux.",
+          "La demande appelle une preparation ou discussion CSE.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande concerne un dossier ou une situation de salarie.",
+          "La demande vise une verification ou un controle."
+        ],
+        "response_profile": "syndical_defense_deep",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "rgpd_cnil",
+          "disciplinaire",
+          "droit_syndical",
+          "cse"
+        ],
+        "warnings": []
+      },
+      "short_answer": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": null,
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [
+            {
+              "article": "L1332-1",
+              "article_or_section": "L1332-1",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2008-05-01",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000006901447",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L1332-1",
+              "match_score": null,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000006901447",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T09:39:00+00:00",
+              "score": null,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2008-05-01"
+            },
+            {
+              "article": "L1331-1",
+              "article_or_section": "L1331-1",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2008-05-01",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000006901445",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L1331-1",
+              "match_score": null,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000006901445",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T09:38:58+00:00",
+              "score": null,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2008-05-01"
+            }
+          ],
+          "status": "present"
+        },
+        {
+          "absent_message": null,
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [
+            {
+              "article": "pourvoi 08-40.453",
+              "article_or_section": "pourvoi 08-40.453",
+              "case_number": "08-40.453",
+              "chamber": "Chambre sociale",
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": null,
+              "date_fin": null,
+              "decision_date": "2009-03-11",
+              "decision_text_length": 7892,
+              "defense_retained": true,
+              "difference_avec_dossier": [
+                "decision ancienne a contextualiser: 2009",
+                "Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation."
+              ],
+              "document": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453",
+              "document_type": "jurisprudence",
+              "etat": null,
+              "excerpt": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armées (IGESA), a été licencié le 3 mars 2003 pour faute grave ; Attendu que l'IGESA fait grief à l'arrêt de dire le licenciement sans cause réelle et sérieuse et de la condamner à payer au salarié diverses sommes à ce titre, alors, selon le moyen : 1°/ qu'elle exposait dans ses conclusions d'appel qu'il résultait du procès-verbal du 28 janvier 2003 signé par M. X... que ce dernier avait au cours d'une audition, datée du même jour, pris connaissance des éléments et fourni ses explications, qu'il avait en conséquence bénéficié d'une information complète, ce qu'il avait reconnu dans son courrier en date du 20 février 2003, postérieur à l'entretien préalable, adressé à l'adminis...",
+              "exclusion_reason": null,
+              "faits_utiles": "non determine a partir des donnees disponibles",
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": null,
+              "judilibre_id": "6079b6319ba5988459c56df8",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 97,
+              "legifrance_id": "6079b6319ba5988459c56df8",
+              "legifrance_relevance_status": null,
+              "limite_utilisation": "decision ancienne a contextualiser: 2009",
+              "location": "pourvoi 08-40.453",
+              "match_score": 0.9961831438498051,
+              "nature": "jurisprudence",
+              "official_id": "6079b6319ba5988459c56df8",
+              "official_origin": null,
+              "origin": "JUDILIBRE",
+              "page": null,
+              "position_employeur": "non determine a partir des donnees disponibles",
+              "position_salarie_representants": "non determine a partir des donnees disponibles",
+              "principe_apport_utile": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "principle_summary": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "question_juridique": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "ressemblance_avec_dossier": [
+                "meme notion juridique: sanction, disciplinaire, faute, entretien prealable",
+                "faits proches: formation, preuve",
+                "type de litige proche: licenciement, grief"
+              ],
+              "resume_court": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "retrieved_at": "2026-07-27T09:39:00+00:00",
+              "score": 0.9961831438498051,
+              "solution": "rejet",
+              "solution_retenue": "rejet: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "source_layer": "jurisprudence",
+              "source_layer_label": "Jurisprudence",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+              "theme": "contrat de travail, rupture licenciement licenciement disciplinaire formalités préalables formalités prévues par des dispositions conventionnelles ou un règlement intérieur inobservation portée cause cause réelle et sérieuse défaut applica...",
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8",
+              "url_or_id": "https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8",
+              "utilite_defense": "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "version": null,
+              "version_end_date": null,
+              "version_start_date": null
+            },
+            {
+              "article": "pourvoi 07-44.185",
+              "article_or_section": "pourvoi 07-44.185",
+              "case_number": "07-44.185",
+              "chamber": "Chambre sociale",
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": null,
+              "date_fin": null,
+              "decision_date": "2009-03-18",
+              "decision_text_length": 16732,
+              "defense_retained": true,
+              "difference_avec_dossier": [
+                "decision ancienne a contextualiser: 2009",
+                "Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation."
+              ],
+              "document": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185",
+              "document_type": "jurisprudence",
+              "etat": null,
+              "excerpt": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28 octobre 1987 par la société Berger en qualité de représentant et dont le contrat avait été repris le 7 juin 1995 par la société Marie Brizard, a été convoqué le 9 décembre 2003 à un entretien préalable fixé au 12 décembre pour un éventuel licenciement avec mise à pied conservatoire de trois jours ; qu'après vérification de ses explications par l'employeur, il a été licencié le 9 janvier 2004 pour faute grave ; qu'il a saisi la juridiction prud'homale d'une demande de paiement de diverses sommes au titre de la rupture ; Attendu que pour condamner l'employeur au paiement d'un rappel de salaire pour la période de mise à pied et de diverses indemnités au titre du licencieme...",
+              "exclusion_reason": null,
+              "faits_utiles": "non determine a partir des donnees disponibles",
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": null,
+              "judilibre_id": "6079b6489ba5988459c56e03",
+              "juridiction": "Cour de cassation",
+              "jurisprudence_relevance_score": 97,
+              "legifrance_id": "6079b6489ba5988459c56e03",
+              "legifrance_relevance_status": null,
+              "limite_utilisation": "decision ancienne a contextualiser: 2009",
+              "location": "pourvoi 07-44.185",
+              "match_score": 0.995209227899448,
+              "nature": "jurisprudence",
+              "official_id": "6079b6489ba5988459c56e03",
+              "official_origin": null,
+              "origin": "JUDILIBRE",
+              "page": null,
+              "position_employeur": "non determine a partir des donnees disponibles",
+              "position_salarie_representants": "non determine a partir des donnees disponibles",
+              "principe_apport_utile": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "principle_summary": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "question_juridique": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "ressemblance_avec_dossier": [
+                "meme notion juridique: sanction, disciplinaire, faute, procedure",
+                "faits proches: procedure, preuve",
+                "type de litige proche: licenciement, mise a pied"
+              ],
+              "resume_court": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "retrieved_at": "2026-07-27T09:39:01+00:00",
+              "score": 0.995209227899448,
+              "solution": "cassation",
+              "solution_retenue": "cassation: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "source_layer": "jurisprudence",
+              "source_layer_label": "Jurisprudence",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+              "theme": "contrat de travail, rupture licenciement formalités légales entretien préalable convocation contenu prononcé d'une mise à pied portée contrat de travail, execution employeur pouvoir disciplinaire mise à pied mise à pied conservatoire durée...",
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03",
+              "url_or_id": "https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03",
+              "utilite_defense": "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+              "version": null,
+              "version_end_date": null,
+              "version_start_date": null
+            }
+          ],
+          "status": "present"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [
+        {
+          "article": "L1332-1",
+          "article_or_section": "L1332-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901447",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1332-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901447",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:39:00+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": "L1331-1",
+          "article_or_section": "L1331-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901445",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1331-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901445",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:38:58+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": "pourvoi 08-40.453",
+          "article_or_section": "pourvoi 08-40.453",
+          "case_number": "08-40.453",
+          "chamber": "Chambre sociale",
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": "2009-03-11",
+          "decision_text_length": 7892,
+          "defense_retained": true,
+          "difference_avec_dossier": [
+            "decision ancienne a contextualiser: 2009",
+            "Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation."
+          ],
+          "document": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453",
+          "document_type": "jurisprudence",
+          "etat": null,
+          "excerpt": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armées (IGESA), a été licencié le 3 mars 2003 pour faute grave ; Attendu que l'IGESA fait grief à l'arrêt de dire le licenciement sans cause réelle et sérieuse et de la condamner à payer au salarié diverses sommes à ce titre, alors, selon le moyen : 1°/ qu'elle exposait dans ses conclusions d'appel qu'il résultait du procès-verbal du 28 janvier 2003 signé par M. X... que ce dernier avait au cours d'une audition, datée du même jour, pris connaissance des éléments et fourni ses explications, qu'il avait en conséquence bénéficié d'une information complète, ce qu'il avait reconnu dans son courrier en date du 20 février 2003, postérieur à l'entretien préalable, adressé à l'adminis...",
+          "exclusion_reason": null,
+          "faits_utiles": "non determine a partir des donnees disponibles",
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": "6079b6319ba5988459c56df8",
+          "juridiction": "Cour de cassation",
+          "jurisprudence_relevance_score": 97,
+          "legifrance_id": "6079b6319ba5988459c56df8",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": "decision ancienne a contextualiser: 2009",
+          "location": "pourvoi 08-40.453",
+          "match_score": 0.9961831438498051,
+          "nature": "jurisprudence",
+          "official_id": "6079b6319ba5988459c56df8",
+          "official_origin": null,
+          "origin": "JUDILIBRE",
+          "page": null,
+          "position_employeur": "non determine a partir des donnees disponibles",
+          "position_salarie_representants": "non determine a partir des donnees disponibles",
+          "principe_apport_utile": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "principle_summary": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "question_juridique": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "ressemblance_avec_dossier": [
+            "meme notion juridique: sanction, disciplinaire, faute, entretien prealable",
+            "faits proches: formation, preuve",
+            "type de litige proche: licenciement, grief"
+          ],
+          "resume_court": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "retrieved_at": "2026-07-27T09:39:00+00:00",
+          "score": 0.9961831438498051,
+          "solution": "rejet",
+          "solution_retenue": "rejet: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "source_layer": "jurisprudence",
+          "source_layer_label": "Jurisprudence",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "theme": "contrat de travail, rupture licenciement licenciement disciplinaire formalités préalables formalités prévues par des dispositions conventionnelles ou un règlement intérieur inobservation portée cause cause réelle et sérieuse défaut applica...",
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8",
+          "url_or_id": "https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8",
+          "utilite_defense": "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        },
+        {
+          "article": "pourvoi 07-44.185",
+          "article_or_section": "pourvoi 07-44.185",
+          "case_number": "07-44.185",
+          "chamber": "Chambre sociale",
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": "2009-03-18",
+          "decision_text_length": 16732,
+          "defense_retained": true,
+          "difference_avec_dossier": [
+            "decision ancienne a contextualiser: 2009",
+            "Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation."
+          ],
+          "document": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185",
+          "document_type": "jurisprudence",
+          "etat": null,
+          "excerpt": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28 octobre 1987 par la société Berger en qualité de représentant et dont le contrat avait été repris le 7 juin 1995 par la société Marie Brizard, a été convoqué le 9 décembre 2003 à un entretien préalable fixé au 12 décembre pour un éventuel licenciement avec mise à pied conservatoire de trois jours ; qu'après vérification de ses explications par l'employeur, il a été licencié le 9 janvier 2004 pour faute grave ; qu'il a saisi la juridiction prud'homale d'une demande de paiement de diverses sommes au titre de la rupture ; Attendu que pour condamner l'employeur au paiement d'un rappel de salaire pour la période de mise à pied et de diverses indemnités au titre du licencieme...",
+          "exclusion_reason": null,
+          "faits_utiles": "non determine a partir des donnees disponibles",
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": "6079b6489ba5988459c56e03",
+          "juridiction": "Cour de cassation",
+          "jurisprudence_relevance_score": 97,
+          "legifrance_id": "6079b6489ba5988459c56e03",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": "decision ancienne a contextualiser: 2009",
+          "location": "pourvoi 07-44.185",
+          "match_score": 0.995209227899448,
+          "nature": "jurisprudence",
+          "official_id": "6079b6489ba5988459c56e03",
+          "official_origin": null,
+          "origin": "JUDILIBRE",
+          "page": null,
+          "position_employeur": "non determine a partir des donnees disponibles",
+          "position_salarie_representants": "non determine a partir des donnees disponibles",
+          "principe_apport_utile": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "principle_summary": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "question_juridique": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "ressemblance_avec_dossier": [
+            "meme notion juridique: sanction, disciplinaire, faute, procedure",
+            "faits proches: procedure, preuve",
+            "type de litige proche: licenciement, mise a pied"
+          ],
+          "resume_court": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "retrieved_at": "2026-07-27T09:39:01+00:00",
+          "score": 0.995209227899448,
+          "solution": "cassation",
+          "solution_retenue": "cassation: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "source_layer": "jurisprudence",
+          "source_layer_label": "Jurisprudence",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "theme": "contrat de travail, rupture licenciement formalités légales entretien préalable convocation contenu prononcé d'une mise à pied portée contrat de travail, execution employeur pouvoir disciplinaire mise à pied mise à pied conservatoire durée...",
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03",
+          "url_or_id": "https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03",
+          "utilite_defense": "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        }
+      ],
+      "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de RGPD/CNIL, disciplinaire, droit syndical. L'analyse vise recherche de droit local, situation individuelle, controle de conformite.",
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "JUDILIBRE: 6 decision(s) ecartee(s) car la proximite juridique, les faits ou la portee etaient insuffisants.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier la proportionnalite d'une eventuelle sanction."
+    },
+    "expert_juriste": {
+      "action_conseillee": [
+        "Action immediate: ne pas repondre a chaud; reconstituer les faits et demander les preuves reprochees.",
+        "Demande ecrite: demander griefs precis, procedure suivie, consignes et preuves.",
+        "Pieces a securiser: formation, habilitations, modes operatoires, contexte de charge, mails et temoignages utiles.",
+        "Intervention DS/CSE si pertinente: alerter sur consignes ou organisation si l'erreur vient du systeme de travail.",
+        "Contestation: contester la sanction si preuve, procedure ou proportionnalite sont insuffisantes.",
+        "Escalade eventuelle: appui juridique en cas de sanction lourde ou de risque licenciement."
+      ],
+      "active": true,
+      "analyse_et_raisonnement": [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        "Regle applicable: Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armée: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables. Apport: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits",
+        "Regle applicable: Code du travail | L1332-1 | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite. Extrait utile: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+        "Regle applicable: Code du travail | L1331-1 | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter imm: la source sert a verifier la qualification disciplinaire, la procedure, les griefs et la proportionnalite. Extrait utile: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié",
+        "Regle applicable: Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | extrait: LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28: dans cette decision, l'apport utile identifie est a comparer aux faits du dossier; elle sert d'appui jurisprudentiel prudent, sans remplacer les textes applicables. Apport: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui reti",
+        "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+        "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+        "Conclusion provisoire: plutot favorable a une defense - une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables.",
+        "Regle certaine: une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
+        "Interpretation: une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident.",
+        "Hypothese: la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+        "Information manquante: convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur."
+      ],
+      "ce_qui_depend_accord_statut_element_manquant": [
+        "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
+        "Information manquante: articulation entre accord local, convention collective et norme superieure applicable."
+      ],
+      "ce_qui_est_etabli_par_sources": [
+        "Regle certaine: le routage Nexus qualifie la demande sur droit_travail_general, rgpd_cnil, disciplinaire, droit_syndical, cse.",
+        "Regle certaine: des sources locales principales ont ete retrouvees et doivent encadrer l'analyse.",
+        "Source locale identifiee: Code du travail | L1332-1 | Code du travail",
+        "Source locale identifiee: Code du travail | L1331-1 | Code du travail",
+        "Source locale identifiee: Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | Jurisprudence",
+        "Source locale identifiee: Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | Jurisprudence"
+      ],
+      "limites": [
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "JUDILIBRE: 6 decision(s) ecartee(s) car la proximite juridique, les faits ou la portee etaient insuffisants.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "position_de_travail_proposee": "Position de travail: construire la defense sur faits, preuves, procedure, contexte de l'erreur et proportionnalite avant d'accepter la qualification disciplinaire de la direction.",
+      "qualification_juridique_situation": "Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite.",
+      "questions_a_poser_direction": [
+        "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+        "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+        "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quels éléments de preuve ont été communiqués au salarié ?"
+      ],
+      "response_courte": "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute.",
+      "risques_points_vigilance": [
+        "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+        "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles."
+      ]
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "accords ou usages sur heures de delegation",
+        "regles de fonctionnement CSE",
+        "moyens syndicaux applicables"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin"
+      ],
+      "elements_du_bulletin_concernes": [
+        "rubriques du bulletin concernees",
+        "base de calcul",
+        "taux",
+        "montant verse"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales.",
+      "regles_ou_sources_disponibles": [
+        "Source locale a verifier: Code du travail | L1332-1 | Code du travail",
+        "Source locale a verifier: Code du travail | L1331-1 | Code du travail",
+        "Source locale a verifier: Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 | pourvoi 08-40.453 | Jurisprudence",
+        "Source locale a verifier: Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185 | pourvoi 07-44.185 | Jurisprudence"
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "accords ou usages sur heures de delegation",
+        "regles de fonctionnement CSE",
+        "moyens syndicaux applicables",
+        "accord ou règle de fonctionnement applicable",
+        "état actuel des moyens",
+        "projet de modification des moyens",
+        "garanties proposées",
+        "éléments reprochés",
+        "témoignages ou éléments de contexte",
+        "accord CSE ou droit syndical applicable"
+      ],
+      "domaines_detectes": [
+        "droit_travail_general",
+        "rgpd_cnil",
+        "disciplinaire",
+        "droit_syndical",
+        "cse"
+      ],
+      "experts_mobilises": [
+        "Expert Juriste droit du travail V0 renforce",
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "JUDILIBRE: 6 decision(s) ecartee(s) car la proximite juridique, les faits ou la portee etaient insuffisants.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Position juridique probable: plutot favorable a une defense. une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un salarié est convoqué après l'envoi de courriels insultants à un collègue.\n- Le collègue destinataire est secrétaire du CSE.\n- Aucun lien avec l'activité syndicale ou le mandat n'est allégué.\n- Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.\n\nFaits reconnus :\n- Le salarié reconnaît être l'auteur des courriels.\n- Le salarié reconnaît le caractère insultant des courriels rapportés.\n\nFaits contestés :\n- Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.\n\nFaits allégués :\n- Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.\n- Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Contenu exact, nombre, dates, destinataires et diffusion des courriels [importance: blocking] — La teneur, la répétition et la publicité déterminent la qualification et la gravité.\n- Contexte et objet de l'échange avec le collègue [importance: high] — Il faut vérifier si le différend était personnel, professionnel ou réellement lié au mandat.\n- Preuves communiquées, procédure suivie et mesure précise envisagée [importance: high] — La défense doit porter sur le grief exact, la preuve, la procédure et la proportionnalité.\n- Antécédents, caractère isolé ou répété et comportement professionnel habituel [importance: high] — Ces éléments peuvent aggraver ou atténuer le risque.\n- Nature, durée, lieu et effets d'une éventuelle mutation [importance: high] — Il faut distinguer organisation, modification contractuelle et mesure disciplinaire.\n- Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations [importance: high] — La santé, la confidentialité et le rôle de la médecine du travail doivent être distingués de la discipline.\n- Existence d'autres mesures déjà prises pour les mêmes faits [importance: high] — Plusieurs mesures peuvent soulever un risque de cumul ou de double sanction.",
+      "questions_utiles": [
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quels éléments de preuve ont été communiqués au salarié ?",
+        "La sanction envisagée est-elle proportionnée aux faits établis ?",
+        "Quels mandats et quels représentants sont concernés ?",
+        "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+        "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+        "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie"
+      ],
+      "reponse_synthetique_nexus": "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: plutot favorable a une defense.",
+      "sources": [
+        {
+          "article": "L1332-1",
+          "article_or_section": "L1332-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901447",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1332-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901447",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:39:00+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901447",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": "L1331-1",
+          "article_or_section": "L1331-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006901445",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L1331-1",
+          "match_score": null,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006901445",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:38:58+00:00",
+          "score": null,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901445",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": "pourvoi 08-40.453",
+          "article_or_section": "pourvoi 08-40.453",
+          "case_number": "08-40.453",
+          "chamber": "Chambre sociale",
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": "2009-03-11",
+          "decision_text_length": 7892,
+          "defense_retained": true,
+          "difference_avec_dossier": [
+            "decision ancienne a contextualiser: 2009",
+            "Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation."
+          ],
+          "document": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453",
+          "document_type": "jurisprudence",
+          "etat": null,
+          "excerpt": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Attendu, selon l'arrêt attaqué (Colmar, 27 novembre 2007), que M. X..., engagé en 1998 par l'Institution de gestion sociale des armées (IGESA), a été licencié le 3 mars 2003 pour faute grave ; Attendu que l'IGESA fait grief à l'arrêt de dire le licenciement sans cause réelle et sérieuse et de la condamner à payer au salarié diverses sommes à ce titre, alors, selon le moyen : 1°/ qu'elle exposait dans ses conclusions d'appel qu'il résultait du procès-verbal du 28 janvier 2003 signé par M. X... que ce dernier avait au cours d'une audition, datée du même jour, pris connaissance des éléments et fourni ses explications, qu'il avait en conséquence bénéficié d'une information complète, ce qu'il avait reconnu dans son courrier en date du 20 février 2003, postérieur à l'entretien préalable, adressé à l'adminis...",
+          "exclusion_reason": null,
+          "faits_utiles": "non determine a partir des donnees disponibles",
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": "6079b6319ba5988459c56df8",
+          "juridiction": "Cour de cassation",
+          "jurisprudence_relevance_score": 97,
+          "legifrance_id": "6079b6319ba5988459c56df8",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": "decision ancienne a contextualiser: 2009",
+          "location": "pourvoi 08-40.453",
+          "match_score": 0.9961831438498051,
+          "nature": "jurisprudence",
+          "official_id": "6079b6319ba5988459c56df8",
+          "official_origin": null,
+          "origin": "JUDILIBRE",
+          "page": null,
+          "position_employeur": "non determine a partir des donnees disponibles",
+          "position_salarie_representants": "non determine a partir des donnees disponibles",
+          "principe_apport_utile": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "principle_summary": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "question_juridique": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "ressemblance_avec_dossier": [
+            "meme notion juridique: sanction, disciplinaire, faute, entretien prealable",
+            "faits proches: formation, preuve",
+            "type de litige proche: licenciement, grief"
+          ],
+          "resume_court": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "retrieved_at": "2026-07-27T09:39:00+00:00",
+          "score": 0.9961831438498051,
+          "solution": "rejet",
+          "solution_retenue": "rejet: Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "source_layer": "jurisprudence",
+          "source_layer_label": "Jurisprudence",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": "Un règlement intérieur qui prévoit qu'une sanction ne pourra intervenir qu'après que le personnel intéressé aura été appelé à prendre connaissance du dossier disciplinaire concernant la sanction et à fournir des explications institue une protection des droits de la défense supérieure à celle prévue par la loi et constitue donc une garantie de fond. Une cour d'appel, ayant constaté que le salarié n'avait pas été mis en situation de prendre connaissance de son dossier disciplinaire, en déduit exactement que son licenciement ne pouvait avoir de cause réelle et sérieuse",
+          "theme": "contrat de travail, rupture licenciement licenciement disciplinaire formalités préalables formalités prévues par des dispositions conventionnelles ou un règlement intérieur inobservation portée cause cause réelle et sérieuse défaut applica...",
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8",
+          "url_or_id": "https://www.courdecassation.fr/decision/6079b6319ba5988459c56df8",
+          "utilite_defense": "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        },
+        {
+          "article": "pourvoi 07-44.185",
+          "article_or_section": "pourvoi 07-44.185",
+          "case_number": "07-44.185",
+          "chamber": "Chambre sociale",
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": "2009-03-18",
+          "decision_text_length": 16732,
+          "defense_retained": true,
+          "difference_avec_dossier": [
+            "decision ancienne a contextualiser: 2009",
+            "Comparer les faits exacts de la decision avec les pieces du dossier Nexus avant utilisation."
+          ],
+          "document": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185",
+          "document_type": "jurisprudence",
+          "etat": null,
+          "excerpt": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : Sur le moyen unique : Vu l'article L. 122-41, devenu L. 1332-3 du code du travail ; Attendu, selon l'arrêt attaqué, que M. X..., qui avait été engagé le 28 octobre 1987 par la société Berger en qualité de représentant et dont le contrat avait été repris le 7 juin 1995 par la société Marie Brizard, a été convoqué le 9 décembre 2003 à un entretien préalable fixé au 12 décembre pour un éventuel licenciement avec mise à pied conservatoire de trois jours ; qu'après vérification de ses explications par l'employeur, il a été licencié le 9 janvier 2004 pour faute grave ; qu'il a saisi la juridiction prud'homale d'une demande de paiement de diverses sommes au titre de la rupture ; Attendu que pour condamner l'employeur au paiement d'un rappel de salaire pour la période de mise à pied et de diverses indemnités au titre du licencieme...",
+          "exclusion_reason": null,
+          "faits_utiles": "non determine a partir des donnees disponibles",
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": "6079b6489ba5988459c56e03",
+          "juridiction": "Cour de cassation",
+          "jurisprudence_relevance_score": 97,
+          "legifrance_id": "6079b6489ba5988459c56e03",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": "decision ancienne a contextualiser: 2009",
+          "location": "pourvoi 07-44.185",
+          "match_score": 0.995209227899448,
+          "nature": "jurisprudence",
+          "official_id": "6079b6489ba5988459c56e03",
+          "official_origin": null,
+          "origin": "JUDILIBRE",
+          "page": null,
+          "position_employeur": "non determine a partir des donnees disponibles",
+          "position_salarie_representants": "non determine a partir des donnees disponibles",
+          "principe_apport_utile": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "principle_summary": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "question_juridique": "Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "ressemblance_avec_dossier": [
+            "meme notion juridique: sanction, disciplinaire, faute, procedure",
+            "faits proches: procedure, preuve",
+            "type de litige proche: licenciement, mise a pied"
+          ],
+          "resume_court": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "retrieved_at": "2026-07-27T09:39:01+00:00",
+          "score": 0.995209227899448,
+          "solution": "cassation",
+          "solution_retenue": "cassation: La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "source_layer": "jurisprudence",
+          "source_layer_label": "Jurisprudence",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": "La mise à pied prononcée par l'employeur dans l'attente de sa décision dans la procédure de licenciement engagée dans le même temps a un caractère conservatoire. Dès lors, viole l'article L. 122-41, devenu L. 1332-3 du code du travail, la cour d'appel qui retient qu'une mise à pied conservatoire étant nécessairement à durée indéterminée, le salarié qui, par la lettre le convoquant à un entretien préalable à un éventuel licenciement, a été mis à pied à titre conservatoire pour un temps déterminé, puis licencié disciplinairement, a été sanctionné deux fois pour les mêmes faits",
+          "theme": "contrat de travail, rupture licenciement formalités légales entretien préalable convocation contenu prononcé d'une mise à pied portée contrat de travail, execution employeur pouvoir disciplinaire mise à pied mise à pied conservatoire durée...",
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03",
+          "url_or_id": "https://www.courdecassation.fr/decision/6079b6489ba5988459c56e03",
+          "utilite_defense": "Appui prudent: utiliser cette decision pour comparer les faits et soutenir l'argumentation sur Preuve de la faute, procedure disciplinaire et proportionnalite de la sanction.",
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        }
+      ]
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}

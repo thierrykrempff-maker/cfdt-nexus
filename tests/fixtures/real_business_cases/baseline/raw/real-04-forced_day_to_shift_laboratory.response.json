@@ -1,0 +1,1169 @@
+{
+  "baseline_schema_version": "1.0",
+  "captured_at": "2026-07-27T09:38:56.251724+00:00",
+  "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+  "case_input_sha256": "a77132e4651e309611abb79f9bfacd9acf73ae24c764f536c249d9ff4acadbb0",
+  "employee_path": "QUESTION_SALARIE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/forced-day-to-shift-laboratory.json",
+  "prompt_sha256": "78087966c7ff13e32be9061990404f4ccb1f156db5c8d347f1722e6d5ae935e7",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [
+          {
+            "items": [
+              "La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites."
+            ],
+            "title": "Reponse courte Juriste"
+          },
+          {
+            "items": [],
+            "title": "Selection juridique des sources"
+          },
+          {
+            "items": [
+              "Projet d'accord ou d'avenant a analyser avant position syndicale, avec comparaison droits actuels / modifications proposees."
+            ],
+            "title": "Qualification juridique"
+          },
+          {
+            "items": [
+              "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel."
+            ],
+            "title": "Regle applicable"
+          },
+          {
+            "items": [
+              "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+              "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+              "Application aux faits: reduire le repos a 9 heures est un signal de perte de garantie; la delegation doit exiger la base juridique, les cas limites, les compensations et le suivi.",
+              "Application aux faits: le projet ne doit pas etre negocie seulement comme une souplesse d'organisation mais comme une modification des protections temps de travail/repos.",
+              "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: changement collectif d'horaires, impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+              "Application aux faits: Projet CSE: changement collectif d'horaires, impact possible sante-securite et conditions de travail.",
+              "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV."
+            ],
+            "title": "Application aux faits"
+          },
+          {
+            "items": [
+              "Position probable: plutot defavorable en l'etat",
+              "Pourquoi: un projet qui reduit le repos est une perte potentielle de protection; il ne devrait etre discute qu'avec base juridique, perimetre strict, contreparties, suivi et garanties ecrites. La decision de signature reste politique et syndicale."
+            ],
+            "title": "Conclusion provisoire juridique"
+          },
+          {
+            "items": [
+              "Argument principal salarie: Refuser de raisonner sur une signature tant que le projet n'est pas compare aux droits actuels, aux normes superieures et aux impacts concrets pour les salaries.",
+              "Arguments complementaires: Exiger un tableau avant/apres des droits modifies.",
+              "Arguments complementaires: Demander le perimetre exact, les categories concernees, les garanties de repos et les contreparties.",
+              "Arguments complementaires: Conditionner la discussion a un suivi CSE/CSSCT et a une clause de revoyure.",
+              "Appui jurisprudentiel: Aucun appui jurisprudentiel suffisamment pertinent n'a ete retenu par Nexus pour cette question.",
+              "Argument probable employeur: La direction peut soutenir que la reduction du repos ou la souplesse proposee est necessaire a la continuite d'activite.",
+              "Argument employeur sur jurisprudence: Aucun argument direction specifique issu d'une decision retenue n'est disponible.",
+              "Reponse a l'employeur: Demander la preuve du besoin operationnel et les alternatives etudiees.",
+              "Reponse a l'employeur: Rappeler qu'une perte de protection doit etre strictement encadree, compensee et controlable.",
+              "Contre-argument jurisprudence: Ne pas presenter une decision isolee comme jurisprudence constante.",
+              "Faiblesse du dossier: La faiblesse principale serait de negocier sur un texte incomplet ou sans chiffrage des impacts.",
+              "Preuve decisive: La preuve qui fait basculer: demonstration que la reduction de repos cree une perte de protection non compensee ou non conforme.",
+              "Preuve prioritaire: Projet complet, tableau avant/apres, justification operationnelle, categories concernees et impacts repos/paie."
+            ],
+            "title": "Argumentation de defense"
+          },
+          {
+            "items": [
+              "Action immediate: demander le projet d'accord complet et un tableau droits actuels / droits proposes.",
+              "Demande ecrite: exiger la base juridique de la reduction du repos, le perimetre et les categories concernees.",
+              "Pieces a securiser: accord actuel, projet, plannings, impacts repos/paie, justification operationnelle et alternatives.",
+              "Intervention DS/CSE: consulter les salaries concernes et demander un suivi CSE/CSSCT si les impacts sont collectifs.",
+              "Contestation: refuser une lecture trop generale si les clauses sont vagues, non controlees ou moins protectrices.",
+              "Escalade eventuelle: appui juridique avant signature si le texte touche au repos, a la sante ou a des garanties imperatives."
+            ],
+            "title": "Strategie d'action"
+          },
+          {
+            "items": [],
+            "title": "Jurisprudence retenue"
+          },
+          {
+            "items": [
+              "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+              "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+              "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+              "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+              "Application aux faits: reduire le repos a 9 heures est un signal de perte de garantie; la delegation doit exiger la base juridique, les cas limites, les compensations et le suivi.",
+              "Application aux faits: le projet ne doit pas etre negocie seulement comme une souplesse d'organisation mais comme une modification des protections temps de travail/repos.",
+              "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: changement collectif d'horaires, impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+              "Conclusion provisoire: plutot defavorable en l'etat - un projet qui reduit le repos est une perte potentielle de protection; il ne devrait etre discute qu'avec base juridique, perimetre strict, contreparties, suivi et garanties ecrites. La decision de signature reste politique et syndicale.",
+              "Regle certaine: un projet d'accord doit etre compare aux droits existants et aux normes superieures avant position syndicale.",
+              "Interpretation: une reduction du repos ou une modification d'horaires constitue un point de vigilance fort pour les salaries."
+            ],
+            "title": "Analyse et raisonnement"
+          },
+          {
+            "items": [],
+            "title": "Analyse contradictoire et retour contentieux"
+          },
+          {
+            "items": [
+              "Risque: negocier un texte avant d'avoir le tableau complet des droits actuels et des droits modifies.",
+              "Risque: accepter une clause vague sur le repos, les horaires, les contreparties ou le suivi.",
+              "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+              "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+              "Risque: demander un reclassement sans relier les faits aux criteres de classification.",
+              "Risque: s'appuyer sur une fiche de poste non actualisee sans preuves des fonctions reelles."
+            ],
+            "title": "Risques et vigilance"
+          }
+        ],
+        "paie": [
+          {
+            "items": [
+              "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: nuit, jour_ferie, 5x8, changement_roulement, cet",
+              "Regle potentiellement applicable: Changement de roulement avec prevenance inferieure a 15 jours (WT_CHANGEMENT_ROULEMENT_PREVENANCE_001) - statut to_verify, population personnel_poste, poste_continu.",
+              "Avertissement regle WT_CHANGEMENT_ROULEMENT_PREVENANCE_001: Regle a verifier humainement avant utilisation., Population non confirmee dans le contexte.",
+              "Regle potentiellement applicable: Personnel poste: jour ferie travaille pendant un repos (PAY_HOLIDAY_POSTED_REST_001) - statut to_verify, population personnel_poste, poste_continu.",
+              "Avertissement regle PAY_HOLIDAY_POSTED_REST_001: Regle a verifier humainement avant utilisation., Population non confirmee dans le contexte.",
+              "Regle potentiellement applicable: Personnel poste: jour ferie travaille dans le roulement normal (PAY_HOLIDAY_POSTED_NORMAL_001) - statut to_verify, population personnel_poste, poste_continu.",
+              "Avertissement regle PAY_HOLIDAY_POSTED_NORMAL_001: Regle a verifier humainement avant utilisation., Population non confirmee dans le contexte.",
+              "Regle potentiellement applicable: Personnel de jour: jour ferie travaille (PAY_HOLIDAY_DAY_WORKED_001) - statut to_verify, population personnel_jour.",
+              "Avertissement regle PAY_HOLIDAY_DAY_WORKED_001: Regle a verifier humainement avant utilisation., Population non confirmee dans le contexte.",
+              "Donnees manquantes: date_information, date_changement, nombre_postes_remplaces, date_premier_repos, date_jour_ferie, repos_initial",
+              "Pieces a fournir: planning, piece_justificative_a_preciser, releve_kelio",
+              "Avertissement: Une ou plusieurs regles sont a verifier humainement avant utilisation.",
+              "Avertissement: rule_conflict: PAY_HOLIDAY_POSTED_NORMAL_001, PAY_HOLIDAY_POSTED_REST_001 (PAY_HOLIDAY_POSTED_REST_001 / PAY_HOLIDAY_POSTED_NORMAL_001: meme theme metier jour_ferie, contexte 5x8 et effet incompatible)",
+              "Avertissement: Calcul automatique refuse: variables incompletes ou regles non autorisees au calcul.",
+              "Avertissement: Une ou plusieurs regles affichees sont a verifier humainement avant utilisation.",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "heures de nuit",
+              "majoration nuit",
+              "base et taux appliques",
+              "heures de jour ferie",
+              "majoration jour ferie",
+              "repos ou recuperation associee"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Orchestration experte",
+        "Juriste Travail",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - droit_travail_general, classification_carriere, cssct_securite"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Une salariée travaille en horaire de jour au laboratoire.\n- La direction veut la faire passer en horaires postés.\n- Les postes mentionnés sont le matin et l'après-midi.\n- Les week-ends et jours fériés sont concernés.\n- Aucun poste de nuit n'est précisé.\n- La salariée n'est pas volontaire.\n- Elle est partie en pleurs.\n- Aucune suite définitive n'est encore connue.\n\nFaits reconnus :\n- La salariée confirme travailler actuellement en horaire de jour.\n- La salariée indique ne pas être volontaire pour le passage en horaires postés.\n\nFaits contestés :\n- La possibilité pour la direction d'imposer le changement sans accord reste contestée.\n- La salariée n'a pas accepté le changement du seul fait de la présentation du projet.\n\nFaits allégués :\n- La direction présente le passage en horaires postés comme nécessaire.\n- Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Heures exactes de début et de fin de chaque poste [importance: blocking] — Il est interdit de supposer un travail de nuit et les contraintes dépendent des horaires exacts.\n- Type de cycle, fréquence des rotations, week-ends et jours fériés [importance: blocking] — Le changement doit être comparé concrètement à l'organisation actuelle.\n- Caractère temporaire ou permanent et date de mise en œuvre [importance: high] — La durée et le préavis influencent la qualification et la stratégie.\n- Contrat, avenants, fiche de poste et clauses relatives aux horaires [importance: blocking] — Il faut distinguer changement des conditions de travail et modification contractuelle.\n- Accords INEOS applicables au laboratoire, au travail posté et aux horaires [importance: high] — Les règles locales peuvent prévoir champ, volontariat, cycle, prévenance ou contreparties.\n- Motifs et critères ayant conduit au choix de cette salariée [importance: high] — Vérifier objectivité, égalité de traitement et solutions alternatives.\n- Recherche de volontaires et autres possibilités de remplacement [importance: high] — Évaluer la nécessité et la proportionnalité de la désignation.\n- Effectifs du laboratoire avant et après, notamment en journée [importance: high] — Identifier une réorganisation collective et son impact sur la charge.\n- Information ou consultation du CSE et documents transmis [importance: high] — Le projet peut affecter organisation, effectifs et conditions de travail.\n- Contraintes personnelles, familiales, transport et santé [importance: high] — Ces conséquences doivent être documentées pour rechercher des alternatives et mesures de prévention."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur droit du travail, avec enjeux associes de classification/carriere, CSSCT/securite, temps de travail, paie/remuneration. L'analyse vise recherche de droit local, preparation CSE, preparation CSSCT, situation individuelle."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "droit_travail_general",
+            "classification_carriere",
+            "cssct_securite",
+            "temps_travail",
+            "paie_remuneration",
+            "cse"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Juriste droit du travail V0 renforce",
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Mode principal: Negociation accord",
+            "Modes mobilises: Negociation accord, CSE/CSSCT, Defense salarie"
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites. Cote droit du travail, Nexus cadre la creance salariale, la preuve et la source applicable; cote paie, il controle ensuite les rubriques, bases, taux, periodes et montants sans inventer de calcul. Conclusion provisoire: plutot defavorable en l'etat."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "Negociation accord: informations insuffisantes.",
+            "Negociation accord - Contradictoire: argument salarie/representants: Les representants peuvent soutenir qu'aucune reduction de garantie ne doit etre signee sans besoin prouve, compensation et controle.",
+            "Negociation accord - Contradictoire: argument direction: La direction peut soutenir que l'accord est necessaire pour l'organisation du travail ou la continuite d'activite.",
+            "Negociation accord - Contradictoire: preuve necessaire: Chronologie precise des faits et dates concernees.",
+            "Negociation accord - Objet du projet: Projet signale: changement d'horaires ou d'organisation du travail.",
+            "Negociation accord - Modifications proposees: Projet signale: changement d'horaires ou d'organisation du travail.",
+            "Negociation accord - Pertes de droits: Reduction possible du repos ou de la protection actuelle si le projet abaisse les garanties existantes.",
+            "Negociation accord - Pertes de droits: Risque de banalisation d'une exception si les conditions ne sont pas strictement encadrees.",
+            "Negociation accord - Clauses a securiser: Champ d'application precis.",
+            "Negociation accord - Clauses a securiser: Garantie de repos et modalites de recuperation.",
+            "Negociation accord - Clauses a securiser: Contreparties et methode de controle.",
+            "Negociation accord - Clauses a securiser: Clause de suivi CSE/CSSCT et clause de revoyure.",
+            "Negociation accord - Arguments de negociation: Exiger la demonstration factuelle du besoin.",
+            "Negociation accord - Arguments de negociation: Comparer le projet aux droits actuels et aux normes superieures.",
+            "Negociation accord - Arguments de negociation: Conditionner toute evolution a des garanties ecrites, mesurables et controlables.",
+            "Negociation accord - Recommandation: informations insuffisantes.",
+            "Negociation accord - Action immediate: Demander le projet d'accord complet, un tableau avant/apres et les impacts par categorie avant toute position.",
+            "CSE/CSSCT: Projet d'accord ou d'avenant a analyser avant position syndicale, avec comparaison droits actuels / modifications proposees.",
+            "CSE/CSSCT - Contradictoire: argument salarie/representants: Le projet modifie plusieurs dimensions de l'organisation; ses impacts doivent etre documentes avant que le CSE puisse rendre un avis utile si une consultation est juridiquement requise.",
+            "CSE/CSSCT - Contradictoire: argument direction: La direction peut soutenir qu'il s'agit d'une simple adaptation d'organisation relevant du pouvoir de direction, sans impact majeur.",
+            "CSE/CSSCT - Contradictoire: preuve necessaire: Organigramme avant/apres, effectifs, fiches de poste, horaires, charge mesuree, absenteisme, heures supplementaires, incidents, accidents, analyse des risques et calendrier.",
+            "CSE/CSSCT - Nature juridique: Projet d'accord ou d'avenant a analyser avant position syndicale, avec comparaison droits actuels / modifications proposees.",
+            "CSE/CSSCT - Qualification du projet: Projet CSE: changement collectif d'horaires, impact possible sante-securite et conditions de travail.",
+            "CSE/CSSCT - Droits probables du CSE: Exiger que la direction qualifie formellement le point: simple information ou consultation du CSE.",
+            "CSE/CSSCT - Droits probables du CSE: Demander une information complete, precise et exploitable avant la reunion ou avant avis.",
+            "CSE/CSSCT - Droits probables du CSE: Demander les consequences concretes du projet sur emploi, horaires, taches, charge, competences et remuneration.",
+            "CSE/CSSCT - Droits probables du CSE: Faire inscrire au proces-verbal les documents demandes, les reponses obtenues, les reserves et les engagements de suivi.",
+            "CSE/CSSCT - Points a confirmer: La direction qualifie-t-elle le point comme information simple ou consultation avec avis ?"
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "le routage Nexus qualifie la demande sur droit_travail_general, classification_carriere, cssct_securite, temps_travail, paie_remuneration, cse.",
+            "aucune source locale principale n'est disponible dans la reponse Nexus.",
+            "Nexus separe les enjeux en groupes distincts: Classification et fonctions exercees, Repos et reprise du poste, Paie et majorations, Risque et prevention.",
+            "l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+            "un projet d'accord doit etre compare aux droits existants et aux normes superieures avant position syndicale."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "une reduction du repos ou une modification d'horaires constitue un point de vigilance fort pour les salaries."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie",
+            "heures de nuit non isolees ou non majorees selon la source applicable"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "date, champ d'application et remplacement eventuel des textes cites.",
+            "articulation entre accord local, convention collective et norme superieure applicable.",
+            "regle locale de paie ou de majoration effectivement appliquee.",
+            "coefficient, emploi repere et fiche de poste actuellement retenus.",
+            "fonctions reellement exercees, niveau d'autonomie, technicite et responsabilites.",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin",
+            "heure de debut et de fin de chaque sequence",
+            "qualification des plages nuit, dimanche ou jour ferie",
+            "detail des majorations ou recuperations appliquees",
+            "Variable PayrollRule manquante: date_information",
+            "Variable PayrollRule manquante: date_changement",
+            "Variable PayrollRule manquante: nombre_postes_remplaces",
+            "Variable PayrollRule manquante: date_premier_repos",
+            "Variable PayrollRule manquante: date_jour_ferie",
+            "Variable PayrollRule manquante: repos_initial",
+            "Variable PayrollRule manquante: heures_travaillees",
+            "Variable PayrollRule manquante: mode_declenchement",
+            "Variable PayrollRule manquante: compteurs"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "contrat de travail et avenants",
+            "description écrite du changement, de sa durée et de sa date d'effet",
+            "planning actuel de jour et cycle posté envisagé",
+            "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+            "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+            "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+            "fiche de poste actuelle",
+            "fonctions reellement exercees",
+            "niveau d'autonomie et responsabilites",
+            "historique des changements de poste",
+            "comparaison avec salaries similaires",
+            "criteres conventionnels et demande de reexamen du coefficient",
+            "releves de pointage",
+            "compteurs d'heures"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
+            "Le changement annoncé est-il temporaire ou permanent ?",
+            "Quels sont les horaires exacts de début et de fin de chaque poste ?",
+            "Quel est le cycle exact et son type : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+            "Quelle est la date de début et quel délai de prévenance est annoncé ?",
+            "Quel motif précis justifie le choix de cette salariée et des volontaires ont-ils été recherchés ?",
+            "Quel accord INEOS encadre ce changement et ses contreparties ?",
+            "Quels sont les effectifs du laboratoire avant et après le changement ?",
+            "Quel sera l'impact sur le service, la charge de travail et la continuité des analyses ?",
+            "Le CSE a-t-il été informé ou consulté sur la réorganisation et les effectifs ?",
+            "Quelles contraintes personnelles, familiales, de transport ou de santé la salariée souhaite-t-elle signaler, sans diagnostic médical ?",
+            "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Position juridique probable: plutot defavorable en l'etat. un projet qui reduit le repos est une perte potentielle de protection; il ne devrait etre discute qu'avec base juridique, perimetre strict, contreparties, suivi et garanties ecrites. La decision de signature reste politique et syndicale."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites. Cote droit du travail, Nexus cadre la creance salariale, la preuve et la source applicable; cote paie, il controle ensuite les rubriques, bases, taux, periodes et montants sans inventer de calcul. Conclusion provisoire: plutot defavorable en l'etat."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "Aucune explication pratique officielle pertinente n'a ete retenue pour cette question."
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+            "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert juriste ne remplace pas une validation juridique humaine.",
+            "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+            "Aucune source locale principale n'a ete trouvee pour conclure.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+            "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - droit_travail_general, classification_carriere, cssct_securite",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": null,
+      "documents_to_request": [
+        "contrat de travail et avenants",
+        "description écrite du changement, de sa durée et de sa date d'effet",
+        "planning actuel de jour et cycle posté envisagé",
+        "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+        "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+        "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+        "fiche de poste actuelle",
+        "fonctions reellement exercees",
+        "niveau d'autonomie et responsabilites",
+        "historique des changements de poste",
+        "comparaison avec salaries similaires",
+        "criteres conventionnels et demande de reexamen du coefficient",
+        "releves de pointage",
+        "compteurs d'heures"
+      ],
+      "employee_method_analysis": {
+        "case_law": [],
+        "case_law_status": "aucune jurisprudence comparable vérifiée retrouvée",
+        "comparative_analysis": "Défendre la salariée sans laisser entendre qu'elle a accepté : demander le projet et ses motifs par écrit, comparer contrat, horaires et accord INEOS, documenter ses contraintes, l'accompagner dans les échanges et porter au CSE la réduction éventuelle de l'équipe de jour. Éviter un refus non préparé comme toute conclusion automatique sur la légalité du changement.",
+        "cse_elements": [],
+        "cse_status": "aucun passage vérifié de procès-verbal du CSE retrouvé",
+        "documents_after_analysis": [
+          {
+            "document": "contrat de travail et avenants",
+            "priority": "indispensable",
+            "utility": "Confirmer les faits déterminants et le champ de la règle."
+          },
+          {
+            "document": "description écrite du changement, de sa durée et de sa date d'effet",
+            "priority": "indispensable",
+            "utility": "Confirmer les faits déterminants et le champ de la règle."
+          },
+          {
+            "document": "planning actuel de jour et cycle posté envisagé",
+            "priority": "indispensable",
+            "utility": "Confirmer les faits déterminants et le champ de la règle."
+          },
+          {
+            "document": "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "fiche de poste actuelle",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "fonctions reellement exercees",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "niveau d'autonomie et responsabilites",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "historique des changements de poste",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "comparaison avec salaries similaires",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "criteres conventionnels et demande de reexamen du coefficient",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "releves de pointage",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "compteurs d'heures",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          }
+        ],
+        "documents_not_required": [
+          "Toute pièce sans lien expliqué avec un fait ou une règle à vérifier."
+        ],
+        "employee_arguments": [
+          "Qualifier d'abord le caractère imposé du changement de poste, d'horaires et de conditions de travail.",
+          "Analyser séparément le rythme posté, les week-ends, les jours fériés, les repos et le délai de prévenance.",
+          "Vérifier la dimension collective liée au remplacement d'une démission et à la réduction possible de l'équipe de jour.",
+          "Ne déduire ni promotion, ni acceptation, ni volontariat, ni caractère favorable d'une hausse de rémunération ou d'une prime de poste.",
+          "À vérifier dans une source locale à identifier : fiche de poste actuelle et classification/coefficient retenus."
+        ],
+        "employer_arguments": [
+          "L'employeur peut invoquer son pouvoir d'organisation, sous réserve du contrat, des accords, des faits et des garanties applicables.",
+          "Toute justification de l'employeur doit être demandée et vérifiée loyalement."
+        ],
+        "expert_advice": {
+          "collective_strategy": "Porter le sujet au CSE lorsqu'une dimension collective ou organisationnelle est objectivée.",
+          "evidence_to_preserve": [
+            "contrat de travail et avenants",
+            "description écrite du changement, de sa durée et de sa date d'effet",
+            "planning actuel de jour et cycle posté envisagé",
+            "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+            "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après"
+          ],
+          "immediate": "Demander immédiatement une présentation écrite du changement, du cycle, de sa durée, de sa date d'effet et des effectifs avant/après, sans signer ni opposer un refus non préparé.",
+          "individual_strategy": "Défendre la salariée sans laisser entendre qu'elle a accepté : demander le projet et ses motifs par écrit, comparer contrat, horaires et accord INEOS, documenter ses contraintes, l'accompagner dans les échanges et porter au CSE la réduction éventuelle de l'équipe de jour. Éviter un refus non préparé comme toute conclusion automatique sur la légalité du changement.",
+          "risks": [
+            "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+            "Verifier l'applicabilite, la date et le champ des textes cites."
+          ]
+        },
+        "factual_answer": "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Il s'agit d'abord d'un changement imposé de poste, d'horaires et de conditions de travail à qualifier, avec des effets sur le rythme posté, les week-ends, les jours fériés et les repos. La rémunération éventuellement supérieure reste une conséquence secondaire et ne prouve ni accord, ni volontariat, ni caractère favorable.",
+        "primary_source": [],
+        "solutions": [
+          "Demander immédiatement une présentation écrite du changement, du cycle, de sa durée, de sa date d'effet et des effectifs avant/après, sans signer ni opposer un refus non préparé.",
+          "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
+          "Le changement annoncé est-il temporaire ou permanent ?",
+          "Quels sont les horaires exacts de début et de fin de chaque poste ?",
+          "Quel est le cycle exact et son type : matins, après-midis, nuits, week-ends, jours fériés et repos ?"
+        ],
+        "source_hierarchy": [
+          "Accords d'entreprise INEOS",
+          "Convention collective nationale des industries chimiques — IDCC 44",
+          "Code du travail",
+          "Jurisprudence comparable",
+          "Historique et débats du CSE"
+        ],
+        "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de classification/carriere, CSSCT/securite, temps de travail, paie/remuneration. L'analyse vise recherche de droit local, preparation CSE, preparation CSSCT, situation individuelle."
+      },
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        }
+      ],
+      "facts": [
+        {
+          "documented": false,
+          "source": "user_statement",
+          "statement": "La salariée indique que le passage en rythme posté lui est imposé."
+        },
+        {
+          "documented": false,
+          "source": "user_statement",
+          "statement": "La salariée précise que ce changement n'est pas volontaire et qu'elle ne le souhaite pas."
+        },
+        {
+          "documented": false,
+          "source": "user_statement",
+          "statement": "Le rythme envisagé comprend des contraintes de postes, week-ends ou jours fériés à préciser."
+        }
+      ],
+      "findings": [
+        "Qualifier d'abord le caractère imposé du changement de poste, d'horaires et de conditions de travail.",
+        "Analyser séparément le rythme posté, les week-ends, les jours fériés, les repos et le délai de prévenance.",
+        "Vérifier la dimension collective liée au remplacement d'une démission et à la réduction possible de l'équipe de jour.",
+        "Ne déduire ni promotion, ni acceptation, ni volontariat, ni caractère favorable d'une hausse de rémunération ou d'une prime de poste.",
+        "À vérifier dans une source locale à identifier : fiche de poste actuelle et classification/coefficient retenus.",
+        "À vérifier dans une source locale à identifier : fonctions réellement exercées, responsabilités, autonomie et technicité.",
+        "À vérifier dans une source locale à identifier : comparaison avec des salariés occupant des postes similaires.",
+        "À vérifier dans une source locale à identifier : historique des évolutions de poste, polyvalence et changements de périmètre.",
+        "À vérifier dans une source locale à identifier : critères conventionnels applicables et possibilité de réexamen du coefficient.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence."
+      ],
+      "issue_groups": [
+        {
+          "documents": [
+            "fiche de poste actuelle",
+            "fonctions reellement exercees",
+            "niveau d'autonomie et responsabilites",
+            "criteres conventionnels et demande de reexamen du coefficient",
+            "descriptif des fonctions reelles"
+          ],
+          "findings": [
+            "À vérifier dans une source locale à identifier : fiche de poste actuelle et classification/coefficient retenus.",
+            "À vérifier dans une source locale à identifier : fonctions réellement exercées, responsabilités, autonomie et technicité.",
+            "À vérifier dans une source locale à identifier : critères conventionnels applicables et possibilité de réexamen du coefficient.",
+            "À vérifier dans une source locale à identifier ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+            "Comparer la classification actuelle aux fonctions reellement exercees."
+          ],
+          "id": "classification",
+          "name": "Classification et fonctions exercees",
+          "questions": [
+            "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?",
+            "Quels ecarts concrets existent entre fiche de poste et travail reel ?",
+            "Quel coefficient est justifie par les criteres conventionnels ?"
+          ]
+        },
+        {
+          "documents": [
+            "planning actuel de jour et cycle posté envisagé",
+            "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+            "releves de pointage",
+            "planning de travail",
+            "historique des heures et repos"
+          ],
+          "findings": [
+            "Qualifier d'abord le caractère imposé du changement de poste, d'horaires et de conditions de travail.",
+            "Analyser séparément le rythme posté, les week-ends, les jours fériés, les repos et le délai de prévenance.",
+            "Verifier l'heure reelle de fin d'intervention et l'heure de reprise du poste.",
+            "Identifier la regle de repos applicable et toute derogation invoquee.",
+            "Verifier la compensation ou le repos associe si le repos normal n'a pas ete respecte."
+          ],
+          "id": "repos",
+          "name": "Repos et reprise du poste",
+          "questions": [
+            "Quels sont les horaires exacts de début et de fin de chaque poste ?",
+            "Quel est le cycle exact et son type : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+            "Quelle heure de fin d'intervention et quelle heure de reprise sont retenues ?",
+            "Quelle regle autorise ou interdit cette reprise ?"
+          ]
+        },
+        {
+          "documents": [
+            "bulletins de paie",
+            "detail des compteurs",
+            "regles de majoration",
+            "historique des paiements et recuperations"
+          ],
+          "findings": [
+            "Ne déduire ni promotion, ni acceptation, ni volontariat, ni caractère favorable d'une hausse de rémunération ou d'une prime de poste.",
+            "Verifier les heures payees, recuperees ou majorees sur la periode.",
+            "Controler les majorations nuit, dimanche ou jour ferie si elles sont concernees.",
+            "Rapprocher bulletin, compteur et regle locale applicable."
+          ],
+          "id": "paie",
+          "name": "Paie et majorations",
+          "questions": [
+            "Quelles heures d'intervention ont ete payees ou recuperees ?",
+            "Quelle majoration a ete appliquee et sur quelle base ?",
+            "Le bulletin correspond-il au compteur et au releve d'intervention ?"
+          ]
+        },
+        {
+          "documents": [
+            "DUERP/DUER",
+            "registre securite",
+            "plan d'action ou de maintenance"
+          ],
+          "findings": [
+            "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+            "Qualifier le risque et les mesures de prevention existantes.",
+            "Verifier le suivi DUERP/CSSCT et le plan d'action."
+          ],
+          "id": "cssct",
+          "name": "Risque et prevention",
+          "questions": [
+            "Quels incidents sont traces ?",
+            "Quelles mesures immediates protegent les salaries ?"
+          ]
+        }
+      ],
+      "jurisprudence_audit": [],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [
+            {
+              "article": "L2312-8",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000043975196",
+              "relevance_score": 0
+            },
+            {
+              "article": "L2312-14",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000036262404",
+              "relevance_score": 0
+            },
+            {
+              "article": "L2312-15",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000038791194",
+              "relevance_score": 0
+            },
+            {
+              "article": "L3131-1",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000033020918",
+              "relevance_score": 4.45
+            },
+            {
+              "article": "L2315-94",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000043975185",
+              "relevance_score": 0
+            }
+          ],
+          "sources_received": 5,
+          "sources_retained": 0,
+          "status": "weak",
+          "warnings": [
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question."
+          ]
+        }
+      ],
+      "next_action": "Demander immédiatement une présentation écrite du changement, du cycle, de sa durée, de sa date d'effet et des effectifs avant/après, sans signer ni opposer un refus non préparé.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Une salariée travaille en horaire de jour au laboratoire.\n- La direction veut la faire passer en horaires postés.\n- Les postes mentionnés sont le matin et l'après-midi.\n- Les week-ends et jours fériés sont concernés.\n- Aucun poste de nuit n'est précisé.\n- La salariée n'est pas volontaire.\n- Elle est partie en pleurs.\n- Aucune suite définitive n'est encore connue.\n\nFaits reconnus :\n- La salariée confirme travailler actuellement en horaire de jour.\n- La salariée indique ne pas être volontaire pour le passage en horaires postés.\n\nFaits contestés :\n- La possibilité pour la direction d'imposer le changement sans accord reste contestée.\n- La salariée n'a pas accepté le changement du seul fait de la présentation du projet.\n\nFaits allégués :\n- La direction présente le passage en horaires postés comme nécessaire.\n- Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Heures exactes de début et de fin de chaque poste [importance: blocking] — Il est interdit de supposer un travail de nuit et les contraintes dépendent des horaires exacts.\n- Type de cycle, fréquence des rotations, week-ends et jours fériés [importance: blocking] — Le changement doit être comparé concrètement à l'organisation actuelle.\n- Caractère temporaire ou permanent et date de mise en œuvre [importance: high] — La durée et le préavis influencent la qualification et la stratégie.\n- Contrat, avenants, fiche de poste et clauses relatives aux horaires [importance: blocking] — Il faut distinguer changement des conditions de travail et modification contractuelle.\n- Accords INEOS applicables au laboratoire, au travail posté et aux horaires [importance: high] — Les règles locales peuvent prévoir champ, volontariat, cycle, prévenance ou contreparties.\n- Motifs et critères ayant conduit au choix de cette salariée [importance: high] — Vérifier objectivité, égalité de traitement et solutions alternatives.\n- Recherche de volontaires et autres possibilités de remplacement [importance: high] — Évaluer la nécessité et la proportionnalité de la désignation.\n- Effectifs du laboratoire avant et après, notamment en journée [importance: high] — Identifier une réorganisation collective et son impact sur la charge.\n- Information ou consultation du CSE et documents transmis [importance: high] — Le projet peut affecter organisation, effectifs et conditions de travail.\n- Contraintes personnelles, familiales, transport et santé [importance: high] — Ces conséquences doivent être documentées pour rechercher des alternatives et mesures de prévention.",
+      "questions_to_ask": [
+        "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
+        "Le changement annoncé est-il temporaire ou permanent ?",
+        "Quels sont les horaires exacts de début et de fin de chaque poste ?",
+        "Quel est le cycle exact et son type : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+        "Quelle est la date de début et quel délai de prévenance est annoncé ?",
+        "Quel motif précis justifie le choix de cette salariée et des volontaires ont-ils été recherchés ?",
+        "Quel accord INEOS encadre ce changement et ses contreparties ?",
+        "Quels sont les effectifs du laboratoire avant et après le changement ?",
+        "Quel sera l'impact sur le service, la charge de travail et la continuité des analyses ?",
+        "Le CSE a-t-il été informé ou consulté sur la réorganisation et les effectifs ?",
+        "Quelles contraintes personnelles, familiales, de transport ou de santé la salariée souhaite-t-elle signaler, sans diagnostic médical ?",
+        "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?"
+      ],
+      "response_depth": "multi_domain",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "classification_carriere",
+          "cssct_securite",
+          "temps_travail",
+          "paie_remuneration",
+          "cse"
+        ],
+        "employee_path": "QUESTION_SALARIE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours salarié général a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "QUESTION_SALARIE",
+        "intents": [
+          "rechercher_droit_local",
+          "preparer_cse",
+          "preparer_cssct",
+          "analyser_situation_individuelle",
+          "analyser_paie",
+          "verifier_conformite",
+          "rechercher_cse_memory"
+        ],
+        "main_domain": "droit_travail_general",
+        "primary_domain": "droit_travail_general",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Une salariée travaille en horaire de jour au laboratoire.\n- La direction veut la faire passer en horaires postés.\n- Les postes mentionnés sont le matin et l'après-midi.\n- Les week-ends et jours fériés sont concernés.\n- Aucun poste de nuit n'est précisé.\n- La salariée n'est pas volontaire.\n- Elle est partie en pleurs.\n- Aucune suite définitive n'est encore connue.\n\nFaits reconnus :\n- La salariée confirme travailler actuellement en horaire de jour.\n- La salariée indique ne pas être volontaire pour le passage en horaires postés.\n\nFaits contestés :\n- La possibilité pour la direction d'imposer le changement sans accord reste contestée.\n- La salariée n'a pas accepté le changement du seul fait de la présentation du projet.\n\nFaits allégués :\n- La direction présente le passage en horaires postés comme nécessaire.\n- Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Heures exactes de début et de fin de chaque poste [importance: blocking] — Il est interdit de supposer un travail de nuit et les contraintes dépendent des horaires exacts.\n- Type de cycle, fréquence des rotations, week-ends et jours fériés [importance: blocking] — Le changement doit être comparé concrètement à l'organisation actuelle.\n- Caractère temporaire ou permanent et date de mise en œuvre [importance: high] — La durée et le préavis influencent la qualification et la stratégie.\n- Contrat, avenants, fiche de poste et clauses relatives aux horaires [importance: blocking] — Il faut distinguer changement des conditions de travail et modification contractuelle.\n- Accords INEOS applicables au laboratoire, au travail posté et aux horaires [importance: high] — Les règles locales peuvent prévoir champ, volontariat, cycle, prévenance ou contreparties.\n- Motifs et critères ayant conduit au choix de cette salariée [importance: high] — Vérifier objectivité, égalité de traitement et solutions alternatives.\n- Recherche de volontaires et autres possibilités de remplacement [importance: high] — Évaluer la nécessité et la proportionnalité de la désignation.\n- Effectifs du laboratoire avant et après, notamment en journée [importance: high] — Identifier une réorganisation collective et son impact sur la charge.\n- Information ou consultation du CSE et documents transmis [importance: high] — Le projet peut affecter organisation, effectifs et conditions de travail.\n- Contraintes personnelles, familiales, transport et santé [importance: high] — Ces conséquences doivent être documentées pour rechercher des alternatives et mesures de prévention.",
+        "reasoning_summary": [
+          "La demande porte sur la relation de travail ou une garantie legale generale.",
+          "La demande porte sur classification, emploi, carriere ou coefficient.",
+          "La demande concerne le temps de travail, les repos, horaires ou compteurs.",
+          "La demande implique paie, remuneration, prime, majoration ou indemnisation.",
+          "La demande releve de la sante, securite, CSSCT, DUERP ou securite process.",
+          "La demande appelle une preparation ou discussion CSE.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande vise une preparation CSE."
+        ],
+        "response_profile": "public_pedagogical",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "classification_carriere",
+          "cssct_securite",
+          "temps_travail",
+          "paie_remuneration",
+          "cse"
+        ],
+        "warnings": [
+          "Module paie dedie non connecte : controle realise via sources locales et methode metier."
+        ]
+      },
+      "short_answer": "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Il s'agit d'abord d'un changement imposé de poste, d'horaires et de conditions de travail à qualifier, avec des effets sur le rythme posté, les week-ends, les jours fériés et les repos. La rémunération éventuellement supérieure reste une conséquence secondaire et ne prouve ni accord, ni volontariat, ni caractère favorable.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de classification/carriere, CSSCT/securite, temps de travail, paie/remuneration. L'analyse vise recherche de droit local, preparation CSE, preparation CSSCT, situation individuelle.",
+      "warnings": [
+        "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Défendre la salariée sans laisser entendre qu'elle a accepté : demander le projet et ses motifs par écrit, comparer contrat, horaires et accord INEOS, documenter ses contraintes, l'accompagner dans les échanges et porter au CSE la réduction éventuelle de l'équipe de jour. Éviter un refus non préparé comme toute conclusion automatique sur la légalité du changement."
+    },
+    "expert_juriste": {
+      "action_conseillee": [
+        "Action immediate: demander le projet d'accord complet et un tableau droits actuels / droits proposes.",
+        "Demande ecrite: exiger la base juridique de la reduction du repos, le perimetre et les categories concernees.",
+        "Pieces a securiser: accord actuel, projet, plannings, impacts repos/paie, justification operationnelle et alternatives.",
+        "Intervention DS/CSE: consulter les salaries concernes et demander un suivi CSE/CSSCT si les impacts sont collectifs.",
+        "Contestation: refuser une lecture trop generale si les clauses sont vagues, non controlees ou moins protectrices.",
+        "Escalade eventuelle: appui juridique avant signature si le texte touche au repos, a la sante ou a des garanties imperatives."
+      ],
+      "active": true,
+      "analyse_et_raisonnement": [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+        "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+        "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+        "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+        "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+        "Application aux faits: reduire le repos a 9 heures est un signal de perte de garantie; la delegation doit exiger la base juridique, les cas limites, les compensations et le suivi.",
+        "Application aux faits: le projet ne doit pas etre negocie seulement comme une souplesse d'organisation mais comme une modification des protections temps de travail/repos.",
+        "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: changement collectif d'horaires, impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+        "Conclusion provisoire: plutot defavorable en l'etat - un projet qui reduit le repos est une perte potentielle de protection; il ne devrait etre discute qu'avec base juridique, perimetre strict, contreparties, suivi et garanties ecrites. La decision de signature reste politique et syndicale.",
+        "Regle certaine: un projet d'accord doit etre compare aux droits existants et aux normes superieures avant position syndicale.",
+        "Interpretation: une reduction du repos ou une modification d'horaires constitue un point de vigilance fort pour les salaries."
+      ],
+      "ce_qui_depend_accord_statut_element_manquant": [
+        "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
+        "Information manquante: articulation entre accord local, convention collective et norme superieure applicable.",
+        "Information manquante: regle locale de paie ou de majoration effectivement appliquee.",
+        "Information manquante: coefficient, emploi repere et fiche de poste actuellement retenus.",
+        "Information manquante: fonctions reellement exercees, niveau d'autonomie, technicite et responsabilites."
+      ],
+      "ce_qui_est_etabli_par_sources": [
+        "Regle certaine: le routage Nexus qualifie la demande sur droit_travail_general, classification_carriere, cssct_securite, temps_travail, paie_remuneration, cse.",
+        "Information manquante: aucune source locale principale n'est disponible dans la reponse Nexus.",
+        "Regle certaine: Nexus separe les enjeux en groupes distincts: Classification et fonctions exercees, Repos et reprise du poste, Paie et majorations, Risque et prevention."
+      ],
+      "limites": [
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Aucune source locale principale n'a ete trouvee pour conclure.",
+        "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels."
+      ],
+      "position_de_travail_proposee": "Position de travail: ne pas raisonner en signature/non-signature a ce stade ; demander le projet complet, comparer les droits actuels et exiger des garanties ecrites avant toute position syndicale.",
+      "qualification_juridique_situation": "Projet d'accord ou d'avenant a analyser avant position syndicale, avec comparaison droits actuels / modifications proposees.",
+      "questions_a_poser_direction": [
+        "Quel besoin precis justifie le projet d'accord ou d'avenant ?",
+        "Quel tableau compare les droits actuels et les modifications proposees ?",
+        "Quelles categories de salaries sont concernees et avec quelles garanties ?",
+        "Quelles contreparties, controles et clauses de revoyure sont proposes ?",
+        "S'agit-il d'une information simple ou d'une consultation du CSE ?",
+        "Quels documents justifient le projet et ses impacts sur emploi, horaires, charge et sante-securite ?",
+        "Quels indicateurs seront suivis apres mise en oeuvre ?",
+        "Quelles reponses la direction accepte-t-elle de faire inscrire au proces-verbal ?"
+      ],
+      "response_courte": "La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites.",
+      "risques_points_vigilance": [
+        "Risque: negocier un texte avant d'avoir le tableau complet des droits actuels et des droits modifies.",
+        "Risque: accepter une clause vague sur le repos, les horaires, les contreparties ou le suivi.",
+        "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+        "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+        "Risque: demander un reclassement sans relier les faits aux criteres de classification.",
+        "Risque: s'appuyer sur une fiche de poste non actualisee sans preuves des fonctions reelles."
+      ]
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie",
+        "heures de nuit non isolees ou non majorees selon la source applicable"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "contrat de travail et avenants",
+        "description écrite du changement, de sa durée et de sa date d'effet",
+        "planning actuel de jour et cycle posté envisagé",
+        "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+        "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+        "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+        "fiche de poste actuelle",
+        "planning",
+        "piece_justificative_a_preciser",
+        "releve_kelio",
+        "agreement"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin",
+        "heure de debut et de fin de chaque sequence",
+        "qualification des plages nuit, dimanche ou jour ferie",
+        "detail des majorations ou recuperations appliquees",
+        "Variable PayrollRule manquante: date_information",
+        "Variable PayrollRule manquante: date_changement",
+        "Variable PayrollRule manquante: nombre_postes_remplaces",
+        "Variable PayrollRule manquante: date_premier_repos",
+        "Variable PayrollRule manquante: date_jour_ferie",
+        "Variable PayrollRule manquante: repos_initial",
+        "Variable PayrollRule manquante: heures_travaillees",
+        "Variable PayrollRule manquante: mode_declenchement",
+        "Variable PayrollRule manquante: compteurs"
+      ],
+      "elements_du_bulletin_concernes": [
+        "heures de nuit",
+        "majoration nuit",
+        "base et taux appliques",
+        "heures de jour ferie",
+        "majoration jour ferie",
+        "repos ou recuperation associee"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "Une ou plusieurs regles sont a verifier humainement avant utilisation.",
+        "rule_conflict: PAY_HOLIDAY_POSTED_NORMAL_001, PAY_HOLIDAY_POSTED_REST_001 (PAY_HOLIDAY_POSTED_REST_001 / PAY_HOLIDAY_POSTED_NORMAL_001: meme theme metier jour_ferie, contexte 5x8 et effet incompatible)",
+        "Calcul automatique refuse: variables incompletes ou regles non autorisees au calcul.",
+        "Une ou plusieurs regles affichees sont a verifier humainement avant utilisation.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie.",
+        "Aucune source applicable n'est disponible.",
+        "Le compteur ou releve Kelio indispensable n'est pas disponible."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin.",
+      "regles_ou_sources_disponibles": [
+        "Aucune source locale principale n'est disponible dans la reponse Nexus.",
+        "PayrollRule: Changement de roulement avec prevenance inferieure a 15 jours (WT_CHANGEMENT_ROULEMENT_PREVENANCE_001) - statut to_verify, confiance medium",
+        "PayrollRule: Personnel poste: jour ferie travaille pendant un repos (PAY_HOLIDAY_POSTED_REST_001) - statut to_verify, confiance medium",
+        "PayrollRule: Personnel poste: jour ferie travaille dans le roulement normal (PAY_HOLIDAY_POSTED_NORMAL_001) - statut to_verify, confiance medium",
+        "PayrollRule: Personnel de jour: jour ferie travaille (PAY_HOLIDAY_DAY_WORKED_001) - statut to_verify, confiance medium"
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "contrat de travail et avenants",
+        "description écrite du changement, de sa durée et de sa date d'effet",
+        "planning actuel de jour et cycle posté envisagé",
+        "accord INEOS applicable au travail posté, aux horaires et aux contreparties",
+        "éléments sur le remplacement du salarié démissionnaire et les effectifs avant/après",
+        "information, consultation, ordre du jour et procès-verbal du CSE s'ils existent",
+        "fiche de poste actuelle",
+        "fonctions reellement exercees",
+        "niveau d'autonomie et responsabilites",
+        "historique des changements de poste",
+        "comparaison avec salaries similaires",
+        "criteres conventionnels et demande de reexamen du coefficient",
+        "releves de pointage",
+        "compteurs d'heures"
+      ],
+      "domaines_detectes": [
+        "droit_travail_general",
+        "classification_carriere",
+        "cssct_securite",
+        "temps_travail",
+        "paie_remuneration",
+        "cse"
+      ],
+      "experts_mobilises": [
+        "Expert Juriste droit du travail V0 renforce",
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Module paie dedie non connecte : controle realise via sources locales et methode metier.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Aucune source locale principale n'a ete trouvee pour conclure.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Position juridique probable: plutot defavorable en l'etat. un projet qui reduit le repos est une perte potentielle de protection; il ne devrait etre discute qu'avec base juridique, perimetre strict, contreparties, suivi et garanties ecrites. La decision de signature reste politique et syndicale.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Une salariée travaille en horaire de jour au laboratoire.\n- La direction veut la faire passer en horaires postés.\n- Les postes mentionnés sont le matin et l'après-midi.\n- Les week-ends et jours fériés sont concernés.\n- Aucun poste de nuit n'est précisé.\n- La salariée n'est pas volontaire.\n- Elle est partie en pleurs.\n- Aucune suite définitive n'est encore connue.\n\nFaits reconnus :\n- La salariée confirme travailler actuellement en horaire de jour.\n- La salariée indique ne pas être volontaire pour le passage en horaires postés.\n\nFaits contestés :\n- La possibilité pour la direction d'imposer le changement sans accord reste contestée.\n- La salariée n'a pas accepté le changement du seul fait de la présentation du projet.\n\nFaits allégués :\n- La direction présente le passage en horaires postés comme nécessaire.\n- Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux.\n\nInformations manquantes déjà identifiées :\n- Heures exactes de début et de fin de chaque poste [importance: blocking] — Il est interdit de supposer un travail de nuit et les contraintes dépendent des horaires exacts.\n- Type de cycle, fréquence des rotations, week-ends et jours fériés [importance: blocking] — Le changement doit être comparé concrètement à l'organisation actuelle.\n- Caractère temporaire ou permanent et date de mise en œuvre [importance: high] — La durée et le préavis influencent la qualification et la stratégie.\n- Contrat, avenants, fiche de poste et clauses relatives aux horaires [importance: blocking] — Il faut distinguer changement des conditions de travail et modification contractuelle.\n- Accords INEOS applicables au laboratoire, au travail posté et aux horaires [importance: high] — Les règles locales peuvent prévoir champ, volontariat, cycle, prévenance ou contreparties.\n- Motifs et critères ayant conduit au choix de cette salariée [importance: high] — Vérifier objectivité, égalité de traitement et solutions alternatives.\n- Recherche de volontaires et autres possibilités de remplacement [importance: high] — Évaluer la nécessité et la proportionnalité de la désignation.\n- Effectifs du laboratoire avant et après, notamment en journée [importance: high] — Identifier une réorganisation collective et son impact sur la charge.\n- Information ou consultation du CSE et documents transmis [importance: high] — Le projet peut affecter organisation, effectifs et conditions de travail.\n- Contraintes personnelles, familiales, transport et santé [importance: high] — Ces conséquences doivent être documentées pour rechercher des alternatives et mesures de prévention.",
+      "questions_utiles": [
+        "Le contrat prévoit-il un travail de jour ou autorise-t-il un rythme posté ?",
+        "Le changement annoncé est-il temporaire ou permanent ?",
+        "Quels sont les horaires exacts de début et de fin de chaque poste ?",
+        "Quel est le cycle exact et son type : matins, après-midis, nuits, week-ends, jours fériés et repos ?",
+        "Quelle est la date de début et quel délai de prévenance est annoncé ?",
+        "Quel motif précis justifie le choix de cette salariée et des volontaires ont-ils été recherchés ?",
+        "Quel accord INEOS encadre ce changement et ses contreparties ?",
+        "Quels sont les effectifs du laboratoire avant et après le changement ?",
+        "Quel sera l'impact sur le service, la charge de travail et la continuité des analyses ?",
+        "Le CSE a-t-il été informé ou consulté sur la réorganisation et les effectifs ?",
+        "Quelles contraintes personnelles, familiales, de transport ou de santé la salariée souhaite-t-elle signaler, sans diagnostic médical ?",
+        "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?"
+      ],
+      "reponse_synthetique_nexus": "La position juridique de travail est defavorable en l'etat: reduire le repos constitue une perte potentielle de protection et ne peut pas etre analyse comme une simple souplesse d'organisation. Il faut exiger la base juridique, le perimetre, les contreparties et les garanties ecrites. Cote droit du travail, Nexus cadre la creance salariale, la preuve et la source applicable; cote paie, il controle ensuite les rubriques, bases, taux, periodes et montants sans inventer de calcul. Conclusion provisoire: plutot defavorable en l'etat.",
+      "sources": []
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}

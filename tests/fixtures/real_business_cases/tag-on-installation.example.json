@@ -4,6 +4,7 @@
   "title": "Tag grossier sur une installation dans un contexte de souffrance au travail",
   "completeness": {
     "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
     "limitations": [
       "La fixture permet une analyse initiale mais pas une conclusion définitive sur la sanction ou le temps de travail.",
       "Les documents, dates, durées et termes exacts de la décision patronale restent à obtenir."
@@ -28,6 +29,10 @@
     "facts_contested": [
       "Le salarié conteste avoir visé une personne déterminée.",
       "Aucune volonté de menace ou de harcèlement n'est reconnue."
+    ],
+    "facts_alleged": [
+      "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.",
+      "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
     ],
     "missing_information": [
       {

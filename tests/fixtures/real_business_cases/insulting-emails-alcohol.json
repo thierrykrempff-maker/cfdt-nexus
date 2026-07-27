@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+  "title": "Courriels insultants reconnus et consommation d'alcool alléguée",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Le contenu exact des courriels, leur diffusion et la mesure envisagée ne sont pas fournis.",
+      "Le statut de secrétaire du CSE ne suffit pas à établir un lien avec le mandat."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+      "Le collègue destinataire est secrétaire du CSE.",
+      "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+      "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels."
+    ],
+    "facts_recognized": [
+      "Le salarié reconnaît être l'auteur des courriels.",
+      "Le salarié reconnaît le caractère insultant des courriels rapportés."
+    ],
+    "facts_contested": [
+      "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+    ],
+    "facts_alleged": [
+      "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+      "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+    ],
+    "missing_information": [
+      {
+        "item": "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+        "importance": "blocking",
+        "reason": "La teneur, la répétition et la publicité déterminent la qualification et la gravité."
+      },
+      {
+        "item": "Contexte et objet de l'échange avec le collègue",
+        "importance": "high",
+        "reason": "Il faut vérifier si le différend était personnel, professionnel ou réellement lié au mandat."
+      },
+      {
+        "item": "Preuves communiquées, procédure suivie et mesure précise envisagée",
+        "importance": "high",
+        "reason": "La défense doit porter sur le grief exact, la preuve, la procédure et la proportionnalité."
+      },
+      {
+        "item": "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+        "importance": "high",
+        "reason": "Ces éléments peuvent aggraver ou atténuer le risque."
+      },
+      {
+        "item": "Nature, durée, lieu et effets d'une éventuelle mutation",
+        "importance": "high",
+        "reason": "Il faut distinguer organisation, modification contractuelle et mesure disciplinaire."
+      },
+      {
+        "item": "Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations",
+        "importance": "high",
+        "reason": "La santé, la confidentialité et le rôle de la médecine du travail doivent être distingués de la discipline."
+      },
+      {
+        "item": "Existence d'autres mesures déjà prises pour les mêmes faits",
+        "importance": "high",
+        "reason": "Plusieurs mesures peuvent soulever un risque de cumul ou de double sanction."
+      }
+    ]
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Propos injurieux ou irrespectueux et discipline",
+      "Preuve, procédure disciplinaire et proportionnalité",
+      "Statut protecteur d'un élu sans présomption de lien avec le mandat",
+      "Mutation disciplinaire, changement des conditions de travail ou modification du contrat",
+      "Santé au travail, alcool et confidentialité des données de santé",
+      "Cumul de mesures et interdiction de sanctionner deux fois les mêmes faits"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quels sont les termes exacts, le nombre, les dates et les destinataires des courriels ?",
+        "why_it_matters": "Délimiter le grief, la répétition, la diffusion et la gravité."
+      },
+      {
+        "priority": 2,
+        "question": "Le contenu ou le contexte des courriels avait-il un lien réel avec le mandat de secrétaire du CSE ?",
+        "why_it_matters": "Ne pas confondre le statut du destinataire avec un acte antisyndical."
+      },
+      {
+        "priority": 3,
+        "question": "Quelle mesure exacte l'employeur envisage-t-il et d'autres mesures ont-elles déjà été notifiées pour les mêmes faits ?",
+        "why_it_matters": "Contrôler procédure, proportionnalité et double sanction."
+      },
+      {
+        "priority": 4,
+        "question": "Une mutation est-elle envisagée, vers quel poste, pour quelle durée et avec quelles conséquences contractuelles ?",
+        "why_it_matters": "Qualifier la nature de la mutation et vérifier le consentement éventuellement requis."
+      },
+      {
+        "priority": 5,
+        "question": "Le salarié dispose-t-il d'éléments objectifs sur sa consommation d'alcool et demande-t-il une aide médicale confidentielle ?",
+        "why_it_matters": "Traiter la santé sans transformer l'alcool en excuse ni exposer des données médicales."
+      },
+      {
+        "priority": 6,
+        "question": "Qui imposerait un suivi, sous quelle forme et qui aurait accès aux informations ?",
+        "why_it_matters": "Vérifier compétence, confidentialité, consentement et articulation avec la médecine du travail."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Vérifier les règles sur les propos, l'alcool, la discipline et l'échelle des sanctions.",
+          "query_or_document": "Règlement intérieur INEOS en vigueur",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Qualifier une mutation et vérifier les précédents locaux.",
+          "query_or_document": "Accords de mobilité, fiches de poste, contrat, courriers remis et pratiques disciplinaires",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Vérifier les règles de prévention et de confidentialité.",
+          "query_or_document": "Procédures INEOS relatives à l'alcool, à la santé au travail et à la médecine du travail",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Retrouver les textes en vigueur sur sanction, procédure, double sanction et règlement intérieur.",
+          "query_or_document": "Code du travail : discipline, sanction, procédure, délai et mesures déjà prises",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les textes sur mutation, contrat et salarié protégé sans présumer un lien syndical.",
+          "query_or_document": "Code du travail : mutation disciplinaire, modification du contrat et statut protecteur",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les règles sur santé au travail et confidentialité.",
+          "query_or_document": "Code du travail : médecine du travail, prévention alcool et secret médical",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Comparer des décisions portant sur des courriels injurieux reconnus.",
+          "query_or_document": "courriels insultants salarié collègue fait reconnu sanction proportionnalité",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer mutation et cumul de mesures pour les mêmes faits.",
+          "query_or_document": "mutation disciplinaire avertissement mêmes faits double sanction",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Examiner avec prudence la place de l'alcool dans une faute disciplinaire.",
+          "query_or_document": "salarié alcool propos injurieux sanction accompagnement santé",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Rechercher les règles ou débats généraux sur alcool et prévention.",
+          "query_or_document": "PV CSE et CSSCT : alcool, prévention, accompagnement et confidentialité",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Rechercher des évolutions collectives de service ou mobilité sans données nominatives.",
+          "query_or_document": "PV CSE : mutations, mobilité et réorganisations de services",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Conclure à une discrimination ou à une entrave au seul motif que le destinataire est secrétaire du CSE.",
+      "Présenter l'alcool comme une excuse automatique ou comme une preuve médicale acquise.",
+      "Assimiler toute mutation à une simple mesure d'organisation.",
+      "Présumer que plusieurs mesures peuvent librement sanctionner les mêmes faits.",
+      "Présenter une obligation de suivi comme licite sans examiner son auteur, sa nature et sa confidentialité.",
+      "Confondre reconnaissance de l'envoi et acceptation de toutes les qualifications patronales."
+    ],
+    "employee_arguments": [
+      "Reconnaissance mesurée des courriels sans accepter une qualification non démontrée.",
+      "Absence de lien allégué avec le mandat du destinataire.",
+      "Caractère éventuellement isolé, regrets, excuses et absence d'antécédent si confirmés.",
+      "Proportionnalité de l'ensemble des mesures et contrôle d'une éventuelle double sanction.",
+      "Examen contractuel distinct de toute mutation.",
+      "Accès volontaire à un accompagnement de santé confidentiel sans transmission de données médicales à l'employeur."
+    ],
+    "possible_employer_arguments": [
+      "Les insultes reconnues portent atteinte au respect dû entre collègues.",
+      "L'usage du courriel professionnel, la répétition ou la diffusion peuvent aggraver le grief.",
+      "L'alcool n'autorise pas les propos et peut soulever un enjeu de prévention.",
+      "Une mobilité pourrait être présentée comme nécessaire pour restaurer le fonctionnement du service.",
+      "Un accompagnement pourrait être présenté comme une mesure de prévention et non une sanction."
+    ],
+    "risks": [
+      "Surqualification antisyndicale sans lien factuel avec le mandat.",
+      "Sous-estimation de propos écrits, répétés ou largement diffusés.",
+      "Double sanction entre avertissement, mutation et autre mesure.",
+      "Modification contractuelle imposée sous couvert de mutation.",
+      "Atteinte à la confidentialité ou traitement inadapté de données de santé.",
+      "Confusion entre aide médicale et obligation disciplinaire."
+    ],
+    "possible_outcomes": [
+      "Absence de sanction après explications.",
+      "Avertissement ou autre sanction proportionnée.",
+      "Mutation acceptée, refusée ou contestée selon sa nature juridique.",
+      "Annulation ou contestation d'une mesure pour procédure, disproportion ou double sanction.",
+      "Accompagnement volontaire et confidentiel par les services de santé.",
+      "Mesure de prévention distincte de la sanction."
+    ],
+    "response_quality_criteria": [
+      "Comprendre que le fait central est l'envoi reconnu de courriels insultants.",
+      "Ne pas déduire un acte antisyndical du seul statut du destinataire.",
+      "Séparer reconnaissance des faits, alcool allégué, mutation et suivi.",
+      "Examiner cumul de mesures, proportionnalité et nature contractuelle de la mutation.",
+      "Protéger la confidentialité des données de santé.",
+      "Comparer toute source aux faits exacts et ne rien inventer."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "known",
+      "facts": [
+        "Un avertissement a été prononcé.",
+        "Une mutation dans un autre service a été mise en œuvre.",
+        "Une obligation de suivi concernant l'alcool a été imposée."
+      ],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+  "title": "Disparition alléguée d'une règle des 10 % après modification de la période de congés",
+  "completeness": {
+    "status": "incomplete",
+    "analysis_state": "unresolved_pending_clarification",
+    "limitations": [
+      "Le sens de la « règle des 10 % » est unresolved et doit être clarifié avant toute analyse de fond.",
+      "L'accord modificatif, l'ancienne règle et l'existence d'une perte financière ne sont pas fournis."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Une règle appelée « règle des 10 % » était auparavant appliquée lors de la pose des congés annuels.",
+      "Un accord a modifié la période de référence, auparavant décrite comme allant de mai à mai et désormais annuelle.",
+      "Depuis ce changement, la règle dite des 10 % ne semble plus appliquée.",
+      "La signification de l'expression « règle des 10 % » n'est pas précisée."
+    ],
+    "facts_recognized": [
+      "Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure.",
+      "Une modification de la période de référence est rapportée."
+    ],
+    "facts_contested": [
+      "La disparition régulière ou irrégulière de la règle n'est pas établie.",
+      "Aucune perte financière n'est reconnue faute de connaître le sens de la règle."
+    ],
+    "facts_alleged": [
+      "La règle ne serait plus appliquée depuis le changement de période.",
+      "Aucun élément ne permet d'affirmer qu'il s'agit de la règle légale du dixième."
+    ],
+    "missing_information": [
+      {
+        "item": "Signification exacte de la « règle des 10 % »",
+        "importance": "blocking",
+        "reason": "Toute analyse de fond serait spéculative avant cette définition."
+      },
+      {
+        "item": "Texte ou pratique qui fondait la règle antérieure",
+        "importance": "blocking",
+        "reason": "Il faut déterminer s'il s'agissait d'un accord, d'une note, d'un PV, d'un usage ou d'un calcul de paie."
+      },
+      {
+        "item": "Accord ayant modifié la période et date d'entrée en vigueur",
+        "importance": "blocking",
+        "reason": "Comparer exactement l'ancien et le nouveau dispositif."
+      },
+      {
+        "item": "Nature de la période désormais annuelle et dates exactes",
+        "importance": "high",
+        "reason": "Le mot annuel ne suffit pas à identifier la période juridique ou de gestion."
+      },
+      {
+        "item": "Exemples avant et après sur des situations comparables",
+        "importance": "high",
+        "reason": "Établir le changement concret sans supposer son mécanisme."
+      },
+      {
+        "item": "Existence d'une perte financière, d'un refus de congé, d'un report ou d'un changement de quota",
+        "importance": "blocking",
+        "reason": "Identifier le véritable préjudice ou changement d'organisation."
+      },
+      {
+        "item": "Information ou consultation du CSE et communications aux salariés",
+        "importance": "high",
+        "reason": "Vérifier la transparence et la dimension collective."
+      }
+    ]
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Catégorie juridique unresolved avant définition de la règle",
+      "Indemnité de congés payés selon la règle du dixième, seulement si confirmée",
+      "Quota d'absences simultanées, seulement si confirmé",
+      "Report ou compteur de congés, seulement si confirmé",
+      "Règle locale de pose ou validation, seulement si confirmée",
+      "Accord collectif, engagement unilatéral, note ou usage",
+      "Information et consultation collective"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Que signifie exactement la « règle des 10 % » dans l'entreprise ?",
+        "why_it_matters": "Cette clarification est obligatoire avant toute qualification."
+      },
+      {
+        "priority": 2,
+        "question": "S'agit-il de la règle du dixième pour l'indemnité de congés payés ?",
+        "why_it_matters": "Tester cette hypothèse sans la présumer."
+      },
+      {
+        "priority": 3,
+        "question": "S'agit-il d'un quota de salariés absents simultanément ?",
+        "why_it_matters": "Distinguer rémunération et organisation des départs."
+      },
+      {
+        "priority": 4,
+        "question": "S'agit-il d'une règle de report ou de compteur ?",
+        "why_it_matters": "Identifier un éventuel effet sur les droits reportés."
+      },
+      {
+        "priority": 5,
+        "question": "S'agit-il d'une règle locale de pose ou de validation des congés ?",
+        "why_it_matters": "Identifier les conditions de planification."
+      },
+      {
+        "priority": 6,
+        "question": "Cette règle figurait-elle dans un accord, une note, un PV CSE ou résultait-elle d'un usage ?",
+        "why_it_matters": "Identifier sa source et les conditions de sa modification."
+      },
+      {
+        "priority": 7,
+        "question": "Quel accord a modifié la période et que disent exactement ses anciennes et nouvelles clauses ?",
+        "why_it_matters": "Comparer les textes plutôt que déduire un effet du seul changement de dates."
+      },
+      {
+        "priority": 8,
+        "question": "Existe-t-il une perte financière ou seulement un changement d'organisation ?",
+        "why_it_matters": "Déterminer la nature concrète du problème."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Définir la règle avant toute recherche juridique ciblée.",
+          "query_or_document": "Ancien accord, nouvel accord, notes de congés, formulaires et communications mentionnant « 10 % »",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Établir une pratique ou un usage éventuel.",
+          "query_or_document": "PV CSE, historiques de pose, règles de validation, bulletins anonymisés et exemples avant/après",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Différer la recherche précise jusqu'à clarification.",
+          "query_or_document": "Recherche conditionnelle : indemnité de congés payés et règle du dixième seulement si cette signification est confirmée",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Préparer les autres branches possibles sans en choisir une.",
+          "query_or_document": "Code du travail : ordre des départs, période de prise, report, accord collectif et usage selon la réponse obtenue",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Ne lancer une recherche jurisprudentielle ciblée qu'après définition de la règle.",
+          "query_or_document": "Requête à construire après clarification : dixième, quota, report, règle de pose ou usage",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Retrouver la signification locale et les débats lors du changement de période.",
+          "query_or_document": "PV CSE : règle des 10 %, période de congés, mai à mai, période annuelle et modification d'accord",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Supposer directement qu'il s'agit de la règle légale du dixième.",
+      "Effectuer un calcul d'indemnité avant de connaître le sens de la règle et les données de paie.",
+      "Conclure à une perte de droit ou de salaire sans exemple avant/après.",
+      "Confondre période de référence, période de prise et exercice de paie.",
+      "Présumer la dénonciation d'un usage sans identifier la source antérieure.",
+      "Citer une jurisprudence sur le dixième avant clarification."
+    ],
+    "employee_arguments": [
+      "Demander une définition écrite de la règle et sa source antérieure.",
+      "Comparer les clauses exactes avant et après l'accord.",
+      "Produire des exemples concrets de traitement avant et après.",
+      "Distinguer effet financier, quota, report et organisation.",
+      "Réserver toute qualification juridique jusqu'à clarification."
+    ],
+    "possible_employer_arguments": [
+      "Le changement de période aurait rendu l'ancienne règle sans objet.",
+      "La règle aurait été intégrée ou remplacée par le nouvel accord.",
+      "Il s'agirait d'une pratique de gestion et non d'un droit.",
+      "Aucune perte financière ne serait intervenue.",
+      "La règle subsisterait sous une autre forme."
+    ],
+    "risks": [
+      "Analyse entièrement hors sujet fondée sur la règle légale du dixième.",
+      "Calcul financier inventé.",
+      "Confusion entre plusieurs périodes de congés.",
+      "Omission de la source locale de la règle.",
+      "Conclusion définitive malgré l'ambiguïté bloquante."
+    ],
+    "possible_outcomes": [
+      "Clarification montrant qu'il s'agit de l'indemnité du dixième.",
+      "Clarification montrant qu'il s'agit d'un quota de départs.",
+      "Clarification montrant qu'il s'agit d'un report ou compteur.",
+      "Clarification montrant qu'il s'agit d'une règle locale de pose.",
+      "Maintien, remplacement, régularisation ou disparition justifiée selon les textes retrouvés.",
+      "Aucune conclusion tant que le sens reste unresolved."
+    ],
+    "response_quality_criteria": [
+      "Commencer obligatoirement par demander ce que signifie la règle des 10 %.",
+      "Présenter les quatre sens possibles sans en choisir un.",
+      "Ne lancer aucune analyse de fond ni calcul avant clarification.",
+      "Demander l'ancien texte, le nouvel accord et des exemples avant/après.",
+      "Distinguer perte financière et changement d'organisation.",
+      "Afficher explicitement l'état unresolved."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

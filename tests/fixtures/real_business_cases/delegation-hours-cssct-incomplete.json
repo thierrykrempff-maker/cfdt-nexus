@@ -1,0 +1,236 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+  "title": "Refus d'heures déclarées pour assister à une réunion CSSCT",
+  "completeness": {
+    "status": "incomplete",
+    "analysis_state": "unresolved_pending_clarification",
+    "limitations": [
+      "Le récit transmis est incomplet et sa fin ne doit pas être inventée.",
+      "La qualité de l'élu, la convocation, la nature du temps et les conséquences du refus ne sont pas connues."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+      "Les heures avaient été inscrites dans un fichier du service.",
+      "Elles n'avaient peut-être pas été posées par le canal officiellement attendu.",
+      "L'objectif déclaré était d'assister à une réunion CSSCT.",
+      "Le récit disponible est incomplet."
+    ],
+    "facts_recognized": [
+      "L'élu indique avoir inscrit les heures dans un fichier du service.",
+      "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+    ],
+    "facts_contested": [
+      "La validité du refus et la qualification exacte du temps ne sont pas admises.",
+      "L'utilisation obligatoire d'un autre canal reste à établir."
+    ],
+    "facts_alleged": [
+      "Le responsable aurait refusé les heures en raison du canal utilisé.",
+      "Aucune entrave, retenue de salaire ou impossibilité effective d'assister n'est établie."
+    ],
+    "missing_information": [
+      {
+        "item": "Fin manquante du récit",
+        "importance": "blocking",
+        "reason": "Aucune issue ni conséquence ne peut être inventée."
+      },
+      {
+        "item": "Qualité exacte de l'élu et appartenance à la CSSCT",
+        "importance": "blocking",
+        "reason": "Les droits et la nature du temps dépendent du mandat exercé."
+      },
+      {
+        "item": "Convocation officielle, objet, auteur, date et horaires de la réunion",
+        "importance": "blocking",
+        "reason": "Il faut distinguer réunion de l'instance et activité personnelle de délégation."
+      },
+      {
+        "item": "Réunion pendant le temps de travail ou pendant le repos",
+        "importance": "high",
+        "reason": "La qualification, le paiement et l'imputation peuvent différer."
+      },
+      {
+        "item": "Nature réelle du temps : réunion CSSCT ou crédit d'heures",
+        "importance": "blocking",
+        "reason": "Ces catégories ne doivent pas être assimilées automatiquement."
+      },
+      {
+        "item": "Canal interne attendu et texte qui le prévoit",
+        "importance": "high",
+        "reason": "Une procédure interne doit être établie et comparée aux droits du mandat."
+      },
+      {
+        "item": "Connaissance de la réunion par le responsable et délai de prévenance",
+        "importance": "high",
+        "reason": "Évaluer la réalité de l'information et les contraintes de service."
+      },
+      {
+        "item": "Empêchement effectif, retenue de salaire ou autre conséquence",
+        "importance": "blocking",
+        "reason": "La réponse juridique dépend de ce qui s'est réellement produit."
+      },
+      {
+        "item": "Accord CSE, règlement intérieur du CSE ou pratique applicable",
+        "importance": "high",
+        "reason": "Les règles locales peuvent préciser convocation, prévenance et moyens."
+      }
+    ]
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Temps de réunion d'une instance représentative",
+      "Crédit d'heures de délégation",
+      "Prévenance et procédure interne",
+      "Paiement et retenue de salaire",
+      "Exercice du mandat et éventuelle entrave à examiner sans la présumer",
+      "Accord collectif et règlement intérieur du CSE"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quelle est la fin manquante du récit ?",
+        "why_it_matters": "Le cas est explicitement incomplet et aucune conséquence ne peut être inventée."
+      },
+      {
+        "priority": 2,
+        "question": "L'élu est-il membre de la CSSCT et était-il officiellement convoqué ?",
+        "why_it_matters": "Établir sa qualité et la nature de sa participation."
+      },
+      {
+        "priority": 3,
+        "question": "La réunion avait-elle lieu pendant son temps de travail ou son repos ?",
+        "why_it_matters": "Qualifier le temps et son traitement."
+      },
+      {
+        "priority": 4,
+        "question": "S'agissait-il d'un temps de réunion CSSCT ou d'heures de délégation ?",
+        "why_it_matters": "Ne pas assimiler deux régimes potentiellement distincts."
+      },
+      {
+        "priority": 5,
+        "question": "Quel canal devait être utilisé et quel texte ou accord le prévoit ?",
+        "why_it_matters": "Vérifier la règle interne invoquée."
+      },
+      {
+        "priority": 6,
+        "question": "Le responsable connaissait-il la réunion et l'élu a-t-il été empêché d'y assister ?",
+        "why_it_matters": "Établir la réalité et les conséquences du refus."
+      },
+      {
+        "priority": 7,
+        "question": "Y a-t-il eu une retenue de salaire ou une autre mesure ?",
+        "why_it_matters": "Déterminer le préjudice et les actions possibles."
+      },
+      {
+        "priority": 8,
+        "question": "Existe-t-il un accord CSE ou un règlement intérieur du CSE applicable ?",
+        "why_it_matters": "Rechercher les garanties et procédures locales."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Identifier les règles de mandat et de prévenance.",
+          "query_or_document": "Accord CSE INEOS, règlement intérieur du CSE, règlement CSSCT et formulaires d'heures",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Établir la convocation et les conséquences.",
+          "query_or_document": "Convocation CSSCT, ordre du jour, fichier du service, échanges avec le responsable et bulletin",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Retrouver les textes distinguant temps de réunion et crédit d'heures.",
+          "query_or_document": "Code du travail : CSSCT, temps de réunion, heures de délégation et paiement",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les conditions d'une éventuelle entrave sans la présumer.",
+          "query_or_document": "Code du travail : exercice du mandat, entrave et retenue de salaire",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Comparer des litiges sur temps de réunion CSSCT et crédit d'heures.",
+          "query_or_document": "CSSCT temps réunion heures délégation convocation refus employeur",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer des procédures de prévenance et refus.",
+          "query_or_document": "heures délégation délai prévenance canal interne refus retenue salaire",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Rechercher les règles et précédents collectifs.",
+          "query_or_document": "PV CSE et CSSCT : heures de délégation, convocation, prévenance et participation",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Conclure automatiquement à une entrave.",
+      "Conclure automatiquement que les heures devaient être acceptées.",
+      "Assimiler sans analyse temps de réunion CSSCT et crédit d'heures.",
+      "Inventer la fin du récit, une retenue de salaire ou un empêchement.",
+      "Supposer que l'élu était membre de la CSSCT ou officiellement convoqué.",
+      "Écarter automatiquement une règle interne de prévenance sans la lire."
+    ],
+    "employee_arguments": [
+      "Demander la qualification exacte du temps et le texte applicable.",
+      "Produire la convocation, l'inscription dans le fichier et les échanges d'information.",
+      "Vérifier si l'exercice du mandat a été effectivement empêché.",
+      "Contester une retenue seulement si elle est établie.",
+      "Réserver toute qualification définitive jusqu'à réception de la fin du récit."
+    ],
+    "possible_employer_arguments": [
+      "Le canal ou le délai de prévenance n'aurait pas été respecté.",
+      "Le fichier du service ne constituerait pas une demande valable.",
+      "L'élu ne serait pas membre ou convoqué à la CSSCT.",
+      "Le temps relèverait du crédit d'heures et non d'une réunion payée comme telle.",
+      "Le service n'aurait pas été informé suffisamment tôt."
+    ],
+    "risks": [
+      "Conclusion d'entrave sans faits suffisants.",
+      "Mauvaise qualification du temps.",
+      "Perte de salaire ou empêchement non documenté.",
+      "Procédure interne présentée à tort comme absolue.",
+      "Invention de la partie manquante."
+    ],
+    "possible_outcomes": [
+      "Clarification sans conséquence après production de la convocation.",
+      "Régularisation du temps ou du salaire si les conditions sont établies.",
+      "Imputation sur le crédit d'heures si le régime applicable le prévoit.",
+      "Maintien du refus si la personne n'était pas convoquée ou habilitée.",
+      "Intervention syndicale ou contentieuse si un empêchement injustifié est établi.",
+      "Aucune conclusion avant réception de la fin du récit."
+    ],
+    "response_quality_criteria": [
+      "Afficher explicitement que le cas est incomplet.",
+      "Demander la fin du récit avant toute conclusion.",
+      "Distinguer temps de réunion et heures de délégation.",
+      "Vérifier qualité, convocation, horaire, canal et conséquence.",
+      "Ne jamais conclure automatiquement à une entrave.",
+      "Ne rien inventer."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

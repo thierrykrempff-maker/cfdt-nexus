@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+  "title": "Pauses cigarettes et utilisation d'un badgeage de sécurité Seveso",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Les durées, dates, règles de pause et informations relatives au badgeage ne sont pas fournies.",
+      "La réalité de certaines pauses est reconnue mais la légalité et la portée de la preuve restent à examiner."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+      "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+      "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+      "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses."
+    ],
+    "facts_recognized": [
+      "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+      "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet."
+    ],
+    "facts_contested": [
+      "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+      "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée."
+    ],
+    "facts_alleged": [
+      "La direction considère que les pauses constituent un manquement disciplinaire.",
+      "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+    ],
+    "missing_information": [
+      {
+        "item": "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+        "importance": "blocking",
+        "reason": "Il faut comparer le grief aux horaires, aux pauses autorisées et au temps réellement travaillé."
+      },
+      {
+        "item": "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+        "importance": "high",
+        "reason": "La connaissance des règles et l'égalité de traitement influencent la défense."
+      },
+      {
+        "item": "Finalité déclarée du tourniquet et information remise aux salariés",
+        "importance": "blocking",
+        "reason": "La licéité et la loyauté de la preuve dépendent notamment de la finalité et de l'information."
+      },
+      {
+        "item": "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+        "importance": "high",
+        "reason": "Ces éléments permettent d'examiner RGPD, proportionnalité et contrôle des salariés."
+      },
+      {
+        "item": "Chronologie des convocations, courriers, sanctions et messages de la direction",
+        "importance": "high",
+        "reason": "Il faut détecter une double sanction et qualifier chaque acte."
+      },
+      {
+        "item": "Existence d'un arrêt maladie et contenu exact de toute communication pendant celui-ci",
+        "importance": "high",
+        "reason": "L'arrêt ne doit pas être traité comme une faute et la chronologie peut affecter la négociation."
+      },
+      {
+        "item": "Objectif du salarié et conditions d'une éventuelle rupture conventionnelle",
+        "importance": "high",
+        "reason": "Le consentement doit rester libre et la rupture ne doit pas être déduite de l'issue connue."
+      }
+    ]
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Respect du temps de travail, pauses et discipline",
+      "Loyauté et licéité de la preuve",
+      "RGPD, finalité du traitement et contrôle des salariés",
+      "Information des salariés et consultation du CSE",
+      "Proportionnalité et double sanction",
+      "Protection liée à l'état de santé et arrêt maladie",
+      "Rupture conventionnelle et consentement libre"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quelles pauses précises sont reprochées et comment leurs durées ont-elles été calculées ?",
+        "why_it_matters": "Séparer les faits reconnus d'une reconstitution patronale éventuellement imprécise."
+      },
+      {
+        "priority": 2,
+        "question": "Quelle finalité du tourniquet a été déclarée et les salariés ont-ils été informés d'un usage de contrôle du temps ?",
+        "why_it_matters": "Vérifier finalité, transparence, loyauté et possible détournement."
+      },
+      {
+        "priority": 3,
+        "question": "Le CSE a-t-il été informé ou consulté sur ce dispositif et cet usage ?",
+        "why_it_matters": "Contrôler les garanties collectives liées au contrôle de l'activité."
+      },
+      {
+        "priority": 4,
+        "question": "Quelles règles de pause, tolérances et pratiques comparables existaient dans le service ?",
+        "why_it_matters": "Comparer le comportement aux règles réellement applicables et à l'égalité de traitement."
+      },
+      {
+        "priority": 5,
+        "question": "Quels actes ou sanctions ont déjà été notifiés et à quelles dates ?",
+        "why_it_matters": "Évaluer procédure, prescription et risque de double sanction."
+      },
+      {
+        "priority": 6,
+        "question": "Un arrêt maladie est-il intervenu et la direction a-t-elle lié cet arrêt au grief ?",
+        "why_it_matters": "Écarter toute assimilation de l'arrêt à une faute et protéger la santé."
+      },
+      {
+        "priority": 7,
+        "question": "Une rupture conventionnelle est-elle souhaitée librement par le salarié et quelles sont ses conditions minimales ?",
+        "why_it_matters": "Préserver un consentement libre et une négociation éclairée."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Identifier les pauses autorisées et les règles disciplinaires.",
+          "query_or_document": "Règlement intérieur, accords temps de travail et consignes relatives aux pauses",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Établir la finalité et les garanties du badgeage.",
+          "query_or_document": "Notice d'information du tourniquet, registre RGPD, analyse d'impact et dossier de consultation CSE",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer les pratiques et la chronologie.",
+          "query_or_document": "Notes de service, tolérances, relevés anonymisés, convocation et courriers remis au salarié",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Retrouver les textes sur pauses, temps de travail et preuve.",
+          "query_or_document": "Code du travail : pause, temps de travail effectif et preuve des horaires",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les textes sur moyens de contrôle et consultation du CSE.",
+          "query_or_document": "Code du travail : information salarié, dispositif de contrôle de l'activité et consultation CSE",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Retrouver les règles sur rupture conventionnelle et santé.",
+          "query_or_document": "Code du travail : arrêt maladie, discrimination liée à la santé et rupture conventionnelle",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Identifier le cadre RGPD pertinent sans inventer de conformité.",
+          "query_or_document": "RGPD et loi Informatique et Libertés : finalité, transparence, minimisation et durée de conservation",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Comparer des décisions sur badgeage détourné de sa finalité et preuve disciplinaire.",
+          "query_or_document": "badge accès sécurité preuve disciplinaire finalité contrôle salarié loyauté",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer des sanctions pour pauses excessives.",
+          "query_or_document": "pauses cigarettes excessives salarié sanction tolérance proportionnalité",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Comparer le consentement à une rupture dans un contexte disciplinaire.",
+          "query_or_document": "rupture conventionnelle contexte disciplinaire consentement libre menace licenciement",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Rechercher la présentation du tourniquet et de sa finalité.",
+          "query_or_document": "PV CSE et CSSCT : tourniquet, badgeage, évacuation Seveso et contrôle d'activité",
+          "availability": "unknown"
+        },
+        {
+          "objective": "Rechercher les débats sur pauses et pratiques collectives.",
+          "query_or_document": "PV CSE : pauses cigarettes, temps de pause, tolérances et égalité de traitement",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Déduire que des pauses reconnues rendent automatiquement licite toute preuve.",
+      "Présumer que le badgeage de sécurité peut être utilisé à toute autre finalité.",
+      "Ignorer l'information des salariés, la consultation du CSE ou le RGPD.",
+      "Traiter un arrêt maladie comme une faute ou un aveu.",
+      "Conseiller automatiquement une rupture conventionnelle.",
+      "Utiliser l'issue négociée connue pour orienter la réponse initiale.",
+      "Confondre message menaçant un licenciement, licenciement notifié et négociation."
+    ],
+    "employee_arguments": [
+      "Reconnaître précisément certaines pauses sans accepter une mesure ou un calcul non démontré.",
+      "Contester la loyauté ou la finalité d'une preuve issue d'un dispositif de sécurité.",
+      "Demander règles, tolérances, information, consultation et données réellement utilisées.",
+      "Vérifier égalité de traitement, proportionnalité et double sanction.",
+      "Séparer strictement l'arrêt maladie du grief disciplinaire.",
+      "Négocier une rupture seulement si elle correspond à un choix libre et éclairé."
+    ],
+    "possible_employer_arguments": [
+      "Les pauses reconnues réduisent le temps de travail et désorganisent le service.",
+      "Les passages au tourniquet seraient des données objectives déjà collectées pour la sécurité.",
+      "Le site Seveso impose une connaissance exacte des présences.",
+      "Les règles de pause auraient été connues et les dépassements répétés.",
+      "Une rupture conventionnelle pourrait être présentée comme une solution négociée."
+    ],
+    "risks": [
+      "Détournement de finalité ou preuve déloyale.",
+      "Confusion entre sécurité Seveso et contrôle disciplinaire.",
+      "Sanction disproportionnée ou double sanction.",
+      "Discrimination ou pression liée à l'état de santé.",
+      "Consentement vicié à une rupture conventionnelle.",
+      "Omission des tolérances et pratiques comparables."
+    ],
+    "possible_outcomes": [
+      "Rappel des règles ou absence de sanction.",
+      "Sanction proportionnée fondée sur des faits établis.",
+      "Écartement ou limitation de données utilisées hors de leur finalité.",
+      "Contestation d'une sanction pour preuve, procédure, disproportion ou double sanction.",
+      "Reprise du travail sans rupture.",
+      "Rupture conventionnelle librement négociée ou refusée.",
+      "Licenciement envisagé, notifié ou contesté selon la suite réelle."
+    ],
+    "response_quality_criteria": [
+      "Distinguer existence des pauses et légalité de la preuve.",
+      "Examiner finalité, information, consultation, RGPD et CNIL.",
+      "Rechercher les règles et tolérances réelles.",
+      "Contrôler chronologie et double sanction.",
+      "Ne jamais traiter l'arrêt maladie comme une faute.",
+      "Analyser la rupture conventionnelle sous l'angle du consentement libre.",
+      "Ne pas laisser l'issue connue contaminer la réponse."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "known",
+      "facts": [
+        "Une mise à pied est intervenue.",
+        "Un arrêt maladie est intervenu.",
+        "Un message de la direction a évoqué un licenciement.",
+        "Une négociation a eu lieu.",
+        "Une rupture conventionnelle a finalement été envisagée ou obtenue."
+      ],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}
