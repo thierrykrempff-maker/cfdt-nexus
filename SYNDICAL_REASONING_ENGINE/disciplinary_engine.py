@@ -6,6 +6,7 @@ import unicodedata
 
 from .disciplinary_arguments import analyze_disciplinary_positions
 from .disciplinary_evidence import disciplinary_evidence
+from .disciplinary_facts import extract_disciplinary_facts
 from .disciplinary_models import (
     DisciplinaryAnalysis,
     DisciplinaryQualification,
@@ -91,17 +92,19 @@ class DisciplinaryReasoningEngine:
         if not isinstance(case, SyndicalCaseInput):
             raise TypeError("case must be a SyndicalCaseInput")
         candidates = self._qualification_candidates(case)
+        facts = extract_disciplinary_facts(case)
         protection = self._protected_employee_analysis(candidates)
         employee, employer = analyze_disciplinary_positions(case, candidates)
         return DisciplinaryAnalysis(
             self._base_engine.analyze(case),
+            facts,
             candidates,
             PROCEDURE_CHECKS,
-            build_disciplinary_questions(case, candidates),
+            build_disciplinary_questions(case, candidates, facts),
             employee,
             employer,
             disciplinary_evidence(candidates),
-            build_disciplinary_strategies(case, protection),
+            build_disciplinary_strategies(case, protection, facts),
             protection,
             scenario_code,
         )

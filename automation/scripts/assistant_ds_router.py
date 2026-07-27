@@ -17,6 +17,13 @@ from pathlib import Path
 from typing import Any
 
 import agreements_bible as bible
+from SYNDICAL_REASONING_ENGINE import (
+    DisciplinaryActCategory,
+    DisciplinaryFactExtraction,
+    DisciplinaryReasoningEngine,
+    SyndicalCaseInput,
+    extract_disciplinary_facts,
+)
 
 try:
     import nexus_bible_bridge as bridge
@@ -1797,6 +1804,29 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 28
     if "droit_syndical" in domains and any(term in document for term in ["droit syndical", "cse", "rp", "dialogue social"]):
         score += 28
+    if "disciplinaire" in domains:
+        facts = extract_disciplinary_facts(str(route.get("query") or ""))
+        if (
+            facts.act_category
+            == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+        ):
+            if any(
+                term in context
+                for term in [
+                    "injure",
+                    "insult",
+                    "propos grossier",
+                    "graffiti",
+                    "inscription",
+                    "respect des personnes",
+                    "respect des locaux",
+                    "comportement",
+                    "degradation",
+                ]
+            ):
+                score += 48
+            if "reglement interieur" in context:
+                score += 24
     if "cse" in domains and any(
         term in context
         for term in [
@@ -1868,7 +1898,7 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
     by_document: dict[str, int] = {}
     top_score = float(ranked[0].get("_router_score") or 0)
     for source in ranked:
-        if len(selected) >= 1 and is_contextual_noise_source(source, route):
+        if is_contextual_noise_source(source, route):
             skipped_noise.append(source)
             continue
         document = normalize(str(source.get("document") or "document local"))
@@ -1909,7 +1939,12 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
         "jurisprudence",
         "historique_cse",
     ]:
-        layer_candidates = [source for source in ranked if source.get("source_layer") == required_layer]
+        layer_candidates = [
+            source
+            for source in ranked
+            if source.get("source_layer") == required_layer
+            and not is_contextual_noise_source(source, route)
+        ]
         if required_layer == "code_travail":
             layer_candidates = [source for source in layer_candidates if legifrance_source_is_retained(source)]
         if layer_candidates and not any(
@@ -1939,7 +1974,12 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
                     )
                 selected[replace_at] = layer_source
 
-    practice_sources = [source for source in ranked if source.get("source_layer") == "pratique_officielle"]
+    practice_sources = [
+        source
+        for source in ranked
+        if source.get("source_layer") == "pratique_officielle"
+        and not is_contextual_noise_source(source, route)
+    ]
     selected_keys = {source_key(source) for source in selected}
     for practice_source in practice_sources[:2]:
         key = source_key(practice_source)
@@ -2001,11 +2041,89 @@ def build_source_layers(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return layers
 
 
+def disciplinary_source_exclusion_reason(
+    source: dict[str, Any],
+    route: dict[str, Any],
+) -> str | None:
+    if route.get("employee_path") != ASSISTANCE_ENTRETIEN_DISCIPLINAIRE:
+        return None
+    facts = extract_disciplinary_facts(str(route.get("query") or ""))
+    context = source_context(source)
+    layer = str(source.get("source_layer") or "")
+    if re.search(r"licenciements? collectifs?|plan de sauvegarde de l emploi|\bpse\b", context):
+        return "licenciement collectif sans rapport avec le grief individuel"
+    if (
+        facts.act_category
+        != DisciplinaryActCategory.IT_MISUSE
+        and re.search(r"communications? electroniques?|messagerie|courriel|reseaux sociaux", context)
+    ):
+        return "communications électroniques sans rapport avec les faits"
+    if (
+        facts.act_category
+        != DisciplinaryActCategory.TECHNICAL_ERROR
+        and re.search(
+            r"formation technique|habilitation|mode operatoire|erreur de manipulation|consigne de production",
+            context,
+        )
+    ):
+        return "volet technique absent des faits"
+    if (
+        facts.act_category
+        == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+    ):
+        factual_markers = (
+            "injure",
+            "insult",
+            "grossier",
+            "irrespect",
+            "graffiti",
+            "inscription",
+            "respect des personnes",
+            "respect des locaux",
+            "degradation",
+            "comportement",
+            "dignite",
+        )
+        procedure_markers = (
+            "l1331",
+            "l1332",
+            "convocation",
+            "entretien prealable",
+            "droits de la defense",
+            "echelle des sanctions",
+        )
+        if layer == "jurisprudence" and not any(
+            marker in context for marker in factual_markers
+        ):
+            return "décision disciplinaire sans faits injurieux comparables"
+        if layer in {"accord_entreprise", "convention_collective", "historique_cse"}:
+            if not any(marker in context for marker in factual_markers):
+                return "texte local ou conventionnel sans règle factuellement pertinente"
+        if layer in {"code_travail", "pratique_officielle"} and not any(
+            marker in context for marker in procedure_markers + factual_markers
+        ):
+            return "texte général sans lien factuel ni garantie de procédure identifiée"
+        if (
+            "harcelement" in context
+            and facts.target_identified is False
+            and facts.repetition is not True
+            and not any(marker in context for marker in ("injure", "insult", "grossier"))
+        ):
+            return "harcèlement non comparable sans cible ni répétition établie"
+        if not any(
+            marker in context for marker in factual_markers + procedure_markers
+        ):
+            return "présence des seuls mots sanction ou disciplinaire"
+    return None
+
+
 def is_contextual_noise_source(source: dict[str, Any], route: dict[str, Any]) -> bool:
     query = normalize(route.get("query", ""))
     document = normalize(str(source.get("document") or ""))
     direct = int(source.get("_direct_relevance") or 0)
     domains = set(business_domains(route))
+    if disciplinary_source_exclusion_reason(source, route):
+        return True
     if "classification_carriere" in domains and "restauration" in document:
         return True
     if "astreinte" in domains and "harmonisation remuneration" in document:
@@ -3134,6 +3252,27 @@ def build_working_position(route: dict[str, Any], findings: list[str], engine_re
             "etudiees et leur compatibilite avec l'avis medical avant toute conclusion."
         )
     if "disciplinaire" in domains:
+        facts = extract_disciplinary_facts(str(route.get("query") or ""))
+        if (
+            facts.act_category
+            == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+        ):
+            if facts.employee_admission is True:
+                return (
+                    "Préparer une reconnaissance mesurée du geste et des regrets, puis discuter "
+                    "la cible réelle, la diffusion, les conséquences, le contexte, les antécédents "
+                    "et la proportionnalité sans conseiller de nier un fait admis."
+                )
+            if facts.employee_admission is False:
+                return (
+                    "Contester l'attribution en exigeant les preuves précises et loyales, puis "
+                    "examiner subsidiairement la qualification et la proportionnalité sans faire "
+                    "reconnaître les faits sur une simple suspicion."
+                )
+            return (
+                "Fixer d'abord la position du salarié, les propos exacts, la personne éventuellement "
+                "visée, la visibilité, les conséquences et les preuves avant de choisir une défense."
+            )
         return (
             "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier "
             "la proportionnalite d'une eventuelle sanction."
@@ -3551,174 +3690,365 @@ def build_employee_method_analysis(answer: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_disciplinary_assistance(answer: dict[str, Any]) -> dict[str, Any]:
-    """Build an operational A-to-G dossier without deciding the merits of a sanction."""
+    """Build a fact-driven disciplinary dossier without deciding the sanction."""
     query = str(answer.get("query") or "")
-    text = normalize(query)
-    measure_markers = (
-        ("mise à pied disciplinaire", "mise a pied"),
-        ("licenciement envisagé ou notifié", "licenciement"),
-        ("avertissement", "avertissement"),
-        ("blâme", "blame"),
-        ("sanction non précisée", "sanction"),
+    reasoning = DisciplinaryReasoningEngine().analyze(SyndicalCaseInput(query))
+    facts = reasoning.fact_extraction
+    aggravating, mitigating = _disciplinary_risk_factors(facts)
+    position, strategy, defense_points, suggested_wording = (
+        _disciplinary_defense_line(facts)
     )
-    measure = next(
-        (label for label, marker in measure_markers if marker in text),
-        "mesure à préciser",
+    employee_questions = semantic_dedupe(
+        [item.question for item in reasoning.automatic_questions]
     )
-    alleged_facts = (
-        "Des faits reprochés sont mentionnés, mais leur teneur et leur preuve restent à vérifier."
-        if any(marker in text for marker in ("fait", "faute", "incident", "insubordination"))
-        else "Les faits reprochés ne sont pas décrits avec assez de précision."
+    if (
+        facts.act_category
+        == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+    ):
+        superseded_generic_questions = (
+            "les faits sont ils reconnus",
+            "existe t il des temoins ou des ecrits contemporains",
+        )
+        employee_questions = [
+            question
+            for question in employee_questions
+            if not any(
+                marker in normalize(question)
+                for marker in superseded_generic_questions
+            )
+        ]
+        if facts.employee_admission is not None:
+            employee_questions = [
+                question
+                for question in employee_questions
+                if "le salarie reconnait il etre l auteur" not in normalize(question)
+            ]
+        if facts.exact_words_or_behavior:
+            employee_questions = [
+                question
+                for question in employee_questions
+                if "quelle etait la phrase exacte" not in normalize(question)
+            ]
+    conclusion = (
+        "Le dossier est défendable principalement sur la preuve, la qualification exacte "
+        "et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation "
+        "sans connaître la position complète du salarié, les preuves de la direction, les "
+        "antécédents et la sanction envisagée."
     )
-    documents = list(answer.get("documents_to_request", ()))
-    questions = list(answer.get("questions_to_ask", ()))
     return {
         "analysis_type": ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
         "notice": (
-            "Dossier de préparation syndicale approfondi. Il ne qualifie pas "
-            "automatiquement la sanction d'illégale et ne présume aucun fait reconnu."
+            "Dossier de préparation syndicale fondé sur les faits fournis. Toute "
+            "qualification et toute appréciation de gravité restent provisoires."
         ),
-        "A_qualification": {
-            "procedure": (
-                "procédure disciplinaire à contrôler"
-                if "disciplinaire" in text or "sanction" in text
-                else "nature de la procédure à confirmer"
-            ),
-            "measure": measure,
-            "alleged_facts": alleged_facts,
-            "potential_seriousness": "à qualifier après vérification contradictoire",
-            "employee_risks": [
-                "sanction dont la nature et les effets doivent être précisés",
-                "délais de réaction ou de contestation à préserver",
+        "fact_extraction": facts.to_dict(),
+        "1_facts_understood": {
+            "facts_from_request": _disciplinary_fact_rows(facts),
+            "guardrail": "Aucun fait absent de la demande n'est présenté comme établi.",
+        },
+        "2_points_to_verify": {
+            "decisive_missing_facts": list(facts.facts_missing),
+            "chronology": [
+                "date des faits",
+                "date de connaissance par l'employeur",
+                "date de convocation",
+                "date de l'entretien",
+                "date de notification éventuelle",
             ],
         },
-        "B_timeline": {
-            "facts_date": None,
-            "employer_awareness_date": None,
-            "summons_date": None,
-            "interview_date": None,
-            "notification_date": None,
-            "deadline_check": (
-                "Impossible à conclure sans les dates ; relever chaque date et sa source."
-            ),
+        "3_provisional_qualification": {
+            "act_category": facts.act_category.value,
+            "wording": _disciplinary_provisional_qualification(facts),
+            "sources": _disciplinary_source_review(answer),
+            "source_selection_rules": _disciplinary_source_selection_rules(facts),
         },
-        "C_procedure_control": [
-            "Vérifier l'objet, la date, l'heure, le lieu et les mentions de la convocation.",
-            "Vérifier les délais applicables sans présumer leur irrégularité.",
-            "Vérifier le droit à assistance et les modalités concrètes.",
-            "Identifier le règlement intérieur et l'échelle des sanctions applicables.",
-            "Comparer la mesure envisagée aux faits établis et au contexte.",
-            "Vérifier qu'une sanction n'a pas déjà été prononcée pour les mêmes faits.",
-            "Consigner séparément toute irrégularité seulement après vérification.",
+        "4_real_disciplinary_risk": {
+            "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+            "severity": "Gravité encore indéterminée au vu des informations disponibles.",
+            "sanction_considered": facts.sanction_considered or "à préciser",
+            "aggravating_factors": aggravating,
+            "mitigating_factors": mitigating,
+            "case_law_comparison": _disciplinary_case_law_comparison(answer),
+            "provisional_conclusion": conclusion,
+        },
+        "5_main_defense_line": {
+            "employee_position": position,
+            "strategy": strategy,
+            "supporting_points": defense_points,
+        },
+        "6_questions_for_employee": employee_questions,
+        "7_questions_for_management": [
+            "Quel est le grief exact retenu contre le salarié ?",
+            "Quelles preuves établissent l'acte et son attribution au salarié ?",
+            "Une personne précise est-elle considérée comme visée et sur quels éléments ?",
+            "Quelles conséquences concrètes l'inscription ou le comportement a-t-il produites ?",
+            "Quelle clause précise du règlement intérieur est invoquée ?",
+            "Quels précédents réellement comparables ont été traités dans l'entreprise ?",
+            "Quelle sanction est envisagée ?",
+            "Comment sa proportionnalité est-elle appréciée au regard du contexte, des conséquences et des antécédents ?",
         ],
-        "D_facts_analysis": {
-            "recognized_facts": [],
-            "contested_facts": [],
-            "unproven_facts": [alleged_facts],
-            "contradictions": [],
-            "witnesses": [],
-            "work_context": [],
-            "training_gaps": [],
-            "unclear_instructions": [],
-            "workload_or_organization": [],
-            "management_responsibilities": [],
-            "mitigating_circumstances": [],
-            "guardrail": (
-                "Aucun fait n'est classé comme reconnu sans déclaration explicite et vérifiée du salarié."
+        "8_interview_preparation": {
+            "suggested_wording": suggested_wording,
+            "documents_to_request": semantic_dedupe(
+                list(answer.get("documents_to_request", ()))
             ),
-        },
-        "E_interview_preparation": {
-            "questions_for_employee": [
-                "Quels faits précis, dates, lieux et personnes sont mentionnés ?",
-                "Que reconnaissez-vous exactement, que contestez-vous et pourquoi ?",
-                "Quelles consignes, formations, contraintes ou alertes existaient ?",
-                *questions[:3],
-            ],
-            "questions_for_employer": [
-                "Quels faits précis et quelles pièces fondent la procédure ?",
-                "Quand l'employeur a-t-il eu connaissance de chaque fait ?",
-                "Quelle mesure est envisagée et quel texte interne est invoqué ?",
-                "Quels éléments contradictoires ont été vérifiés ?",
-            ],
-            "documents_after_initial_analysis": [
-                {
-                    "document": document,
-                    "priority": "indispensable" if index < 3 else "utile",
-                    "utility": (
-                        "Vérifier un fait, une date, une règle interne ou une preuve invoquée."
-                    ),
-                }
-                for index, document in enumerate(documents)
-            ],
-            "main_arguments": list(answer.get("findings", ()))[:4],
-            "fallback_arguments": [
-                "À défaut de contester le fait, discuter son contexte, sa preuve et la proportionnalité.",
-                "Demander qu'aucune décision ne soit prise avant examen des observations et pièces.",
-            ],
-            "do_not_admit_without_evidence": [
-                "la matérialité précise des faits",
-                "leur caractère fautif",
-                "leur gravité",
-                "l'absence de cause organisationnelle ou de formation",
-            ],
-            "prudent_wording": [
-                "« À ce stade, le salarié demande que les faits et les pièces soient précisés. »",
-                "« Cette observation ne vaut pas reconnaissance d'un fait non établi. »",
-                "« Le salarié souhaite compléter ses observations après vérification des documents. »",
-            ],
-            "defense_strategy": (
-                "Faire préciser, établir la chronologie, répondre factuellement, préserver "
-                "le contradictoire puis formuler une demande proportionnée."
-            ),
-            "risks_and_limits": list(answer.get("warnings", ()))[:4],
-        },
-        "F_during_interview": {
-            "points_to_clarify": [
-                "faits exacts, qualification envisagée et origine de chaque information",
-            ],
-            "dates_to_record": [
-                "faits",
-                "connaissance par l'employeur",
-                "convocation",
-                "entretien",
-                "notification éventuelle",
-            ],
-            "documents_to_request": documents[:6],
-            "contradictions_to_note": [
-                "écarts entre convocation, déclarations, pièces et chronologie",
-            ],
-            "prudent_responses": [
-                "répondre sur les faits connus ; réserver les points non vérifiés",
-            ],
-            "pause_requests": [
-                "demander une suspension ou un temps de réflexion si une pièce nouvelle est présentée",
-            ],
-            "essential_notes": [
-                "participants, questions, réponses, documents cités, demandes et incidents",
+            "notes_to_record": [
+                "participants et qualité de chacun",
+                "grief exact et qualification avancée",
+                "preuves citées ou présentées",
+                "réponses du salarié",
+                "demandes de communication et réponse de la direction",
             ],
         },
-        "G_after_interview": [
-            "Rédiger un compte rendu factuel et daté.",
-            "Adresser, si utile, les observations complémentaires du salarié.",
-            "Examiner toute notification avant de choisir contestation, retrait ou réduction.",
-            "Évaluer l'action syndicale et, si le problème est collectif, une saisine du CSE.",
-            "Orienter selon le besoin vers l'inspection du travail, un défenseur syndical ou un avocat.",
+        "9_points_not_to_say": [
+            "« Ce n'est pas grave. »",
+            "« Il avait le droit parce qu'il était énervé. »",
+            "« Personne n'était nommée donc aucune faute n'existe. »",
+            "« Il faut nier même si une preuve existe. »",
         ],
-        "source_hierarchy": [
-            "Accords d'entreprise INEOS",
-            "Convention collective nationale des industries chimiques — IDCC 44",
-            "Code du travail",
-            "Jurisprudence réellement comparable",
-            "Historique et débats vérifiés du CSE",
-        ],
-        "priority_material": [
-            "règlement intérieur",
-            "procédure disciplinaire interne",
-            "précédents comparables vérifiés dans l'entreprise",
-            "décisions ou échanges CSE vérifiés sur le sujet",
-            "éléments de preuve du dossier",
+        "10_after_interview": [
+            "Rédiger un compte rendu factuel et daté sans dupliquer les arguments.",
+            "Demander la communication des preuves ou pièces encore manquantes.",
+            "Contrôler le motif, la date et la proportionnalité de toute sanction notifiée.",
+            "Adresser si nécessaire une contestation écrite ciblée.",
+            "Évaluer avec un défenseur syndical ou un avocat la suite adaptée.",
         ],
     }
+
+
+def _disciplinary_fact_rows(facts: DisciplinaryFactExtraction) -> list[str]:
+    rows = [facts.alleged_act]
+    if facts.employee_admission is True:
+        rows.append("Le salarié reconnaît être l'auteur selon la demande transmise.")
+    elif facts.employee_admission is False:
+        rows.append("Le salarié conteste être l'auteur selon la demande transmise.")
+    if facts.target_identified is False:
+        rows.append("Aucune personne n'est présentée comme précisément visée.")
+    elif facts.target_identified is True:
+        rows.append(
+            "Une personne est présentée comme visée : "
+            + (facts.target_type or "qualité à préciser")
+            + "."
+        )
+    if facts.location:
+        rows.append("Lieu indiqué : " + facts.location + ".")
+    if facts.context_claimed:
+        rows.append("Contexte allégué : " + ", ".join(facts.context_claimed) + ".")
+    if facts.material_damage is True:
+        rows.append("Une conséquence matérielle est alléguée.")
+    elif facts.material_damage is False:
+        rows.append("La demande indique l'absence de dégradation matérielle durable.")
+    return semantic_dedupe(rows)
+
+
+def _disciplinary_risk_factors(
+    facts: DisciplinaryFactExtraction,
+) -> tuple[list[str], list[str]]:
+    aggravating: list[str] = []
+    mitigating: list[str] = []
+    for value, positive, negative in (
+        (facts.target_identified, "personne précisément visée", "absence de personne précisément identifiée comme visée"),
+        (facts.public_visibility, "visibilité auprès de tiers", "absence de diffusion publique indiquée"),
+        (facts.repetition, "faits répétés", "fait présenté comme isolé"),
+        (facts.prior_warnings, "antécédent disciplinaire indiqué", "absence d'antécédent indiquée"),
+        (facts.material_damage, "dégradation matérielle alléguée", "absence de dommage matériel durable indiquée"),
+        (facts.threat_or_violence, "menace ou violence alléguée", "absence de menace ou de violence indiquée"),
+    ):
+        if value is True:
+            aggravating.append(positive)
+        elif value is False:
+            mitigating.append(negative)
+    mitigating.extend(facts.context_claimed)
+    return (
+        semantic_dedupe(aggravating) or ["aucun élément aggravant établi à ce stade"],
+        semantic_dedupe(mitigating) or ["aucun élément atténuant établi à ce stade"],
+    )
+
+
+def _disciplinary_defense_line(
+    facts: DisciplinaryFactExtraction,
+) -> tuple[str, str, list[str], list[str]]:
+    if facts.employee_admission is True:
+        return (
+            "faits reconnus",
+            (
+                "Le salarié reconnaît un geste déplacé et regrettable commis sous le coup "
+                "de l'énervement. Il conteste toutefois toute volonté de menacer, harceler "
+                "ou viser personnellement un collègue si ces éléments correspondent aux faits. "
+                "La défense porte sur le caractère isolé, les conséquences réelles, les "
+                "antécédents et la proportionnalité de la sanction."
+            ),
+            [
+                "reconnaissance mesurée du geste et regrets",
+                "absence de personne nommément visée si elle est confirmée",
+                "absence de menace ou de violence si elle est confirmée",
+                "caractère isolé et absence d'antécédent à vérifier",
+                "conséquences matérielles et visibilité réelles",
+                "contexte documenté sans le présenter comme une autorisation",
+                "réparation, nettoyage ou suppression rapide à vérifier",
+                "proportionnalité de la sanction",
+            ],
+            [
+                "« Je reconnais un geste déplacé et je le regrette. »",
+                "« Je n'ai voulu menacer ni harceler personne ; je demande que la personne prétendument visée et les conséquences exactes soient précisées. »",
+                "« Je souhaite que mon parcours, mes éventuels antécédents, le contexte et les conséquences réelles soient pris en compte. »",
+            ],
+        )
+    if facts.employee_admission is False:
+        return (
+            "attribution contestée",
+            (
+                "Ne reconnaître aucun fait sur la base d'une simple suspicion. Demander la "
+                "preuve de l'attribution et examiner photographie, vidéo, témoignages, accès "
+                "aux lieux, aveu éventuel et loyauté de la preuve."
+            ),
+            [
+                "matérialité et attribution de l'acte",
+                "accès possible de plusieurs personnes",
+                "date et origine de chaque preuve",
+                "cohérence des témoignages",
+                "loyauté de la preuve",
+                "proportionnalité si un fait devait néanmoins être établi",
+            ],
+            [
+                "« Je conteste être l'auteur et demande les éléments précis qui fondent cette attribution. »",
+                "« Ma présence ou mon accès aux lieux ne constitue pas à lui seul une preuve d'auteur. »",
+                "« Je répondrai précisément après communication des éléments invoqués. »",
+            ],
+        )
+    return (
+        "position du salarié à établir",
+        (
+            "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du "
+            "salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la "
+            "diffusion, les conséquences, la répétition et les antécédents."
+        ),
+        [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité",
+        ],
+        [
+            "« À ce stade, je souhaite connaître précisément les faits et les pièces avant de répondre définitivement. »",
+            "« Cette demande de précision ne vaut ni reconnaissance ni refus de répondre. »",
+        ],
+    )
+
+
+def _disciplinary_provisional_qualification(
+    facts: DisciplinaryFactExtraction,
+) -> str:
+    if (
+        facts.act_category
+        == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+    ):
+        return (
+            "Comportement potentiellement fautif consistant en une inscription ou des propos "
+            "grossiers sur un support de l'entreprise. La qualification exacte dépend de la "
+            "preuve de l'auteur, de la personne éventuellement visée, de la visibilité, des "
+            "conséquences, de la répétition et du contexte."
+        )
+    if facts.act_category == DisciplinaryActCategory.UNSPECIFIED_FACTS:
+        return (
+            "Faits disciplinaires non précisément qualifiés. Une stratégie définitive est "
+            "impossible avant description de l'acte, de son attribution et de ses conséquences."
+        )
+    return (
+        "Qualification provisoire : "
+        + facts.act_category.value.replace("_", " ").lower()
+        + ". La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+    )
+
+
+def _disciplinary_source_review(answer: dict[str, Any]) -> list[dict[str, Any]]:
+    layers = answer.get("source_layers") or build_source_layers(answer.get("sources", []))
+    retained_layers = {
+        "accord_entreprise",
+        "convention_collective",
+        "code_travail",
+        "jurisprudence",
+        "historique_cse",
+    }
+    review: list[dict[str, Any]] = []
+    for layer in layers:
+        if layer.get("id") not in retained_layers:
+            continue
+        sources = [
+            {
+                "document": source.get("document"),
+                "article_or_clause": source.get("article")
+                or source.get("article_or_section"),
+                "decision_date": source.get("decision_date"),
+                "case_number": source.get("case_number"),
+            }
+            for source in layer.get("sources", [])
+            if isinstance(source, dict)
+        ]
+        review.append(
+            {
+                "layer": layer.get("label"),
+                "status": (
+                    "disponible et factuellement pertinent"
+                    if sources
+                    else "indisponible ou aucune clause précise pertinente retrouvée"
+                ),
+                "sources": sources,
+            }
+        )
+    return review
+
+
+def _disciplinary_source_selection_rules(
+    facts: DisciplinaryFactExtraction,
+) -> list[str]:
+    rules = [
+        "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+        "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien.",
+    ]
+    if (
+        facts.act_category
+        == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+    ):
+        rules.extend(
+            [
+                "Prioriser le règlement intérieur sur le respect des personnes, les injures, les inscriptions, les dégradations, les locaux, l'échelle des sanctions et les droits de la défense.",
+                "Écarter les thèmes techniques ou numériques sans volet factuel correspondant.",
+                "Ne retenir une jurisprudence que si les propos, la cible, la diffusion, la répétition, les antécédents, le contexte et la sanction peuvent être comparés.",
+                "Ne pas qualifier automatiquement de harcèlement un fait unique sans personne visée ni répétition établie.",
+            ]
+        )
+    return rules
+
+
+def _disciplinary_case_law_comparison(
+    answer: dict[str, Any],
+) -> list[dict[str, Any]] | str:
+    decisions = [
+        source
+        for source in answer.get("sources", [])
+        if isinstance(source, dict) and source.get("source_layer") == "jurisprudence"
+    ]
+    if not decisions:
+        return "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue."
+    return [
+        {
+            "decision": source.get("document"),
+            "date": source.get("decision_date"),
+            "case_number": source.get("case_number"),
+            "exact_words": source.get("faits_utiles") or "à comparer dans la décision",
+            "target": "à comparer dans la décision",
+            "public_or_private": "à comparer dans la décision",
+            "repetition": "à comparer dans la décision",
+            "seniority_and_prior_warnings": "à comparer dans la décision",
+            "context": source.get("ressemblance_avec_dossier") or "à comparer",
+            "sanction": source.get("solution_retenue")
+            or source.get("solution")
+            or "à comparer",
+        }
+        for source in decisions
+    ]
 
 
 def merge_bible_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
@@ -3865,6 +4195,17 @@ def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, s
     text = normalize(query)
     domains = set(route.get("domains", []))
     if "disciplinaire" in domains or re.search(r"sanction|procedure disciplinaire|entretien disciplinaire", text):
+        facts = extract_disciplinary_facts(query)
+        if (
+            facts.act_category
+            == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+        ):
+            return (
+                "injure salarié employeur propos grossiers inscription injurieuse "
+                "graffiti entreprise sanction disproportionnée licenciement injure "
+                "collègue fait isolé ancienneté absence antécédent",
+                "Propos injurieux ou inscription grossière au travail",
+            )
         return "sanction disciplinaire faute preuve entretien prealable", "Discipline sanction et preuve"
     if "cse" in domains and re.search(r"reorganisation|suppression de postes?|changement .*horaires?|modification .*taches?|consultation", text):
         return "CSE consultation reorganisation", "CSE information consultation reorganisation"
@@ -3924,6 +4265,23 @@ def judilibre_quality_warning(source: dict[str, Any], route: dict[str, Any]) -> 
     query = normalize(route.get("query", ""))
 
     if "disciplinaire" in domains or re.search(r"sanction|procedure disciplinaire|entretien disciplinaire", query):
+        facts = extract_disciplinary_facts(str(route.get("query") or ""))
+        if (
+            facts.act_category
+            == DisciplinaryActCategory.INSULTING_OR_INAPPROPRIATE_BEHAVIOR
+            and not has_any_term(
+                context,
+                [
+                    "injure",
+                    "insulte",
+                    "propos grossier",
+                    "graffiti",
+                    "inscription injurieuse",
+                    "atteinte a la dignite",
+                ],
+            )
+        ):
+            return "decision disciplinaire sans propos ou comportement injurieux comparable"
         discipline_markers = [
             has_any_term(context, ["sanction", "disciplinaire", "mise a pied", "avertissement"]),
             has_any_term(context, ["faute", "grief", "manquement"]),
@@ -4007,7 +4365,18 @@ def merge_judilibre_result(answer: dict[str, Any], result: dict[str, Any]) -> No
         normalized = normalize_source(source, "judilibre_jurisprudence")
         quality_warning = judilibre_quality_warning(normalized, route)
         relevance_score = float(normalized.get("jurisprudence_relevance_score") or 0)
-        if quality_warning and relevance_score < 45:
+        fatal_factual_mismatch = bool(
+            quality_warning
+            and any(
+                marker in quality_warning
+                for marker in (
+                    "sans propos ou comportement injurieux comparable",
+                    "éloignée du sujet",
+                    "eloignee du sujet",
+                )
+            )
+        )
+        if quality_warning and (relevance_score < 45 or fatal_factual_mismatch):
             rejected_count += 1
             audit_row["rejected"].append(
                 {

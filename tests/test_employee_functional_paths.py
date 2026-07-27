@@ -92,7 +92,7 @@ def test_unknown_explicit_path_is_rejected() -> None:
         router.route_query("Question", "UNKNOWN")
 
 
-def test_full_disciplinary_scenario_produces_ordered_a_to_g_dossier(
+def test_full_disciplinary_scenario_produces_ordered_fact_driven_dossier(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
@@ -121,23 +121,25 @@ def test_full_disciplinary_scenario_produces_ordered_a_to_g_dossier(
 
     assert answer["route"]["employee_path"] == router.ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
     assert answer["employee_method_analysis"] is None
-    assert list(dossier)[2:9] == [
-        "A_qualification",
-        "B_timeline",
-        "C_procedure_control",
-        "D_facts_analysis",
-        "E_interview_preparation",
-        "F_during_interview",
-        "G_after_interview",
+    assert list(dossier)[3:] == [
+        "1_facts_understood",
+        "2_points_to_verify",
+        "3_provisional_qualification",
+        "4_real_disciplinary_risk",
+        "5_main_defense_line",
+        "6_questions_for_employee",
+        "7_questions_for_management",
+        "8_interview_preparation",
+        "9_points_not_to_say",
+        "10_after_interview",
     ]
-    assert dossier["D_facts_analysis"]["recognized_facts"] == []
-    assert "Aucun fait" in dossier["D_facts_analysis"]["guardrail"]
-    assert dossier["E_interview_preparation"]["questions_for_employee"]
-    assert dossier["E_interview_preparation"]["questions_for_employer"]
-    assert dossier["E_interview_preparation"]["documents_after_initial_analysis"]
+    assert dossier["fact_extraction"]["act_category"] == "SAFETY_BREACH"
+    assert dossier["6_questions_for_employee"]
+    assert dossier["7_questions_for_management"]
+    assert dossier["8_interview_preparation"]["documents_to_request"]
     rendered = json.dumps(dossier, ensure_ascii=False).casefold()
-    assert "automatiquement la sanction d'illégale" in rendered
-    assert "ne présume aucun fait reconnu" in rendered
+    assert "toute appréciation de gravité restent provisoires" in rendered
+    assert "aucun fait absent de la demande" in rendered
 
 
 def test_public_path_keeps_employee_method_and_separates_deep_dossier(

@@ -32,6 +32,61 @@ class DisciplinaryQualification(str, Enum):
     UNDETERMINED_MEASURE = "undetermined_measure"
 
 
+class DisciplinaryActCategory(str, Enum):
+    TECHNICAL_ERROR = "TECHNICAL_ERROR"
+    INSUBORDINATION = "INSUBORDINATION"
+    ABSENCE_OR_LATENESS = "ABSENCE_OR_LATENESS"
+    INSULTING_OR_INAPPROPRIATE_BEHAVIOR = "INSULTING_OR_INAPPROPRIATE_BEHAVIOR"
+    THREAT_OR_VIOLENCE = "THREAT_OR_VIOLENCE"
+    ALLEGED_HARASSMENT = "ALLEGED_HARASSMENT"
+    MATERIAL_DAMAGE = "MATERIAL_DAMAGE"
+    SAFETY_BREACH = "SAFETY_BREACH"
+    IT_MISUSE = "IT_MISUSE"
+    ALCOHOL_OR_DRUGS = "ALCOHOL_OR_DRUGS"
+    INTERPERSONAL_CONFLICT = "INTERPERSONAL_CONFLICT"
+    UNSPECIFIED_FACTS = "UNSPECIFIED_FACTS"
+
+
+@dataclass(frozen=True, slots=True)
+class DisciplinaryFactExtraction:
+    alleged_act: str
+    act_category: DisciplinaryActCategory
+    exact_words_or_behavior: str | None
+    target_identified: bool | None
+    target_type: str | None
+    location: str | None
+    public_visibility: bool | None
+    material_damage: bool | None
+    threat_or_violence: bool | None
+    repetition: bool | None
+    employee_admission: bool | None
+    employer_evidence: tuple[str, ...]
+    context_claimed: tuple[str, ...]
+    prior_warnings: bool | None
+    sanction_considered: str | None
+    facts_missing: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "alleged_act": self.alleged_act,
+            "act_category": self.act_category.value,
+            "exact_words_or_behavior": self.exact_words_or_behavior,
+            "target_identified": self.target_identified,
+            "target_type": self.target_type,
+            "location": self.location,
+            "public_visibility": self.public_visibility,
+            "material_damage": self.material_damage,
+            "threat_or_violence": self.threat_or_violence,
+            "repetition": self.repetition,
+            "employee_admission": self.employee_admission,
+            "employer_evidence": list(self.employer_evidence),
+            "context_claimed": list(self.context_claimed),
+            "prior_warnings": self.prior_warnings,
+            "sanction_considered": self.sanction_considered,
+            "facts_missing": list(self.facts_missing),
+        }
+
+
 @dataclass(frozen=True, slots=True)
 class DisciplinaryQualificationCandidate:
     qualification: DisciplinaryQualification
@@ -50,6 +105,7 @@ class ProtectedEmployeeAnalysis:
 @dataclass(frozen=True, slots=True)
 class DisciplinaryAnalysis:
     base_report: SyndicalReasoningReport
+    fact_extraction: DisciplinaryFactExtraction
     qualification_candidates: tuple[DisciplinaryQualificationCandidate, ...]
     procedure_checks: tuple[str, ...]
     automatic_questions: tuple[PrioritizedQuestion, ...]
@@ -63,6 +119,7 @@ class DisciplinaryAnalysis:
     def to_dict(self) -> dict[str, object]:
         return {
             "analysis_type": "disciplinary_procedure",
+            "fact_extraction": self.fact_extraction.to_dict(),
             "qualification_candidates": [
                 {
                     "qualification": item.qualification.value,

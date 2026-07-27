@@ -450,13 +450,16 @@ function renderDisciplinaryAssistance(dossier) {
   generalFollowupGrid.hidden = Boolean(dossier);
   if (!dossier) return;
   const labels = {
-    A_qualification: "A. Qualification de la situation",
-    B_timeline: "B. Chronologie",
-    C_procedure_control: "C. Contrôle de la procédure",
-    D_facts_analysis: "D. Analyse des faits",
-    E_interview_preparation: "E. Préparation de l’entretien",
-    F_during_interview: "F. Fiche pendant l’entretien",
-    G_after_interview: "G. Après l’entretien"
+    "1_facts_understood": "1. Faits compris",
+    "2_points_to_verify": "2. Ce qui reste à vérifier",
+    "3_provisional_qualification": "3. Qualification provisoire",
+    "4_real_disciplinary_risk": "4. Risque disciplinaire réel",
+    "5_main_defense_line": "5. Ligne de défense principale",
+    "6_questions_for_employee": "6. Questions à poser au salarié",
+    "7_questions_for_management": "7. Questions à poser à la direction",
+    "8_interview_preparation": "8. Préparation de l’entretien",
+    "9_points_not_to_say": "9. Points à ne pas dire",
+    "10_after_interview": "10. Action après entretien"
   };
   for (const [key, title] of Object.entries(labels)) {
     const value = dossier[key];

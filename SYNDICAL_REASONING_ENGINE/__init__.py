@@ -136,8 +136,11 @@ from .disciplinary_engine import (
     DisciplinaryReasoningEngine,
     needs_disciplinary_reasoning,
 )
+from .disciplinary_facts import extract_disciplinary_facts
 from .disciplinary_models import (
+    DisciplinaryActCategory,
     DisciplinaryAnalysis,
+    DisciplinaryFactExtraction,
     DisciplinaryQualification,
     DisciplinaryQualificationCandidate,
     ProtectedEmployeeAnalysis,
@@ -261,9 +264,12 @@ __all__ = (
     "CommitmentStatus",
     "ConsultationAssessment",
     "DisciplinaryAnalysis",
+    "DisciplinaryActCategory",
+    "DisciplinaryFactExtraction",
     "DisciplinaryQualification",
     "DisciplinaryQualificationCandidate",
     "DisciplinaryReasoningEngine",
+    "extract_disciplinary_facts",
     "DeadlineAssessment",
     "DocumentRequest",
     "DocumentStatus",
