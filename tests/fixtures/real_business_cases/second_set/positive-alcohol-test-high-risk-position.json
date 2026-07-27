@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+  "title": "Contrôle d'alcoolémie positif sur un poste à risque",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Le règlement intérieur, le procès-verbal du contrôle et l'unité exacte du résultat ne sont pas produits.",
+      "La régularité du contrôle et la gravité éventuelle restent à vérifier."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un cariste travaille sur un site industriel à risques.",
+      "La prise de poste était prévue à cinq heures.",
+      "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+      "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+    ],
+    "facts_recognized": [],
+    "facts_contested": [],
+    "facts_alleged": [
+      "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+      "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+      "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+      "Un droit à contre-expertise aurait été annoncé.",
+      "Des difficultés personnelles sont alléguées."
+    ],
+    "missing_information": [
+      {
+        "item": "Texte exact et version applicable du règlement intérieur",
+        "importance": "blocking",
+        "reason": "Il faut vérifier les postes contrôlables, les circonstances et les garanties prévues."
+      },
+      {
+        "item": "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+        "importance": "blocking",
+        "reason": "La fiabilité et la régularité du contrôle ne peuvent être présumées."
+      },
+      {
+        "item": "Unité exacte du résultat, heure et conditions de mesure",
+        "importance": "blocking",
+        "reason": "La mention 0,8 g/l doit être comprise et rattachée au dispositif utilisé."
+      },
+      {
+        "item": "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+        "importance": "high",
+        "reason": "Une garantie seulement annoncée n'établit pas qu'elle était concrètement accessible."
+      },
+      {
+        "item": "Prise effective du chariot, mise en sécurité et risque concret",
+        "importance": "high",
+        "reason": "La gravité dépend notamment de l'exposition effective au risque."
+      },
+      {
+        "item": "Mesures médicales ou sociales proposées et antécédents vérifiés",
+        "importance": "medium",
+        "reason": "Ces éléments éclairent les mesures alternatives et la proportionnalité."
+      }
+    ],
+    "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Contrôle d'alcoolémie prévu par le règlement intérieur",
+      "Sécurité sur un poste à risque",
+      "Preuve, fiabilité et possibilité de contestation",
+      "Faute simple, faute grave ou mesure alternative",
+      "Prévention et accompagnement médical ou social"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Que prévoit exactement le règlement intérieur pour ce poste, cette situation et la contre-expertise ?",
+        "why_it_matters": "Contrôler le fondement et les garanties du dispositif."
+      },
+      {
+        "priority": 2,
+        "question": "Quelle est l'unité exacte du résultat, à quelle heure et avec quel matériel vérifié a-t-il été obtenu ?",
+        "why_it_matters": "Évaluer la fiabilité et la portée du résultat."
+      },
+      {
+        "priority": 3,
+        "question": "Le salarié a-t-il pu demander une contre-expertise et avait-il déjà pris le chariot ?",
+        "why_it_matters": "Mesurer la contestabilité et le risque concret."
+      },
+      {
+        "priority": 4,
+        "question": "Quelles mesures immédiates, médicales ou sociales ont été proposées et existe-t-il des antécédents établis ?",
+        "why_it_matters": "Construire une stratégie proportionnée et réaliste."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Vérifier le fondement, la procédure et les garanties du contrôle.",
+          "query_or_document": "Règlement intérieur, procédure alcool, fiche de poste cariste, procès-verbal et calibration",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Vérifier les conditions des restrictions et contrôles justifiés par la sécurité.",
+          "query_or_document": "Code du travail sur règlement intérieur, proportionnalité, santé et sécurité",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Rechercher des décisions comparables sur alcoolémie et poste à risque.",
+          "query_or_document": "éthylotest règlement intérieur cariste poste à risque contre-expertise faute grave",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Vérifier la politique locale, les incidents et les mesures de prévention.",
+          "query_or_document": "PV CSE/CSSCT relatifs aux contrôles d'alcoolémie et aux postes de conduite",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Promettre que quinze ans d'ancienneté sans antécédent excluent une faute grave.",
+      "Présenter le taux, son unité, la procédure ou l'habilitation comme vérifiés.",
+      "Transformer les difficultés personnelles alléguées en justification automatique."
+    ],
+    "employee_arguments": [
+      "La procédure, l'unité, la calibration et la contre-expertise doivent être objectivement établies.",
+      "L'absence d'antécédent et la prise ou non du chariot comptent dans la proportionnalité.",
+      "Un accompagnement peut être discuté sans nier le risque."
+    ],
+    "possible_employer_arguments": [
+      "Le poste de cariste expose à un risque grave et serait expressément contrôlable.",
+      "Les signes observés et un contrôle fiable établiraient un danger immédiat.",
+      "La faute grave pourrait être invoquée même sans antécédent."
+    ],
+    "risks": [
+      "Accident industriel ou atteinte à la sécurité.",
+      "Licenciement pour faute grave.",
+      "Contestation affaiblie si les garanties sont établies et le risque concret."
+    ],
+    "possible_outcomes": [
+      "Écartement immédiat du poste et accompagnement sans licenciement.",
+      "Sanction disciplinaire proportionnée.",
+      "Licenciement contesté ou validé selon la procédure, la preuve et le risque."
+    ],
+    "response_quality_criteria": [
+      "Ne pas confondre résultat annoncé et preuve vérifiée.",
+      "Examiner simultanément sécurité, régularité et proportionnalité.",
+      "Présenter faute grave, faute simple et mesures alternatives comme des options conditionnelles."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

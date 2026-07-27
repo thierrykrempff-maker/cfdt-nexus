@@ -1,0 +1,1064 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "second_set",
+  "captured_at": "2026-07-27T10:48:46.265791+00:00",
+  "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+  "case_input_sha256": "6d383e4094a86cb81e3eae311d56690830ee12b5991067638bc32f4fa9adc983",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/safety-ppe-unavailable-or-unsuitable.json",
+  "prompt_sha256": "25d5a1c22334a10ed40e9ca785b7f13f01c42abbcabf62954092d39427c9cd55",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [
+          {
+            "items": [
+              "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion."
+            ],
+            "title": "Reponse courte Juriste"
+          },
+          {
+            "items": [],
+            "title": "Selection juridique des sources"
+          },
+          {
+            "items": [
+              "Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries."
+            ],
+            "title": "Qualification juridique"
+          },
+          {
+            "items": [
+              "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel."
+            ],
+            "title": "Regle applicable"
+          },
+          {
+            "items": [
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+              "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+              "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+              "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+              "Application aux faits: Projet CSE: impact possible sante-securite et conditions de travail.",
+              "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV."
+            ],
+            "title": "Application aux faits"
+          },
+          {
+            "items": [
+              "Position probable: favorable a une exigence d'information-consultation documentee",
+              "Pourquoi: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position."
+            ],
+            "title": "Conclusion provisoire juridique"
+          },
+          {
+            "items": [
+              "Argument principal salarie: Obtenir une information complete et loyale avant toute discussion de fond sur la reorganisation.",
+              "Arguments complementaires: Demander les impacts sur emploi, horaires, charge, competences, remuneration et sante-securite.",
+              "Arguments complementaires: Faire inscrire au proces-verbal les documents demandes, reponses donnees et reserves des elus.",
+              "Arguments complementaires: Relancer par ecrit si les donnees restent incompletes.",
+              "Appui jurisprudentiel: Aucun appui jurisprudentiel suffisamment pertinent n'a ete retenu par Nexus pour cette question.",
+              "Argument probable employeur: La direction peut soutenir que le projet releve de son pouvoir d'organisation ou que les informations transmises suffisent.",
+              "Argument employeur sur jurisprudence: Aucun argument direction specifique issu d'une decision retenue n'est disponible.",
+              "Reponse a l'employeur: Ramener la discussion aux impacts concrets pour les salaries et aux documents manquants.",
+              "Reponse a l'employeur: Demander des indicateurs de suivi et des engagements dates.",
+              "Contre-argument jurisprudence: Ne pas presenter une decision isolee comme jurisprudence constante.",
+              "Faiblesse du dossier: La faiblesse principale serait une discussion CSE sans documents suffisants ni delai utile.",
+              "Preuve decisive: La preuve qui fait basculer: impacts concrets sur postes, horaires, charge ou sante non documentes par la direction.",
+              "Preuve prioritaire: Note projet, effectifs avant/apres, planning cible, impacts par metier, analyse de risques et calendrier."
+            ],
+            "title": "Argumentation de defense"
+          },
+          {
+            "items": [
+              "Action immediate: demander par ecrit les documents manquants avant la reunion ou en debut de seance.",
+              "Demande ecrite: obtenir impacts emploi, horaires, charge, competences, calendrier et mesures d'accompagnement.",
+              "Pieces a securiser: note projet, organigrammes avant/apres, planning cible, analyse de risques et indicateurs de suivi.",
+              "Intervention DS/CSE: poser les questions prioritaires et faire inscrire reponses, reserves et engagements au PV.",
+              "Contestation: demander report ou relance si les informations ne permettent pas une discussion utile.",
+              "Escalade eventuelle: solliciter appui juridique ou expertise selon l'ampleur et les impacts du projet."
+            ],
+            "title": "Strategie d'action"
+          },
+          {
+            "items": [],
+            "title": "Jurisprudence retenue"
+          },
+          {
+            "items": [
+              "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+              "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+              "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+              "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+              "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+              "Conclusion provisoire: favorable a une exigence d'information-consultation documentee - Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position.",
+              "Regle certaine: un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
+              "Interpretation: une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets."
+            ],
+            "title": "Analyse et raisonnement"
+          },
+          {
+            "items": [],
+            "title": "Analyse contradictoire et retour contentieux"
+          },
+          {
+            "items": [
+              "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+              "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+              "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+              "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles.",
+              "Risque: demander un reclassement sans relier les faits aux criteres de classification.",
+              "Risque: s'appuyer sur une fiche de poste non actualisee sans preuves des fonctions reelles."
+            ],
+            "title": "Risques et vigilance"
+          }
+        ],
+        "paie": [
+          {
+            "items": [
+              "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: cet",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "rubriques du bulletin concernees",
+              "base de calcul",
+              "taux",
+              "montant verse"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Orchestration experte",
+        "Juriste Travail",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - droit_travail_general, classification_carriere, cssct_securite"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un opérateur travaille sur un site industriel Seveso seuil haut.\n- L'opération concernait la manipulation d'une vanne d'acide sulfurique.\n- Le salarié porte des lunettes de vue.\n- Le modèle correcteur adapté aurait été en rupture de stock.\n- Le salarié a huit ans d'ancienneté.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- L'employeur allègue une absence temporaire de visière et de gants spécifiques.\n- Le salarié allègue que les sur-lunettes standards généraient de la buée.\n- L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée.\n\nInformations manquantes déjà identifiées :\n- Texte, affichage et précision de la consigne EPI applicable à l'opération [importance: blocking] — Il faut identifier les équipements obligatoires et la règle effectivement portée à la connaissance du salarié.\n- État des stocks et solutions de remplacement disponibles au moment des faits [importance: blocking] — La disponibilité et l'adaptation concrètes des EPI conditionnent l'analyse des responsabilités.\n- Formation, information et habilitation reçues par le salarié [importance: high] — Elles permettent d'apprécier la connaissance du risque et la conduite attendue.\n- Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle [importance: high] — L'absence d'alternative et le degré d'urgence doivent être vérifiés, non supposés.\n- Signalements antérieurs et comportement du salarié avant et après le retrait [importance: high] — Ces éléments éclairent la prévention, la réaction au risque et la proportionnalité."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur droit du travail, avec enjeux associes de classification/carriere, CSSCT/securite, disciplinaire. L'analyse vise recherche de droit local, preparation CSSCT, situation individuelle, controle de conformite."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "droit_travail_general",
+            "classification_carriere",
+            "cssct_securite",
+            "disciplinaire"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Juriste droit du travail V0 renforce",
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Mode principal: CSE/CSSCT",
+            "Modes mobilises: CSE/CSSCT, Defense salarie"
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: favorable a une exigence d'information-consultation documentee."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "CSE/CSSCT: Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries.",
+            "CSE/CSSCT - Contradictoire: argument salarie/representants: Le projet modifie plusieurs dimensions de l'organisation; ses impacts doivent etre documentes avant que le CSE puisse rendre un avis utile si une consultation est juridiquement requise.",
+            "CSE/CSSCT - Contradictoire: argument direction: La direction peut soutenir qu'il s'agit d'une simple adaptation d'organisation relevant du pouvoir de direction, sans impact majeur.",
+            "CSE/CSSCT - Contradictoire: preuve necessaire: Organigramme avant/apres, effectifs, fiches de poste, horaires, charge mesuree, absenteisme, heures supplementaires, incidents, accidents, analyse des risques et calendrier.",
+            "CSE/CSSCT - Nature juridique: Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries.",
+            "CSE/CSSCT - Qualification du projet: Projet CSE: impact possible sante-securite et conditions de travail.",
+            "CSE/CSSCT - Droits probables du CSE: Exiger que la direction qualifie formellement le point: simple information ou consultation du CSE.",
+            "CSE/CSSCT - Droits probables du CSE: Demander une information complete, precise et exploitable avant la reunion ou avant avis.",
+            "CSE/CSSCT - Droits probables du CSE: Demander les consequences concretes du projet sur emploi, horaires, taches, charge, competences et remuneration.",
+            "CSE/CSSCT - Droits probables du CSE: Faire inscrire au proces-verbal les documents demandes, les reponses obtenues, les reserves et les engagements de suivi.",
+            "CSE/CSSCT - Points a confirmer: La direction qualifie-t-elle le point comme information simple ou consultation avec avis ?",
+            "CSE/CSSCT - Points a confirmer: Combien de postes, salaries, equipes et regimes horaires sont concernes ?",
+            "CSE/CSSCT - Points a confirmer: Les changements modifient-ils la charge, les competences, la polyvalence, la securite ou la remuneration ?",
+            "CSE/CSSCT - Points a confirmer: Quels documents ont ete remis et a quelle date pour apprecier le delai utile ?",
+            "CSE/CSSCT - Documents manquants: Note de presentation du projet.",
+            "CSE/CSSCT - Documents manquants: Organigrammes et effectifs avant/apres.",
+            "CSE/CSSCT - Documents manquants: Tableau des effectifs et equipes concernees, meme en l'absence de suppression annoncee.",
+            "CSE/CSSCT - Documents manquants: Calendrier de mise en oeuvre.",
+            "CSE/CSSCT - Suppressions de postes: Aucune suppression de poste n'est etablie dans la question; verifier les effectifs avant/apres.",
+            "CSE/CSSCT - Changement horaires: Aucun changement d'horaires n'est etabli; demander le planning cible si la direction evoque une adaptation.",
+            "CSE/CSSCT - Modification taches: Aucune modification de taches n'est etablie; demander une matrice activites actuelles / activites futures.",
+            "CSE/CSSCT - Charge de travail: Demander une mesure avant/apres: volumes, nombre d'interventions, heures supplementaires, retards, priorites abandonnees et charge par equipe.",
+            "CSE/CSSCT - Charge de travail: Verifier si les taches des postes supprimes sont absorbees par les salaries restants sans moyens supplementaires.",
+            "CSE/CSSCT - Sante securite: Verifier fatigue, travail isole, gestes critiques, coactivite, formation, habilitations, risques d'erreur et mise a jour du DUERP.",
+            "CSE/CSSCT - Sante securite: Si le projet modifie fortement les conditions de travail ou la sante-securite, verifier les conditions legales d'une expertise CSE.",
+            "CSE/CSSCT - Delais: Date de remise des documents.",
+            "CSE/CSSCT - Delais: Date de reunion et delai utile d'analyse.",
+            "CSE/CSSCT - Delais: Existence d'une consultation formelle et echeance eventuelle d'avis."
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "le routage Nexus qualifie la demande sur droit_travail_general, classification_carriere, cssct_securite, disciplinaire.",
+            "aucune source locale principale n'est disponible dans la reponse Nexus.",
+            "Nexus separe les enjeux en groupes distincts: Classification et fonctions exercees, Risque et prevention.",
+            "l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+            "un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "date, champ d'application et remplacement eventuel des textes cites.",
+            "articulation entre accord local, convention collective et norme superieure applicable.",
+            "coefficient, emploi repere et fiche de poste actuellement retenus.",
+            "fonctions reellement exercees, niveau d'autonomie, technicite et responsabilites.",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "fiche de poste actuelle",
+            "fonctions reellement exercees",
+            "niveau d'autonomie et responsabilites",
+            "historique des changements de poste",
+            "comparaison avec salaries similaires",
+            "criteres conventionnels et demande de reexamen du coefficient",
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "DUERP/DUER",
+            "registre securite",
+            "signalements salaries",
+            "plan de maintenance ou de contingence"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?",
+            "Quels criteres conventionnels justifient ou contestent le coefficient actuel ?",
+            "Quels salaries comparables occupent des fonctions similaires ?",
+            "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+            "Quels incidents, pannes ou signalements ont ete traces ?",
+            "Quelles mesures immediates protegent les salaries ?",
+            "Quels faits precis sont reproches ?",
+            "Quels delais et droits de defense ont ete respectes ?",
+            "Quelle fiche de poste est actuellement retenue pour ce salarié ou ce groupe de salariés ?",
+            "Quelles fonctions sont réellement exercées au quotidien ?",
+            "Quel niveau d'autonomie, de responsabilité et de technicité est reconnu ?",
+            "Existe-t-il des salariés similaires avec une classification ou un coefficient différent ?"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Position juridique probable: favorable a une exigence d'information-consultation documentee. Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: favorable a une exigence d'information-consultation documentee."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "Aucune explication pratique officielle pertinente n'a ete retenue pour cette question."
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+            "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert juriste ne remplace pas une validation juridique humaine.",
+            "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+            "Aucune source locale principale n'a ete trouvee pour conclure.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+            "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+            "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - droit_travail_general, classification_carriere, cssct_securite",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": {
+        "10_after_interview": [
+          "Rédiger un compte rendu factuel et daté sans dupliquer les arguments.",
+          "Demander la communication des preuves ou pièces encore manquantes.",
+          "Contrôler le motif, la date et la proportionnalité de toute sanction notifiée.",
+          "Adresser si nécessaire une contestation écrite ciblée.",
+          "Évaluer avec un défenseur syndical ou un avocat la suite adaptée."
+        ],
+        "1_facts_understood": {
+          "facts_from_request": [
+            "faits disciplinaires insuffisamment précisés"
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "2_points_to_verify": {
+          "chronology": [
+            "date des faits",
+            "date de connaissance par l'employeur",
+            "date de convocation",
+            "date de l'entretien",
+            "date de notification éventuelle"
+          ],
+          "decisive_missing_facts": [
+            "formulation ou comportement exact",
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "caractère isolé ou répété",
+            "position du salarié sur les faits",
+            "preuves invoquées par l'employeur",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ]
+        },
+        "3_provisional_qualification": {
+          "act_category": "UNSPECIFIED_FACTS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Faits disciplinaires non précisément qualifiés. Une stratégie définitive est impossible avant description de l'acte, de son attribution et de ses conséquences."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        },
+        "6_questions_for_employee": [
+          "Existe-t-il une notification écrite et précisément motivée ?",
+          "Le salarié était-il assisté lors de l'entretien ?",
+          "Les faits sont-ils reconnus, partiellement reconnus ou contestés ?",
+          "Quand et comment le salarié a-t-il été convoqué ?",
+          "Quand l'employeur a-t-il eu connaissance des faits ?",
+          "Quelle est la date précise des faits reprochés ?",
+          "Quelle est la nature exacte de la mesure annoncée ou notifiée ?",
+          "Des situations similaires ont-elles donné lieu à des mesures comparables ?",
+          "Existe-t-il des témoins ou des écrits contemporains des faits ?",
+          "La sanction paraît-elle proportionnée aux faits allégués ?",
+          "Le règlement intérieur prévoit-il cette sanction et la procédure applicable ?",
+          "Existe-t-il une jurisprudence réellement comparable et à jour ?",
+          "Quels accords INEOS et dispositions conventionnelles sont applicables ?"
+        ],
+        "7_questions_for_management": [
+          "Quel est le grief exact retenu contre le salarié ?",
+          "Quelles preuves établissent l'acte et son attribution au salarié ?",
+          "Une personne précise est-elle considérée comme visée et sur quels éléments ?",
+          "Quelles conséquences concrètes l'inscription ou le comportement a-t-il produites ?",
+          "Quelle clause précise du règlement intérieur est invoquée ?",
+          "Quels précédents réellement comparables ont été traités dans l'entreprise ?",
+          "Quelle sanction est envisagée ?",
+          "Comment sa proportionnalité est-elle appréciée au regard du contexte, des conséquences et des antécédents ?"
+        ],
+        "8_interview_preparation": {
+          "documents_to_request": [
+            "fiche de poste actuelle",
+            "fonctions reellement exercees",
+            "niveau d'autonomie et responsabilites",
+            "historique des changements de poste",
+            "comparaison avec salaries similaires",
+            "criteres conventionnels et demande de reexamen du coefficient",
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "DUERP/DUER",
+            "registre securite",
+            "signalements salaries",
+            "plan de maintenance ou de contingence"
+          ],
+          "notes_to_record": [
+            "participants et qualité de chacun",
+            "grief exact et qualification avancée",
+            "preuves citées ou présentées",
+            "réponses du salarié",
+            "demandes de communication et réponse de la direction"
+          ],
+          "suggested_wording": [
+            "« À ce stade, je souhaite connaître précisément les faits et les pièces avant de répondre définitivement. »",
+            "« Cette demande de précision ne vaut ni reconnaissance ni refus de répondre. »"
+          ]
+        },
+        "9_points_not_to_say": [
+          "« Ce n'est pas grave. »",
+          "« Il avait le droit parce qu'il était énervé. »",
+          "« Personne n'était nommée donc aucune faute n'existe. »",
+          "« Il faut nier même si une preuve existe. »"
+        ],
+        "analysis_type": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "fact_extraction": {
+          "act_category": "UNSPECIFIED_FACTS",
+          "alleged_act": "faits disciplinaires insuffisamment précisés",
+          "context_claimed": [],
+          "employee_admission": null,
+          "employer_evidence": [],
+          "exact_words_or_behavior": null,
+          "facts_missing": [
+            "formulation ou comportement exact",
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "caractère isolé ou répété",
+            "position du salarié sur les faits",
+            "preuves invoquées par l'employeur",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ],
+          "location": null,
+          "material_damage": null,
+          "prior_warnings": null,
+          "public_visibility": null,
+          "repetition": null,
+          "sanction_considered": null,
+          "target_identified": null,
+          "target_type": "employeur ou direction",
+          "threat_or_violence": null
+        },
+        "notice": "Dossier de préparation syndicale fondé sur les faits fournis. Toute qualification et toute appréciation de gravité restent provisoires."
+      },
+      "documents_to_request": [
+        "fiche de poste actuelle",
+        "fonctions reellement exercees",
+        "niveau d'autonomie et responsabilites",
+        "historique des changements de poste",
+        "comparaison avec salaries similaires",
+        "criteres conventionnels et demande de reexamen du coefficient",
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "DUERP/DUER",
+        "registre securite",
+        "signalements salaries",
+        "plan de maintenance ou de contingence"
+      ],
+      "employee_method_analysis": null,
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        }
+      ],
+      "facts": [],
+      "findings": [
+        "Comparer le coefficient et l'emploi retenus avec les fonctions reellement exercees.",
+        "Objectiver le niveau d'autonomie, de responsabilite et de technicite.",
+        "Verifier les criteres conventionnels et les comparaisons internes disponibles.",
+        "À vérifier dans une source locale à identifier : fiche de poste actuelle et classification/coefficient retenus.",
+        "À vérifier dans une source locale à identifier : fonctions réellement exercées, responsabilités, autonomie et technicité.",
+        "À vérifier dans une source locale à identifier : comparaison avec des salariés occupant des postes similaires.",
+        "À vérifier dans une source locale à identifier : historique des évolutions de poste, polyvalence et changements de périmètre.",
+        "À vérifier dans une source locale à identifier : critères conventionnels applicables et possibilité de réexamen du coefficient.",
+        "risque de dossier insuffisamment documenté",
+        "risque d'égalité de traitement ou de confidentialité à maîtriser",
+        "risque de sous-classification du poste réellement tenu",
+        "risque d'écart entre fiche de poste et fonctions exercées"
+      ],
+      "issue_groups": [
+        {
+          "documents": [
+            "fiche de poste actuelle",
+            "fonctions reellement exercees",
+            "niveau d'autonomie et responsabilites",
+            "criteres conventionnels et demande de reexamen du coefficient",
+            "descriptif des fonctions reelles"
+          ],
+          "findings": [
+            "Comparer le coefficient et l'emploi retenus avec les fonctions reellement exercees.",
+            "Objectiver le niveau d'autonomie, de responsabilite et de technicite.",
+            "À vérifier dans une source locale à identifier : fiche de poste actuelle et classification/coefficient retenus.",
+            "À vérifier dans une source locale à identifier : fonctions réellement exercées, responsabilités, autonomie et technicité.",
+            "À vérifier dans une source locale à identifier : critères conventionnels applicables et possibilité de réexamen du coefficient."
+          ],
+          "id": "classification",
+          "name": "Classification et fonctions exercees",
+          "questions": [
+            "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?",
+            "Quels criteres conventionnels justifient ou contestent le coefficient actuel ?",
+            "Quels salaries comparables occupent des fonctions similaires ?",
+            "Quelle fiche de poste est actuellement retenue pour ce salarié ou ce groupe de salariés ?"
+          ]
+        },
+        {
+          "documents": [
+            "DUERP/DUER",
+            "registre securite",
+            "plan de maintenance ou de contingence",
+            "plan d'action ou de maintenance"
+          ],
+          "findings": [
+            "risque de dossier insuffisamment documenté",
+            "risque d'égalité de traitement ou de confidentialité à maîtriser",
+            "risque de sous-classification du poste réellement tenu",
+            "risque d'écart entre fiche de poste et fonctions exercées",
+            "Qualifier le risque et les mesures de prevention existantes."
+          ],
+          "id": "cssct",
+          "name": "Risque et prevention",
+          "questions": [
+            "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+            "Quels incidents, pannes ou signalements ont ete traces ?",
+            "Quels incidents sont traces ?",
+            "Quelles mesures immediates protegent les salaries ?"
+          ]
+        }
+      ],
+      "jurisprudence_audit": [],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [],
+          "sources_received": 0,
+          "sources_retained": 0,
+          "status": "empty",
+          "warnings": []
+        }
+      ],
+      "next_action": "Rassembler fiche de poste, fonctions reelles et comparaisons internes avant demande de reexamen.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un opérateur travaille sur un site industriel Seveso seuil haut.\n- L'opération concernait la manipulation d'une vanne d'acide sulfurique.\n- Le salarié porte des lunettes de vue.\n- Le modèle correcteur adapté aurait été en rupture de stock.\n- Le salarié a huit ans d'ancienneté.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- L'employeur allègue une absence temporaire de visière et de gants spécifiques.\n- Le salarié allègue que les sur-lunettes standards généraient de la buée.\n- L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée.\n\nInformations manquantes déjà identifiées :\n- Texte, affichage et précision de la consigne EPI applicable à l'opération [importance: blocking] — Il faut identifier les équipements obligatoires et la règle effectivement portée à la connaissance du salarié.\n- État des stocks et solutions de remplacement disponibles au moment des faits [importance: blocking] — La disponibilité et l'adaptation concrètes des EPI conditionnent l'analyse des responsabilités.\n- Formation, information et habilitation reçues par le salarié [importance: high] — Elles permettent d'apprécier la connaissance du risque et la conduite attendue.\n- Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle [importance: high] — L'absence d'alternative et le degré d'urgence doivent être vérifiés, non supposés.\n- Signalements antérieurs et comportement du salarié avant et après le retrait [importance: high] — Ces éléments éclairent la prévention, la réaction au risque et la proportionnalité.",
+      "questions_to_ask": [
+        "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?",
+        "Quels criteres conventionnels justifient ou contestent le coefficient actuel ?",
+        "Quels salaries comparables occupent des fonctions similaires ?",
+        "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+        "Quels incidents, pannes ou signalements ont ete traces ?",
+        "Quelles mesures immediates protegent les salaries ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quelle fiche de poste est actuellement retenue pour ce salarié ou ce groupe de salariés ?",
+        "Quelles fonctions sont réellement exercées au quotidien ?",
+        "Quel niveau d'autonomie, de responsabilité et de technicité est reconnu ?",
+        "Existe-t-il des salariés similaires avec une classification ou un coefficient différent ?"
+      ],
+      "response_depth": "multi_domain",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "classification_carriere",
+          "cssct_securite",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours approfondi a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "intents": [
+          "rechercher_droit_local",
+          "preparer_cssct",
+          "analyser_situation_individuelle",
+          "verifier_conformite"
+        ],
+        "main_domain": "droit_travail_general",
+        "primary_domain": "droit_travail_general",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un opérateur travaille sur un site industriel Seveso seuil haut.\n- L'opération concernait la manipulation d'une vanne d'acide sulfurique.\n- Le salarié porte des lunettes de vue.\n- Le modèle correcteur adapté aurait été en rupture de stock.\n- Le salarié a huit ans d'ancienneté.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- L'employeur allègue une absence temporaire de visière et de gants spécifiques.\n- Le salarié allègue que les sur-lunettes standards généraient de la buée.\n- L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée.\n\nInformations manquantes déjà identifiées :\n- Texte, affichage et précision de la consigne EPI applicable à l'opération [importance: blocking] — Il faut identifier les équipements obligatoires et la règle effectivement portée à la connaissance du salarié.\n- État des stocks et solutions de remplacement disponibles au moment des faits [importance: blocking] — La disponibilité et l'adaptation concrètes des EPI conditionnent l'analyse des responsabilités.\n- Formation, information et habilitation reçues par le salarié [importance: high] — Elles permettent d'apprécier la connaissance du risque et la conduite attendue.\n- Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle [importance: high] — L'absence d'alternative et le degré d'urgence doivent être vérifiés, non supposés.\n- Signalements antérieurs et comportement du salarié avant et après le retrait [importance: high] — Ces éléments éclairent la prévention, la réaction au risque et la proportionnalité.",
+        "reasoning_summary": [
+          "La demande porte sur la relation de travail ou une garantie legale generale.",
+          "La demande porte sur classification, emploi, carriere ou coefficient.",
+          "La demande releve de la sante, securite, CSSCT, DUERP ou securite process.",
+          "Le parcours d'assistance disciplinaire impose une analyse disciplinaire.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande concerne un dossier ou une situation de salarie.",
+          "La demande vise une verification ou un controle.",
+          "Le domaine sante-securite appelle une preparation CSSCT/CSE."
+        ],
+        "response_profile": "syndical_defense_deep",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "classification_carriere",
+          "cssct_securite",
+          "disciplinaire"
+        ],
+        "warnings": []
+      },
+      "short_answer": "Nexus ne trouve pas de source locale suffisante pour conclure ; il faut completer les faits ou la base documentaire.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de classification/carriere, CSSCT/securite, disciplinaire. L'analyse vise recherche de droit local, preparation CSSCT, situation individuelle, controle de conformite.",
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Objectiver l'ecart entre la classification actuelle et les fonctions reellement exercees avant de demander un reexamen motive du coefficient."
+    },
+    "expert_juriste": {
+      "action_conseillee": [
+        "Action immediate: demander par ecrit les documents manquants avant la reunion ou en debut de seance.",
+        "Demande ecrite: obtenir impacts emploi, horaires, charge, competences, calendrier et mesures d'accompagnement.",
+        "Pieces a securiser: note projet, organigrammes avant/apres, planning cible, analyse de risques et indicateurs de suivi.",
+        "Intervention DS/CSE: poser les questions prioritaires et faire inscrire reponses, reserves et engagements au PV.",
+        "Contestation: demander report ou relance si les informations ne permettent pas une discussion utile.",
+        "Escalade eventuelle: solliciter appui juridique ou expertise selon l'ampleur et les impacts du projet."
+      ],
+      "active": true,
+      "analyse_et_raisonnement": [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+        "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+        "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+        "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+        "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+        "Application aux faits: la contestation devient defendable si les fonctions depassant la fiche de poste sont reelles, durables, prouvees et rattachees aux criteres de classification.",
+        "Application aux faits: un simple depannage ou une mission ponctuelle sera plus fragile qu'une responsabilite exercee regulierement.",
+        "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+        "Conclusion provisoire: favorable a une exigence d'information-consultation documentee - Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position.",
+        "Regle certaine: un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
+        "Interpretation: une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets."
+      ],
+      "ce_qui_depend_accord_statut_element_manquant": [
+        "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
+        "Information manquante: articulation entre accord local, convention collective et norme superieure applicable.",
+        "Information manquante: coefficient, emploi repere et fiche de poste actuellement retenus.",
+        "Information manquante: fonctions reellement exercees, niveau d'autonomie, technicite et responsabilites."
+      ],
+      "ce_qui_est_etabli_par_sources": [
+        "Regle certaine: le routage Nexus qualifie la demande sur droit_travail_general, classification_carriere, cssct_securite, disciplinaire.",
+        "Information manquante: aucune source locale principale n'est disponible dans la reponse Nexus.",
+        "Regle certaine: Nexus separe les enjeux en groupes distincts: Classification et fonctions exercees, Risque et prevention."
+      ],
+      "limites": [
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Aucune source locale principale n'a ete trouvee pour conclure.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "position_de_travail_proposee": "Position de travail: traiter le point comme un dossier CSE/CSSCT a documenter, obtenir les pieces manquantes, poser les questions prioritaires et faire inscrire les engagements ou reserves au PV.",
+      "qualification_juridique_situation": "Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries.",
+      "questions_a_poser_direction": [
+        "S'agit-il d'une information simple ou d'une consultation du CSE ?",
+        "Quels documents justifient le projet et ses impacts sur emploi, horaires, charge et sante-securite ?",
+        "Quels indicateurs seront suivis apres mise en oeuvre ?",
+        "Quelles reponses la direction accepte-t-elle de faire inscrire au proces-verbal ?",
+        "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+        "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+        "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+        "Quels criteres conventionnels justifient le coefficient actuel ?"
+      ],
+      "response_courte": "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion.",
+      "risques_points_vigilance": [
+        "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+        "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+        "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+        "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles.",
+        "Risque: demander un reclassement sans relier les faits aux criteres de classification.",
+        "Risque: s'appuyer sur une fiche de poste non actualisee sans preuves des fonctions reelles."
+      ]
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "fiche de poste actuelle",
+        "fonctions reellement exercees",
+        "niveau d'autonomie et responsabilites",
+        "historique des changements de poste",
+        "comparaison avec salaries similaires",
+        "criteres conventionnels et demande de reexamen du coefficient",
+        "convocation",
+        "kelio",
+        "payslip"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin"
+      ],
+      "elements_du_bulletin_concernes": [
+        "rubriques du bulletin concernees",
+        "base de calcul",
+        "taux",
+        "montant verse"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie.",
+        "Aucune source applicable n'est disponible.",
+        "Le bulletin indispensable au controle n'est pas disponible.",
+        "Le compteur ou releve Kelio indispensable n'est pas disponible."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales.",
+      "regles_ou_sources_disponibles": [
+        "Aucune source locale principale n'est disponible dans la reponse Nexus."
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "fiche de poste actuelle",
+        "fonctions reellement exercees",
+        "niveau d'autonomie et responsabilites",
+        "historique des changements de poste",
+        "comparaison avec salaries similaires",
+        "criteres conventionnels et demande de reexamen du coefficient",
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "DUERP/DUER",
+        "registre securite",
+        "signalements salaries",
+        "plan de maintenance ou de contingence"
+      ],
+      "domaines_detectes": [
+        "droit_travail_general",
+        "classification_carriere",
+        "cssct_securite",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Expert Juriste droit du travail V0 renforce",
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Aucune source locale principale n'a ete trouvee pour conclure.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Position juridique probable: favorable a une exigence d'information-consultation documentee. Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un opérateur travaille sur un site industriel Seveso seuil haut.\n- L'opération concernait la manipulation d'une vanne d'acide sulfurique.\n- Le salarié porte des lunettes de vue.\n- Le modèle correcteur adapté aurait été en rupture de stock.\n- Le salarié a huit ans d'ancienneté.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- L'employeur allègue une absence temporaire de visière et de gants spécifiques.\n- Le salarié allègue que les sur-lunettes standards généraient de la buée.\n- L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée.\n\nInformations manquantes déjà identifiées :\n- Texte, affichage et précision de la consigne EPI applicable à l'opération [importance: blocking] — Il faut identifier les équipements obligatoires et la règle effectivement portée à la connaissance du salarié.\n- État des stocks et solutions de remplacement disponibles au moment des faits [importance: blocking] — La disponibilité et l'adaptation concrètes des EPI conditionnent l'analyse des responsabilités.\n- Formation, information et habilitation reçues par le salarié [importance: high] — Elles permettent d'apprécier la connaissance du risque et la conduite attendue.\n- Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle [importance: high] — L'absence d'alternative et le degré d'urgence doivent être vérifiés, non supposés.\n- Signalements antérieurs et comportement du salarié avant et après le retrait [importance: high] — Ces éléments éclairent la prévention, la réaction au risque et la proportionnalité.",
+      "questions_utiles": [
+        "Quelles fonctions sont reellement exercees au-dela de la fiche de poste ?",
+        "Quels criteres conventionnels justifient ou contestent le coefficient actuel ?",
+        "Quels salaries comparables occupent des fonctions similaires ?",
+        "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+        "Quels incidents, pannes ou signalements ont ete traces ?",
+        "Quelles mesures immediates protegent les salaries ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quelle fiche de poste est actuellement retenue pour ce salarié ou ce groupe de salariés ?",
+        "Quelles fonctions sont réellement exercées au quotidien ?",
+        "Quel niveau d'autonomie, de responsabilité et de technicité est reconnu ?",
+        "Existe-t-il des salariés similaires avec une classification ou un coefficient différent ?"
+      ],
+      "reponse_synthetique_nexus": "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: favorable a une exigence d'information-consultation documentee.",
+      "sources": []
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}

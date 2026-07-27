@@ -87,6 +87,12 @@
         },
         "missing_information": {
           "$ref": "#/$defs/missingInformation"
+        },
+        "requested_path": {
+          "enum": [
+            "QUESTION_SALARIE",
+            "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+          ]
         }
       }
     },

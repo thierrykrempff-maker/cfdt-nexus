@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+  "title": "Insultes envers un supérieur dans un contexte de fatigue et de surcharge",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Les mots exacts, le planning, les repos et les antécédents ne sont pas produits.",
+      "Le contexte peut être analysé sans excuser automatiquement les propos."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un technicien travaillait en poste de nuit.",
+      "Il venait d'intervenir sur une fuite de vapeur sous la pluie.",
+      "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+      "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+      "L'employeur envisage une qualification de faute grave."
+    ],
+    "facts_recognized": [],
+    "facts_contested": [],
+    "facts_alleged": [
+      "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+      "L'absence non remplacée d'un collègue est alléguée.",
+      "Une fatigue importante et une surcharge sont alléguées."
+    ],
+    "missing_information": [
+      {
+        "item": "Mots exacts, ton, durée et présence éventuelle d'une menace",
+        "importance": "blocking",
+        "reason": "La qualification et la gravité dépendent des propos précis."
+      },
+      {
+        "item": "Nature exacte de la remarque du superviseur et échanges précédents",
+        "importance": "high",
+        "reason": "Il faut distinguer provocation réelle et simple remarque professionnelle."
+      },
+      {
+        "item": "Planning, durée du travail et repos quotidien et hebdomadaire",
+        "importance": "blocking",
+        "reason": "La fatigue et la conformité des cinq nuits doivent être objectivées."
+      },
+      {
+        "item": "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+        "importance": "high",
+        "reason": "Le contexte de surcharge doit être établi par des éléments concrets."
+      },
+      {
+        "item": "Antécédents, regrets, excuses et conséquences sur le service",
+        "importance": "high",
+        "reason": "Ces éléments influencent fortement la proportionnalité."
+      }
+    ],
+    "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Propos injurieux envers un supérieur",
+      "Faute simple ou faute grave",
+      "Durée du travail et repos en travail de nuit",
+      "Fatigue importante et surcharge alléguées",
+      "Qualification et proportionnalité de la sanction"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quels mots exacts ont été prononcés, sur quel ton et comportaient-ils une menace ?",
+        "why_it_matters": "Délimiter le grief principal sans l'atténuer ni l'aggraver artificiellement."
+      },
+      {
+        "priority": 2,
+        "question": "Quelle remarque précise du superviseur a précédé les propos et existe-t-il des témoins concordants ?",
+        "why_it_matters": "Évaluer le contexte et la preuve sans qualifier automatiquement une provocation."
+      },
+      {
+        "priority": 3,
+        "question": "Quels étaient le planning, les heures réellement travaillées et les repos sur la période ?",
+        "why_it_matters": "Objectiver la fatigue et vérifier les garanties du travail de nuit."
+      },
+      {
+        "priority": 4,
+        "question": "Existe-t-il des antécédents, des excuses ou des conséquences concrètes sur le service ?",
+        "why_it_matters": "Apprécier le maintien possible dans l'entreprise et la proportionnalité."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Vérifier les règles disciplinaires, le planning et les garanties du travail de nuit.",
+          "query_or_document": "Règlement intérieur, accord horaires postés, planning, badgeages et rapport d'intervention",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Vérifier discipline, durée du travail, repos et travail de nuit.",
+          "query_or_document": "Code du travail et CCN industries chimiques IDCC 44 dans leur version applicable",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Rechercher des décisions comparables sans automatiser leur solution.",
+          "query_or_document": "insultes supérieur fatigue surcharge travail de nuit faute grave provocation",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Vérifier les alertes sur effectifs, nuits successives et surcharge.",
+          "query_or_document": "PV CSE/CSSCT sur sous-effectif, travail de nuit, fatigue et fuites vapeur",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Employer l'expression non juridique « burn-out physique ».",
+      "Conclure que fatigue ou provocation excluent automatiquement toute faute.",
+      "Inventer une erreur de manipulation, un défaut de formation ou d'habilitation."
+    ],
+    "employee_arguments": [
+      "La fatigue importante, la surcharge et les repos éventuellement insuffisants peuvent contextualiser un fait isolé.",
+      "L'absence de menace, les excuses et l'absence d'antécédent peuvent réduire la gravité s'ils sont établis.",
+      "La conformité du planning et les conditions de l'intervention doivent être vérifiées."
+    ],
+    "possible_employer_arguments": [
+      "Des insultes publiques envers un supérieur peuvent rompre le respect nécessaire au travail.",
+      "Une remarque sur le temps d'intervention ne constitue pas nécessairement une provocation.",
+      "La fatigue n'autorise pas les propos et la faute grave peut être soutenue selon leur teneur."
+    ],
+    "risks": [
+      "Licenciement pour faute grave.",
+      "Minimisation excessive de propos potentiellement graves.",
+      "Omission d'un problème distinct de charge ou de repos."
+    ],
+    "possible_outcomes": [
+      "Sanction inférieure au licenciement avec excuses et suivi.",
+      "Licenciement pour cause réelle et sérieuse ou faute grave selon les faits établis.",
+      "Traitement parallèle des conditions de travail et de la prévention de la fatigue."
+    ],
+    "response_quality_criteria": [
+      "Commencer par les mots exacts et la présence éventuelle d'une menace.",
+      "Traiter fatigue et surcharge comme contexte à prouver, non comme excuse automatique.",
+      "Faire varier la stratégie selon reconnaissance, contestation, excuses et antécédents."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

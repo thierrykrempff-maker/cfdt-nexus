@@ -1,0 +1,975 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "second_set",
+  "captured_at": "2026-07-27T10:48:52.083025+00:00",
+  "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+  "case_input_sha256": "11426ff7580063d4f7bb7cf58036dc7b07f990586444c29481bdd91f84c4602f",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/positive-alcohol-test-high-risk-position.json",
+  "prompt_sha256": "88a61247f8fbcfe979f3c683c9dec70b43bc731a8469961deb18e2ab002c8427",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [
+          {
+            "items": [
+              "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute."
+            ],
+            "title": "Reponse courte Juriste"
+          },
+          {
+            "items": [],
+            "title": "Selection juridique des sources"
+          },
+          {
+            "items": [
+              "Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite."
+            ],
+            "title": "Qualification juridique"
+          },
+          {
+            "items": [
+              "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel."
+            ],
+            "title": "Regle applicable"
+          },
+          {
+            "items": [
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee."
+            ],
+            "title": "Application aux faits"
+          },
+          {
+            "items": [
+              "Position probable: plutot favorable a une defense",
+              "Pourquoi: une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables."
+            ],
+            "title": "Conclusion provisoire juridique"
+          },
+          {
+            "items": [
+              "Argument principal salarie: Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, des consignes claires et une sanction proportionnee.",
+              "Arguments complementaires: Verifier si la procedure, les delais et les droits de defense ont ete respectes.",
+              "Arguments complementaires: Documenter le contexte de l'erreur: formation, urgence, charge, effectifs, consignes contradictoires.",
+              "Arguments complementaires: Comparer la reaction de la direction avec les pratiques anterieures pour des faits comparables.",
+              "Appui jurisprudentiel: Aucun appui jurisprudentiel suffisamment pertinent n'a ete retenu par Nexus pour cette question.",
+              "Argument probable employeur: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+              "Argument employeur sur jurisprudence: Aucun argument direction specifique issu d'une decision retenue n'est disponible.",
+              "Reponse a l'employeur: Demander les preuves exactes et la consigne applicable au moment des faits.",
+              "Reponse a l'employeur: Rappeler qu'une erreur ne suffit pas sans faute et proportionnalite demontrees.",
+              "Contre-argument jurisprudence: Ne pas presenter une decision isolee comme jurisprudence constante.",
+              "Faiblesse du dossier: La faiblesse serait une faute clairement prouvee, grave, repetee ou precedee de consignes non ambigues.",
+              "Preuve decisive: La preuve qui fait basculer: absence de formation/consigne claire, pression d'organisation ou incoherence des griefs.",
+              "Preuve prioritaire: Convocation, griefs ecrits, preuves direction, consignes applicables, formation et elements de contexte."
+            ],
+            "title": "Argumentation de defense"
+          },
+          {
+            "items": [
+              "Action immediate: ne pas repondre a chaud; reconstituer les faits et demander les preuves reprochees.",
+              "Demande ecrite: demander griefs precis, procedure suivie, consignes et preuves.",
+              "Pieces a securiser: formation, habilitations, modes operatoires, contexte de charge, mails et temoignages utiles.",
+              "Intervention DS/CSE si pertinente: alerter sur consignes ou organisation si l'erreur vient du systeme de travail.",
+              "Contestation: contester la sanction si preuve, procedure ou proportionnalite sont insuffisantes.",
+              "Escalade eventuelle: appui juridique en cas de sanction lourde ou de risque licenciement."
+            ],
+            "title": "Strategie d'action"
+          },
+          {
+            "items": [],
+            "title": "Jurisprudence retenue"
+          },
+          {
+            "items": [
+              "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+              "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+              "Conclusion provisoire: plutot favorable a une defense - une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables.",
+              "Regle certaine: une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
+              "Interpretation: une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident.",
+              "Hypothese: la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+              "Information manquante: convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur."
+            ],
+            "title": "Analyse et raisonnement"
+          },
+          {
+            "items": [],
+            "title": "Analyse contradictoire et retour contentieux"
+          },
+          {
+            "items": [
+              "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+              "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles."
+            ],
+            "title": "Risques et vigilance"
+          }
+        ],
+        "paie": [
+          {
+            "items": [
+              "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: 5x8, cet",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "rubriques du bulletin concernees",
+              "base de calcul",
+              "taux",
+              "montant verse"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Orchestration experte",
+        "Juriste Travail",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - droit_travail_general, retraite_penibilite, disciplinaire"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un cariste travaille sur un site industriel à risques.\n- La prise de poste était prévue à cinq heures.\n- Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.\n- Le salarié a quinze ans d'ancienneté sans antécédent annoncé.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Une haleine alcoolisée et des troubles de l'équilibre sont allégués.\n- Un éthylotest positif annoncé à 0,8 g/l est allégué.\n- Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.\n- Un droit à contre-expertise aurait été annoncé.\n- Des difficultés personnelles sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Texte exact et version applicable du règlement intérieur [importance: blocking] — Il faut vérifier les postes contrôlables, les circonstances et les garanties prévues.\n- Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité [importance: blocking] — La fiabilité et la régularité du contrôle ne peuvent être présumées.\n- Unité exacte du résultat, heure et conditions de mesure [importance: blocking] — La mention 0,8 g/l doit être comprise et rattachée au dispositif utilisé.\n- Possibilité réelle de contestation ou contre-expertise et choix du salarié [importance: high] — Une garantie seulement annoncée n'établit pas qu'elle était concrètement accessible.\n- Prise effective du chariot, mise en sécurité et risque concret [importance: high] — La gravité dépend notamment de l'exposition effective au risque.\n- Mesures médicales ou sociales proposées et antécédents vérifiés [importance: medium] — Ces éléments éclairent les mesures alternatives et la proportionnalité."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur droit du travail, avec enjeux associes de retraite/penibilite, disciplinaire. L'analyse vise recherche de droit local, situation individuelle, controle de conformite."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "droit_travail_general",
+            "retraite_penibilite",
+            "disciplinaire"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Juriste droit du travail V0 renforce",
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Mode principal: Defense salarie",
+            "Modes mobilises: Defense salarie"
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: plutot favorable a une defense."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "Defense salarie: La defense doit partir des faits precis reproches, des preuves communiquees, du respect de la procedure et de la proportionnalite de la sanction eventuelle. A ce stade, il faut securiser le dossier avant toute position definitive.",
+            "Defense salarie - Contradictoire: argument salarie/representants: Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, des consignes claires et une sanction proportionnee.",
+            "Defense salarie - Contradictoire: argument direction: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+            "Defense salarie - Contradictoire: preuve necessaire: Chronologie precise des faits et dates concernees.",
+            "Defense salarie - Qualification: Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite.",
+            "Defense salarie - Meilleur argument salarie: Contester toute qualification disciplinaire automatique en exigeant des faits precis, une preuve loyale, des consignes claires et une sanction proportionnee.",
+            "Defense salarie - Position probable employeur: La direction peut soutenir que le salarie connaissait la procedure et que l'erreur a cree un risque ou un dommage.",
+            "Defense salarie - Preuves indispensables: Chronologie precise des faits et dates concernees.",
+            "Defense salarie - Preuves indispensables: Convocation et eventuelle notification de sanction.",
+            "Defense salarie - Preuves indispensables: Pieces permettant de verifier la procedure disciplinaire et les delais.",
+            "Defense salarie - Preuves indispensables: Faits reproches dates et decrits precisement.",
+            "Defense salarie - Risques: Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+            "Defense salarie - Risques: Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles.",
+            "Defense salarie - Action immediate: Recuperer la convocation, les faits reproches, les preuves et construire une chronologie avant l'entretien ou la reponse."
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "le routage Nexus qualifie la demande sur droit_travail_general, retraite_penibilite, disciplinaire.",
+            "aucune source locale principale n'est disponible dans la reponse Nexus.",
+            "l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+            "une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "date, champ d'application et remplacement eventuel des textes cites.",
+            "articulation entre accord local, convention collective et norme superieure applicable.",
+            "convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur.",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "état des lieux documenté",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+            "état technique climatisation locaux SNCC/PROVOX",
+            "état technique des analyseurs en continu",
+            "inventaire des pièces critiques et stocks disponibles",
+            "délais de réapprovisionnement fournisseurs",
+            "plan de contingence et scénarios de panne",
+            "procédure d'escalade en cas de panne"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Quels faits precis sont reproches ?",
+            "Quels delais et droits de defense ont ete respectes ?",
+            "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+            "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+            "Quelles pièces critiques sont en stock ?",
+            "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+            "Quel plan de contingence existe en cas de panne ?",
+            "Quels risques pour la sécurité process ont été identifiés ?",
+            "Quelles conséquences sur la charge mentale des équipes ?",
+            "Le DUERP a-t-il été mis à jour ?",
+            "Quels scénarios de panne ont été évalués ?",
+            "Quelles mesures de prévention immédiates sont prévues ?"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Position juridique probable: plutot favorable a une defense. une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: plutot favorable a une defense."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "Aucune explication pratique officielle pertinente n'a ete retenue pour cette question."
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+            "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert juriste ne remplace pas une validation juridique humaine.",
+            "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+            "Aucune source locale principale n'a ete trouvee pour conclure.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+            "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+            "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - droit_travail_general, retraite_penibilite, disciplinaire",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": {
+        "10_after_interview": [
+          "Rédiger un compte rendu factuel et daté sans dupliquer les arguments.",
+          "Demander la communication des preuves ou pièces encore manquantes.",
+          "Contrôler le motif, la date et la proportionnalité de toute sanction notifiée.",
+          "Adresser si nécessaire une contestation écrite ciblée.",
+          "Évaluer avec un défenseur syndical ou un avocat la suite adaptée."
+        ],
+        "1_facts_understood": {
+          "facts_from_request": [
+            "fait lié à l'alcool ou aux stupéfiants"
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "2_points_to_verify": {
+          "chronology": [
+            "date des faits",
+            "date de connaissance par l'employeur",
+            "date de convocation",
+            "date de l'entretien",
+            "date de notification éventuelle"
+          ],
+          "decisive_missing_facts": [
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "caractère isolé ou répété",
+            "position du salarié sur les faits",
+            "preuves invoquées par l'employeur",
+            "sanction envisagée"
+          ]
+        },
+        "3_provisional_qualification": {
+          "act_category": "ALCOHOL_OR_DRUGS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Qualification provisoire : alcohol or drugs. La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "absence d'antécédent indiquée"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        },
+        "6_questions_for_employee": [
+          "Existe-t-il une notification écrite et précisément motivée ?",
+          "Le salarié était-il assisté lors de l'entretien ?",
+          "Les faits sont-ils reconnus, partiellement reconnus ou contestés ?",
+          "Quand et comment le salarié a-t-il été convoqué ?",
+          "Quand l'employeur a-t-il eu connaissance des faits ?",
+          "Quelle est la date précise des faits reprochés ?",
+          "Quelle est la nature exacte de la mesure annoncée ou notifiée ?",
+          "Des situations similaires ont-elles donné lieu à des mesures comparables ?",
+          "Existe-t-il des témoins ou des écrits contemporains des faits ?",
+          "La sanction paraît-elle proportionnée aux faits allégués ?",
+          "Le règlement intérieur prévoit-il cette sanction et la procédure applicable ?",
+          "Existe-t-il une jurisprudence réellement comparable et à jour ?",
+          "Quels accords INEOS et dispositions conventionnelles sont applicables ?"
+        ],
+        "7_questions_for_management": [
+          "Quel est le grief exact retenu contre le salarié ?",
+          "Quelles preuves établissent l'acte et son attribution au salarié ?",
+          "Une personne précise est-elle considérée comme visée et sur quels éléments ?",
+          "Quelles conséquences concrètes l'inscription ou le comportement a-t-il produites ?",
+          "Quelle clause précise du règlement intérieur est invoquée ?",
+          "Quels précédents réellement comparables ont été traités dans l'entreprise ?",
+          "Quelle sanction est envisagée ?",
+          "Comment sa proportionnalité est-elle appréciée au regard du contexte, des conséquences et des antécédents ?"
+        ],
+        "8_interview_preparation": {
+          "documents_to_request": [
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "état des lieux documenté",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+            "état technique climatisation locaux SNCC/PROVOX",
+            "état technique des analyseurs en continu",
+            "inventaire des pièces critiques et stocks disponibles",
+            "délais de réapprovisionnement fournisseurs",
+            "plan de contingence et scénarios de panne",
+            "procédure d'escalade en cas de panne"
+          ],
+          "notes_to_record": [
+            "participants et qualité de chacun",
+            "grief exact et qualification avancée",
+            "preuves citées ou présentées",
+            "réponses du salarié",
+            "demandes de communication et réponse de la direction"
+          ],
+          "suggested_wording": [
+            "« À ce stade, je souhaite connaître précisément les faits et les pièces avant de répondre définitivement. »",
+            "« Cette demande de précision ne vaut ni reconnaissance ni refus de répondre. »"
+          ]
+        },
+        "9_points_not_to_say": [
+          "« Ce n'est pas grave. »",
+          "« Il avait le droit parce qu'il était énervé. »",
+          "« Personne n'était nommée donc aucune faute n'existe. »",
+          "« Il faut nier même si une preuve existe. »"
+        ],
+        "analysis_type": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "fact_extraction": {
+          "act_category": "ALCOHOL_OR_DRUGS",
+          "alleged_act": "fait lié à l'alcool ou aux stupéfiants",
+          "context_claimed": [],
+          "employee_admission": null,
+          "employer_evidence": [],
+          "exact_words_or_behavior": "fait lié à l'alcool ou aux stupéfiants",
+          "facts_missing": [
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "caractère isolé ou répété",
+            "position du salarié sur les faits",
+            "preuves invoquées par l'employeur",
+            "sanction envisagée"
+          ],
+          "location": null,
+          "material_damage": null,
+          "prior_warnings": false,
+          "public_visibility": null,
+          "repetition": null,
+          "sanction_considered": null,
+          "target_identified": null,
+          "target_type": null,
+          "threat_or_violence": null
+        },
+        "notice": "Dossier de préparation syndicale fondé sur les faits fournis. Toute qualification et toute appréciation de gravité restent provisoires."
+      },
+      "documents_to_request": [
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu",
+        "inventaire des pièces critiques et stocks disponibles",
+        "délais de réapprovisionnement fournisseurs",
+        "plan de contingence et scénarios de panne",
+        "procédure d'escalade en cas de panne"
+      ],
+      "employee_method_analysis": null,
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        }
+      ],
+      "facts": [],
+      "findings": [
+        "Verifier les faits reproches, les preuves, les dates et les delais de procedure.",
+        "Controler les droits de defense et les garanties prevues par le reglement interieur.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence.",
+        "À vérifier dans une source locale à identifier ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+        "À vérifier dans une source locale à identifier : procédure disciplinaire applicable et garanties de défense.",
+        "À vérifier dans une source locale à identifier : sanctions prévues, délais et modalités de convocation.",
+        "risque technique sur équipements critiques",
+        "risque sécurité process",
+        "risque de rupture de continuité d'exploitation"
+      ],
+      "issue_groups": [],
+      "jurisprudence_audit": [],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [
+            {
+              "article": "L3121-28",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000033020373",
+              "relevance_score": 3.0
+            }
+          ],
+          "sources_received": 1,
+          "sources_retained": 0,
+          "status": "weak",
+          "warnings": [
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question."
+          ]
+        }
+      ],
+      "next_action": "Completer les faits, relire les sources citees puis choisir la suite syndicale adaptee.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un cariste travaille sur un site industriel à risques.\n- La prise de poste était prévue à cinq heures.\n- Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.\n- Le salarié a quinze ans d'ancienneté sans antécédent annoncé.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Une haleine alcoolisée et des troubles de l'équilibre sont allégués.\n- Un éthylotest positif annoncé à 0,8 g/l est allégué.\n- Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.\n- Un droit à contre-expertise aurait été annoncé.\n- Des difficultés personnelles sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Texte exact et version applicable du règlement intérieur [importance: blocking] — Il faut vérifier les postes contrôlables, les circonstances et les garanties prévues.\n- Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité [importance: blocking] — La fiabilité et la régularité du contrôle ne peuvent être présumées.\n- Unité exacte du résultat, heure et conditions de mesure [importance: blocking] — La mention 0,8 g/l doit être comprise et rattachée au dispositif utilisé.\n- Possibilité réelle de contestation ou contre-expertise et choix du salarié [importance: high] — Une garantie seulement annoncée n'établit pas qu'elle était concrètement accessible.\n- Prise effective du chariot, mise en sécurité et risque concret [importance: high] — La gravité dépend notamment de l'exposition effective au risque.\n- Mesures médicales ou sociales proposées et antécédents vérifiés [importance: medium] — Ces éléments éclairent les mesures alternatives et la proportionnalité.",
+      "questions_to_ask": [
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?",
+        "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+        "Quel plan de contingence existe en cas de panne ?",
+        "Quels risques pour la sécurité process ont été identifiés ?",
+        "Quelles conséquences sur la charge mentale des équipes ?",
+        "Le DUERP a-t-il été mis à jour ?",
+        "Quels scénarios de panne ont été évalués ?",
+        "Quelles mesures de prévention immédiates sont prévues ?"
+      ],
+      "response_depth": "multi_domain",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "retraite_penibilite",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours approfondi a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "intents": [
+          "rechercher_droit_local",
+          "analyser_situation_individuelle",
+          "verifier_conformite"
+        ],
+        "main_domain": "droit_travail_general",
+        "primary_domain": "droit_travail_general",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un cariste travaille sur un site industriel à risques.\n- La prise de poste était prévue à cinq heures.\n- Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.\n- Le salarié a quinze ans d'ancienneté sans antécédent annoncé.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Une haleine alcoolisée et des troubles de l'équilibre sont allégués.\n- Un éthylotest positif annoncé à 0,8 g/l est allégué.\n- Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.\n- Un droit à contre-expertise aurait été annoncé.\n- Des difficultés personnelles sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Texte exact et version applicable du règlement intérieur [importance: blocking] — Il faut vérifier les postes contrôlables, les circonstances et les garanties prévues.\n- Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité [importance: blocking] — La fiabilité et la régularité du contrôle ne peuvent être présumées.\n- Unité exacte du résultat, heure et conditions de mesure [importance: blocking] — La mention 0,8 g/l doit être comprise et rattachée au dispositif utilisé.\n- Possibilité réelle de contestation ou contre-expertise et choix du salarié [importance: high] — Une garantie seulement annoncée n'établit pas qu'elle était concrètement accessible.\n- Prise effective du chariot, mise en sécurité et risque concret [importance: high] — La gravité dépend notamment de l'exposition effective au risque.\n- Mesures médicales ou sociales proposées et antécédents vérifiés [importance: medium] — Ces éléments éclairent les mesures alternatives et la proportionnalité.",
+        "reasoning_summary": [
+          "La demande porte sur la relation de travail ou une garantie legale generale.",
+          "La demande porte sur la retraite, la carriere ou la penibilite.",
+          "Le parcours d'assistance disciplinaire impose une analyse disciplinaire.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande concerne un dossier ou une situation de salarie.",
+          "La demande vise une verification ou un controle."
+        ],
+        "response_profile": "syndical_defense_deep",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "retraite_penibilite",
+          "disciplinaire"
+        ],
+        "warnings": []
+      },
+      "short_answer": "Nexus ne trouve pas de source locale suffisante pour conclure ; il faut completer les faits ou la base documentaire.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Explication pratique officielle absente: connecteur CDTN indisponible ou aucun contenu pertinent retenu.",
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de retraite/penibilite, disciplinaire. L'analyse vise recherche de droit local, situation individuelle, controle de conformite.",
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier la proportionnalite d'une eventuelle sanction."
+    },
+    "expert_juriste": {
+      "action_conseillee": [
+        "Action immediate: ne pas repondre a chaud; reconstituer les faits et demander les preuves reprochees.",
+        "Demande ecrite: demander griefs precis, procedure suivie, consignes et preuves.",
+        "Pieces a securiser: formation, habilitations, modes operatoires, contexte de charge, mails et temoignages utiles.",
+        "Intervention DS/CSE si pertinente: alerter sur consignes ou organisation si l'erreur vient du systeme de travail.",
+        "Contestation: contester la sanction si preuve, procedure ou proportionnalite sont insuffisantes.",
+        "Escalade eventuelle: appui juridique en cas de sanction lourde ou de risque licenciement."
+      ],
+      "active": true,
+      "analyse_et_raisonnement": [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+        "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+        "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+        "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+        "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+        "Conclusion provisoire: plutot favorable a une defense - une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables.",
+        "Regle certaine: une defense disciplinaire exige d'abord des faits dates, des preuves communiquees et le controle des droits de defense.",
+        "Interpretation: une erreur de manipulation ne justifie pas automatiquement une sanction si le contexte, les consignes, la formation ou l'organisation expliquent l'incident.",
+        "Hypothese: la sanction peut etre contestable si la procedure, la preuve ou la proportionnalite sont fragiles.",
+        "Information manquante: convocation, faits reproches, preuves, antecedents, consignes, formation et consequences reelles de l'erreur."
+      ],
+      "ce_qui_depend_accord_statut_element_manquant": [
+        "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
+        "Information manquante: articulation entre accord local, convention collective et norme superieure applicable."
+      ],
+      "ce_qui_est_etabli_par_sources": [
+        "Regle certaine: le routage Nexus qualifie la demande sur droit_travail_general, retraite_penibilite, disciplinaire.",
+        "Information manquante: aucune source locale principale n'est disponible dans la reponse Nexus."
+      ],
+      "limites": [
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Aucune source locale principale n'a ete trouvee pour conclure.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "position_de_travail_proposee": "Position de travail: construire la defense sur faits, preuves, procedure, contexte de l'erreur et proportionnalite avant d'accepter la qualification disciplinaire de la direction.",
+      "qualification_juridique_situation": "Situation disciplinaire individuelle ou collective a preparer sous l'angle des faits, preuves, procedure, droits de defense et proportionnalite.",
+      "questions_a_poser_direction": [
+        "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+        "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+        "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?"
+      ],
+      "response_courte": "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute.",
+      "risques_points_vigilance": [
+        "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+        "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles."
+      ]
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin"
+      ],
+      "elements_du_bulletin_concernes": [
+        "rubriques du bulletin concernees",
+        "base de calcul",
+        "taux",
+        "montant verse"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie.",
+        "Aucune source applicable n'est disponible."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle paie methodologique a partir du bulletin, du pointage, des compteurs et des sources locales.",
+      "regles_ou_sources_disponibles": [
+        "Aucune source locale principale n'est disponible dans la reponse Nexus."
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu",
+        "inventaire des pièces critiques et stocks disponibles",
+        "délais de réapprovisionnement fournisseurs",
+        "plan de contingence et scénarios de panne",
+        "procédure d'escalade en cas de panne"
+      ],
+      "domaines_detectes": [
+        "droit_travail_general",
+        "retraite_penibilite",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Expert Juriste droit du travail V0 renforce",
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Aucune source locale principale n'a ete trouvee pour conclure.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Position juridique probable: plutot favorable a une defense. une erreur de manipulation n'emporte pas automatiquement sanction si la preuve, la procedure, les consignes, la formation ou la proportionnalite sont discutables.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un cariste travaille sur un site industriel à risques.\n- La prise de poste était prévue à cinq heures.\n- Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.\n- Le salarié a quinze ans d'ancienneté sans antécédent annoncé.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Une haleine alcoolisée et des troubles de l'équilibre sont allégués.\n- Un éthylotest positif annoncé à 0,8 g/l est allégué.\n- Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.\n- Un droit à contre-expertise aurait été annoncé.\n- Des difficultés personnelles sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Texte exact et version applicable du règlement intérieur [importance: blocking] — Il faut vérifier les postes contrôlables, les circonstances et les garanties prévues.\n- Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité [importance: blocking] — La fiabilité et la régularité du contrôle ne peuvent être présumées.\n- Unité exacte du résultat, heure et conditions de mesure [importance: blocking] — La mention 0,8 g/l doit être comprise et rattachée au dispositif utilisé.\n- Possibilité réelle de contestation ou contre-expertise et choix du salarié [importance: high] — Une garantie seulement annoncée n'établit pas qu'elle était concrètement accessible.\n- Prise effective du chariot, mise en sécurité et risque concret [importance: high] — La gravité dépend notamment de l'exposition effective au risque.\n- Mesures médicales ou sociales proposées et antécédents vérifiés [importance: medium] — Ces éléments éclairent les mesures alternatives et la proportionnalité.",
+      "questions_utiles": [
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?",
+        "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+        "Quel plan de contingence existe en cas de panne ?",
+        "Quels risques pour la sécurité process ont été identifiés ?",
+        "Quelles conséquences sur la charge mentale des équipes ?",
+        "Le DUERP a-t-il été mis à jour ?",
+        "Quels scénarios de panne ont été évalués ?",
+        "Quelles mesures de prévention immédiates sont prévues ?"
+      ],
+      "reponse_synthetique_nexus": "Le dossier est defendable si la direction se contente d'invoquer une erreur ou un non-respect de procedure sans preuve precise, formation claire et sanction proportionnee. Le meilleur angle est de discuter les faits, le contexte de travail et la procedure avant d'admettre une faute. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: plutot favorable a une defense.",
+      "sources": []
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}
