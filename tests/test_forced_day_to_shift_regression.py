@@ -109,6 +109,28 @@ def test_critical_questions_and_defensive_plan_are_present() -> None:
     assert "refus non préparé" in position
 
 
+def test_mission_wording_requests_all_facts_before_legal_search() -> None:
+    query = (
+        "Une salariée travaillant de jour au laboratoire est contrainte de passer "
+        "en rythme posté pour remplacer une personne démissionnaire. Elle n’est pas "
+        "volontaire. Le changement pourrait réduire l’effectif de jour."
+    )
+    route = router.route_query(query, router.QUESTION_SALARIE)
+    questions = " ".join(router.default_questions(route)).casefold()
+
+    for marker in (
+        "horaires exacts",
+        "cycle exact",
+        "temporaire ou permanent",
+        "motif précis",
+        "effectifs du laboratoire avant et après",
+        "impact sur le service",
+        "cse",
+    ):
+        assert marker in questions
+    assert "travail de nuit" not in " ".join(item["statement"] for item in router.declared_case_facts(query)).casefold()
+
+
 def test_explicit_payroll_control_still_selects_payroll() -> None:
     query = (
         BASE

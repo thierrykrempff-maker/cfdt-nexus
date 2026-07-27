@@ -19,10 +19,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+from piste_oauth import PisteCredentials, PisteOAuthClient, PisteOAuthError
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -36,6 +37,12 @@ ENV_SEARCH_ENDPOINT = "CFDT_NEXUS_LEGIFRANCE_SEARCH_ENDPOINT"
 ENV_ARTICLE_ENDPOINT = "CFDT_NEXUS_LEGIFRANCE_ARTICLE_ENDPOINT"
 ENV_CACHE_DIR = "CFDT_NEXUS_LEGIFRANCE_CACHE_DIR"
 ENV_CACHE_TTL = "CFDT_NEXUS_LEGIFRANCE_CACHE_TTL_SECONDS"
+NEW_ENV_CLIENT_ID = "LEGIFRANCE_CLIENT_ID"
+NEW_ENV_CLIENT_SECRET = "LEGIFRANCE_CLIENT_SECRET"
+PISTE_ENV_CLIENT_ID = "PISTE_CLIENT_ID"
+PISTE_ENV_CLIENT_SECRET = "PISTE_CLIENT_SECRET"
+PISTE_ENV_OAUTH_URL = "PISTE_OAUTH_URL"
+PISTE_ENV_API_BASE_URL = "PISTE_API_BASE_URL"
 
 DEFAULT_TOKEN_URL = "https://oauth.piste.gouv.fr/api/oauth/token"
 DEFAULT_API_BASE_URL = "https://api.piste.gouv.fr/dila/legifrance/lf-engine-app"
@@ -294,11 +301,16 @@ class LegifranceConfig:
         timeout = parse_int(os.environ.get(ENV_TIMEOUT), DEFAULT_TIMEOUT_SECONDS)
         cache_ttl = parse_int(os.environ.get(ENV_CACHE_TTL), DEFAULT_CACHE_TTL_SECONDS)
         cache_dir = Path(os.environ.get(ENV_CACHE_DIR) or ROOT / "local-index" / "legifrance")
+        client_id = first_env(NEW_ENV_CLIENT_ID, PISTE_ENV_CLIENT_ID, ENV_CLIENT_ID)
+        client_secret = first_env(NEW_ENV_CLIENT_SECRET, PISTE_ENV_CLIENT_SECRET, ENV_CLIENT_SECRET)
         return cls(
-            client_id=clean_env(os.environ.get(ENV_CLIENT_ID)),
-            client_secret=clean_env(os.environ.get(ENV_CLIENT_SECRET)),
-            token_url=os.environ.get(ENV_TOKEN_URL, DEFAULT_TOKEN_URL).strip(),
-            api_base_url=os.environ.get(ENV_API_BASE_URL, DEFAULT_API_BASE_URL).strip().rstrip("/"),
+            client_id=client_id,
+            client_secret=client_secret,
+            token_url=first_env(PISTE_ENV_OAUTH_URL, ENV_TOKEN_URL) or DEFAULT_TOKEN_URL,
+            api_base_url=(
+                first_env("LEGIFRANCE_API_BASE_URL", PISTE_ENV_API_BASE_URL, ENV_API_BASE_URL)
+                or DEFAULT_API_BASE_URL
+            ).rstrip("/"),
             scope=clean_env(os.environ.get(ENV_SCOPE)),
             timeout_seconds=timeout,
             search_endpoint=os.environ.get(ENV_SEARCH_ENDPOINT, DEFAULT_SEARCH_ENDPOINT).strip(),
@@ -332,6 +344,14 @@ class LegifranceConfig:
 def clean_env(value: str | None) -> str | None:
     cleaned = (value or "").strip()
     return cleaned or None
+
+
+def first_env(*names: str) -> str | None:
+    for name in names:
+        value = clean_env(os.environ.get(name))
+        if value:
+            return value
+    return None
 
 
 def parse_int(value: str | None, default: int) -> int:
@@ -369,6 +389,16 @@ class LegifranceClient:
     def __init__(self, config: LegifranceConfig | None = None) -> None:
         self.config = config or LegifranceConfig.from_env()
         self.cache_fallback_warnings: list[str] = []
+        self.oauth = PisteOAuthClient(
+            PisteCredentials(
+                self.config.client_id,
+                self.config.client_secret,
+                self.config.token_url,
+                self.config.scope or "openid",
+                self.config.timeout_seconds,
+                "legifrance",
+            )
+        )
 
     def ensure_configured(self) -> None:
         if not self.config.configured:
@@ -378,62 +408,14 @@ class LegifranceClient:
             )
 
     @property
-    def token_cache_path(self) -> Path:
-        return self.config.cache_dir / "oauth-token.private.json"
-
-    @property
     def response_cache_path(self) -> Path:
         return self.config.cache_dir / "responses.private.json"
 
     def authenticate(self, force_refresh: bool = False) -> dict[str, Any]:
-        self.ensure_configured()
-        if not force_refresh:
-            cached = self._read_token_cache()
-            if cached and float(cached.get("expires_at", 0)) > time.time() + 60:
-                return {**cached, "from_cache": True}
-
-        assert self.config.client_id is not None
-        assert self.config.client_secret is not None
-        form: dict[str, str] = {
-            "grant_type": "client_credentials",
-            "client_id": self.config.client_id,
-            "client_secret": self.config.client_secret,
-            "scope": self.config.scope or "openid",
-        }
-        body = urllib.parse.urlencode(form).encode("utf-8")
-        request = urllib.request.Request(
-            self.config.token_url,
-            data=body,
-            headers={
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept": "application/json",
-            },
-            method="POST",
-        )
         try:
-            with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:  # noqa: S310
-                payload = json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            raise LegifranceAPIError(f"OAuth Legifrance refuse: HTTP {exc.code} {exc.reason}.") from exc
-        except urllib.error.URLError as exc:
-            raise LegifranceAPIError(f"OAuth Legifrance indisponible: {safe_reason(exc)}.") from exc
-        except json.JSONDecodeError as exc:
-            raise LegifranceAPIError("OAuth Legifrance: reponse JSON illisible.") from exc
-
-        token = payload.get("access_token")
-        if not token:
-            raise LegifranceAPIError("OAuth Legifrance: access_token absent de la reponse.")
-        expires_in = int(payload.get("expires_in") or 3600)
-        cached = {
-            "access_token": token,
-            "token_type": payload.get("token_type") or "Bearer",
-            "expires_in": expires_in,
-            "expires_at": time.time() + max(60, expires_in - 60),
-            "created_at": utc_now(),
-            "from_cache": False,
-        }
-        self._write_token_cache(cached)
-        return cached
+            return self.oauth.token(force_refresh)
+        except PisteOAuthError as exc:
+            raise LegifranceAPIError(f"OAuth Legifrance ({exc.status}): {exc}") from exc
 
     def auth_diagnostic(self, force_refresh: bool = False) -> dict[str, Any]:
         token = self.authenticate(force_refresh=force_refresh)
@@ -444,17 +426,46 @@ class LegifranceClient:
             "from_cache": bool(token.get("from_cache")),
         }
 
-    def search_article_hits(self, query: str, limit: int = 3) -> list[dict[str, Any]]:
+    def healthcheck(self) -> dict[str, Any]:
+        self.ensure_configured()
+        search_response = self._post_json(
+            self.config.search_endpoint,
+            build_search_payload("travail", limit=1),
+        )
+        hits = extract_article_hits(search_response)
+        if not hits or not hits[0].get("official_id"):
+            raise LegifranceAPIError(
+                "API Legifrance: /search ne retourne aucun article officiel exploitable.",
+                endpoint=self.config.endpoint_url(self.config.search_endpoint),
+            )
+        article_id = str(hits[0]["official_id"])
+        article_response = self._post_json(self.config.article_endpoint, {"id": article_id})
+        if not article_response:
+            raise LegifranceAPIError(
+                "API Legifrance: /consult/getArticle retourne une reponse vide.",
+                endpoint=self.config.endpoint_url(self.config.article_endpoint),
+            )
+        return {
+            "status": 200,
+            "functional_operations": {
+                "search": True,
+                "get_article": True,
+            },
+            "article_id": article_id,
+            "ping_required": False,
+        }
+
+    def search_article_hits(self, query: str, limit: int = 3, page: int = 1) -> list[dict[str, Any]]:
         self.ensure_configured()
         cleaned_query = (query or "").strip()
         if not cleaned_query:
             return []
-        cache_key = self._cache_key("search", {"query": cleaned_query, "limit": limit})
+        cache_key = self._cache_key("search", {"query": cleaned_query, "limit": limit, "page": page})
         cached = self._read_response_cache(cache_key)
         if cached is not None:
             return cached
 
-        payload = build_search_payload(cleaned_query, limit)
+        payload = build_search_payload(cleaned_query, limit, page)
         try:
             response = self._post_json(self.config.search_endpoint, payload)
         except LegifranceAPIError as exc:
@@ -470,6 +481,34 @@ class LegifranceClient:
         deduped = dedupe_hits(hits)[: max(1, limit)]
         self._write_response_cache(cache_key, deduped)
         return deduped
+
+    def search_idcc_sources(self, idcc: str = "44", query: str = "", limit: int = 5, page: int = 1) -> dict[str, Any]:
+        cleaned_idcc = re.sub(r"\D", "", idcc or "")
+        if not cleaned_idcc:
+            return {"sources": [], "warnings": ["Numéro IDCC absent."], "search_hits": 0}
+        try:
+            response = self._post_json(
+                self.config.search_endpoint,
+                build_idcc_search_payload(cleaned_idcc, query, limit, page),
+            )
+            hits = extract_article_hits(response)
+            return {
+                "sources": [source for hit in hits if (source := source_from_search_hit(hit))],
+                "warnings": [],
+                "search_hits": len(hits),
+                "query": query,
+                "idcc": cleaned_idcc,
+                "page": page,
+            }
+        except LegifranceError as exc:
+            return {
+                "sources": [],
+                "warnings": [f"Légifrance IDCC {cleaned_idcc} indisponible: {exc}"],
+                "search_hits": 0,
+                "query": query,
+                "idcc": cleaned_idcc,
+                "page": page,
+            }
 
     def search_jurisprudence_hits(self, query: str, limit: int = 6) -> list[dict[str, Any]]:
         self.ensure_configured()
@@ -744,12 +783,6 @@ class LegifranceClient:
                 ) from exc
         raise LegifranceAPIError("API Legifrance: reponse absente.", endpoint=url, payload=safe_api_payload(payload))
 
-    def _read_token_cache(self) -> dict[str, Any] | None:
-        return read_json_file(self.token_cache_path)
-
-    def _write_token_cache(self, payload: dict[str, Any]) -> None:
-        write_json_file(self.token_cache_path, payload)
-
     def _cache_key(self, kind: str, payload: dict[str, Any]) -> str:
         raw = json.dumps({"kind": kind, "payload": payload}, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
@@ -812,13 +845,27 @@ def write_json_file(path: Path, payload: Any) -> None:
         return
 
 
-def build_search_payload(query: str, limit: int) -> dict[str, Any]:
+def build_search_payload(
+    query: str,
+    limit: int,
+    page: int = 1,
+    version_date: str | date | datetime | None = None,
+) -> dict[str, Any]:
     page_size = max(1, min(limit, 10))
+    normalized_version_date = normalize_version_date(version_date)
+    filters = [
+        {
+            "facette": "NOM_CODE" if normalized_version_date else "TEXT_NOM_CODE",
+            "valeurs": [CODE_DU_TRAVAIL_LABEL],
+        }
+    ]
+    if normalized_version_date:
+        filters.append({"facette": "DATE_VERSION", "singleDate": normalized_version_date})
     return {
         "recherche": {
             "champs": [
                 {
-                    "typeChamp": "ALL",
+                    "typeChamp": "ARTICLE",
                     "criteres": [
                         {
                             "typeRecherche": "UN_DES_MOTS",
@@ -829,15 +876,59 @@ def build_search_payload(query: str, limit: int) -> dict[str, Any]:
                     "operateur": "ET",
                 }
             ],
-            "filtres": [
-                {"facette": "NATURE", "valeurs": ["CODE"]},
-                {"facette": "CODE", "valeurs": [CODE_DU_TRAVAIL_LEGITEXT]},
-            ],
-            "pageNumber": 1,
+            "filtres": filters,
+            "fromAdvancedRecherche": False,
+            "pageNumber": max(1, page),
             "pageSize": page_size,
+            "operateur": "ET",
             "sort": "PERTINENCE",
+            "typePagination": "DEFAUT",
         },
-        "fond": "CODE_DATE",
+        "fond": "CODE_DATE" if normalized_version_date else "CODE_ETAT",
+    }
+
+
+def normalize_version_date(value: str | date | datetime | None) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value.date().isoformat()
+    if isinstance(value, date):
+        return value.isoformat()
+    cleaned = str(value).strip()
+    if not cleaned:
+        raise ValueError("Date de version Legifrance vide.")
+    try:
+        return date.fromisoformat(cleaned).isoformat()
+    except ValueError as exc:
+        raise ValueError(
+            "Date de version Legifrance invalide: format attendu AAAA-MM-JJ."
+        ) from exc
+
+
+def build_idcc_search_payload(idcc: str, query: str, limit: int, page: int = 1) -> dict[str, Any]:
+    fields = [{
+        "typeChamp": "IDCC",
+        "operateur": "ET",
+        "criteres": [{"valeur": idcc, "typeRecherche": "TOUS_LES_MOTS_DANS_UN_CHAMP", "operateur": "ET"}],
+    }]
+    if query.strip():
+        fields.append({
+            "typeChamp": "ALL",
+            "operateur": "ET",
+            "criteres": [{"valeur": query.strip(), "typeRecherche": "TOUS_LES_MOTS_DANS_UN_CHAMP", "operateur": "ET"}],
+        })
+    return {
+        "fond": "KALI",
+        "recherche": {
+            "champs": fields,
+            "fromAdvancedRecherche": False,
+            "pageNumber": max(1, page),
+            "pageSize": max(1, min(limit, 25)),
+            "typePagination": "DEFAUT",
+            "sort": "PERTINENCE",
+            "operateur": "ET",
+        },
     }
 
 
@@ -1494,6 +1585,7 @@ def normalize_article_source(payload: Any, requested_id: str, search_hit: dict[s
     if (search_hit or {}).get("reason"):
         ranking_reasons.append(str(search_hit["reason"]))
     return {
+        "source": "legifrance",
         "document": CODE_DU_TRAVAIL_LABEL,
         "document_type": "code_travail",
         "source_layer": "code_travail",
@@ -1510,6 +1602,8 @@ def normalize_article_source(payload: Any, requested_id: str, search_hit: dict[s
         "version_end_date": end_date,
         "retrieved_at": utc_now(),
         "url": f"https://www.legifrance.gouv.fr/codes/article_lc/{official_id}",
+        "official_reference": f"LEGIFRANCE:{official_id}",
+        "original_query": (search_hit or {}).get("query") or (search_hit or {}).get("search_query"),
         "excerpt": short_excerpt(text),
         "chunk_id": official_id,
         "score": (search_hit or {}).get("score"),

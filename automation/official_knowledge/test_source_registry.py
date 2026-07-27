@@ -4,8 +4,12 @@ from automation.official_knowledge.source_registry import CATALOG_SOURCE_IDS,SOU
 class RegistryTests(unittest.TestCase):
  def test_sixteen_stable_sources(self):
   self.assertEqual(16,len(list_sources()));self.assertEqual(len(SOURCE_REGISTRY),len(set(SOURCE_REGISTRY)))
- def test_disabled_architecture_only(self):
-  self.assertTrue(all(not s.enabled and s.connector_status=="architecture_only" for s in list_sources()))
+ def test_disabled_with_only_legal_connectors_implemented(self):
+  self.assertTrue(all(not s.enabled for s in list_sources()))
+  implemented={s.source_id for s in list_sources() if s.connector_status=="implemented"}
+  self.assertEqual({"legifrance","judilibre"},implemented)
+  for source_id in implemented:
+   self.assertEqual(("official_api",),SOURCE_REGISTRY[source_id].allowed_access_modes)
  def test_uninvestigated_sources_do_not_invent_endpoints(self):
   self.assertEqual((),SOURCE_REGISTRY["inrs"].official_domains);self.assertEqual("unknown",SOURCE_REGISTRY["inrs"].source_type)
  def test_cnil_official_domains_are_verified_but_not_enabled(self):

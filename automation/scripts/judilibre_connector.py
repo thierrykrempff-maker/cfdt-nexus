@@ -24,6 +24,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+from piste_oauth import PisteCredentials, PisteOAuthClient, PisteOAuthError
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -37,6 +38,12 @@ ENV_SCOPE = "CFDT_NEXUS_JUDILIBRE_SCOPE"
 ENV_TIMEOUT = "CFDT_NEXUS_JUDILIBRE_TIMEOUT"
 ENV_CACHE_DIR = "CFDT_NEXUS_JUDILIBRE_CACHE_DIR"
 ENV_CACHE_TTL = "CFDT_NEXUS_JUDILIBRE_CACHE_TTL_SECONDS"
+NEW_ENV_CLIENT_ID = "JUDILIBRE_CLIENT_ID"
+NEW_ENV_CLIENT_SECRET = "JUDILIBRE_CLIENT_SECRET"
+PISTE_ENV_CLIENT_ID = "PISTE_CLIENT_ID"
+PISTE_ENV_CLIENT_SECRET = "PISTE_CLIENT_SECRET"
+PISTE_ENV_OAUTH_URL = "PISTE_OAUTH_URL"
+PISTE_ENV_API_BASE_URL = "PISTE_API_BASE_URL"
 
 DEFAULT_TOKEN_URL = "https://oauth.piste.gouv.fr/api/oauth/token"
 DEFAULT_API_BASE_URL = "https://api.piste.gouv.fr/cassation/judilibre/v1.0"
@@ -104,16 +111,23 @@ class JudilibreConfig:
 
     @classmethod
     def from_env(cls) -> "JudilibreConfig":
-        client_id, client_id_source = read_config_value(ENV_CLIENT_ID, FALLBACK_ENV_CLIENT_ID)
-        client_secret, client_secret_source = read_config_value(ENV_CLIENT_SECRET, FALLBACK_ENV_CLIENT_SECRET)
+        client_id, client_id_source = read_first_config(
+            NEW_ENV_CLIENT_ID, PISTE_ENV_CLIENT_ID, ENV_CLIENT_ID, FALLBACK_ENV_CLIENT_ID
+        )
+        client_secret, client_secret_source = read_first_config(
+            NEW_ENV_CLIENT_SECRET, PISTE_ENV_CLIENT_SECRET, ENV_CLIENT_SECRET, FALLBACK_ENV_CLIENT_SECRET
+        )
         timeout = parse_int(os.environ.get(ENV_TIMEOUT), DEFAULT_TIMEOUT_SECONDS)
         cache_ttl = parse_int(os.environ.get(ENV_CACHE_TTL), DEFAULT_CACHE_TTL_SECONDS)
         cache_dir = Path(os.environ.get(ENV_CACHE_DIR) or ROOT / "local-index" / "judilibre")
         return cls(
             client_id=client_id,
             client_secret=client_secret,
-            token_url=os.environ.get(ENV_TOKEN_URL, DEFAULT_TOKEN_URL).strip(),
-            api_base_url=os.environ.get(ENV_API_BASE_URL, DEFAULT_API_BASE_URL).strip().rstrip("/"),
+            token_url=first_env(PISTE_ENV_OAUTH_URL, ENV_TOKEN_URL) or DEFAULT_TOKEN_URL,
+            api_base_url=(
+                first_env("JUDILIBRE_API_BASE_URL", PISTE_ENV_API_BASE_URL, ENV_API_BASE_URL)
+                or DEFAULT_API_BASE_URL
+            ).rstrip("/"),
             scope=clean_env(os.environ.get(ENV_SCOPE)) or DEFAULT_SCOPE,
             timeout_seconds=timeout,
             cache_dir=cache_dir,
@@ -154,6 +168,18 @@ def read_config_value(primary: str, fallback: str) -> tuple[str | None, str | No
     return None, None
 
 
+def read_first_config(*names: str) -> tuple[str | None, str | None]:
+    for name in names:
+        value = clean_env(os.environ.get(name))
+        if value:
+            return value, name
+    return None, None
+
+
+def first_env(*names: str) -> str | None:
+    return read_first_config(*names)[0]
+
+
 def clean_env(value: str | None) -> str | None:
     cleaned = (value or "").strip()
     return cleaned or None
@@ -174,10 +200,16 @@ def utc_now() -> str:
 class JudilibreClient:
     def __init__(self, config: JudilibreConfig | None = None) -> None:
         self.config = config or JudilibreConfig.from_env()
-
-    @property
-    def token_cache_path(self) -> Path:
-        return self.config.cache_dir / "oauth-token.private.json"
+        self.oauth = PisteOAuthClient(
+            PisteCredentials(
+                self.config.client_id,
+                self.config.client_secret,
+                self.config.token_url,
+                self.config.scope,
+                self.config.timeout_seconds,
+                "judilibre",
+            )
+        )
 
     @property
     def response_cache_path(self) -> Path:
@@ -191,50 +223,10 @@ class JudilibreClient:
             )
 
     def authenticate(self, force_refresh: bool = False) -> dict[str, Any]:
-        self.ensure_configured()
-        if not force_refresh:
-            cached = self._read_token_cache()
-            if cached and float(cached.get("expires_at", 0)) > time.time() + 60:
-                return {**cached, "from_cache": True}
-
-        assert self.config.client_id is not None
-        assert self.config.client_secret is not None
-        form = {
-            "grant_type": "client_credentials",
-            "client_id": self.config.client_id,
-            "client_secret": self.config.client_secret,
-            "scope": self.config.scope or DEFAULT_SCOPE,
-        }
-        request = urllib.request.Request(
-            self.config.token_url,
-            data=urllib.parse.urlencode(form).encode("utf-8"),
-            headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
-            method="POST",
-        )
         try:
-            with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:  # noqa: S310
-                payload = json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            raise JudilibreAPIError(f"OAuth JUDILIBRE refuse: HTTP {exc.code} {exc.reason}.") from exc
-        except urllib.error.URLError as exc:
-            raise JudilibreAPIError(f"OAuth JUDILIBRE indisponible: {safe_reason(exc)}.") from exc
-        except json.JSONDecodeError as exc:
-            raise JudilibreAPIError("OAuth JUDILIBRE: reponse JSON illisible.") from exc
-
-        token = payload.get("access_token")
-        if not token:
-            raise JudilibreAPIError("OAuth JUDILIBRE: access_token absent de la reponse.")
-        expires_in = int(payload.get("expires_in") or 3600)
-        cached = {
-            "access_token": token,
-            "token_type": payload.get("token_type") or "Bearer",
-            "expires_in": expires_in,
-            "expires_at": time.time() + max(60, expires_in - 60),
-            "created_at": utc_now(),
-            "from_cache": False,
-        }
-        self._write_token_cache(cached)
-        return cached
+            return self.oauth.token(force_refresh)
+        except PisteOAuthError as exc:
+            raise JudilibreAPIError(f"OAuth JUDILIBRE ({exc.status}): {exc}") from exc
 
     def auth_diagnostic(self, force_refresh: bool = False) -> dict[str, Any]:
         token = self.authenticate(force_refresh=force_refresh)
@@ -248,12 +240,33 @@ class JudilibreClient:
     def healthcheck(self) -> dict[str, Any]:
         return self._get_json("/healthcheck")
 
-    def search_decision_hits(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
+    def search_decision_hits(
+        self,
+        query: str,
+        limit: int = 5,
+        *,
+        page: int = 0,
+        jurisdiction: str | None = None,
+        chamber: str | None = None,
+        date_start: str | None = None,
+        date_end: str | None = None,
+        decision_number: str | None = None,
+    ) -> list[dict[str, Any]]:
         cleaned_query = (query or "").strip()
         if not cleaned_query:
             return []
         page_size = max(1, min(limit, 10))
-        cache_key = self._cache_key("search", {"query": cleaned_query, "page_size": page_size})
+        params = {
+            "query": cleaned_query,
+            "page_size": page_size,
+            "page": max(0, page),
+            "jurisdiction": jurisdiction,
+            "chamber": chamber,
+            "date_start": date_start,
+            "date_end": date_end,
+            "number": decision_number,
+        }
+        cache_key = self._cache_key("search", params)
         cached = self._read_response_cache(cache_key)
         if cached is not None:
             return cached
@@ -262,7 +275,7 @@ class JudilibreClient:
             if cached_by_query is not None:
                 return cached_by_query[:page_size]
 
-        payload = self._get_json("/search", {"query": cleaned_query, "page_size": page_size})
+        payload = self._get_json("/search", params)
         hits = payload.get("results") if isinstance(payload, dict) else []
         if not isinstance(hits, list):
             raise JudilibreAPIError("JUDILIBRE search: champ results absent ou invalide.")
@@ -388,12 +401,6 @@ class JudilibreClient:
         except json.JSONDecodeError as exc:
             raise JudilibreAPIError("API JUDILIBRE: reponse JSON illisible.") from exc
 
-    def _read_token_cache(self) -> dict[str, Any] | None:
-        return read_json_file(self.token_cache_path)
-
-    def _write_token_cache(self, payload: dict[str, Any]) -> None:
-        write_json_file(self.token_cache_path, payload)
-
     def _cache_key(self, kind: str, payload: dict[str, Any]) -> str:
         raw = json.dumps({"kind": kind, "payload": payload}, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
@@ -484,15 +491,18 @@ def base_source(payload: dict[str, Any], official_id: str | None, query: str | N
     theme = best_theme(payload)
     document = ", ".join(part for part in [jurisdiction, chamber, decision_date, case_number] if part)
     return {
+        "source": "judilibre",
         "document": document or JUDILIBRE_LABEL,
         "document_type": "jurisprudence",
         "source_layer": "jurisprudence",
         "source_layer_label": "Jurisprudence",
         "juridiction": jurisdiction,
         "chamber": chamber,
+        "formation": clean_text_value(payload.get("formation")),
         "decision_date": decision_date,
         "case_number": case_number,
         "theme": theme,
+        "themes": payload.get("themes") if isinstance(payload.get("themes"), list) else ([theme] if theme else []),
         "summary": short_excerpt(clean_text_value(payload.get("summary")), 700),
         "resume_court": short_excerpt(clean_text_value(payload.get("summary")), 700),
         "solution": clean_text_value(payload.get("solution")),
@@ -504,6 +514,9 @@ def base_source(payload: dict[str, Any], official_id: str | None, query: str | N
         "judilibre_id": official_id,
         "retrieved_at": utc_now(),
         "url": f"https://www.courdecassation.fr/decision/{official_id}" if official_id else None,
+        "official_reference": f"JUDILIBRE:{official_id}" if official_id else None,
+        "original_query": query,
+        "pseudonymization": payload.get("pseudonymization") or payload.get("pseudonymisation"),
         "chunk_id": official_id,
         "score": payload.get("score"),
         "query": query,

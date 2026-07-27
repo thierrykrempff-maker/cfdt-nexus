@@ -6,7 +6,9 @@ class CatalogTests(unittest.TestCase):
  def test_required_sources_present(self):
   required={"legifrance","judilibre","code_travail_numerique","dreets_grand_est","dreal_grand_est","inrs","ineris","aida","aria","georisques","anact","ameli","urssaf","echa","gestis","france_chimie","observatoire_chimie","opco_2i","data_gouv_fr"};self.assertTrue(required<=set(CATALOG_BY_ID))
  def test_all_disabled(self): self.assertTrue(all(not source.enabled for source in CATALOG))
- def test_no_unproved_implemented_connector(self): self.assertTrue(all(source.connector_status!="implemented" for source in CATALOG))
+ def test_only_proved_legal_connectors_are_implemented(self):
+  implemented={source.source_id for source in CATALOG if source.connector_status=="implemented"}
+  self.assertEqual({"legifrance","judilibre"},implemented)
  def test_france_chimie_position(self):
   source=get_catalog_source("france_chimie");self.assertEqual("employer_federation",source.publisher_type);self.assertEqual("employer_side_institution",source.institutional_position);self.assertEqual("institutional_information",source.authority_level);self.assertIn("not_neutral",source.caveats)
  def test_dreets_guidance_not_law(self): self.assertEqual("official_guidance",get_catalog_source("dreets_grand_est").authority_level)
