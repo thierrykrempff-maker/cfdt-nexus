@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+  "title": "Erreur de fabrication et procédure informatique potentiellement obsolète",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "La version de la procédure, les journaux informatiques et les consignes reçues ne sont pas fournis.",
+      "Le lien causal et la qualification du comportement restent à établir."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un catalyseur a été incorporé à une concentration erronée.",
+      "Le produit a cristallisé et une perte d'exploitation est annoncée.",
+      "Un changement récent de fournisseur avait entraîné une modification du dosage.",
+      "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+    ],
+    "facts_recognized": [],
+    "facts_contested": [],
+    "facts_alleged": [
+      "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour.",
+      "L'employeur attribue l'erreur de concentration à l'opération réalisée."
+    ],
+    "missing_information": [
+      {
+        "item": "Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+        "importance": "blocking",
+        "reason": "La procédure réellement accessible constitue le fait technique central."
+      },
+      {
+        "item": "Journaux de publication, de consultation et de modification de la recette",
+        "importance": "blocking",
+        "reason": "Ils peuvent objectiver la chronologie et la connaissance possible du nouveau dosage."
+      },
+      {
+        "item": "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+        "importance": "high",
+        "reason": "Il faut vérifier comment la nouvelle règle devait être connue."
+      },
+      {
+        "item": "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+        "importance": "high",
+        "reason": "Ces éléments répartissent les responsabilités opérationnelles et organisationnelles."
+      },
+      {
+        "item": "Erreurs antérieures, chiffrage et lien causal de la perte annoncée",
+        "importance": "high",
+        "reason": "La proportionnalité ne peut reposer sur un dommage non établi."
+      }
+    ],
+    "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Faute disciplinaire ou erreur non fautive",
+      "Insuffisance professionnelle",
+      "Défaillance organisationnelle et documentaire",
+      "Preuve du grief et du lien causal",
+      "Proportionnalité d'une sanction ou d'un licenciement"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quelle version de la recette était affichée sur le terminal au moment exact de l'incorporation ?",
+        "why_it_matters": "Établir la consigne effectivement accessible."
+      },
+      {
+        "priority": 2,
+        "question": "Quand la nouvelle recette a-t-elle été publiée, consultée et communiquée au salarié ?",
+        "why_it_matters": "Reconstituer la chronologie probatoire."
+      },
+      {
+        "priority": 3,
+        "question": "Un contrôle croisé ou une validation était-il prévu et qui en avait la responsabilité ?",
+        "why_it_matters": "Évaluer l'organisation et l'autonomie réelle."
+      },
+      {
+        "priority": 4,
+        "question": "La perte annoncée résulte-t-elle directement de ce dosage et existe-t-il des antécédents comparables ?",
+        "why_it_matters": "Contrôler causalité, gravité et proportionnalité."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Établir la recette applicable, sa diffusion et les contrôles prévus.",
+          "query_or_document": "Versions de procédure, historique informatique, fiche de lot, formation et matrice de responsabilités",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Distinguer faute, insuffisance professionnelle et cause réelle et sérieuse.",
+          "query_or_document": "Code du travail sur discipline, licenciement et preuve dans leur version applicable",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Rechercher des décisions comparables sur erreur et consigne obsolète.",
+          "query_or_document": "erreur fabrication procédure non mise à jour insuffisance professionnelle faute salarié",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Identifier les incidents de procédure ou de système déjà signalés.",
+          "query_or_document": "PV CSE/CSSCT sur gestion documentaire, changement fournisseur et erreurs de recette",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Conclure que toute erreur documentaire exclut automatiquement toute responsabilité du salarié.",
+      "Traiter la perte d'exploitation annoncée comme un montant ou un lien causal établi.",
+      "Inventer une erreur de manipulation distincte du dosage décrit."
+    ],
+    "employee_arguments": [
+      "Une procédure obsolète ou une information tardive peut révéler une défaillance organisationnelle.",
+      "L'absence de contrôle croisé peut avoir contribué à l'incident.",
+      "Une erreur ponctuelle ne caractérise pas nécessairement une faute disciplinaire."
+    ],
+    "possible_employer_arguments": [
+      "Le salarié aurait reçu la nouvelle consigne ou devait vérifier le dosage.",
+      "Son autonomie et le risque industriel imposaient une vigilance renforcée.",
+      "Le dommage annoncé et d'éventuels antécédents pourraient aggraver le grief."
+    ],
+    "risks": [
+      "Licenciement disciplinaire ou pour insuffisance professionnelle.",
+      "Attribution individuelle d'une défaillance systémique.",
+      "Altération ou mauvaise interprétation des journaux informatiques."
+    ],
+    "possible_outcomes": [
+      "Absence de sanction faute de preuve d'une consigne accessible.",
+      "Mesure corrective, formation ou rappel de procédure sans qualification disciplinaire.",
+      "Sanction proportionnée si une violation consciente d'une consigne connue est établie."
+    ],
+    "response_quality_criteria": [
+      "Faire de la version accessible et de sa chronologie la priorité.",
+      "Distinguer faute, erreur, insuffisance et organisation.",
+      "Ne pas déduire la responsabilité du seul dommage annoncé."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

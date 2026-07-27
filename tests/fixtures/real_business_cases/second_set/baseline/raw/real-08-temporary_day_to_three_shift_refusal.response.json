@@ -1,0 +1,1297 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "second_set",
+  "captured_at": "2026-07-27T10:48:50.229642+00:00",
+  "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+  "case_input_sha256": "bb9e25a29409ecc097c7df937ea864c5155c70509fb5254bd412a9717cb0afde",
+  "employee_path": "QUESTION_SALARIE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/temporary-day-to-three-shift-refusal.json",
+  "prompt_sha256": "eb7851db4470f429cb03282b732aa4bf5967d19a462b535d76b56a71761991aa",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [
+          {
+            "items": [
+              "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites."
+            ],
+            "title": "Reponse courte Juriste"
+          },
+          {
+            "items": [
+              "Source ecartee: La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? | extrait: L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur - source explicative ou pratique Source non determinante pour le raisonnement juridique.",
+              "Source ecartee: Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? | extrait: Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail. - source explicative ou pratique Source non determinante pour le raisonnement juridique."
+            ],
+            "title": "Selection juridique des sources"
+          },
+          {
+            "items": [
+              "Situation de temps de travail ou de repos a rapprocher des textes locaux applicables."
+            ],
+            "title": "Qualification juridique"
+          },
+          {
+            "items": [
+              "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+              "Explication pratique officielle: 2 source(s) remontee(s) par Nexus pour cette couche."
+            ],
+            "title": "Regle applicable"
+          },
+          {
+            "items": [
+              "Application aux faits: les sources retenues doivent etre rapprochees des dates, pieces et personnes concernees avant conclusion definitive."
+            ],
+            "title": "Application aux faits"
+          },
+          {
+            "items": [
+              "Position probable: incertaine",
+              "Pourquoi: les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires."
+            ],
+            "title": "Conclusion provisoire juridique"
+          },
+          {
+            "items": [
+              "Argument principal salarie: Qualifier les faits et les rattacher aux sources Nexus reellement remontees.",
+              "Arguments complementaires: Verifier le champ d'application des textes cites.",
+              "Arguments complementaires: Ne conclure qu'apres controle des pieces indispensables.",
+              "Appui jurisprudentiel: Aucun appui jurisprudentiel suffisamment pertinent n'a ete retenu par Nexus pour cette question.",
+              "Argument probable employeur: La direction peut contester les faits, le champ du texte ou la portee de l'interpretation.",
+              "Argument employeur sur jurisprudence: Aucun argument direction specifique issu d'une decision retenue n'est disponible.",
+              "Reponse a l'employeur: Demander une position ecrite et la source precise appliquee par la direction.",
+              "Contre-argument jurisprudence: Ne pas presenter une decision isolee comme jurisprudence constante.",
+              "Faiblesse du dossier: Le dossier reste fragile si les faits ou la source applicable ne sont pas prouves.",
+              "Preuve decisive: Une piece datee, objective et concordante peut faire basculer l'analyse.",
+              "Preuve prioritaire: Chronologie precise et piece contemporaine directement liee au fait."
+            ],
+            "title": "Argumentation de defense"
+          },
+          {
+            "items": [
+              "Niveau 1: verifier les faits et securiser les preuves avant toute conclusion.",
+              "Niveau 2: demander a la direction la source et la justification ecrite de sa position.",
+              "Niveau 4: envisager un appui juridique specialise seulement si le dossier est documente et que le blocage persiste."
+            ],
+            "title": "Strategie d'action"
+          },
+          {
+            "items": [],
+            "title": "Jurisprudence retenue"
+          },
+          {
+            "items": [
+              "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+              "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+              "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+              "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+              "Regle applicable: Explication pratique officielle: 2 source(s) remontee(s) par Nexus pour cette couche.",
+              "Application aux faits: les sources retenues doivent etre rapprochees des dates, pieces et personnes concernees avant conclusion definitive.",
+              "Conclusion provisoire: incertaine - les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires.",
+              "Regle certaine: Nexus ne peut raisonner que sur les sources locales retrouvees.",
+              "Information manquante: faits exacts et texte applicable a la situation."
+            ],
+            "title": "Analyse et raisonnement"
+          },
+          {
+            "items": [],
+            "title": "Analyse contradictoire et retour contentieux"
+          },
+          {
+            "items": [
+              "Risque: conclure trop vite sans verifier le champ des sources locales."
+            ],
+            "title": "Risques et vigilance"
+          }
+        ],
+        "paie": [
+          {
+            "items": [
+              "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: nuit, changement_roulement, cet",
+              "Regle potentiellement applicable: Changement de roulement avec prevenance inferieure a 15 jours (WT_CHANGEMENT_ROULEMENT_PREVENANCE_001) - statut to_verify, population personnel_poste, poste_continu.",
+              "Avertissement regle WT_CHANGEMENT_ROULEMENT_PREVENANCE_001: Regle a verifier humainement avant utilisation., Population non confirmee dans le contexte.",
+              "Donnees manquantes: date_information, date_changement, nombre_postes_remplaces, date_premier_repos",
+              "Pieces a fournir: planning",
+              "Avertissement: Une ou plusieurs regles sont a verifier humainement avant utilisation.",
+              "Avertissement: Calcul automatique refuse: variables incompletes ou regles non autorisees au calcul.",
+              "Avertissement: Une ou plusieurs regles affichees sont a verifier humainement avant utilisation.",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "heures de nuit",
+              "majoration nuit",
+              "base et taux appliques"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Code du travail numérique",
+        "Orchestration experte",
+        "Juriste Travail",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - droit_travail_general, temps_travail"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien de laboratoire travaille en horaire de journée depuis quatre ans.\n- L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.\n- Le salarié a formulé un refus écrit.\n- Le contrat contient une clause de variabilité des horaires.\n- L'employeur invoque un pic de production et refuse de rechercher une solution alternative.\n\nFaits reconnus :\n- Le salarié reconnaît avoir refusé par écrit le changement annoncé.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue une garde alternée incompatible avec le cycle annoncé.\n- L'employeur allègue que le besoin est temporaire et lié à un pic de production.\n\nInformations manquantes déjà identifiées :\n- Texte exact de la clause de variabilité et fonctions contractuelles [importance: blocking] — La portée de la clause ne peut pas être présumée.\n- Horaires détaillés du 3x8, présence de nuit et calendrier des six mois [importance: blocking] — Le passage éventuel au travail de nuit et l'impact concret doivent être identifiés.\n- Délai de prévenance et date d'effet [importance: high] — Le délai conditionne la possibilité réelle d'organisation familiale.\n- Justificatifs et organisation précise de la garde alternée [importance: high] — L'atteinte à la vie personnelle et familiale doit être concrètement appréciée.\n- Recherche de volontaires, permutations et traitement des salariés comparables [importance: high] — Ces éléments éclairent la nécessité et la proportionnalité de la décision."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur droit du travail, avec enjeux associes de temps de travail. L'analyse vise recherche de droit local, situation individuelle."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "droit_travail_general",
+            "temps_travail"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Juriste droit du travail V0 renforce",
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Mode principal: Defense salarie",
+            "Modes mobilises: Defense salarie"
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: incertaine."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "Defense salarie: Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+            "Defense salarie - Contradictoire: argument salarie/representants: Qualifier les faits et les rattacher aux sources Nexus reellement remontees.",
+            "Defense salarie - Contradictoire: argument direction: La direction peut contester les faits, le champ du texte ou la portee de l'interpretation.",
+            "Defense salarie - Contradictoire: preuve necessaire: Chronologie precise des faits et dates concernees.",
+            "Defense salarie - Qualification: Situation de temps de travail ou de repos a rapprocher des textes locaux applicables.",
+            "Defense salarie - Meilleur argument salarie: Qualifier les faits et les rattacher aux sources Nexus reellement remontees.",
+            "Defense salarie - Position probable employeur: La direction peut contester les faits, le champ du texte ou la portee de l'interpretation.",
+            "Defense salarie - Preuves indispensables: Chronologie precise des faits et dates concernees.",
+            "Defense salarie - Preuves indispensables: état des lieux documenté",
+            "Defense salarie - Preuves indispensables: registre incidents ou alertes",
+            "Defense salarie - Preuves indispensables: mesures de prévention existantes et prévues",
+            "Defense salarie - Risques: Risque: conclure trop vite sans verifier le champ des sources locales.",
+            "Defense salarie - Action immediate: Securiser les faits et les pieces, puis demander a la direction la source appliquee et sa justification ecrite."
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "le routage Nexus qualifie la demande sur droit_travail_general, temps_travail.",
+            "des sources locales principales ont ete retrouvees et doivent encadrer l'analyse.",
+            "Source locale identifiee: La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? | Explication pratique officielle",
+            "Source locale identifiee: Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? | Explication pratique officielle",
+            "l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+            "Nexus ne peut raisonner que sur les sources locales retrouvees.",
+            "Des sources ont ete remontees par le routeur Nexus."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "Aucun element distinct remonte par l'analyse Nexus a ce stade."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie",
+            "heures de nuit non isolees ou non majorees selon la source applicable"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "date, champ d'application et remplacement eventuel des textes cites.",
+            "articulation entre accord local, convention collective et norme superieure applicable.",
+            "faits exacts et texte applicable a la situation.",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin",
+            "heure de debut et de fin de chaque sequence",
+            "qualification des plages nuit, dimanche ou jour ferie",
+            "detail des majorations ou recuperations appliquees",
+            "Variable PayrollRule manquante: date_information",
+            "Variable PayrollRule manquante: date_changement",
+            "Variable PayrollRule manquante: nombre_postes_remplaces",
+            "Variable PayrollRule manquante: date_premier_repos"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "état des lieux documenté",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+            "état technique climatisation locaux SNCC/PROVOX",
+            "état technique des analyseurs en continu",
+            "Chronologie precise des faits et dates concernees.",
+            "bulletin de paie de la periode controlee",
+            "detail de paie ou recapitulatif des elements variables",
+            "pointage ou releve horaire valide",
+            "planning de la periode",
+            "compteurs horaires et recuperations",
+            "planning",
+            "agreement"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+            "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+            "Quelles pièces critiques sont en stock ?",
+            "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+            "Quel plan de contingence existe en cas de panne ?",
+            "Quels risques pour la sécurité process ont été identifiés ?",
+            "Quelles conséquences sur la charge mentale des équipes ?",
+            "Le DUERP a-t-il été mis à jour ?",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Position juridique probable: incertaine. les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: incertaine."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? - organisme: Ministere du Travail.",
+            "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? - mise a jour: date de mise a jour non fournie par /api/presearch; URL ou identifiant: https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail.",
+            "En pratique, la source officielle explique que: L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+            "Limite: Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+            "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? - organisme: Service-Public.fr.",
+            "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? - mise a jour: date de mise a jour non fournie par /api/presearch; URL ou identifiant: https://www.service-public.gouv.fr/particuliers/vosdroits/F31576.",
+            "En pratique, la source officielle explique que: Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail."
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+            "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: 2 source(s) remontee(s).",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? | Explication pratique officielle | couche Explication pratique officielle | origine Code du travail numérique | score 163.2967 | id officiel fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail | recupere le 2026-07-27T10:48:50+00:00 | Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1. | organisme Ministere du Travail | url/id https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail | extrait: L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+            "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? | Explication pratique officielle | couche Explication pratique officielle | origine Code du travail numérique | score 194.12094 | id officiel 7a0c9d5fd2 | recupere le 2026-07-27T10:48:50+00:00 | Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1. | organisme Service-Public.fr | url/id https://www.service-public.gouv.fr/particuliers/vosdroits/F31576 | extrait: Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail."
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+            "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+            "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+            "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert juriste ne remplace pas une validation juridique humaine.",
+            "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - droit_travail_general, temps_travail",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": null,
+      "documents_to_request": [
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu"
+      ],
+      "employee_method_analysis": {
+        "case_law": [],
+        "case_law_status": "aucune jurisprudence comparable vérifiée retrouvée",
+        "comparative_analysis": "Utiliser les sources locales comme base de travail, sans conclure avant verification humaine.",
+        "cse_elements": [],
+        "cse_status": "aucun passage vérifié de procès-verbal du CSE retrouvé",
+        "documents_after_analysis": [
+          {
+            "document": "état des lieux documenté",
+            "priority": "indispensable",
+            "utility": "Confirmer les faits déterminants et le champ de la règle."
+          },
+          {
+            "document": "registre incidents ou alertes",
+            "priority": "indispensable",
+            "utility": "Confirmer les faits déterminants et le champ de la règle."
+          },
+          {
+            "document": "mesures de prévention existantes et prévues",
+            "priority": "indispensable",
+            "utility": "Confirmer les faits déterminants et le champ de la règle."
+          },
+          {
+            "document": "calendrier de traitement",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "état technique climatisation locaux SNCC/PROVOX",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          },
+          {
+            "document": "état technique des analyseurs en continu",
+            "priority": "utile",
+            "utility": "Affiner l'analyse ou documenter la pratique."
+          }
+        ],
+        "documents_not_required": [
+          "Toute pièce sans lien expliqué avec un fait ou une règle à vérifier."
+        ],
+        "employee_arguments": [
+          "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+          "À vérifier dans une source locale à identifier ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+          "À vérifier dans une source locale à identifier ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence.",
+          "À vérifier dans une source locale à identifier ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+          "À vérifier dans une source locale à identifier : règle actuelle de repos et éventuelles dérogations."
+        ],
+        "employer_arguments": [
+          "L'employeur peut invoquer son pouvoir d'organisation, sous réserve du contrat, des accords, des faits et des garanties applicables.",
+          "Toute justification de l'employeur doit être demandée et vérifiée loyalement."
+        ],
+        "expert_advice": {
+          "collective_strategy": "Porter le sujet au CSE lorsqu'une dimension collective ou organisationnelle est objectivée.",
+          "evidence_to_preserve": [
+            "état des lieux documenté",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+            "état technique climatisation locaux SNCC/PROVOX"
+          ],
+          "immediate": "Completer les faits, relire les sources citees puis choisir la suite syndicale adaptee.",
+          "individual_strategy": "Utiliser les sources locales comme base de travail, sans conclure avant verification humaine.",
+          "risks": [
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+            "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+            "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches."
+          ]
+        },
+        "factual_answer": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+        "primary_source": [
+          {
+            "article_or_clause": null,
+            "comparison_required": true,
+            "date": null,
+            "decision_number": null,
+            "jurisdiction": null,
+            "principle": null,
+            "title": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?"
+          }
+        ],
+        "solutions": [
+          "Completer les faits, relire les sources citees puis choisir la suite syndicale adaptee.",
+          "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+          "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+          "Quelles pièces critiques sont en stock ?",
+          "Quel est le délai de réapprovisionnement des pièces manquantes ?"
+        ],
+        "source_hierarchy": [
+          "Accords d'entreprise INEOS",
+          "Convention collective nationale des industries chimiques — IDCC 44",
+          "Code du travail",
+          "Jurisprudence comparable",
+          "Historique et débats du CSE"
+        ],
+        "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de temps de travail. L'analyse vise recherche de droit local, situation individuelle."
+      },
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher 1 ou 2 contenus explicatifs officiels via le Code du travail numerique",
+          "engine": "Code du travail numérique",
+          "status": "connected"
+        }
+      ],
+      "facts": [],
+      "findings": [
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence.",
+        "À vérifier dans une source locale à identifier ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+        "À vérifier dans une source locale à identifier : règle actuelle de repos et éventuelles dérogations.",
+        "À vérifier dans une source locale à identifier : cycle actuel, salariés concernés et délai de prévenance.",
+        "À vérifier dans une source locale à identifier : garanties, contreparties et articulation avec le travail de nuit.",
+        "À vérifier dans une source locale à identifier : prime ou majoration actuelle, bénéficiaires et conditions d'ouverture."
+      ],
+      "issue_groups": [],
+      "jurisprudence_audit": [],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [
+            {
+              "article": "L3131-1",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000033020918",
+              "relevance_score": 4.45
+            }
+          ],
+          "sources_received": 1,
+          "sources_retained": 0,
+          "status": "weak",
+          "warnings": [
+            "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question."
+          ]
+        }
+      ],
+      "next_action": "Completer les faits, relire les sources citees puis choisir la suite syndicale adaptee.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien de laboratoire travaille en horaire de journée depuis quatre ans.\n- L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.\n- Le salarié a formulé un refus écrit.\n- Le contrat contient une clause de variabilité des horaires.\n- L'employeur invoque un pic de production et refuse de rechercher une solution alternative.\n\nFaits reconnus :\n- Le salarié reconnaît avoir refusé par écrit le changement annoncé.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue une garde alternée incompatible avec le cycle annoncé.\n- L'employeur allègue que le besoin est temporaire et lié à un pic de production.\n\nInformations manquantes déjà identifiées :\n- Texte exact de la clause de variabilité et fonctions contractuelles [importance: blocking] — La portée de la clause ne peut pas être présumée.\n- Horaires détaillés du 3x8, présence de nuit et calendrier des six mois [importance: blocking] — Le passage éventuel au travail de nuit et l'impact concret doivent être identifiés.\n- Délai de prévenance et date d'effet [importance: high] — Le délai conditionne la possibilité réelle d'organisation familiale.\n- Justificatifs et organisation précise de la garde alternée [importance: high] — L'atteinte à la vie personnelle et familiale doit être concrètement appréciée.\n- Recherche de volontaires, permutations et traitement des salariés comparables [importance: high] — Ces éléments éclairent la nécessité et la proportionnalité de la décision.",
+      "questions_to_ask": [
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?",
+        "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+        "Quel plan de contingence existe en cas de panne ?",
+        "Quels risques pour la sécurité process ont été identifiés ?",
+        "Quelles conséquences sur la charge mentale des équipes ?",
+        "Le DUERP a-t-il été mis à jour ?"
+      ],
+      "response_depth": "situation_individuelle",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "temps_travail"
+        ],
+        "employee_path": "QUESTION_SALARIE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours salarié général a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher 1 ou 2 contenus explicatifs officiels via le Code du travail numerique",
+            "engine": "Code du travail numérique",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "QUESTION_SALARIE",
+        "intents": [
+          "rechercher_droit_local",
+          "analyser_situation_individuelle"
+        ],
+        "main_domain": "droit_travail_general",
+        "primary_domain": "droit_travail_general",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien de laboratoire travaille en horaire de journée depuis quatre ans.\n- L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.\n- Le salarié a formulé un refus écrit.\n- Le contrat contient une clause de variabilité des horaires.\n- L'employeur invoque un pic de production et refuse de rechercher une solution alternative.\n\nFaits reconnus :\n- Le salarié reconnaît avoir refusé par écrit le changement annoncé.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue une garde alternée incompatible avec le cycle annoncé.\n- L'employeur allègue que le besoin est temporaire et lié à un pic de production.\n\nInformations manquantes déjà identifiées :\n- Texte exact de la clause de variabilité et fonctions contractuelles [importance: blocking] — La portée de la clause ne peut pas être présumée.\n- Horaires détaillés du 3x8, présence de nuit et calendrier des six mois [importance: blocking] — Le passage éventuel au travail de nuit et l'impact concret doivent être identifiés.\n- Délai de prévenance et date d'effet [importance: high] — Le délai conditionne la possibilité réelle d'organisation familiale.\n- Justificatifs et organisation précise de la garde alternée [importance: high] — L'atteinte à la vie personnelle et familiale doit être concrètement appréciée.\n- Recherche de volontaires, permutations et traitement des salariés comparables [importance: high] — Ces éléments éclairent la nécessité et la proportionnalité de la décision.",
+        "reasoning_summary": [
+          "La demande porte sur la relation de travail ou une garantie legale generale.",
+          "La demande concerne le temps de travail, les repos, horaires ou compteurs.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande concerne un dossier ou une situation de salarie."
+        ],
+        "response_profile": "public_pedagogical",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "temps_travail"
+        ],
+        "warnings": []
+      },
+      "short_answer": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": null,
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [
+            {
+              "article": null,
+              "article_or_section": null,
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+              "content_access": "presearch_description_only",
+              "content_type": "fiche pratique ministerielle",
+              "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+              "date_debut": null,
+              "date_fin": null,
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?",
+              "document_type": "explication_Code du travail numérique",
+              "etat": null,
+              "excerpt": "L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": false,
+              "idcc": null,
+              "is_in_force": null,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+              "legifrance_relevance_status": null,
+              "limite_utilisation": null,
+              "location": "",
+              "match_score": 163.2967,
+              "nature": "regle_locale_a_verifier",
+              "official_id": "fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+              "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+              "origin": "Code du travail numérique",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T10:48:50+00:00",
+              "score": 163.2967,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "Code du travail numérique",
+              "source_layer_label": "Explication pratique officielle",
+              "source_officielle": "Ministere du Travail",
+              "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "summary": "L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+              "theme": "Explication pratique officielle",
+              "title": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?",
+              "updated_at": null,
+              "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+              "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": null,
+              "version_start_date": null
+            },
+            {
+              "article": null,
+              "article_or_section": null,
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+              "content_access": "presearch_description_only",
+              "content_type": "fiche pratique officielle",
+              "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+              "date_debut": null,
+              "date_fin": null,
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ?",
+              "document_type": "explication_Code du travail numérique",
+              "etat": null,
+              "excerpt": "Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": false,
+              "idcc": null,
+              "is_in_force": null,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "7a0c9d5fd2",
+              "legifrance_relevance_status": null,
+              "limite_utilisation": null,
+              "location": "",
+              "match_score": 194.12094,
+              "nature": "regle_locale_a_verifier",
+              "official_id": "7a0c9d5fd2",
+              "official_origin": "service-public.fr",
+              "origin": "Code du travail numérique",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T10:48:50+00:00",
+              "score": 194.12094,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "Code du travail numérique",
+              "source_layer_label": "Explication pratique officielle",
+              "source_officielle": "Service-Public.fr",
+              "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "summary": "Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail.",
+              "theme": "Explication pratique officielle",
+              "title": "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ?",
+              "updated_at": null,
+              "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31576",
+              "url_or_id": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31576",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": null,
+              "version_start_date": null
+            }
+          ],
+          "status": "present"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique ministerielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 163.2967,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:50+00:00",
+          "score": 163.2967,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Ministere du Travail",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+          "theme": "Explication pratique officielle",
+          "title": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?",
+          "updated_at": null,
+          "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        },
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique officielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "7a0c9d5fd2",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 194.12094,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "7a0c9d5fd2",
+          "official_origin": "service-public.fr",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:50+00:00",
+          "score": 194.12094,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Service-Public.fr",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail.",
+          "theme": "Explication pratique officielle",
+          "title": "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ?",
+          "updated_at": null,
+          "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31576",
+          "url_or_id": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31576",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        }
+      ],
+      "understanding": "Demande portant principalement sur droit du travail, avec enjeux associes de temps de travail. L'analyse vise recherche de droit local, situation individuelle.",
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+        "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+        "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Utiliser les sources locales comme base de travail, sans conclure avant verification humaine."
+    },
+    "expert_juriste": {
+      "action_conseillee": [
+        "Niveau 1: verifier les faits et securiser les preuves avant toute conclusion.",
+        "Niveau 2: demander a la direction la source et la justification ecrite de sa position.",
+        "Niveau 4: envisager un appui juridique specialise seulement si le dossier est documente et que le blocage persiste."
+      ],
+      "active": true,
+      "analyse_et_raisonnement": [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        "Regle applicable: Code du travail: Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+        "Regle applicable: Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+        "Regle applicable: Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+        "Regle applicable: Explication pratique officielle: 2 source(s) remontee(s) par Nexus pour cette couche.",
+        "Application aux faits: les sources retenues doivent etre rapprochees des dates, pieces et personnes concernees avant conclusion definitive.",
+        "Conclusion provisoire: incertaine - les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires.",
+        "Regle certaine: Nexus ne peut raisonner que sur les sources locales retrouvees.",
+        "Information manquante: faits exacts et texte applicable a la situation."
+      ],
+      "ce_qui_depend_accord_statut_element_manquant": [
+        "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
+        "Information manquante: articulation entre accord local, convention collective et norme superieure applicable."
+      ],
+      "ce_qui_est_etabli_par_sources": [
+        "Regle certaine: le routage Nexus qualifie la demande sur droit_travail_general, temps_travail.",
+        "Regle certaine: des sources locales principales ont ete retrouvees et doivent encadrer l'analyse.",
+        "Source locale identifiee: La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? | Explication pratique officielle",
+        "Source locale identifiee: Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? | Explication pratique officielle"
+      ],
+      "limites": [
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+        "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+        "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+        "Verifier l'applicabilite, la date et le champ des textes cites."
+      ],
+      "position_de_travail_proposee": "Utiliser les sources locales comme base de travail, sans conclure avant verification humaine.",
+      "qualification_juridique_situation": "Situation de temps de travail ou de repos a rapprocher des textes locaux applicables.",
+      "questions_a_poser_direction": [
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?"
+      ],
+      "response_courte": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+      "risques_points_vigilance": [
+        "Risque: conclure trop vite sans verifier le champ des sources locales."
+      ]
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie",
+        "heures de nuit non isolees ou non majorees selon la source applicable"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu",
+        "planning",
+        "agreement",
+        "kelio"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin",
+        "heure de debut et de fin de chaque sequence",
+        "qualification des plages nuit, dimanche ou jour ferie",
+        "detail des majorations ou recuperations appliquees",
+        "Variable PayrollRule manquante: date_information",
+        "Variable PayrollRule manquante: date_changement",
+        "Variable PayrollRule manquante: nombre_postes_remplaces",
+        "Variable PayrollRule manquante: date_premier_repos"
+      ],
+      "elements_du_bulletin_concernes": [
+        "heures de nuit",
+        "majoration nuit",
+        "base et taux appliques"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "Une ou plusieurs regles sont a verifier humainement avant utilisation.",
+        "Calcul automatique refuse: variables incompletes ou regles non autorisees au calcul.",
+        "Une ou plusieurs regles affichees sont a verifier humainement avant utilisation.",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee.",
+        "La population ou le salarie concerne n'est pas identifie.",
+        "Le compteur ou releve Kelio indispensable n'est pas disponible.",
+        "L'accord indispensable a l'analyse n'est pas disponible."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin.",
+      "regles_ou_sources_disponibles": [
+        "Source locale a verifier: La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ? | Explication pratique officielle",
+        "Source locale a verifier: Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ? | Explication pratique officielle",
+        "PayrollRule: Changement de roulement avec prevenance inferieure a 15 jours (WT_CHANGEMENT_ROULEMENT_PREVENANCE_001) - statut to_verify, confiance medium"
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu",
+        "Chronologie precise des faits et dates concernees.",
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "planning",
+        "agreement"
+      ],
+      "domaines_detectes": [
+        "droit_travail_general",
+        "temps_travail"
+      ],
+      "experts_mobilises": [
+        "Expert Juriste droit du travail V0 renforce",
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: des resultats ont ete recus mais aucun article n'est suffisamment pertinent pour appuyer juridiquement cette question.",
+        "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+        "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+        "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Position juridique probable: incertaine. les sources disponibles ne permettent pas de qualifier une position plus nette sans faits et pieces complementaires.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien de laboratoire travaille en horaire de journée depuis quatre ans.\n- L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.\n- Le salarié a formulé un refus écrit.\n- Le contrat contient une clause de variabilité des horaires.\n- L'employeur invoque un pic de production et refuse de rechercher une solution alternative.\n\nFaits reconnus :\n- Le salarié reconnaît avoir refusé par écrit le changement annoncé.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue une garde alternée incompatible avec le cycle annoncé.\n- L'employeur allègue que le besoin est temporaire et lié à un pic de production.\n\nInformations manquantes déjà identifiées :\n- Texte exact de la clause de variabilité et fonctions contractuelles [importance: blocking] — La portée de la clause ne peut pas être présumée.\n- Horaires détaillés du 3x8, présence de nuit et calendrier des six mois [importance: blocking] — Le passage éventuel au travail de nuit et l'impact concret doivent être identifiés.\n- Délai de prévenance et date d'effet [importance: high] — Le délai conditionne la possibilité réelle d'organisation familiale.\n- Justificatifs et organisation précise de la garde alternée [importance: high] — L'atteinte à la vie personnelle et familiale doit être concrètement appréciée.\n- Recherche de volontaires, permutations et traitement des salariés comparables [importance: high] — Ces éléments éclairent la nécessité et la proportionnalité de la décision.",
+      "questions_utiles": [
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?",
+        "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+        "Quel plan de contingence existe en cas de panne ?",
+        "Quels risques pour la sécurité process ont été identifiés ?",
+        "Quelles conséquences sur la charge mentale des équipes ?",
+        "Le DUERP a-t-il été mis à jour ?",
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie"
+      ],
+      "reponse_synthetique_nexus": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: incertaine.",
+      "sources": [
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique ministerielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 163.2967,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "fiches_ministere_travail:la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:50+00:00",
+          "score": 163.2967,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Ministere du Travail",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "L'employeur peut proposer au salarié une modification d’un élément essentiel de son contrat de travail ou un simple changement de ses conditions de travail.Situation des salariés protégés L’employeur",
+          "theme": "Explication pratique officielle",
+          "title": "La modification du contrat de travail : l'employeur peut-il modifier le contrat de travail ?",
+          "updated_at": null,
+          "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-modification-du-contrat-de-travail#lemployeur-peut-il-modifier-le-contrat-de-travail",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        },
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique officielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "7a0c9d5fd2",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 194.12094,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "7a0c9d5fd2",
+          "official_origin": "service-public.fr",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:50+00:00",
+          "score": 194.12094,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Service-Public.fr",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "Une clause de mobilité est une disposition prévoyant que le salarié accepte la modification de son lieu de travail.",
+          "theme": "Explication pratique officielle",
+          "title": "Qu'est-ce qu'une clause de mobilité dans le contrat de travail d’un salarié ?",
+          "updated_at": null,
+          "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31576",
+          "url_or_id": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31576",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        }
+      ]
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}

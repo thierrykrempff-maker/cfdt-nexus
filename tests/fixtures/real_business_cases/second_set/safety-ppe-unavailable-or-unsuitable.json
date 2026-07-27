@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+  "title": "EPI indisponible ou inadapté lors d'une opération sur acide sulfurique",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Les consignes, stocks, signalements et circonstances exactes de l'opération ne sont pas produits.",
+      "Une analyse initiale est possible, mais pas une conclusion définitive sur la faute ou la sanction."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+      "L'opération concernait la manipulation d'une vanne d'acide sulfurique.",
+      "Le salarié porte des lunettes de vue.",
+      "Le modèle correcteur adapté aurait été en rupture de stock.",
+      "Le salarié a huit ans d'ancienneté."
+    ],
+    "facts_recognized": [],
+    "facts_contested": [],
+    "facts_alleged": [
+      "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+      "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+      "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+    ],
+    "missing_information": [
+      {
+        "item": "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+        "importance": "blocking",
+        "reason": "Il faut identifier les équipements obligatoires et la règle effectivement portée à la connaissance du salarié."
+      },
+      {
+        "item": "État des stocks et solutions de remplacement disponibles au moment des faits",
+        "importance": "blocking",
+        "reason": "La disponibilité et l'adaptation concrètes des EPI conditionnent l'analyse des responsabilités."
+      },
+      {
+        "item": "Formation, information et habilitation reçues par le salarié",
+        "importance": "high",
+        "reason": "Elles permettent d'apprécier la connaissance du risque et la conduite attendue."
+      },
+      {
+        "item": "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+        "importance": "high",
+        "reason": "L'absence d'alternative et le degré d'urgence doivent être vérifiés, non supposés."
+      },
+      {
+        "item": "Signalements antérieurs et comportement du salarié avant et après le retrait",
+        "importance": "high",
+        "reason": "Ces éléments éclairent la prévention, la réaction au risque et la proportionnalité."
+      }
+    ],
+    "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Obligation de sécurité et mise à disposition d'EPI appropriés",
+      "Obligation du salarié de prendre soin de sa sécurité et de celle d'autrui",
+      "Information, formation et consignes de sécurité",
+      "Exercice éventuel d'un droit de retrait",
+      "Qualification et proportionnalité d'une sanction disciplinaire"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quels EPI la consigne écrite imposait-elle exactement pour cette opération ?",
+        "why_it_matters": "Délimiter le manquement reproché à partir d'une règle précise."
+      },
+      {
+        "priority": 2,
+        "question": "La visière, les gants spécifiques et une protection compatible avec les lunettes de vue étaient-ils réellement disponibles ?",
+        "why_it_matters": "Comparer les moyens fournis au risque et aux besoins du salarié."
+      },
+      {
+        "priority": 3,
+        "question": "Le salarié pouvait-il arrêter ou reporter l'opération et avait-il signalé l'inadaptation des équipements ?",
+        "why_it_matters": "Évaluer les choix possibles et les responsabilités respectives."
+      },
+      {
+        "priority": 4,
+        "question": "Quelle formation et quelle information avaient été reçues, et comment le salarié a-t-il réagi après le retrait ?",
+        "why_it_matters": "Apprécier la conscience du risque et la proportionnalité."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Identifier les EPI, consignes et sanctions applicables localement.",
+          "query_or_document": "Règlement intérieur, DUERP, procédure acide sulfurique, fiches de poste et registre EPI",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Vérifier les obligations relatives aux EPI, à la sécurité et au droit de retrait.",
+          "query_or_document": "Code du travail : équipements de protection individuelle, obligations de sécurité, articles L. 4122-1 et L. 4131-1 à vérifier dans leur version applicable",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Rechercher des décisions comparables sans en déduire une règle automatique.",
+          "query_or_document": "sanction disciplinaire EPI indisponible inadapté salarié obligation sécurité",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Vérifier les alertes sur les EPI, ruptures de stock et protections correctrices.",
+          "query_or_document": "PV CSE/CSSCT relatifs aux EPI, à l'acide sulfurique et aux ruptures de stock",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Conclure que l'indisponibilité alléguée d'un EPI supprime automatiquement toute faute.",
+      "Présenter la sanction ou son quantum comme déjà connus.",
+      "Inventer un droit de retrait effectivement exercé."
+    ],
+    "employee_arguments": [
+      "L'employeur devait fournir un équipement disponible et adapté au risque ainsi qu'aux besoins visuels.",
+      "La buée et la rupture de stock peuvent expliquer la difficulté, sous réserve de preuve et du comportement adopté.",
+      "L'ancienneté et l'absence éventuelle d'antécédents peuvent compter dans la proportionnalité."
+    ],
+    "possible_employer_arguments": [
+      "Le risque chimique et le classement Seveso imposaient le respect strict des consignes.",
+      "Des protections standards ou une possibilité d'arrêt auraient pu être disponibles.",
+      "Le salarié devait signaler le problème et ne pas poursuivre sans protection."
+    ],
+    "risks": [
+      "Risque grave pour la santé du salarié et d'autres personnes.",
+      "Faute disciplinaire possible si une consigne claire et des moyens adaptés étaient disponibles.",
+      "Défaillance préventive possible si les EPI étaient indisponibles ou inadaptés."
+    ],
+    "possible_outcomes": [
+      "Absence de sanction si le grief ou les moyens disponibles ne sont pas établis.",
+      "Sanction réduite ou mesure de prévention renforcée.",
+      "Sanction disciplinaire proportionnée si le manquement conscient est démontré."
+    ],
+    "response_quality_criteria": [
+      "Séparer l'indisponibilité alléguée, l'inadaptation alléguée et le comportement établi.",
+      "Comparer les obligations respectives aux moyens réellement disponibles.",
+      "Ne pas transformer la sécurité Seveso en culpabilité automatique."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "partially_known",
+      "facts": [
+        "Le récit annonce une mise à pied disciplinaire de trois jours, sans décision juridictionnelle vérifiable fournie."
+      ],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}

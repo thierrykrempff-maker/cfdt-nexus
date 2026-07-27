@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Registre des affirmations et références juridiques du récit source qui ne doivent pas être apprises comme des autorités certaines.",
+  "allowed_statuses": [
+    "VERIFIED",
+    "TO_VERIFY",
+    "INCOMPLETE_REFERENCE",
+    "UNSUPPORTED_ASSERTION"
+  ],
+  "references": [
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "provided_reference": "Une décision prud'homale non identifiée aurait retenu une mise à pied de trois jours.",
+      "status": "INCOMPLETE_REFERENCE",
+      "missing_information": [
+        "Juridiction",
+        "Date complète",
+        "Numéro de décision",
+        "Source vérifiable"
+      ],
+      "recommended_query": {
+        "service": "JUDILIBRE",
+        "query": "EPI indisponible inadapté mise à pied opérateur acide sulfurique"
+      },
+      "risk_if_unverified": "Attribuer à une juridiction une solution non traçable et transformer une issue de récit en règle."
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "provided_reference": "La vie familiale permettrait de refuser un changement d'horaires.",
+      "status": "UNSUPPORTED_ASSERTION",
+      "missing_information": [
+        "Texte ou décision invoqué",
+        "Conditions factuelles de la règle alléguée"
+      ],
+      "recommended_query": {
+        "service": "LEGIFRANCE_AND_JUDILIBRE",
+        "query": "passage jour 3x8 garde alternée vie personnelle clause horaires refus"
+      },
+      "risk_if_unverified": "Présenter comme absolu un contrôle de proportionnalité nécessairement dépendant des faits."
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "provided_reference": "Une procédure non mise à jour exclurait la responsabilité du salarié.",
+      "status": "UNSUPPORTED_ASSERTION",
+      "missing_information": [
+        "Source juridique",
+        "Circonstances de connaissance de la consigne",
+        "Répartition des contrôles"
+      ],
+      "recommended_query": {
+        "service": "JUDILIBRE",
+        "query": "erreur fabrication procédure obsolète faute insuffisance professionnelle salarié"
+      },
+      "risk_if_unverified": "Effacer automatiquement toute responsabilité individuelle sans analyser connaissance et comportement."
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "provided_reference": "Une ancienneté de quinze ans sans antécédent exclurait la faute grave.",
+      "status": "UNSUPPORTED_ASSERTION",
+      "missing_information": [
+        "Décision identifiable",
+        "Comparabilité du poste et du contrôle"
+      ],
+      "recommended_query": {
+        "service": "LEGIFRANCE_AND_JUDILIBRE",
+        "query": "alcoolémie cariste poste à risque faute grave ancienneté règlement intérieur"
+      },
+      "risk_if_unverified": "Promettre une qualification alors que sécurité, procédure et risque concret doivent être mis en balance."
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "provided_reference": "La fatigue ou la provocation ferait automatiquement disparaître la faute.",
+      "status": "UNSUPPORTED_ASSERTION",
+      "missing_information": [
+        "Décision identifiable",
+        "Mots exacts et nature de la provocation",
+        "Données de temps de travail"
+      ],
+      "recommended_query": {
+        "service": "JUDILIBRE",
+        "query": "insultes supérieur fatigue travail de nuit provocation faute grave"
+      },
+      "risk_if_unverified": "Transformer un contexte potentiellement atténuant en immunité disciplinaire."
+    },
+    {
+      "case_id": "SECOND_SET_ALL",
+      "provided_reference": "La mention générale « jurisprudence constante » sans décision identifiable.",
+      "status": "INCOMPLETE_REFERENCE",
+      "missing_information": [
+        "Juridiction",
+        "Date",
+        "Numéro",
+        "Lien ou source officielle"
+      ],
+      "recommended_query": {
+        "service": "LEGIFRANCE_AND_JUDILIBRE",
+        "query": "Rechercher séparément chaque proposition juridique à partir des faits de chaque cas."
+      },
+      "risk_if_unverified": "Donner une autorité artificielle à une affirmation du récit source."
+    }
+  ]
+}

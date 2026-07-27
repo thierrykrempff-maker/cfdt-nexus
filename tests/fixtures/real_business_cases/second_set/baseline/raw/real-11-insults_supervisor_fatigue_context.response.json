@@ -1,0 +1,1916 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "second_set",
+  "captured_at": "2026-07-27T10:48:53.076808+00:00",
+  "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+  "case_input_sha256": "1020d5e7c9b7d4f9e8367bdc7a958083a9b186a7dcd1991261d3c51366e2f49e",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/insults-supervisor-fatigue-context.json",
+  "prompt_sha256": "9f7051f7fe30df134fae4ba736e33bcb716737a38c76b5f3e0f2fbc5f6298311",
+  "response": {
+    "analysis_report": {
+      "expert_sections": {
+        "juriste": [
+          {
+            "items": [
+              "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion."
+            ],
+            "title": "Reponse courte Juriste"
+          },
+          {
+            "items": [
+              "Source principale: Code du travail | L3131-1 | extrait: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret. - terme utile: repos; terme utile: duree; source normative Code du travail; cible le temps de travail ou le repos",
+              "Source principale: Code du travail | L3132-2 | extrait: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier. - terme utile: repos; terme utile: duree; source normative Code du travail; cible le temps de travail ou le repos",
+              "Source contextuelle: La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n - terme utile: sanction; terme utile: disciplinaire; source explicative ou pratique; cible directement la procedure ou sanction disciplinaire; aide explicative officielle conservee comme contexte, pas comme regle opposable",
+              "Source contextuelle: La sanction disciplinaire : quelle est la procédure ? | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave - terme utile: sanction; terme utile: disciplinaire; terme utile: procedure; terme utile: grief; source explicative ou pratique"
+            ],
+            "title": "Selection juridique des sources"
+          },
+          {
+            "items": [
+              "Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries."
+            ],
+            "title": "Qualification juridique"
+          },
+          {
+            "items": [
+              "Code du travail | L3131-1 | extrait: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.: la source encadre le temps de travail, le repos ou la reprise apres interruption. Extrait utile: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+              "Code du travail | L3132-2 | extrait: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.: la source encadre le temps de travail, le repos ou la reprise apres interruption. Extrait utile: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier."
+            ],
+            "title": "Regle applicable"
+          },
+          {
+            "items": [
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+              "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+              "Application aux faits: Projet CSE: impact possible sante-securite et conditions de travail.",
+              "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV."
+            ],
+            "title": "Application aux faits"
+          },
+          {
+            "items": [
+              "Position probable: favorable a une exigence d'information-consultation documentee",
+              "Pourquoi: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position."
+            ],
+            "title": "Conclusion provisoire juridique"
+          },
+          {
+            "items": [
+              "Argument principal salarie: Obtenir une information complete et loyale avant toute discussion de fond sur la reorganisation.",
+              "Arguments complementaires: Demander les impacts sur emploi, horaires, charge, competences, remuneration et sante-securite.",
+              "Arguments complementaires: Faire inscrire au proces-verbal les documents demandes, reponses donnees et reserves des elus.",
+              "Arguments complementaires: Relancer par ecrit si les donnees restent incompletes.",
+              "Appui jurisprudentiel: Aucun appui jurisprudentiel suffisamment pertinent n'a ete retenu par Nexus pour cette question.",
+              "Argument probable employeur: La direction peut soutenir que le projet releve de son pouvoir d'organisation ou que les informations transmises suffisent.",
+              "Argument employeur sur jurisprudence: Aucun argument direction specifique issu d'une decision retenue n'est disponible.",
+              "Reponse a l'employeur: Ramener la discussion aux impacts concrets pour les salaries et aux documents manquants.",
+              "Reponse a l'employeur: Demander des indicateurs de suivi et des engagements dates.",
+              "Contre-argument jurisprudence: Ne pas presenter une decision isolee comme jurisprudence constante.",
+              "Faiblesse du dossier: La faiblesse principale serait une discussion CSE sans documents suffisants ni delai utile.",
+              "Preuve decisive: La preuve qui fait basculer: impacts concrets sur postes, horaires, charge ou sante non documentes par la direction.",
+              "Preuve prioritaire: Note projet, effectifs avant/apres, planning cible, impacts par metier, analyse de risques et calendrier."
+            ],
+            "title": "Argumentation de defense"
+          },
+          {
+            "items": [
+              "Action immediate: demander par ecrit les documents manquants avant la reunion ou en debut de seance.",
+              "Demande ecrite: obtenir impacts emploi, horaires, charge, competences, calendrier et mesures d'accompagnement.",
+              "Pieces a securiser: note projet, organigrammes avant/apres, planning cible, analyse de risques et indicateurs de suivi.",
+              "Intervention DS/CSE: poser les questions prioritaires et faire inscrire reponses, reserves et engagements au PV.",
+              "Contestation: demander report ou relance si les informations ne permettent pas une discussion utile.",
+              "Escalade eventuelle: solliciter appui juridique ou expertise selon l'ampleur et les impacts du projet."
+            ],
+            "title": "Strategie d'action"
+          },
+          {
+            "items": [],
+            "title": "Jurisprudence retenue"
+          },
+          {
+            "items": [
+              "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+              "Regle applicable: Code du travail | L3131-1 | extrait: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.: la source encadre le temps de travail, le repos ou la reprise apres interruption. Extrait utile: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+              "Regle applicable: Code du travail | L3132-2 | extrait: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.: la source encadre le temps de travail, le repos ou la reprise apres interruption. Extrait utile: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.",
+              "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+              "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+              "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+              "Application aux faits: Projet CSE: impact possible sante-securite et conditions de travail.",
+              "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV.",
+              "Conclusion provisoire: favorable a une exigence d'information-consultation documentee - Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position.",
+              "Regle certaine: un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
+              "Interpretation: une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets.",
+              "Hypothese: les enjeux sante-securite deviennent prioritaires si les horaires, charges, effectifs ou conditions de travail sont modifies."
+            ],
+            "title": "Analyse et raisonnement"
+          },
+          {
+            "items": [],
+            "title": "Analyse contradictoire et retour contentieux"
+          },
+          {
+            "items": [
+              "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+              "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+              "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+              "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles."
+            ],
+            "title": "Risques et vigilance"
+          }
+        ],
+        "paie": [
+          {
+            "items": [
+              "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin."
+            ],
+            "title": "Objet du controle paie"
+          },
+          {
+            "items": [
+              "Themes detectes: nuit, 5x8, intervention, cet, repos",
+              "Regle potentiellement applicable: Rappel en astreinte (PAY_RAPPEL_ASTREINTE_001) - statut to_verify, population tous.",
+              "Avertissement regle PAY_RAPPEL_ASTREINTE_001: Regle a verifier humainement avant utilisation., Confiance documentaire faible.",
+              "Regle ecartee: Changement de roulement avec prevenance inferieure a 15 jours (WT_CHANGEMENT_ROULEMENT_PREVENANCE_001) - raison faible_pertinence_affichage.",
+              "Regle ecartee: Prelevement RJFJ vers JR (WT_5X8_RJFJ_TO_JR_001) - raison faible_pertinence_affichage.",
+              "Regle ecartee: Liberte d'utilisation RJFJ/RJFN apres regularisation (WT_5X8_RJFJ_RJFN_USAGE_001) - raison faible_pertinence_affichage.",
+              "Donnees manquantes: planning_astreinte, heure_appel, heure_debut_intervention, heure_fin_intervention, temps_deplacement",
+              "Pieces a fournir: planning, releve_kelio",
+              "Avertissement: Une ou plusieurs regles sont a verifier humainement avant utilisation.",
+              "Avertissement: Une ou plusieurs sources ont une confiance faible.",
+              "Avertissement: rule_conflict: PAY_HOLIDAY_POSTED_NORMAL_001, PAY_HOLIDAY_POSTED_REST_001, PAY_MAINTIEN_POSTE_NON_PREVU_001, PAY_RAPPEL_ASTREINTE_001, PAY_RAPPEL_HORS_ASTREINTE_001, WT_5X8_JOURS_DUS_001, WT_5X8_JR_REGULARISATION_001, WT_5X8_RCTP_001, WT_5X8_RCTR_001, WT_5X8_RJFJ_TO_JR_001 (WT_5X8_RJFJ_TO_JR_001 / WT_5X8_RCTR_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RJFJ_TO_JR_001 / WT_5X8_RCTP_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RJFJ_TO_JR_001 / WT_5X8_JR_REGULARISATION_001: meme theme metier recuperation_jour_ferie, contexte 5x8 et effet incompatible; WT_5X8_RJFJ_TO_JR_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTR_001 / WT_5X8_RCTP_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTR_001 / WT_5X8_JR_REGULARISATION_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTR_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTP_001 / WT_5X8_JR_REGULARISATION_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTP_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_JR_REGULARISATION_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; PAY_HOLIDAY_POSTED_REST_001 / PAY_HOLIDAY_POSTED_NORMAL_001: meme theme metier jour_ferie, contexte 5x8 et effet incompatible; PAY_HOLIDAY_POSTED_REST_001 / PAY_RAPPEL_HORS_ASTREINTE_001: meme theme metier heures_exceptionnelles, contexte repos et effet incompatible; PAY_HOLIDAY_POSTED_REST_001 / PAY_MAINTIEN_POSTE_NON_PREVU_001: meme theme metier heures_exceptionnelles, contexte repos et effet incompatible; PAY_RAPPEL_ASTREINTE_001 / PAY_RAPPEL_HORS_ASTREINTE_001: meme theme metier rappel, contexte repos et effet incompatible; PAY_RAPPEL_HORS_ASTREINTE_001 / PAY_MAINTIEN_POSTE_NON_PREVU_001: meme theme metier heures_exceptionnelles, contexte repos et effet incompatible)",
+              "Avertissement: Calcul automatique refuse: variables incompletes ou regles non autorisees au calcul.",
+              "Calcul automatique: non execute dans le LOT 3. Validation humaine obligatoire avant tout chiffrage."
+            ],
+            "title": "Analyse Paie INEOS"
+          },
+          {
+            "items": [
+              "heures de nuit",
+              "majoration nuit",
+              "base et taux appliques"
+            ],
+            "title": "Elements du bulletin concernes"
+          },
+          {
+            "items": [
+              "Identifier la rubrique controlee, la periode et la source locale applicable.",
+              "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+              "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.",
+              "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+              "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+            ],
+            "title": "Methode de controle"
+          },
+          {
+            "items": [
+              "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin."
+            ],
+            "title": "Calcul detaille"
+          }
+        ]
+      },
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Code du travail numérique",
+        "Orchestration experte",
+        "Juriste Travail",
+        "Expert Paie",
+        "Rapport Nexus"
+      ],
+      "sections": [
+        {
+          "id": "titre",
+          "items": [
+            "Dossier salarie - cssct_securite, temps_travail, disciplinaire"
+          ],
+          "title": "Titre du dossier"
+        },
+        {
+          "id": "question",
+          "items": [
+            "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien travaillait en poste de nuit.\n- Il venait d'intervenir sur une fuite de vapeur sous la pluie.\n- Des propos insultants envers son superviseur ont été tenus devant trois collègues.\n- Les propos ont suivi une remarque du superviseur sur le temps d'intervention.\n- L'employeur envisage une qualification de faute grave.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue avoir effectué cinq postes de nuit successifs.\n- L'absence non remplacée d'un collègue est alléguée.\n- Une fatigue importante et une surcharge sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Mots exacts, ton, durée et présence éventuelle d'une menace [importance: blocking] — La qualification et la gravité dépendent des propos précis.\n- Nature exacte de la remarque du superviseur et échanges précédents [importance: high] — Il faut distinguer provocation réelle et simple remarque professionnelle.\n- Planning, durée du travail et repos quotidien et hebdomadaire [importance: blocking] — La fatigue et la conformité des cinq nuits doivent être objectivées.\n- Charge réelle, remplacement du collègue absent et conditions de l'intervention [importance: high] — Le contexte de surcharge doit être établi par des éléments concrets.\n- Antécédents, regrets, excuses et conséquences sur le service [importance: high] — Ces éléments influencent fortement la proportionnalité."
+          ],
+          "title": "Question"
+        },
+        {
+          "id": "resume",
+          "items": [
+            "Demande portant principalement sur disciplinaire, avec enjeux associes de CSSCT/securite, temps de travail. L'analyse vise recherche de droit local, preparation CSSCT, situation individuelle."
+          ],
+          "title": "Resume du probleme"
+        },
+        {
+          "id": "domaines",
+          "items": [
+            "cssct_securite",
+            "temps_travail",
+            "disciplinaire"
+          ],
+          "title": "Domaines detectes"
+        },
+        {
+          "id": "experts",
+          "items": [
+            "Expert Juriste droit du travail V0 renforce",
+            "Expert Paie V0"
+          ],
+          "title": "Experts reellement mobilises"
+        },
+        {
+          "id": "modes_metier",
+          "items": [
+            "Mode principal: CSE/CSSCT",
+            "Modes mobilises: CSE/CSSCT, Defense salarie"
+          ],
+          "title": "Modes metier detectes"
+        },
+        {
+          "id": "synthese",
+          "items": [
+            "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: favorable a une exigence d'information-consultation documentee."
+          ],
+          "title": "Synthese Nexus"
+        },
+        {
+          "id": "analyse_metier",
+          "items": [
+            "CSE/CSSCT: Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries.",
+            "CSE/CSSCT - Contradictoire: argument salarie/representants: Le projet modifie plusieurs dimensions de l'organisation; ses impacts doivent etre documentes avant que le CSE puisse rendre un avis utile si une consultation est juridiquement requise.",
+            "CSE/CSSCT - Contradictoire: argument direction: La direction peut soutenir qu'il s'agit d'une simple adaptation d'organisation relevant du pouvoir de direction, sans impact majeur.",
+            "CSE/CSSCT - Contradictoire: preuve necessaire: Organigramme avant/apres, effectifs, fiches de poste, horaires, charge mesuree, absenteisme, heures supplementaires, incidents, accidents, analyse des risques et calendrier.",
+            "CSE/CSSCT - Nature juridique: Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries.",
+            "CSE/CSSCT - Qualification du projet: Projet CSE: impact possible sante-securite et conditions de travail.",
+            "CSE/CSSCT - Droits probables du CSE: Exiger que la direction qualifie formellement le point: simple information ou consultation du CSE.",
+            "CSE/CSSCT - Droits probables du CSE: Demander une information complete, precise et exploitable avant la reunion ou avant avis.",
+            "CSE/CSSCT - Droits probables du CSE: Demander les consequences concretes du projet sur emploi, horaires, taches, charge, competences et remuneration.",
+            "CSE/CSSCT - Droits probables du CSE: Faire inscrire au proces-verbal les documents demandes, les reponses obtenues, les reserves et les engagements de suivi.",
+            "CSE/CSSCT - Points a confirmer: La direction qualifie-t-elle le point comme information simple ou consultation avec avis ?",
+            "CSE/CSSCT - Points a confirmer: Combien de postes, salaries, equipes et regimes horaires sont concernes ?",
+            "CSE/CSSCT - Points a confirmer: Les changements modifient-ils la charge, les competences, la polyvalence, la securite ou la remuneration ?",
+            "CSE/CSSCT - Points a confirmer: Quels documents ont ete remis et a quelle date pour apprecier le delai utile ?",
+            "CSE/CSSCT - Documents manquants: Note de presentation du projet.",
+            "CSE/CSSCT - Documents manquants: Organigrammes et effectifs avant/apres.",
+            "CSE/CSSCT - Documents manquants: Tableau des effectifs et equipes concernees, meme en l'absence de suppression annoncee.",
+            "CSE/CSSCT - Documents manquants: Calendrier de mise en oeuvre.",
+            "CSE/CSSCT - Suppressions de postes: Aucune suppression de poste n'est etablie dans la question; verifier les effectifs avant/apres.",
+            "CSE/CSSCT - Changement horaires: Aucun changement d'horaires n'est etabli; demander le planning cible si la direction evoque une adaptation.",
+            "CSE/CSSCT - Modification taches: Aucune modification de taches n'est etablie; demander une matrice activites actuelles / activites futures.",
+            "CSE/CSSCT - Charge de travail: Demander une mesure avant/apres: volumes, nombre d'interventions, heures supplementaires, retards, priorites abandonnees et charge par equipe.",
+            "CSE/CSSCT - Charge de travail: Verifier si les taches des postes supprimes sont absorbees par les salaries restants sans moyens supplementaires.",
+            "CSE/CSSCT - Sante securite: Verifier fatigue, travail isole, gestes critiques, coactivite, formation, habilitations, risques d'erreur et mise a jour du DUERP.",
+            "CSE/CSSCT - Sante securite: Si le projet modifie fortement les conditions de travail ou la sante-securite, verifier les conditions legales d'une expertise CSE.",
+            "CSE/CSSCT - Delais: Date de remise des documents.",
+            "CSE/CSSCT - Delais: Date de reunion et delai utile d'analyse.",
+            "CSE/CSSCT - Delais: Existence d'une consultation formelle et echeance eventuelle d'avis."
+          ],
+          "title": "Analyse metier Defense / Negociation / CSE"
+        },
+        {
+          "id": "points_etablis",
+          "items": [
+            "le routage Nexus qualifie la demande sur cssct_securite, temps_travail, disciplinaire.",
+            "des sources locales principales ont ete retrouvees et doivent encadrer l'analyse.",
+            "Source locale identifiee: Code du travail | L3131-1 | Code du travail",
+            "Source locale identifiee: Code du travail | L3132-2 | Code du travail",
+            "Source locale identifiee: La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? | Explication pratique officielle",
+            "Source locale identifiee: La sanction disciplinaire : quelle est la procédure ? | Explication pratique officielle",
+            "Nexus separe les enjeux en groupes distincts: Repos et reprise du poste, Risque et prevention.",
+            "l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+            "un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
+            "Des sources ont ete remontees par le routeur Nexus."
+          ],
+          "title": "Points etablis"
+        },
+        {
+          "id": "interpretations",
+          "items": [
+            "une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets."
+          ],
+          "title": "Interpretations"
+        },
+        {
+          "id": "hypotheses",
+          "items": [
+            "les enjeux sante-securite deviennent prioritaires si les horaires, charges, effectifs ou conditions de travail sont modifies.",
+            "rubrique absente ou libellee de facon ambigue",
+            "nombre d'heures payees different du pointage valide",
+            "taux ou base non justifie par la source applicable",
+            "ecart entre compteur, bulletin et recapitulatif paie",
+            "heures de nuit non isolees ou non majorees selon la source applicable"
+          ],
+          "title": "Hypotheses"
+        },
+        {
+          "id": "informations_manquantes",
+          "items": [
+            "date, champ d'application et remplacement eventuel des textes cites.",
+            "articulation entre accord local, convention collective et norme superieure applicable.",
+            "periode de paie controlee",
+            "bulletin de paie detaille de la periode",
+            "pointage ou releve horaire valide",
+            "compteurs horaires avant et apres paie",
+            "regle locale applicable a la rubrique controlee",
+            "taux ou montant applique sur le bulletin",
+            "heure de debut et de fin de chaque sequence",
+            "qualification des plages nuit, dimanche ou jour ferie",
+            "detail des majorations ou recuperations appliquees",
+            "Variable PayrollRule manquante: planning_astreinte",
+            "Variable PayrollRule manquante: heure_appel",
+            "Variable PayrollRule manquante: heure_debut_intervention",
+            "Variable PayrollRule manquante: heure_fin_intervention",
+            "Variable PayrollRule manquante: temps_deplacement"
+          ],
+          "title": "Informations manquantes"
+        },
+        {
+          "id": "pieces",
+          "items": [
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "DUERP/DUER",
+            "registre securite",
+            "signalements salaries",
+            "plan de maintenance ou de contingence",
+            "état des lieux documenté",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+            "état technique climatisation locaux SNCC/PROVOX",
+            "état technique des analyseurs en continu"
+          ],
+          "title": "Pieces a recuperer"
+        },
+        {
+          "id": "questions_direction",
+          "items": [
+            "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+            "Quels incidents, pannes ou signalements ont ete traces ?",
+            "Quelles mesures immediates protegent les salaries ?",
+            "Quels faits precis sont reproches ?",
+            "Quels delais et droits de defense ont ete respectes ?",
+            "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+            "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+            "Quelles pièces critiques sont en stock ?",
+            "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+            "Quel plan de contingence existe en cas de panne ?",
+            "Quels risques pour la sécurité process ont été identifiés ?",
+            "Quelles conséquences sur la charge mentale des équipes ?"
+          ],
+          "title": "Questions a poser a la direction"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Position juridique probable: favorable a une exigence d'information-consultation documentee. Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position."
+          ],
+          "title": "Position de travail"
+        },
+        {
+          "id": "conclusion",
+          "items": [
+            "Conclusion provisoire limitee : informations insuffisantes pour conclure. Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: favorable a une exigence d'information-consultation documentee."
+          ],
+          "title": "Conclusion provisoire"
+        },
+        {
+          "id": "Code du travail numérique",
+          "items": [
+            "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? - organisme: Ministere du Travail.",
+            "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? - mise a jour: date de mise a jour non fournie par /api/presearch; URL ou identifiant: https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire.",
+            "En pratique, la source officielle explique que: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+            "Limite: Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+            "La sanction disciplinaire : quelle est la procédure ? - organisme: Ministere du Travail.",
+            "La sanction disciplinaire : quelle est la procédure ? - mise a jour: date de mise a jour non fournie par /api/presearch; URL ou identifiant: https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure.",
+            "En pratique, la source officielle explique que: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave"
+          ],
+          "title": "EXPLICATION PRATIQUE OFFICIELLE"
+        },
+        {
+          "id": "source_layers",
+          "items": [
+            "Accords d'entreprise: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Convention collective: Aucune source de ce niveau n'a ete remontee par Nexus.",
+            "Code du travail: 2 source(s) remontee(s).",
+            "Jurisprudence: Jurisprudence absente du socle documentaire local actuel.",
+            "Historique et débats du CSE: Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+            "Prud'hommes: Decisions prud'homales absentes du socle documentaire local actuel.",
+            "Explication pratique officielle: 2 source(s) remontee(s).",
+            "Points pratiques: Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+            "Autres sources: Aucune source de ce niveau n'a ete remontee par Nexus."
+          ],
+          "title": "Sources par niveau juridique"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Code du travail | L3131-1 | Code du travail | couche Code du travail | origine Légifrance | score 89 | référence interne non publiée | id officiel LEGIARTI000033020918 | etat VIGUEUR | en vigueur True | version 2016-08-10 -> 2999-01-01 | recupere le 2026-07-27T09:38:53+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918 | extrait: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+            "Code du travail | L3132-2 | Code du travail | couche Code du travail | origine Légifrance | score 60 | référence interne non publiée | id officiel LEGIARTI000006902581 | etat VIGUEUR | en vigueur True | version 2008-05-01 -> 2999-01-01 | recupere le 2026-07-27T10:48:51+00:00 | url/id https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581 | extrait: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.",
+            "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? | Explication pratique officielle | couche Explication pratique officielle | origine Code du travail numérique | score 69.203476 | id officiel fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire | recupere le 2026-07-27T10:48:52+00:00 | Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1. | organisme Ministere du Travail | url/id https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire | extrait: Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+            "La sanction disciplinaire : quelle est la procédure ? | Explication pratique officielle | couche Explication pratique officielle | origine Code du travail numérique | score 67.25234 | id officiel fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure | recupere le 2026-07-27T10:48:52+00:00 | Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1. | organisme Ministere du Travail | url/id https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure | extrait: Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave"
+          ],
+          "title": "Sources reellement remontees par Nexus"
+        },
+        {
+          "id": "confiance",
+          "items": [
+            "faible"
+          ],
+          "title": "Niveau de confiance"
+        },
+        {
+          "id": "limites",
+          "items": [
+            "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+            "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+            "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+            "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+            "Verifier l'applicabilite, la date et le champ des textes cites.",
+            "Verifier les avenants, usages ou textes plus recents eventuels.",
+            "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+            "L'expert juriste ne remplace pas une validation juridique humaine.",
+            "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+            "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+            "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+            "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application."
+          ],
+          "title": "Limites"
+        }
+      ],
+      "title": "Dossier salarie - cssct_securite, temps_travail, disciplinaire",
+      "version": "2.2"
+    },
+    "answer": {
+      "confidence": "faible",
+      "disciplinary_assistance": {
+        "10_after_interview": [
+          "Rédiger un compte rendu factuel et daté sans dupliquer les arguments.",
+          "Demander la communication des preuves ou pièces encore manquantes.",
+          "Contrôler le motif, la date et la proportionnalité de toute sanction notifiée.",
+          "Adresser si nécessaire une contestation écrite ciblée.",
+          "Évaluer avec un défenseur syndical ou un avocat la suite adaptée."
+        ],
+        "1_facts_understood": {
+          "facts_from_request": [
+            "menace ou violence alléguée",
+            "Contexte allégué : charge ou fatigue alléguée."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "2_points_to_verify": {
+          "chronology": [
+            "date des faits",
+            "date de connaissance par l'employeur",
+            "date de convocation",
+            "date de l'entretien",
+            "date de notification éventuelle"
+          ],
+          "decisive_missing_facts": [
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "caractère isolé ou répété",
+            "position du salarié sur les faits",
+            "preuves invoquées par l'employeur",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ]
+        },
+        "3_provisional_qualification": {
+          "act_category": "THREAT_OR_VIOLENCE",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [
+                {
+                  "article_or_clause": "L3131-1",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                },
+                {
+                  "article_or_clause": "L3132-2",
+                  "case_number": null,
+                  "decision_date": null,
+                  "document": "Code du travail"
+                }
+              ],
+              "status": "disponible et factuellement pertinent"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Qualification provisoire : threat or violence. La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "menace ou violence alléguée"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "charge ou fatigue alléguée"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        },
+        "6_questions_for_employee": [
+          "Existe-t-il une notification écrite et précisément motivée ?",
+          "Le salarié était-il assisté lors de l'entretien ?",
+          "Les faits sont-ils reconnus, partiellement reconnus ou contestés ?",
+          "Quand et comment le salarié a-t-il été convoqué ?",
+          "Quand l'employeur a-t-il eu connaissance des faits ?",
+          "Quelle est la date précise des faits reprochés ?",
+          "Quelle est la nature exacte de la mesure annoncée ou notifiée ?",
+          "Des situations similaires ont-elles donné lieu à des mesures comparables ?",
+          "Existe-t-il des témoins ou des écrits contemporains des faits ?",
+          "La sanction paraît-elle proportionnée aux faits allégués ?",
+          "Le règlement intérieur prévoit-il cette sanction et la procédure applicable ?",
+          "Existe-t-il une jurisprudence réellement comparable et à jour ?",
+          "Quels accords INEOS et dispositions conventionnelles sont applicables ?"
+        ],
+        "7_questions_for_management": [
+          "Quel est le grief exact retenu contre le salarié ?",
+          "Quelles preuves établissent l'acte et son attribution au salarié ?",
+          "Une personne précise est-elle considérée comme visée et sur quels éléments ?",
+          "Quelles conséquences concrètes l'inscription ou le comportement a-t-il produites ?",
+          "Quelle clause précise du règlement intérieur est invoquée ?",
+          "Quels précédents réellement comparables ont été traités dans l'entreprise ?",
+          "Quelle sanction est envisagée ?",
+          "Comment sa proportionnalité est-elle appréciée au regard du contexte, des conséquences et des antécédents ?"
+        ],
+        "8_interview_preparation": {
+          "documents_to_request": [
+            "convocation",
+            "reglement interieur",
+            "faits reproches",
+            "dossier disciplinaire communique",
+            "DUERP/DUER",
+            "registre securite",
+            "signalements salaries",
+            "plan de maintenance ou de contingence",
+            "état des lieux documenté",
+            "registre incidents ou alertes",
+            "mesures de prévention existantes et prévues",
+            "calendrier de traitement",
+            "état technique climatisation locaux SNCC/PROVOX",
+            "état technique des analyseurs en continu"
+          ],
+          "notes_to_record": [
+            "participants et qualité de chacun",
+            "grief exact et qualification avancée",
+            "preuves citées ou présentées",
+            "réponses du salarié",
+            "demandes de communication et réponse de la direction"
+          ],
+          "suggested_wording": [
+            "« À ce stade, je souhaite connaître précisément les faits et les pièces avant de répondre définitivement. »",
+            "« Cette demande de précision ne vaut ni reconnaissance ni refus de répondre. »"
+          ]
+        },
+        "9_points_not_to_say": [
+          "« Ce n'est pas grave. »",
+          "« Il avait le droit parce qu'il était énervé. »",
+          "« Personne n'était nommée donc aucune faute n'existe. »",
+          "« Il faut nier même si une preuve existe. »"
+        ],
+        "analysis_type": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "fact_extraction": {
+          "act_category": "THREAT_OR_VIOLENCE",
+          "alleged_act": "menace ou violence alléguée",
+          "context_claimed": [
+            "charge ou fatigue alléguée"
+          ],
+          "employee_admission": null,
+          "employer_evidence": [],
+          "exact_words_or_behavior": "menace ou violence alléguée",
+          "facts_missing": [
+            "personne éventuellement visée",
+            "lieu précis",
+            "visibilité de l'acte",
+            "conséquence matérielle",
+            "caractère isolé ou répété",
+            "position du salarié sur les faits",
+            "preuves invoquées par l'employeur",
+            "antécédents disciplinaires",
+            "sanction envisagée"
+          ],
+          "location": null,
+          "material_damage": null,
+          "prior_warnings": null,
+          "public_visibility": null,
+          "repetition": null,
+          "sanction_considered": null,
+          "target_identified": null,
+          "target_type": "collègue",
+          "threat_or_violence": true
+        },
+        "notice": "Dossier de préparation syndicale fondé sur les faits fournis. Toute qualification et toute appréciation de gravité restent provisoires."
+      },
+      "documents_to_request": [
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "DUERP/DUER",
+        "registre securite",
+        "signalements salaries",
+        "plan de maintenance ou de contingence",
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu"
+      ],
+      "employee_method_analysis": null,
+      "execution_plan": [
+        {
+          "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+          "engine": "Accords INEOS",
+          "status": "unavailable"
+        },
+        {
+          "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+          "engine": "Accords INEOS",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+          "engine": "Légifrance",
+          "status": "connected"
+        },
+        {
+          "action": "rechercher 1 ou 2 contenus explicatifs officiels via le Code du travail numerique",
+          "engine": "Code du travail numérique",
+          "status": "connected"
+        }
+      ],
+      "facts": [],
+      "findings": [
+        "Verifier les faits reproches, les preuves, les dates et les delais de procedure.",
+        "Controler les droits de defense et les garanties prevues par le reglement interieur.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : incidents, dysfonctionnements et alertes recensés.",
+        "À vérifier dans une source locale à identifier ou dans les documents techniques : stock de pièces critiques, délais de réapprovisionnement et plan de contingence.",
+        "À vérifier dans une source locale à identifier ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+        "À vérifier dans une source locale à identifier : règle actuelle de repos et éventuelles dérogations.",
+        "À vérifier dans une source locale à identifier : cycle actuel, salariés concernés et délai de prévenance.",
+        "À vérifier dans une source locale à identifier : garanties, contreparties et articulation avec le travail de nuit.",
+        "À vérifier dans une source locale à identifier : régime actuel d'astreinte et conditions d'intervention."
+      ],
+      "issue_groups": [
+        {
+          "documents": [
+            "planning de travail",
+            "releves de pointage ou badgeage",
+            "historique des heures et repos"
+          ],
+          "findings": [
+            "À vérifier dans une source locale à identifier : règle actuelle de repos et éventuelles dérogations.",
+            "Verifier l'heure reelle de fin d'intervention et l'heure de reprise du poste.",
+            "Identifier la regle de repos applicable et toute derogation invoquee.",
+            "Verifier la compensation ou le repos associe si le repos normal n'a pas ete respecte."
+          ],
+          "id": "repos",
+          "name": "Repos et reprise du poste",
+          "questions": [
+            "Quelle heure de fin d'intervention et quelle heure de reprise sont retenues ?",
+            "Quelle regle autorise ou interdit cette reprise ?",
+            "Quelle compensation ou quel repos a ete accorde ?"
+          ]
+        },
+        {
+          "documents": [
+            "DUERP/DUER",
+            "registre securite",
+            "plan de maintenance ou de contingence",
+            "état technique climatisation locaux SNCC/PROVOX",
+            "plan d'action ou de maintenance"
+          ],
+          "findings": [
+            "À vérifier dans une source locale à identifier ou dans les documents techniques : état réel des locaux SNCC/PROVOX et analyseurs.",
+            "À vérifier dans une source locale à identifier ou dans le DUERP : scénarios de panne, risques sécurité process et RPS associés.",
+            "Qualifier le risque et les mesures de prevention existantes.",
+            "Verifier le suivi DUERP/CSSCT et le plan d'action."
+          ],
+          "id": "cssct",
+          "name": "Risque et prevention",
+          "questions": [
+            "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+            "Quels incidents, pannes ou signalements ont ete traces ?",
+            "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+            "Quel plan de contingence existe en cas de panne ?"
+          ]
+        }
+      ],
+      "jurisprudence_audit": [],
+      "legifrance_audit": [
+        {
+          "attempted": true,
+          "available": true,
+          "error": null,
+          "rejected_sources": [
+            {
+              "article": "L3132-1",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000006902580",
+              "relevance_score": 15.0
+            },
+            {
+              "article": "L3121-1",
+              "document": "Code du travail",
+              "exclusion_reason": "pertinence insuffisante avec la question et les domaines detectes",
+              "official_id": "LEGIARTI000033020517",
+              "relevance_score": 28.5
+            }
+          ],
+          "sources_received": 4,
+          "sources_retained": 2,
+          "status": "retained",
+          "warnings": []
+        }
+      ],
+      "next_action": "Mettre le sujet a l'ordre du jour avec les documents demandes et les questions prioritaires.",
+      "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien travaillait en poste de nuit.\n- Il venait d'intervenir sur une fuite de vapeur sous la pluie.\n- Des propos insultants envers son superviseur ont été tenus devant trois collègues.\n- Les propos ont suivi une remarque du superviseur sur le temps d'intervention.\n- L'employeur envisage une qualification de faute grave.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue avoir effectué cinq postes de nuit successifs.\n- L'absence non remplacée d'un collègue est alléguée.\n- Une fatigue importante et une surcharge sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Mots exacts, ton, durée et présence éventuelle d'une menace [importance: blocking] — La qualification et la gravité dépendent des propos précis.\n- Nature exacte de la remarque du superviseur et échanges précédents [importance: high] — Il faut distinguer provocation réelle et simple remarque professionnelle.\n- Planning, durée du travail et repos quotidien et hebdomadaire [importance: blocking] — La fatigue et la conformité des cinq nuits doivent être objectivées.\n- Charge réelle, remplacement du collègue absent et conditions de l'intervention [importance: high] — Le contexte de surcharge doit être établi par des éléments concrets.\n- Antécédents, regrets, excuses et conséquences sur le service [importance: high] — Ces éléments influencent fortement la proportionnalité.",
+      "questions_to_ask": [
+        "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+        "Quels incidents, pannes ou signalements ont ete traces ?",
+        "Quelles mesures immediates protegent les salaries ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?",
+        "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+        "Quel plan de contingence existe en cas de panne ?",
+        "Quels risques pour la sécurité process ont été identifiés ?",
+        "Quelles conséquences sur la charge mentale des équipes ?"
+      ],
+      "response_depth": "multi_domain",
+      "route": {
+        "confidence": "fort",
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "temps_travail",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "employee_path_advisory": null,
+        "employee_path_reason": "Le parcours approfondi a été choisi explicitement.",
+        "execution_plan": [
+          {
+            "action": "rechercher les textes locaux pertinents dans l'index Bible Accords",
+            "engine": "Accords INEOS",
+            "status": "unavailable"
+          },
+          {
+            "action": "construire une fiche metier CSE/RH/Paie a partir des sources locales",
+            "engine": "Accords INEOS",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher des articles pertinents du Code du travail via l'API officielle Legifrance",
+            "engine": "Légifrance",
+            "status": "connected"
+          },
+          {
+            "action": "rechercher 1 ou 2 contenus explicatifs officiels via le Code du travail numerique",
+            "engine": "Code du travail numérique",
+            "status": "connected"
+          }
+        ],
+        "functional_intent": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "intents": [
+          "rechercher_droit_local",
+          "preparer_cssct",
+          "analyser_situation_individuelle"
+        ],
+        "main_domain": "disciplinaire",
+        "primary_domain": "disciplinaire",
+        "query": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien travaillait en poste de nuit.\n- Il venait d'intervenir sur une fuite de vapeur sous la pluie.\n- Des propos insultants envers son superviseur ont été tenus devant trois collègues.\n- Les propos ont suivi une remarque du superviseur sur le temps d'intervention.\n- L'employeur envisage une qualification de faute grave.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue avoir effectué cinq postes de nuit successifs.\n- L'absence non remplacée d'un collègue est alléguée.\n- Une fatigue importante et une surcharge sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Mots exacts, ton, durée et présence éventuelle d'une menace [importance: blocking] — La qualification et la gravité dépendent des propos précis.\n- Nature exacte de la remarque du superviseur et échanges précédents [importance: high] — Il faut distinguer provocation réelle et simple remarque professionnelle.\n- Planning, durée du travail et repos quotidien et hebdomadaire [importance: blocking] — La fatigue et la conformité des cinq nuits doivent être objectivées.\n- Charge réelle, remplacement du collègue absent et conditions de l'intervention [importance: high] — Le contexte de surcharge doit être établi par des éléments concrets.\n- Antécédents, regrets, excuses et conséquences sur le service [importance: high] — Ces éléments influencent fortement la proportionnalité.",
+        "reasoning_summary": [
+          "La demande concerne le temps de travail, les repos, horaires ou compteurs.",
+          "La demande releve de la sante, securite, CSSCT, DUERP ou securite process.",
+          "Le parcours d'assistance disciplinaire impose une analyse disciplinaire.",
+          "Une recherche dans les accords locaux est necessaire.",
+          "La demande appelle une preparation CSSCT ou sante-securite.",
+          "La demande concerne un dossier ou une situation de salarie."
+        ],
+        "response_profile": "syndical_defense_deep",
+        "router_version": "1.2",
+        "secondary_domains": [
+          "cssct_securite",
+          "temps_travail"
+        ],
+        "warnings": []
+      },
+      "short_answer": "Nexus a trouve des sources locales pertinentes, mais la conclusion depend encore des faits et du champ exact des textes cites.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": null,
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [
+            {
+              "article": "L3131-1",
+              "article_or_section": "L3131-1",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2016-08-10",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000033020918",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L3131-1",
+              "match_score": 89,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000033020918",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T09:38:53+00:00",
+              "score": 89,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2016-08-10"
+            },
+            {
+              "article": "L3132-2",
+              "article_or_section": "L3132-2",
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": null,
+              "content_access": null,
+              "content_type": null,
+              "contradiction_risk": null,
+              "date_debut": "2008-05-01",
+              "date_fin": "2999-01-01",
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "Code du travail",
+              "document_type": "code_travail",
+              "etat": "VIGUEUR",
+              "excerpt": "Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": null,
+              "idcc": null,
+              "is_in_force": true,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "LEGIARTI000006902581",
+              "legifrance_relevance_status": "retained",
+              "limite_utilisation": null,
+              "location": "L3132-2",
+              "match_score": 60,
+              "nature": "code_travail",
+              "official_id": "LEGIARTI000006902581",
+              "official_origin": null,
+              "origin": "Légifrance",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T10:48:51+00:00",
+              "score": 60,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "code_travail",
+              "source_layer_label": "Code du travail",
+              "source_officielle": null,
+              "source_quality_warning": null,
+              "status": null,
+              "summary": null,
+              "theme": null,
+              "title": null,
+              "updated_at": null,
+              "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581",
+              "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": "2999-01-01",
+              "version_start_date": "2008-05-01"
+            }
+          ],
+          "status": "present"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": null,
+          "id": "Code du travail numérique",
+          "label": "Explication pratique officielle",
+          "sources": [
+            {
+              "article": null,
+              "article_or_section": null,
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+              "content_access": "presearch_description_only",
+              "content_type": "fiche pratique ministerielle",
+              "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+              "date_debut": null,
+              "date_fin": null,
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ?",
+              "document_type": "explication_Code du travail numérique",
+              "etat": null,
+              "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": false,
+              "idcc": null,
+              "is_in_force": null,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+              "legifrance_relevance_status": null,
+              "limite_utilisation": null,
+              "location": "",
+              "match_score": 69.203476,
+              "nature": "regle_locale_a_verifier",
+              "official_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+              "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+              "origin": "Code du travail numérique",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T10:48:52+00:00",
+              "score": 69.203476,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "Code du travail numérique",
+              "source_layer_label": "Explication pratique officielle",
+              "source_officielle": "Ministere du Travail",
+              "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "summary": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+              "theme": "Sanction disciplinaire",
+              "title": "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ?",
+              "updated_at": null,
+              "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+              "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": null,
+              "version_start_date": null
+            },
+            {
+              "article": null,
+              "article_or_section": null,
+              "case_number": null,
+              "chamber": null,
+              "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+              "content_access": "presearch_description_only",
+              "content_type": "fiche pratique ministerielle",
+              "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+              "date_debut": null,
+              "date_fin": null,
+              "decision_date": null,
+              "decision_text_length": null,
+              "defense_retained": null,
+              "difference_avec_dossier": [],
+              "document": "La sanction disciplinaire : quelle est la procédure ?",
+              "document_type": "explication_Code du travail numérique",
+              "etat": null,
+              "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave",
+              "exclusion_reason": null,
+              "faits_utiles": null,
+              "full_content_available": false,
+              "idcc": null,
+              "is_in_force": null,
+              "judilibre_id": null,
+              "juridiction": null,
+              "jurisprudence_relevance_score": null,
+              "legifrance_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure",
+              "legifrance_relevance_status": null,
+              "limite_utilisation": null,
+              "location": "",
+              "match_score": 67.25234,
+              "nature": "regle_locale_a_verifier",
+              "official_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure",
+              "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+              "origin": "Code du travail numérique",
+              "page": null,
+              "position_employeur": null,
+              "position_salarie_representants": null,
+              "principe_apport_utile": null,
+              "principle_summary": null,
+              "question_juridique": null,
+              "ressemblance_avec_dossier": [],
+              "resume_court": null,
+              "retrieved_at": "2026-07-27T10:48:52+00:00",
+              "score": 67.25234,
+              "solution": null,
+              "solution_retenue": null,
+              "source_layer": "Code du travail numérique",
+              "source_layer_label": "Explication pratique officielle",
+              "source_officielle": "Ministere du Travail",
+              "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+              "summary": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave",
+              "theme": "Sanction disciplinaire",
+              "title": "La sanction disciplinaire : quelle est la procédure ?",
+              "updated_at": null,
+              "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure",
+              "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure",
+              "utilite_defense": null,
+              "version": null,
+              "version_end_date": null,
+              "version_start_date": null
+            }
+          ],
+          "status": "present"
+        },
+        {
+          "absent_message": "Aucune fiche pratique distincte indexee dans le socle documentaire local actuel.",
+          "id": "pratique",
+          "label": "Points pratiques",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "autre",
+          "label": "Autres sources",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [
+        {
+          "article": "L3131-1",
+          "article_or_section": "L3131-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2016-08-10",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000033020918",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L3131-1",
+          "match_score": 89,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000033020918",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:38:53+00:00",
+          "score": 89,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2016-08-10"
+        },
+        {
+          "article": "L3132-2",
+          "article_or_section": "L3132-2",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006902581",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L3132-2",
+          "match_score": 60,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006902581",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:51+00:00",
+          "score": 60,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique ministerielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 69.203476,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:52+00:00",
+          "score": 69.203476,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Ministere du Travail",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+          "theme": "Sanction disciplinaire",
+          "title": "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ?",
+          "updated_at": null,
+          "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        },
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique ministerielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "La sanction disciplinaire : quelle est la procédure ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 67.25234,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure",
+          "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:52+00:00",
+          "score": 67.25234,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Ministere du Travail",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave",
+          "theme": "Sanction disciplinaire",
+          "title": "La sanction disciplinaire : quelle est la procédure ?",
+          "updated_at": null,
+          "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure",
+          "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        }
+      ],
+      "understanding": "Demande portant principalement sur disciplinaire, avec enjeux associes de CSSCT/securite, temps de travail. L'analyse vise recherche de droit local, preparation CSSCT, situation individuelle.",
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+        "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+        "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ],
+      "working_position": "Verifier les faits, les preuves, les delais et les droits de defense avant d'apprecier la proportionnalite d'une eventuelle sanction."
+    },
+    "expert_juriste": {
+      "action_conseillee": [
+        "Action immediate: demander par ecrit les documents manquants avant la reunion ou en debut de seance.",
+        "Demande ecrite: obtenir impacts emploi, horaires, charge, competences, calendrier et mesures d'accompagnement.",
+        "Pieces a securiser: note projet, organigrammes avant/apres, planning cible, analyse de risques et indicateurs de suivi.",
+        "Intervention DS/CSE: poser les questions prioritaires et faire inscrire reponses, reserves et engagements au PV.",
+        "Contestation: demander report ou relance si les informations ne permettent pas une discussion utile.",
+        "Escalade eventuelle: solliciter appui juridique ou expertise selon l'ampleur et les impacts du projet."
+      ],
+      "active": true,
+      "analyse_et_raisonnement": [
+        "Regle certaine: l'analyse ci-dessous ne s'appuie que sur les sources principales ou complementaires retenues par l'Expert Juriste.",
+        "Regle applicable: Code du travail | L3131-1 | extrait: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.: la source encadre le temps de travail, le repos ou la reprise apres interruption. Extrait utile: Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+        "Regle applicable: Code du travail | L3132-2 | extrait: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.: la source encadre le temps de travail, le repos ou la reprise apres interruption. Extrait utile: Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.",
+        "Application aux faits: une erreur de manipulation ne suffit pas, seule, a etablir une faute sanctionnable; il faut verifier la consigne, la formation, le contexte et la preuve.",
+        "Application aux faits: la defense doit attaquer d'abord la precision des griefs, puis la procedure et enfin la proportionnalite de la sanction envisagee.",
+        "Application aux faits: Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise.",
+        "Application aux faits: Projet CSE: impact possible sante-securite et conditions de travail.",
+        "Application aux faits: les elus doivent obtenir les donnees emploi, charge, horaires, risques et calendrier, puis faire acter les reponses et reserves au PV.",
+        "Conclusion provisoire: favorable a une exigence d'information-consultation documentee - Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position.",
+        "Regle certaine: un dossier collectif presente au CSE doit etre analyse a partir des documents transmis, des impacts salaries et des questions a inscrire.",
+        "Interpretation: une reorganisation avec postes ou horaires modifiees peut appeler information, consultation ou suivi CSE/CSSCT selon ses effets.",
+        "Hypothese: les enjeux sante-securite deviennent prioritaires si les horaires, charges, effectifs ou conditions de travail sont modifies."
+      ],
+      "ce_qui_depend_accord_statut_element_manquant": [
+        "Information manquante: date, champ d'application et remplacement eventuel des textes cites.",
+        "Information manquante: articulation entre accord local, convention collective et norme superieure applicable."
+      ],
+      "ce_qui_est_etabli_par_sources": [
+        "Regle certaine: le routage Nexus qualifie la demande sur cssct_securite, temps_travail, disciplinaire.",
+        "Regle certaine: des sources locales principales ont ete retrouvees et doivent encadrer l'analyse.",
+        "Source locale identifiee: Code du travail | L3131-1 | Code du travail",
+        "Source locale identifiee: Code du travail | L3132-2 | Code du travail",
+        "Source locale identifiee: La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? | Explication pratique officielle",
+        "Source locale identifiee: La sanction disciplinaire : quelle est la procédure ? | Explication pratique officielle",
+        "Regle certaine: Nexus separe les enjeux en groupes distincts: Repos et reprise du poste, Risque et prevention."
+      ],
+      "limites": [
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+        "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+        "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels."
+      ],
+      "position_de_travail_proposee": "Position de travail: traiter le point comme un dossier CSE/CSSCT a documenter, obtenir les pieces manquantes, poser les questions prioritaires et faire inscrire les engagements ou reserves au PV.",
+      "qualification_juridique_situation": "Point CSE/CSSCT ou dossier collectif a preparer, avec verification des documents, informations, consultations et impacts salaries.",
+      "questions_a_poser_direction": [
+        "S'agit-il d'une information simple ou d'une consultation du CSE ?",
+        "Quels documents justifient le projet et ses impacts sur emploi, horaires, charge et sante-securite ?",
+        "Quels indicateurs seront suivis apres mise en oeuvre ?",
+        "Quelles reponses la direction accepte-t-elle de faire inscrire au proces-verbal ?",
+        "Quels faits precis sont reproches, a quelles dates et avec quelles preuves ?",
+        "Quelles consignes, formations ou modes operatoires etaient applicables au moment des faits ?",
+        "Pourquoi la direction estime-t-elle une sanction proportionnee plutot qu'un rappel, accompagnement ou formation ?",
+        "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?"
+      ],
+      "response_courte": "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion.",
+      "risques_points_vigilance": [
+        "Risque: traiter la reunion comme une simple information alors que les impacts peuvent appeler une consultation ou un suivi.",
+        "Risque: laisser une reponse orale vague sans inscription precise au proces-verbal.",
+        "Risque: repondre sans connaitre les faits precis, dates et preuves retenus par la direction.",
+        "Risque: ne pas traiter la proportionnalite de la sanction au regard du contexte et des consequences reelles."
+      ]
+    },
+    "expert_paie": {
+      "active": true,
+      "anomalies_potentielles": [
+        "rubrique absente ou libellee de facon ambigue",
+        "nombre d'heures payees different du pointage valide",
+        "taux ou base non justifie par la source applicable",
+        "ecart entre compteur, bulletin et recapitulatif paie",
+        "heures de nuit non isolees ou non majorees selon la source applicable"
+      ],
+      "calcul_detaille": "Non produit : Nexus ne dispose pas simultanement des heures validees, du taux ou montant applicable, de la base de calcul et de la valeur portee au bulletin.",
+      "documents_necessaires": [
+        "bulletin de paie de la periode controlee",
+        "detail de paie ou recapitulatif des elements variables",
+        "pointage ou releve horaire valide",
+        "planning de la periode",
+        "compteurs horaires et recuperations",
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "DUERP/DUER",
+        "registre securite",
+        "signalements salaries",
+        "planning",
+        "releve_kelio",
+        "agreement",
+        "kelio"
+      ],
+      "donnees_necessaires_au_calcul": [
+        "periode de paie controlee",
+        "bulletin de paie detaille de la periode",
+        "pointage ou releve horaire valide",
+        "compteurs horaires avant et apres paie",
+        "regle locale applicable a la rubrique controlee",
+        "taux ou montant applique sur le bulletin",
+        "heure de debut et de fin de chaque sequence",
+        "qualification des plages nuit, dimanche ou jour ferie",
+        "detail des majorations ou recuperations appliquees",
+        "Variable PayrollRule manquante: planning_astreinte",
+        "Variable PayrollRule manquante: heure_appel",
+        "Variable PayrollRule manquante: heure_debut_intervention",
+        "Variable PayrollRule manquante: heure_fin_intervention",
+        "Variable PayrollRule manquante: temps_deplacement"
+      ],
+      "elements_du_bulletin_concernes": [
+        "heures de nuit",
+        "majoration nuit",
+        "base et taux appliques"
+      ],
+      "limites": [
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application.",
+        "Une ou plusieurs regles sont a verifier humainement avant utilisation.",
+        "Une ou plusieurs sources ont une confiance faible.",
+        "rule_conflict: PAY_HOLIDAY_POSTED_NORMAL_001, PAY_HOLIDAY_POSTED_REST_001, PAY_MAINTIEN_POSTE_NON_PREVU_001, PAY_RAPPEL_ASTREINTE_001, PAY_RAPPEL_HORS_ASTREINTE_001, WT_5X8_JOURS_DUS_001, WT_5X8_JR_REGULARISATION_001, WT_5X8_RCTP_001, WT_5X8_RCTR_001, WT_5X8_RJFJ_TO_JR_001 (WT_5X8_RJFJ_TO_JR_001 / WT_5X8_RCTR_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RJFJ_TO_JR_001 / WT_5X8_RCTP_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RJFJ_TO_JR_001 / WT_5X8_JR_REGULARISATION_001: meme theme metier recuperation_jour_ferie, contexte 5x8 et effet incompatible; WT_5X8_RJFJ_TO_JR_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTR_001 / WT_5X8_RCTP_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTR_001 / WT_5X8_JR_REGULARISATION_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTR_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTP_001 / WT_5X8_JR_REGULARISATION_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_RCTP_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; WT_5X8_JR_REGULARISATION_001 / WT_5X8_JOURS_DUS_001: meme theme metier repos_compensateur, contexte 5x8 et effet incompatible; PAY_HOLIDAY_POSTED_REST_001 / PAY_HOLIDAY_POSTED_NORMAL_001: meme theme metier jour_ferie, contexte 5x8 et effet incompatible; PAY_HOLIDAY_POSTED_REST_001 / PAY_RAPPEL_HORS_ASTREINTE_001: meme theme metier heures_exceptionnelles, contexte repos et effet incompatible; PAY_HOLIDAY_POSTED_REST_001 / PAY_MAINTIEN_POSTE_NON_PREVU_001: meme theme metier heures_exceptionnelles, contexte repos et effet incompatible; PAY_RAPPEL_ASTREINTE_001 / PAY_RAPPEL_HORS_ASTREINTE_001: meme theme metier rappel, contexte repos et effet incompatible; PAY_RAPPEL_HORS_ASTREINTE_001 / PAY_MAINTIEN_POSTE_NON_PREVU_001: meme theme metier heures_exceptionnelles, contexte repos et effet incompatible)",
+        "Calcul automatique refuse: variables incompletes ou regles non autorisees au calcul.",
+        "Une ou plusieurs regles affichees sont a verifier humainement avant utilisation.",
+        "Une ou plusieurs regles affichees ont une confiance faible.",
+        "Regles ecartees de l'affichage LOT 3 pour faible pertinence: WT_CHANGEMENT_ROULEMENT_PREVENANCE_001, WT_5X8_RJFJ_TO_JR_001, WT_5X8_RJFJ_RJFN_USAGE_001, WT_5X8_RCTR_001, WT_5X8_RCTP_001, WT_5X8_JR_REGULARISATION_001",
+        "PayrollRuleEngine: calcul automatique non disponible avec le catalogue actuel.",
+        "La periode concernee n'est pas renseignee."
+      ],
+      "methode_de_controle": [
+        "Identifier la rubrique controlee, la periode et la source locale applicable.",
+        "Rapprocher pointage, planning, compteurs et bulletin sans additionner des elements de nature differente.",
+        "Isoler les heures situees sur les plages nuit, dimanche ou jour ferie avant de chercher la majoration.",
+        "Verifier la base, le taux, le nombre d'heures ou le montant retenu sur le bulletin.",
+        "Comparer le resultat attendu au bulletin uniquement apres validation des donnees et du texte applicable."
+      ],
+      "objet_du_controle": "Controle des heures de nuit, dimanche ou jour ferie et des majorations correspondantes sur le bulletin.",
+      "regles_ou_sources_disponibles": [
+        "Source locale a verifier: Code du travail | L3131-1 | Code du travail",
+        "Source locale a verifier: Code du travail | L3132-2 | Code du travail",
+        "Source locale a verifier: La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ? | Explication pratique officielle",
+        "Source locale a verifier: La sanction disciplinaire : quelle est la procédure ? | Explication pratique officielle",
+        "PayrollRule: Rappel en astreinte (PAY_RAPPEL_ASTREINTE_001) - statut to_verify, confiance low"
+      ]
+    },
+    "final_assistant_runtime": {
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "documents_necessaires": [
+        "convocation",
+        "reglement interieur",
+        "faits reproches",
+        "dossier disciplinaire communique",
+        "DUERP/DUER",
+        "registre securite",
+        "signalements salaries",
+        "plan de maintenance ou de contingence",
+        "état des lieux documenté",
+        "registre incidents ou alertes",
+        "mesures de prévention existantes et prévues",
+        "calendrier de traitement",
+        "état technique climatisation locaux SNCC/PROVOX",
+        "état technique des analyseurs en continu"
+      ],
+      "domaines_detectes": [
+        "cssct_securite",
+        "temps_travail",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Expert Juriste droit du travail V0 renforce",
+        "Expert Paie V0"
+      ],
+      "limites": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Pratique officielle: La couche Code du travail numérique explique en langage clair mais ne remplace pas les sources juridiques.",
+        "Pratique officielle: /api/presearch fournit des titres, resumes, URL et identifiants; pas le corps complet stable des fiches.",
+        "Pratique officielle: Les outils, modeles et themes de navigation sont ecartes par defaut pour eviter de confondre orientation et explication.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile.",
+        "L'expert juriste ne remplace pas une validation juridique humaine.",
+        "Il ne dispose que des sources principales selectionnees par le routeur V1.2, dont Legifrance seulement si le connecteur est configure et a repondu.",
+        "L'expert paie V0 ne calcule pas sans bulletin, pointage, taux applicable et source de calcul.",
+        "Il ne lit aucun document externe et n'envoie aucune donnee hors du poste local.",
+        "Les sources retrouvees doivent etre relues pour confirmer leur champ d'application."
+      ],
+      "niveau_de_confiance": "faible",
+      "position_de_travail": "Position juridique probable: favorable a une exigence d'information-consultation documentee. Information-consultation a exiger ou a qualifier tres serieusement: Projet CSE: impact possible sante-securite et conditions de travail. Le CSE peut demander les documents et delais necessaires pour rendre un avis utile si la consultation est juridiquement requise. Le CSE dispose donc d'un dossier defendable pour demander pieces, delais, impacts et reponses tracees avant toute position.",
+      "question_posee": "Analyse cette situation syndicale à partir des seuls éléments fournis.\nDistingue les faits certains, reconnus, contestés, allégués et manquants.\nPose les questions déterminantes, indique les sources réellement disponibles ou indisponibles, compare les règles aux faits et n'invente rien.\n\nFaits fournis :\n- Un technicien travaillait en poste de nuit.\n- Il venait d'intervenir sur une fuite de vapeur sous la pluie.\n- Des propos insultants envers son superviseur ont été tenus devant trois collègues.\n- Les propos ont suivi une remarque du superviseur sur le temps d'intervention.\n- L'employeur envisage une qualification de faute grave.\n\nFaits reconnus :\n- Aucun élément fourni.\n\nFaits contestés :\n- Aucun élément fourni.\n\nFaits allégués :\n- Le salarié allègue avoir effectué cinq postes de nuit successifs.\n- L'absence non remplacée d'un collègue est alléguée.\n- Une fatigue importante et une surcharge sont alléguées.\n\nInformations manquantes déjà identifiées :\n- Mots exacts, ton, durée et présence éventuelle d'une menace [importance: blocking] — La qualification et la gravité dépendent des propos précis.\n- Nature exacte de la remarque du superviseur et échanges précédents [importance: high] — Il faut distinguer provocation réelle et simple remarque professionnelle.\n- Planning, durée du travail et repos quotidien et hebdomadaire [importance: blocking] — La fatigue et la conformité des cinq nuits doivent être objectivées.\n- Charge réelle, remplacement du collègue absent et conditions de l'intervention [importance: high] — Le contexte de surcharge doit être établi par des éléments concrets.\n- Antécédents, regrets, excuses et conséquences sur le service [importance: high] — Ces éléments influencent fortement la proportionnalité.",
+      "questions_utiles": [
+        "Quels risques sont identifies dans le DUERP et quelles actions sont planifiees ?",
+        "Quels incidents, pannes ou signalements ont ete traces ?",
+        "Quelles mesures immediates protegent les salaries ?",
+        "Quels faits precis sont reproches ?",
+        "Quels delais et droits de defense ont ete respectes ?",
+        "Quel est l'état réel de la climatisation des locaux SNCC PROVOX et des analyseurs ?",
+        "Quels incidents, dysfonctionnements ou alertes ont été recensés ?",
+        "Quelles pièces critiques sont en stock ?",
+        "Quel est le délai de réapprovisionnement des pièces manquantes ?",
+        "Quel plan de contingence existe en cas de panne ?",
+        "Quels risques pour la sécurité process ont été identifiés ?",
+        "Quelles conséquences sur la charge mentale des équipes ?"
+      ],
+      "reponse_synthetique_nexus": "Le CSE dispose d'un angle solide pour exiger une information-consultation documentee: Projet CSE: impact possible sante-securite et conditions de travail. La premiere action est de demander par ecrit les pieces d'impact et les questions a inscrire au PV avant la reunion. Cote droit du travail, Nexus qualifie le cadre applicable; cote paie, il ne chiffre rien sans donnees verifiees. Conclusion provisoire: favorable a une exigence d'information-consultation documentee.",
+      "sources": [
+        {
+          "article": "L3131-1",
+          "article_or_section": "L3131-1",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2016-08-10",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Tout salarié bénéficie d'un repos quotidien d'une durée minimale de onze heures consécutives, sauf dans les cas prévus aux articles L. 3131-2 et L. 3131-3 ou en cas d'urgence, dans des conditions déterminées par décret.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000033020918",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L3131-1",
+          "match_score": 89,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000033020918",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T09:38:53+00:00",
+          "score": 89,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020918",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2016-08-10"
+        },
+        {
+          "article": "L3132-2",
+          "article_or_section": "L3132-2",
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": null,
+          "content_access": null,
+          "content_type": null,
+          "contradiction_risk": null,
+          "date_debut": "2008-05-01",
+          "date_fin": "2999-01-01",
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "Code du travail",
+          "document_type": "code_travail",
+          "etat": "VIGUEUR",
+          "excerpt": "Le repos hebdomadaire a une durée minimale de vingt-quatre heures consécutives auxquelles s'ajoutent les heures consécutives de repos quotidien prévu au chapitre Ier.",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": null,
+          "idcc": null,
+          "is_in_force": true,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "LEGIARTI000006902581",
+          "legifrance_relevance_status": "retained",
+          "limite_utilisation": null,
+          "location": "L3132-2",
+          "match_score": 60,
+          "nature": "code_travail",
+          "official_id": "LEGIARTI000006902581",
+          "official_origin": null,
+          "origin": "Légifrance",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:51+00:00",
+          "score": 60,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "code_travail",
+          "source_layer_label": "Code du travail",
+          "source_officielle": null,
+          "source_quality_warning": null,
+          "status": null,
+          "summary": null,
+          "theme": null,
+          "title": null,
+          "updated_at": null,
+          "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581",
+          "url_or_id": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006902581",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": "2999-01-01",
+          "version_start_date": "2008-05-01"
+        },
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique ministerielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 69.203476,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:52+00:00",
+          "score": 69.203476,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Ministere du Travail",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de n",
+          "theme": "Sanction disciplinaire",
+          "title": "La sanction disciplinaire : quelles sont les caractéristiques de la sanction disciplinaire ?",
+          "updated_at": null,
+          "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelles-sont-les-caracteristiques-de-la-sanction-disciplinaire",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        },
+        {
+          "article": null,
+          "article_or_section": null,
+          "case_number": null,
+          "chamber": null,
+          "complementarity_with_legifrance": "Aide a comprendre en langage clair; a afficher sous les articles Legifrance, accords, CCN et jurisprudence.",
+          "content_access": "presearch_description_only",
+          "content_type": "fiche pratique ministerielle",
+          "contradiction_risk": "Faible si la couche reste separee; verifier les accords INEOS et textes opposables avant conclusion.",
+          "date_debut": null,
+          "date_fin": null,
+          "decision_date": null,
+          "decision_text_length": null,
+          "defense_retained": null,
+          "difference_avec_dossier": [],
+          "document": "La sanction disciplinaire : quelle est la procédure ?",
+          "document_type": "explication_Code du travail numérique",
+          "etat": null,
+          "excerpt": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave",
+          "exclusion_reason": null,
+          "faits_utiles": null,
+          "full_content_available": false,
+          "idcc": null,
+          "is_in_force": null,
+          "judilibre_id": null,
+          "juridiction": null,
+          "jurisprudence_relevance_score": null,
+          "legifrance_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure",
+          "legifrance_relevance_status": null,
+          "limite_utilisation": null,
+          "location": "",
+          "match_score": 67.25234,
+          "nature": "regle_locale_a_verifier",
+          "official_id": "fiches_ministere_travail:la-sanction-disciplinaire#quelle-est-la-procedure",
+          "official_origin": "travail-emploi.gouv.fr / Code du travail numerique",
+          "origin": "Code du travail numérique",
+          "page": null,
+          "position_employeur": null,
+          "position_salarie_representants": null,
+          "principe_apport_utile": null,
+          "principle_summary": null,
+          "question_juridique": null,
+          "ressemblance_avec_dossier": [],
+          "resume_court": null,
+          "retrieved_at": "2026-07-27T10:48:52+00:00",
+          "score": 67.25234,
+          "solution": null,
+          "solution_retenue": null,
+          "source_layer": "Code du travail numérique",
+          "source_layer_label": "Explication pratique officielle",
+          "source_officielle": "Ministere du Travail",
+          "source_quality_warning": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "status": "Le corps complet de la fiche n'est pas recupere par une API publique stable dans cette V1.",
+          "summary": "Aucune sanction ne peut être prise à l'encontre du salarié sans que celui-ci soit informé, dans le même temps et par écrit, des griefs retenus contre lui.Avant de prendre une sanction, autre qu’un ave",
+          "theme": "Sanction disciplinaire",
+          "title": "La sanction disciplinaire : quelle est la procédure ?",
+          "updated_at": null,
+          "url": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure",
+          "url_or_id": "https://code.travail.gouv.fr/fiche-ministere-travail/la-sanction-disciplinaire#quelle-est-la-procedure",
+          "utilite_defense": null,
+          "version": null,
+          "version_end_date": null,
+          "version_start_date": null
+        }
+      ]
+    },
+    "syndical_reasoning_runtime": {
+      "mode": "DISABLED"
+    }
+  },
+  "response_projection": "visible_baseline_v1"
+}

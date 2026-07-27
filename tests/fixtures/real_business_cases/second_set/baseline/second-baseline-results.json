@@ -1,0 +1,636 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "second_set",
+  "case_count": 5,
+  "cases": [
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "correction_priority": "Très haute — extraire le risque, l'EPI manquant ou inadapté et les responsabilités avant tout domaine secondaire.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Les responsabilités respectives en matière de moyens disponibles, signalement et poursuite de l'opération ne sont pas confrontées."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 2
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Nexus remplace le fait principal EPI/acide sulfurique par une demande de classification et de coefficient.",
+            "Le module disciplinaire déclare les faits insuffisamment précisés sans extraire l'absence alléguée d'EPI, la buée ou la rupture de stock."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 4
+        },
+        "no_invention": {
+          "evidence": [
+            "La réponse signale l'insuffisance documentaire.",
+            "Elle introduit sans fondement une sous-classification, des fonctions réelles et une comparaison de coefficients."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 3
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "La réponse ne permet pas de préparer l'entretien sur le grief EPI."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 1
+        },
+        "question_relevance": {
+          "evidence": [
+            "Quelques questions génériques sur les risques et le DUERP sont utiles.",
+            "La consigne EPI, les stocks, l'adaptation aux lunettes, l'arrêt de l'opération et le signalement ne sont pas demandés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 2
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "Aucune règle relative aux EPI ou aux obligations respectives n'est comparée aux faits."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 1
+        },
+        "source_relevance": {
+          "evidence": [
+            "Aucune source juridique ou locale factuellement pertinente n'est retenue."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 1
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La prudence sur la preuve et la proportionnalité reste exploitable.",
+            "La stratégie principale porte sur un réexamen de coefficient étranger au dossier."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 2
+        }
+      },
+      "dimensions_below_minimum": [
+        "factual_understanding",
+        "question_relevance",
+        "source_relevance",
+        "rule_fact_comparison",
+        "strategy_realism",
+        "adversarial_analysis",
+        "no_invention",
+        "practical_usefulness"
+      ],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [
+        "Contamination par un scénario de classification professionnelle.",
+        "Le risque chimique, les EPI disponibles et le comportement du salarié ne sont pas restitués."
+      ],
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "important_repetitions": [
+        "Questions disciplinaires génériques répétées sans traitement du fait principal."
+      ],
+      "invented_facts": [
+        "Écart de classification ou de coefficient.",
+        "Fonctions exercées au-delà de la fiche de poste."
+      ],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [
+        "Consigne EPI exacte.",
+        "Disponibilité et adaptation des protections.",
+        "Possibilité d'arrêt, urgence et signalement préalable."
+      ],
+      "passed": false,
+      "successes": [
+        "Le besoin de vérifier le DUERP, les incidents et les preuves est évoqué."
+      ],
+      "title": "EPI indisponible ou inadapté lors d'une opération sur acide sulfurique",
+      "total_score": 16,
+      "unrealistic_strategies": [
+        "Demander un réexamen de coefficient."
+      ]
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "correction_priority": "Très haute — empêcher la contamination et comparer clause, cycle, vie familiale, besoin temporaire et alternatives.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Le pouvoir d'organisation de l'employeur est mentionné.",
+            "Le pic de production et les conséquences familiales ne sont pas réellement mis en balance."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 3
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Le domaine temps de travail et une source sur la modification du contrat sont reconnus.",
+            "La restitution principale dérive vers la climatisation SNCC/PROVOX, les analyseurs et les pièces de rechange."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 8
+        },
+        "no_invention": {
+          "evidence": [
+            "Les limites de la fiche officielle sont signalées.",
+            "La réponse invente un dossier SNCC/PROVOX, des pannes, des stocks et un plan de contingence."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 3
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Les prochaines étapes portent principalement sur un autre scénario."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 1
+        },
+        "question_relevance": {
+          "evidence": [
+            "Le cycle et le délai apparaissent seulement dans des constats secondaires.",
+            "La clause, la garde alternée, les horaires de nuit, les six mois et les alternatives ne sont pas priorisés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 2
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "La distinction contrat/conditions de travail est citée sans comparaison avec la clause, le 3x8 ou la garde alternée."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 3
+        },
+        "source_relevance": {
+          "evidence": [
+            "Une fiche officielle sur modification du contrat est pertinente mais son corps n'est pas disponible.",
+            "Une fiche sur la mobilité géographique et de nombreux documents techniques sont hors sujet."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 5
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La réserve sur le pouvoir d'organisation est utile.",
+            "Aucune stratégie concrète de volontariat, permutation, délai ou réponse au refus écrit n'est proposée."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 3
+        }
+      },
+      "dimensions_below_minimum": [
+        "factual_understanding",
+        "question_relevance",
+        "source_relevance",
+        "rule_fact_comparison",
+        "strategy_realism",
+        "adversarial_analysis",
+        "no_invention",
+        "practical_usefulness"
+      ],
+      "employee_path": "QUESTION_SALARIE",
+      "errors": [
+        "Contamination majeure par un scénario technique SNCC/PROVOX.",
+        "La clause et l'atteinte familiale ne structurent pas l'analyse."
+      ],
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "important_repetitions": [
+        "Questions techniques SNCC répétées dans les questions, documents et solutions."
+      ],
+      "invented_facts": [
+        "Pannes de climatisation et d'analyseurs.",
+        "Stocks de pièces critiques et plan de contingence."
+      ],
+      "irrelevant_sources": [
+        "Fiche relative à la clause de mobilité géographique."
+      ],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [
+        "Texte exact de la clause.",
+        "Horaires de nuit et délai de prévenance.",
+        "Garde alternée et alternatives recherchées."
+      ],
+      "passed": false,
+      "successes": [
+        "Le parcours QUESTION_SALARIE est respecté.",
+        "Le thème modification du contrat est détecté."
+      ],
+      "title": "Refus d'un passage temporaire de jour vers un cycle 3x8",
+      "total_score": 28,
+      "unrealistic_strategies": [
+        "Mettre au centre des documents techniques sans lien avec le changement d'horaires."
+      ]
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "correction_priority": "Très haute — préserver le fait technique et distinguer erreur, faute, insuffisance et défaillance documentaire.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "La connaissance de la recette et la responsabilité du système documentaire ne sont pas confrontées."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 2
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Le dosage erroné, la cristallisation, le changement de fournisseur et la procédure obsolète ne sont pas extraits.",
+            "Nexus transforme le dossier en demande de classification professionnelle."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 3
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune autorité juridique précise n'est inventée.",
+            "Une sous-classification et des comparaisons de salariés sont introduites sans fait."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 3
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Aucune préservation prioritaire des journaux ou versions de recette n'est proposée."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 1
+        },
+        "question_relevance": {
+          "evidence": [
+            "La demande générique des preuves est utile.",
+            "La version affichée, les journaux, la formation, le contrôle croisé et le lien causal sont absents."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 2
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "Aucune distinction faute, erreur, insuffisance ou défaillance organisationnelle n'est appliquée."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 1
+        },
+        "source_relevance": {
+          "evidence": [
+            "Aucune source factuellement pertinente n'est retenue."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 1
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La prudence sur la preuve subsiste.",
+            "Le réexamen du coefficient ne répond pas au risque disciplinaire."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 2
+        }
+      },
+      "dimensions_below_minimum": [
+        "factual_understanding",
+        "question_relevance",
+        "source_relevance",
+        "rule_fact_comparison",
+        "strategy_realism",
+        "adversarial_analysis",
+        "no_invention",
+        "practical_usefulness"
+      ],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [
+        "Le fait de fabrication disparaît entièrement.",
+        "Contamination par la classification et la carrière."
+      ],
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "important_repetitions": [
+        "Questions de fiche de poste et de coefficient répétées."
+      ],
+      "invented_facts": [
+        "Sous-classification et écart de coefficient.",
+        "Salariés comparables occupant des fonctions similaires."
+      ],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [
+        "Version exacte de la recette sur le terminal.",
+        "Horodatage de publication et de consultation.",
+        "Formation, contrôle croisé et causalité."
+      ],
+      "passed": false,
+      "successes": [
+        "La nécessité de recueillir les preuves de la direction est rappelée."
+      ],
+      "title": "Erreur de fabrication et procédure informatique potentiellement obsolète",
+      "total_score": 15,
+      "unrealistic_strategies": [
+        "Réexamen de classification au lieu de préserver les preuves techniques."
+      ]
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "correction_priority": "Haute — conserver la bonne catégorie mais extraire la procédure, la fiabilité, le risque concret et les alternatives.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Le risque de sécurité et les garanties procédurales ne sont pas mis en balance de façon factuelle."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 3
+        },
+        "factual_understanding": {
+          "evidence": [
+            "La catégorie alcool ou stupéfiants et le contexte disciplinaire sont reconnus.",
+            "Le poste de cariste, le résultat annoncé, la procédure, la contre-expertise et l'ancienneté ne sont pas restitués."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 10
+        },
+        "no_invention": {
+          "evidence": [
+            "La catégorie alcool n'est pas inventée.",
+            "Des pannes SNCC/PROVOX, pièces critiques et risques de continuité d'exploitation contaminent la réponse."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 3
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Demander règlement intérieur et dossier disciplinaire est utile, mais insuffisant pour contrôler l'éthylotest."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 2
+        },
+        "question_relevance": {
+          "evidence": [
+            "Le règlement intérieur, les faits, les preuves et la proportionnalité sont demandés.",
+            "L'unité, la calibration, la contre-expertise, l'heure et la prise du chariot sont omises."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 4
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "La régularité et la proportionnalité sont évoquées sans comparaison avec les garanties annoncées."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 2
+        },
+        "source_relevance": {
+          "evidence": [
+            "La procédure disciplinaire est visée sans source précise.",
+            "Aucune source sur le contrôle d'alcoolémie ou le poste à risque n'est retenue."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 2
+        },
+        "strategy_realism": {
+          "evidence": [
+            "Vérifier les preuves et la proportionnalité est une base prudente.",
+            "La réponse ne prépare ni contestation technique ni stratégie conditionnelle selon la prise du chariot."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 4
+        }
+      },
+      "dimensions_below_minimum": [
+        "factual_understanding",
+        "question_relevance",
+        "source_relevance",
+        "rule_fact_comparison",
+        "strategy_realism",
+        "adversarial_analysis",
+        "no_invention"
+      ],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [
+        "Les garanties spécifiques du contrôle ne sont pas analysées.",
+        "Contamination par un scénario technique de climatisation et d'analyseurs."
+      ],
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "important_repetitions": [
+        "Questions techniques hors sujet répétées."
+      ],
+      "invented_facts": [
+        "Pannes SNCC/PROVOX et stocks de pièces.",
+        "Risque de rupture de continuité d'exploitation."
+      ],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [
+        "Unité, heure, matériel et calibration.",
+        "Contre-expertise réellement accessible.",
+        "Prise effective du chariot et mise en sécurité."
+      ],
+      "passed": false,
+      "successes": [
+        "La catégorie disciplinaire principale est détectée.",
+        "La réponse ne promet pas que l'ancienneté exclut la faute grave."
+      ],
+      "title": "Contrôle d'alcoolémie positif sur un poste à risque",
+      "total_score": 30,
+      "unrealistic_strategies": [
+        "Approche purement procédurale sans contrôle technique du résultat."
+      ]
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "correction_priority": "Très haute — distinguer insulte de menace et préserver la cible, puis comparer les repos au planning.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "La fatigue est identifiée comme facteur atténuant et la gravité comme provisoire.",
+            "La publicité des insultes et l'argument patronal sur le respect hiérarchique sont insuffisamment traités."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 4
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Le disciplinaire, la fatigue et le temps de travail sont détectés.",
+            "Les insultes sont transformées en menace ou violence et la cible devient un collègue au lieu du superviseur."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 9
+        },
+        "no_invention": {
+          "evidence": [
+            "Les articles cités sont traçables.",
+            "Une menace, une violence et un dossier technique SNCC sont inventés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 4
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Les documents disciplinaires et les repos peuvent être vérifiés.",
+            "La préparation reste très générique et contaminée."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 2
+        },
+        "question_relevance": {
+          "evidence": [
+            "Les faits, les preuves et les repos sont abordés.",
+            "Les mots exacts, la remarque du superviseur, les excuses, les antécédents et le planning précis ne sont pas priorisés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 3
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "Les repos sont cités mais non comparés au planning allégué de cinq nuits.",
+            "La qualification disciplinaire repose sur une menace non fournie."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 4
+        },
+        "source_relevance": {
+          "evidence": [
+            "Les articles L. 3131-1 et L. 3132-2 sur les repos sont officiels et pertinents au contexte.",
+            "Aucune jurisprudence comparable sur les insultes et de nombreux documents SNCC sont hors sujet."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 6
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La prudence sur reconnaissance, preuve et proportionnalité est utile.",
+            "La stratégie ne varie pas selon les mots, les excuses ou la contestation."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 5
+        }
+      },
+      "dimensions_below_minimum": [
+        "factual_understanding",
+        "question_relevance",
+        "source_relevance",
+        "rule_fact_comparison",
+        "strategy_realism",
+        "adversarial_analysis",
+        "no_invention"
+      ],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [
+        "Insultes requalifiées en menace ou violence.",
+        "Superviseur remplacé par un collègue.",
+        "Contamination par le scénario SNCC/PROVOX."
+      ],
+      "hard_failures": [
+        "FACTUAL_MISUNDERSTANDING",
+        "PRIMARY_FACT_CONTRADICTION",
+        "INVENTED_AUTHORITY_OR_EVIDENCE",
+        "FORBIDDEN_FALSE_LEAD"
+      ],
+      "important_repetitions": [
+        "Questions techniques hors sujet reprises dans plusieurs sections."
+      ],
+      "invented_facts": [
+        "Menace ou violence alléguée.",
+        "Cible qualifiée de collègue.",
+        "Incident SNCC/PROVOX."
+      ],
+      "irrelevant_sources": [
+        "Documents de climatisation, analyseurs, stocks et plan de contingence."
+      ],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [
+        "Mots exacts et menace éventuelle.",
+        "Remarque du superviseur et témoins.",
+        "Planning, repos, excuses et antécédents."
+      ],
+      "passed": false,
+      "successes": [
+        "La fatigue est traitée comme contexte allégué, non comme excuse automatique.",
+        "Deux articles officiels sur les repos sont retrouvés."
+      ],
+      "title": "Insultes envers un supérieur dans un contexte de fatigue et de surcharge",
+      "total_score": 37,
+      "unrealistic_strategies": [
+        "Stratégie standardisée de menace ou violence."
+      ]
+    }
+  ],
+  "difference_from_initial_baseline": -7.47,
+  "failed_cases": [
+    "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+    "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+    "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+    "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+    "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT"
+  ],
+  "initial_baseline_average": 32.67,
+  "passed_cases": [],
+  "score_average": 25.2,
+  "transversal": {
+    "findings": [
+      "Les cinq cas échouent au verrou de compréhension factuelle.",
+      "Les réponses disciplinaires génériques perdent les faits techniques spécifiques.",
+      "Des contaminations récurrentes par la classification professionnelle et le scénario SNCC/PROVOX apparaissent.",
+      "Le parcours demandé est respecté, mais cela ne suffit pas à préserver le dossier.",
+      "Les sources officielles pertinentes restent rares et sont peu comparées aux faits.",
+      "La priorité demeure l'isolation du scénario, l'extraction du fait principal et la sélection factuelle des questions et sources."
+    ]
+  }
+}

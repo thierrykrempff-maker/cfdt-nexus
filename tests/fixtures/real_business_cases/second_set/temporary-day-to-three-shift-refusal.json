@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0",
+  "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+  "title": "Refus d'un passage temporaire de jour vers un cycle 3x8",
+  "completeness": {
+    "status": "complete_for_initial_analysis",
+    "analysis_state": "ready_for_initial_analysis",
+    "limitations": [
+      "Le contrat, le cycle exact, le délai de prévenance et les conséquences familiales ne sont pas documentés.",
+      "La qualification contractuelle et la proportionnalité d'une mesure restent conditionnelles."
+    ]
+  },
+  "privacy": {
+    "classification": "restricted_validation_fixture",
+    "anonymized": true,
+    "direct_identifiers": []
+  },
+  "case_input": {
+    "facts_provided": [
+      "Un technicien de laboratoire travaille en horaire de journée depuis quatre ans.",
+      "L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.",
+      "Le salarié a formulé un refus écrit.",
+      "Le contrat contient une clause de variabilité des horaires.",
+      "L'employeur invoque un pic de production et refuse de rechercher une solution alternative."
+    ],
+    "facts_recognized": [
+      "Le salarié reconnaît avoir refusé par écrit le changement annoncé."
+    ],
+    "facts_contested": [],
+    "facts_alleged": [
+      "Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+      "L'employeur allègue que le besoin est temporaire et lié à un pic de production."
+    ],
+    "missing_information": [
+      {
+        "item": "Texte exact de la clause de variabilité et fonctions contractuelles",
+        "importance": "blocking",
+        "reason": "La portée de la clause ne peut pas être présumée."
+      },
+      {
+        "item": "Horaires détaillés du 3x8, présence de nuit et calendrier des six mois",
+        "importance": "blocking",
+        "reason": "Le passage éventuel au travail de nuit et l'impact concret doivent être identifiés."
+      },
+      {
+        "item": "Délai de prévenance et date d'effet",
+        "importance": "high",
+        "reason": "Le délai conditionne la possibilité réelle d'organisation familiale."
+      },
+      {
+        "item": "Justificatifs et organisation précise de la garde alternée",
+        "importance": "high",
+        "reason": "L'atteinte à la vie personnelle et familiale doit être concrètement appréciée."
+      },
+      {
+        "item": "Recherche de volontaires, permutations et traitement des salariés comparables",
+        "importance": "high",
+        "reason": "Ces éléments éclairent la nécessité et la proportionnalité de la décision."
+      }
+    ],
+    "requested_path": "QUESTION_SALARIE"
+  },
+  "evaluation_expectations": {
+    "possible_legal_categories": [
+      "Modification du contrat ou changement des conditions de travail",
+      "Passage éventuel d'un horaire de jour à un horaire de nuit",
+      "Atteinte à la vie personnelle et familiale",
+      "Portée d'une clause de variabilité des horaires",
+      "Proportionnalité d'une éventuelle sanction ou rupture"
+    ],
+    "priority_questions": [
+      {
+        "priority": 1,
+        "question": "Quel est le texte exact de la clause et quels sont les horaires précis du cycle 3x8 ?",
+        "why_it_matters": "Qualifier la portée contractuelle et identifier le travail de nuit."
+      },
+      {
+        "priority": 2,
+        "question": "Quel délai de prévenance a été donné et comment la garde alternée serait-elle concrètement affectée ?",
+        "why_it_matters": "Mesurer l'atteinte familiale et la possibilité de s'organiser."
+      },
+      {
+        "priority": 3,
+        "question": "Pourquoi six mois, quels éléments établissent le pic de production et quelles alternatives ont été examinées ?",
+        "why_it_matters": "Tester le caractère temporaire, nécessaire et proportionné."
+      },
+      {
+        "priority": 4,
+        "question": "Des volontaires ou permutations ont-ils été recherchés et comment les autres salariés sont-ils traités ?",
+        "why_it_matters": "Évaluer les solutions moins contraignantes et l'égalité de traitement."
+      }
+    ],
+    "expected_searches": {
+      "local_sources": [
+        {
+          "objective": "Identifier les cycles, délais, priorités et garanties locales.",
+          "query_or_document": "Contrat, accords INEOS sur horaires postés et travail de nuit, planning et note de service",
+          "availability": "unknown"
+        }
+      ],
+      "legifrance": [
+        {
+          "objective": "Vérifier le régime du travail de nuit et les règles de modification des horaires.",
+          "query_or_document": "Code du travail et CCN industries chimiques IDCC 44 sur travail de nuit, horaires et vie personnelle",
+          "availability": "unknown"
+        }
+      ],
+      "judilibre": [
+        {
+          "objective": "Rechercher des décisions factuellement comparables.",
+          "query_or_document": "passage horaire jour 3x8 temporaire clause variabilité garde alternée refus salarié",
+          "availability": "unknown"
+        }
+      ],
+      "cse_minutes": [
+        {
+          "objective": "Vérifier la présentation du besoin, les effectifs et les alternatives.",
+          "query_or_document": "PV CSE/CSSCT sur laboratoire, passage en 3x8 et pic de production",
+          "availability": "unknown"
+        }
+      ]
+    },
+    "forbidden_false_leads": [
+      "Présenter la vie familiale comme un droit absolu de refuser tout changement.",
+      "Conclure sans lire la clause que le changement est nécessairement contractuel ou nécessairement imposable.",
+      "Confondre ce cas temporaire avec un remplacement définitif après démission."
+    ],
+    "employee_arguments": [
+      "Le passage au 3x8, surtout s'il inclut la nuit, peut bouleverser un élément essentiel de l'organisation personnelle.",
+      "La clause doit être interprétée précisément et ne justifie pas toute modification.",
+      "Le refus d'examiner volontariat, permutation ou adaptation peut fragiliser la proportionnalité."
+    ],
+    "possible_employer_arguments": [
+      "La clause autoriserait la variation et le besoin serait objectif, limité à six mois.",
+      "Le pic de production justifierait une organisation temporaire.",
+      "Le refus écrit pourrait être considéré fautif si le changement relevait des conditions de travail."
+    ],
+    "risks": [
+      "Sanction ou licenciement en cas de refus jugé injustifié.",
+      "Atteinte disproportionnée à la vie personnelle et familiale.",
+      "Pérennisation d'un changement annoncé comme temporaire."
+    ],
+    "possible_outcomes": [
+      "Maintien en journée ou aménagement négocié.",
+      "Passage temporaire avec garanties et calendrier précis.",
+      "Contentieux sur le refus et la qualification du changement."
+    ],
+    "response_quality_criteria": [
+      "Demander la clause et le cycle avant de conclure.",
+      "Comparer le besoin invoqué aux conséquences familiales et aux alternatives.",
+      "Ne pas appliquer automatiquement la réponse du cas historique jour-vers-poste."
+    ]
+  },
+  "evaluation_only": {
+    "never_include_in_initial_prompt": true,
+    "known_outcome": {
+      "status": "unknown",
+      "facts": [],
+      "evaluation_use_only": "realism_check_after_response"
+    }
+  }
+}
