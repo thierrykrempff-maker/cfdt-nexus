@@ -19,7 +19,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -427,26 +427,33 @@ class LegifranceClient:
         }
 
     def healthcheck(self) -> dict[str, Any]:
-        token = self.authenticate()
-        request = urllib.request.Request(
-            self.config.endpoint_url("/list/ping"),
-            headers={
-                "Authorization": f"{token.get('token_type') or 'Bearer'} {token['access_token']}",
-                "Accept": "application/json",
-            },
-            method="GET",
+        self.ensure_configured()
+        search_response = self._post_json(
+            self.config.search_endpoint,
+            build_search_payload("travail", limit=1),
         )
-        try:
-            with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:  # noqa: S310
-                raw = response.read().decode("utf-8")
-                return {"status": response.status, "payload_present": bool(raw)}
-        except urllib.error.HTTPError as exc:
+        hits = extract_article_hits(search_response)
+        if not hits or not hits[0].get("official_id"):
             raise LegifranceAPIError(
-                f"API Legifrance refuse: HTTP {exc.code} {exc.reason}.",
-                status_code=exc.code,
-            ) from exc
-        except urllib.error.URLError as exc:
-            raise LegifranceAPIError(f"API Legifrance indisponible: {safe_reason(exc)}.") from exc
+                "API Legifrance: /search ne retourne aucun article officiel exploitable.",
+                endpoint=self.config.endpoint_url(self.config.search_endpoint),
+            )
+        article_id = str(hits[0]["official_id"])
+        article_response = self._post_json(self.config.article_endpoint, {"id": article_id})
+        if not article_response:
+            raise LegifranceAPIError(
+                "API Legifrance: /consult/getArticle retourne une reponse vide.",
+                endpoint=self.config.endpoint_url(self.config.article_endpoint),
+            )
+        return {
+            "status": 200,
+            "functional_operations": {
+                "search": True,
+                "get_article": True,
+            },
+            "article_id": article_id,
+            "ping_required": False,
+        }
 
     def search_article_hits(self, query: str, limit: int = 3, page: int = 1) -> list[dict[str, Any]]:
         self.ensure_configured()
@@ -838,13 +845,27 @@ def write_json_file(path: Path, payload: Any) -> None:
         return
 
 
-def build_search_payload(query: str, limit: int, page: int = 1) -> dict[str, Any]:
+def build_search_payload(
+    query: str,
+    limit: int,
+    page: int = 1,
+    version_date: str | date | datetime | None = None,
+) -> dict[str, Any]:
     page_size = max(1, min(limit, 10))
+    normalized_version_date = normalize_version_date(version_date)
+    filters = [
+        {
+            "facette": "NOM_CODE" if normalized_version_date else "TEXT_NOM_CODE",
+            "valeurs": [CODE_DU_TRAVAIL_LABEL],
+        }
+    ]
+    if normalized_version_date:
+        filters.append({"facette": "DATE_VERSION", "singleDate": normalized_version_date})
     return {
         "recherche": {
             "champs": [
                 {
-                    "typeChamp": "ALL",
+                    "typeChamp": "ARTICLE",
                     "criteres": [
                         {
                             "typeRecherche": "UN_DES_MOTS",
@@ -855,16 +876,34 @@ def build_search_payload(query: str, limit: int, page: int = 1) -> dict[str, Any
                     "operateur": "ET",
                 }
             ],
-            "filtres": [{"facette": "TEXT_NOM_CODE", "valeurs": [CODE_DU_TRAVAIL_LABEL]}],
+            "filtres": filters,
             "fromAdvancedRecherche": False,
             "pageNumber": max(1, page),
             "pageSize": page_size,
             "operateur": "ET",
             "sort": "PERTINENCE",
-            "typePagination": "ARTICLE",
+            "typePagination": "DEFAUT",
         },
-        "fond": "CODE_DATE",
+        "fond": "CODE_DATE" if normalized_version_date else "CODE_ETAT",
     }
+
+
+def normalize_version_date(value: str | date | datetime | None) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value.date().isoformat()
+    if isinstance(value, date):
+        return value.isoformat()
+    cleaned = str(value).strip()
+    if not cleaned:
+        raise ValueError("Date de version Legifrance vide.")
+    try:
+        return date.fromisoformat(cleaned).isoformat()
+    except ValueError as exc:
+        raise ValueError(
+            "Date de version Legifrance invalide: format attendu AAAA-MM-JJ."
+        ) from exc
 
 
 def build_idcc_search_payload(idcc: str, query: str, limit: int, page: int = 1) -> dict[str, Any]:

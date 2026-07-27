@@ -101,11 +101,72 @@ def test_judilibre_environment_precedence_and_independence(monkeypatch: pytest.M
 def test_legifrance_code_search_payload_uses_official_facets_and_pagination() -> None:
     payload = legifrance.build_search_payload("L1221-1", 5, page=3)
     search = payload["recherche"]
-    assert payload["fond"] == "CODE_DATE"
+    assert payload["fond"] == "CODE_ETAT"
+    assert search["champs"][0]["typeChamp"] == "ARTICLE"
     assert search["filtres"] == [{"facette": "TEXT_NOM_CODE", "valeurs": ["Code du travail"]}]
     assert search["pageNumber"] == 3
-    assert search["typePagination"] == "ARTICLE"
+    assert search["typePagination"] == "DEFAUT"
     assert search["operateur"] == "ET"
+    assert not any(item["facette"] == "DATE_VERSION" for item in search["filtres"])
+
+
+def test_legifrance_historical_search_requires_and_normalizes_version_date() -> None:
+    payload = legifrance.build_search_payload("responsabilite", 5, version_date="2025-04-15")
+    search = payload["recherche"]
+    assert payload["fond"] == "CODE_DATE"
+    assert search["typePagination"] == "DEFAUT"
+    assert search["filtres"] == [
+        {"facette": "NOM_CODE", "valeurs": ["Code du travail"]},
+        {"facette": "DATE_VERSION", "singleDate": "2025-04-15"},
+    ]
+
+
+@pytest.mark.parametrize("invalid_date", ["", "15/04/2025", "2025-02-30", "not-a-date"])
+def test_legifrance_historical_search_rejects_invalid_version_date(invalid_date: str) -> None:
+    with pytest.raises(ValueError, match="Date de version Legifrance"):
+        legifrance.build_search_payload("responsabilite", 5, version_date=invalid_date)
+
+
+def test_legifrance_healthcheck_uses_functional_operations_not_ping(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    client = legifrance.LegifranceClient(
+        legifrance.LegifranceConfig("id", "secret", cache_dir=tmp_path)
+    )
+    calls = []
+
+    def fake_post(endpoint, payload):
+        calls.append((endpoint, payload))
+        if endpoint == client.config.search_endpoint:
+            return {"results": [{"id": "LEGIARTI000033020517"}]}
+        if endpoint == client.config.article_endpoint:
+            return {"article": {"id": payload["id"], "texte": "Texte officiel"}}
+        raise AssertionError(f"Endpoint inattendu: {endpoint}")
+
+    monkeypatch.setattr(client, "_post_json", fake_post)
+    result = client.healthcheck()
+    assert result["functional_operations"] == {"search": True, "get_article": True}
+    assert result["ping_required"] is False
+    assert [endpoint for endpoint, _payload in calls] == ["/search", "/consult/getArticle"]
+
+
+def test_legifrance_article_normalization_keeps_official_provenance() -> None:
+    source = legifrance.normalize_article_source(
+        {
+            "article": {
+                "id": "LEGIARTI000033020517",
+                "num": "L3121-1",
+                "texte": "Texte officiel",
+                "etat": "VIGUEUR",
+                "titreTexte": "Code du travail",
+            }
+        },
+        "LEGIARTI000033020517",
+    )
+    assert source["source"] == "legifrance"
+    assert source["official_reference"] == "LEGIFRANCE:LEGIARTI000033020517"
+    assert source["article"] == "L3121-1"
+    assert source["excerpt"] == "Texte officiel"
 
 
 def test_legifrance_idcc_44_payload_is_structured() -> None:
