@@ -201,6 +201,68 @@ def test_employee_questionnaire_collects_and_explicitly_exports_answers() -> Non
     assert "sessionStorage" not in script
 
 
+def test_local_interface_distinguishes_server_unavailable_from_raw_fetch_error() -> None:
+    script = (ROOT / "apps" / "nexus-local-interface" / "app.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert (
+        "Le serveur Nexus local ne répond pas. Relancez start-nexus-local.bat "
+        "puis ouvrez http://127.0.0.1:8765/"
+    ) in script
+    assert 'new NexusRequestError("network", SERVER_UNAVAILABLE_MESSAGE)' in script
+    assert "renderError(error.message)" not in script
+
+
+def test_local_interface_has_a_specific_analysis_timeout() -> None:
+    script = (ROOT / "apps" / "nexus-local-interface" / "app.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "const ANALYZE_TIMEOUT_MS" in script
+    assert "new AbortController()" in script
+    assert 'error?.name === "AbortError"' in script
+    assert "Le délai d’analyse est dépassé." in script
+
+
+def test_local_interface_reports_http_status_and_business_error_safely() -> None:
+    script = (ROOT / "apps" / "nexus-local-interface" / "app.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Erreur HTTP ${response.status}" in script
+    assert "if (!response.ok)" in script
+    assert "if (!payload.ok)" in script
+    assert 'new NexusRequestError("business", businessMessage)' in script
+    assert "Une erreur interne Nexus est survenue." in script
+
+
+def test_local_interface_rejects_invalid_json_and_keeps_valid_payload() -> None:
+    script = (ROOT / "apps" / "nexus-local-interface" / "app.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "rawBody = await response.text()" in script
+    assert "const payload = parseNexusResponse(rawBody)" in script
+    assert "Le serveur Nexus a renvoyé une réponse invalide" in script
+    assert 'new NexusRequestError("invalid_json", INVALID_SERVER_RESPONSE_MESSAGE)' in script
+    assert "return payload;" in script
+    assert "renderResult(payload)" in script
+
+
+def test_local_launcher_refuses_a_silent_second_instance() -> None:
+    launcher = (
+        ROOT / "apps" / "nexus-local-interface" / "start-nexus-local.bat"
+    ).read_text(encoding="utf-8")
+
+    assert "TcpClient" in launcher
+    assert "http://127.0.0.1:8765/health" in launcher
+    assert "Une instance Nexus est deja active." in launcher
+    assert "Le port 8765 est deja utilise par une autre application." in launcher
+    assert 'if "%NEXUS_PORT_STATE%"=="0"' in launcher
+    assert 'if "%NEXUS_PORT_STATE%"=="2"' in launcher
+
+
 def test_server_passes_explicit_employee_path_to_router(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

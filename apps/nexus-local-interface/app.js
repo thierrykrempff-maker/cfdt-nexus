@@ -91,6 +91,90 @@ let selectedSituation = "";
 let selectedOutcome = "";
 let sessionHistoryCount = 0;
 
+const ANALYZE_TIMEOUT_MS = 190000;
+const SERVER_UNAVAILABLE_MESSAGE =
+  "Le serveur Nexus local ne répond pas. Relancez start-nexus-local.bat puis ouvrez http://127.0.0.1:8765/";
+const ANALYZE_TIMEOUT_MESSAGE =
+  "Le délai d’analyse est dépassé. Vérifiez que le serveur Nexus est toujours actif puis réessayez.";
+const INVALID_SERVER_RESPONSE_MESSAGE =
+  "Le serveur Nexus a renvoyé une réponse invalide";
+
+class NexusRequestError extends Error {
+  constructor(kind, message, status = null) {
+    super(message);
+    this.name = "NexusRequestError";
+    this.kind = kind;
+    this.status = status;
+  }
+}
+
+function parseNexusResponse(rawBody) {
+  try {
+    return JSON.parse(rawBody);
+  } catch (_error) {
+    return null;
+  }
+}
+
+function httpErrorMessage(response, payload) {
+  const serverMessage =
+    payload && typeof payload.error === "string" ? payload.error.trim() : "";
+  const fallback =
+    response.status >= 500
+      ? "Une erreur interne Nexus est survenue."
+      : "La requête a été refusée par le serveur Nexus.";
+  return `Erreur HTTP ${response.status} — ${serverMessage || fallback}`;
+}
+
+async function requestNexusAnalysis(requestPayload, timeoutMs = ANALYZE_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+  let response;
+
+  try {
+    response = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestPayload),
+      signal: controller.signal
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new NexusRequestError("timeout", ANALYZE_TIMEOUT_MESSAGE);
+    }
+    throw new NexusRequestError("network", SERVER_UNAVAILABLE_MESSAGE);
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+
+  let rawBody;
+  try {
+    rawBody = await response.text();
+  } catch (_error) {
+    throw new NexusRequestError("network", SERVER_UNAVAILABLE_MESSAGE);
+  }
+  const payload = parseNexusResponse(rawBody);
+
+  if (!response.ok) {
+    throw new NexusRequestError(
+      "http",
+      httpErrorMessage(response, payload),
+      response.status
+    );
+  }
+  if (!payload) {
+    throw new NexusRequestError("invalid_json", INVALID_SERVER_RESPONSE_MESSAGE);
+  }
+  if (!payload.ok) {
+    const businessMessage =
+      typeof payload.error === "string" && payload.error.trim()
+        ? payload.error.trim()
+        : "Nexus n’a pas pu traiter cette analyse.";
+    throw new NexusRequestError("business", businessMessage);
+  }
+  return payload;
+}
+
 const examples = [
   "classification",
   "Un salarie en 5x8 peut-il assister a une reunion du CSE pendant son repos, et comment ce temps doit-il etre traite ?",
@@ -1113,19 +1197,15 @@ form.addEventListener("submit", async (event) => {
   showOnly("loading");
 
   try {
-    const response = await fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestPayload)
-    });
-    const payload = await response.json();
-    if (!response.ok || !payload.ok) {
-      throw new Error(payload.error || "Erreur locale.");
-    }
+    const payload = await requestNexusAnalysis(requestPayload);
     renderResult(payload);
     setStatus("Analyse OK", payload.orchestration?.niveau_de_confiance || payload.answer.confidence);
   } catch (error) {
-    renderError(error.message);
+    const userMessage =
+      error instanceof NexusRequestError
+        ? error.message
+        : "Une erreur interne Nexus est survenue.";
+    renderError(userMessage);
     setStatus("Erreur", "faible");
     showOnly("result");
   } finally {
