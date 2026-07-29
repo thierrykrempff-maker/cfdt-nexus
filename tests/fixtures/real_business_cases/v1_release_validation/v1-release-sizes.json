@@ -1,0 +1,97 @@
+{
+  "average_bytes": 29891.55,
+  "cases": [
+    {
+      "analysis_suspended": false,
+      "before_bytes": 164791,
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "reduction_percent": 79.23,
+      "size_bytes": 34222,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 145250,
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "reduction_percent": 72.74,
+      "size_bytes": 39595,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 124349,
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "reduction_percent": 72.19,
+      "size_bytes": 34582,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 149333,
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "reduction_percent": 75.46,
+      "size_bytes": 36647,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": true,
+      "before_bytes": 72536,
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "reduction_percent": 71.9,
+      "size_bytes": 20379,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": true,
+      "before_bytes": 67802,
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "reduction_percent": 73.42,
+      "size_bytes": 18019,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 132953,
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "reduction_percent": 73.23,
+      "size_bytes": 35587,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 140110,
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "reduction_percent": 74.45,
+      "size_bytes": 35804,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 111219,
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "reduction_percent": 81.3,
+      "size_bytes": 20802,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 144628,
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "reduction_percent": 80.21,
+      "size_bytes": 28628,
+      "within_hard_limit": true
+    },
+    {
+      "analysis_suspended": false,
+      "before_bytes": 125360,
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "reduction_percent": 80.42,
+      "size_bytes": 24542,
+      "within_hard_limit": true
+    }
+  ],
+  "hard_limit_complete_bytes": 45000,
+  "hard_limit_suspended_bytes": 25000,
+  "target_complete_bytes": 30000,
+  "target_suspended_bytes": 15000
+}

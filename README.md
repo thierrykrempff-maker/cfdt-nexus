@@ -1,86 +1,122 @@
-# CFDT Nexus
+# CFDT Nexus 1.0.0
 
-CFDT Nexus est une plateforme IA destinée à assister les représentants du personnel et à améliorer le service rendu aux salariés.
+CFDT Nexus est un assistant syndical local destiné à préparer une analyse prudente,
+traçable et exploitable par un délégué syndical. Il aide à structurer les faits, les
+questions, les documents utiles et les sources disponibles. Il ne remplace ni la
+validation humaine, ni un conseil juridique, médical ou financier compétent.
 
-Le projet vise à structurer un environnement professionnel capable d'aider les équipes syndicales à préparer leurs analyses, organiser leurs connaissances, suivre les sujets sociaux et produire des réponses plus claires, plus rapides et mieux documentées.
+## Périmètre V1
 
-L'intelligence artificielle y est conçue comme un appui au travail humain : elle aide à rechercher, résumer, comparer, préparer et formaliser, mais les décisions, validations et positions syndicales restent sous responsabilité des représentants.
+La V1 garantit deux parcours :
 
-## Ambition
+- `QUESTION_SALARIE` : réponse pédagogique fondée sur les faits et les sources
+  réellement disponibles ;
+- `ASSISTANCE_ENTRETIEN_DISCIPLINAIRE` : préparation concrète d'un entretien,
+  avec griefs, preuves, questions, documents, stratégie et formulations.
 
-CFDT Nexus doit pouvoir évoluer vers :
+La comparaison sources–faits n'est produite que lorsque les documents sont
+réellement disponibles. En mode dégradé, Nexus signale les sources absentes et
+suspend la conclusion lorsque les informations ne suffisent pas.
 
-- un assistant privé pour Thierry ;
-- un chatbot public pour les salariés ;
-- une base documentaire structurée ;
-- des agents spécialisés ;
-- des workflows n8n ;
-- un site web ;
-- une veille automatique ;
-- des automatisations GitHub ;
-- des tests ;
-- une documentation technique durable.
+La V1 ne garantit pas un calcul de paie, une décision juridique définitive, un
+conseil médical, un service multi-utilisateur ou un stockage serveur de dossiers.
 
-## Principes
+## Installation
 
-- assistance, pas substitution ;
-- validation humaine obligatoire ;
-- traçabilité des sources et des décisions ;
-- protection des données personnelles ;
-- séparation stricte entre informations publiques et internes ;
-- architecture lisible et maintenable ;
-- amélioration continue par versions.
-
-## Assistant DS Router V1.1 / V1.2 corrective
-
-Le prototype `automation/scripts/assistant_ds_router.py` sert de routeur central local.
-
-Il recoit une question naturelle, detecte les domaines metier et l'intention, choisit automatiquement les moteurs locaux disponibles, puis produit une reponse Assistant DS avec reponse courte, sources locales rerankees, documents a recuperer, questions a poser, groupes d'enjeux, position de travail et points de prudence.
-
-Commandes principales :
+Python 3.10 ou ultérieur est requis.
 
 ```powershell
-python automation/scripts/assistant_ds_router.py ask --query "Un salarie pense etre mal classe car il exerce plus de responsabilites que sa fiche de poste." --source-limit 6
-python automation/scripts/assistant_ds_router.py route --query "Quels documents demander pour controler les compteurs d'heures ?"
-python automation/scripts/assistant_ds_router.py diagnose
-python automation/scripts/assistant_ds_router.py run-scenarios
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Documentation : `docs/architecture/ASSISTANT_DS_ROUTER_V1.md` et `docs/architecture/ASSISTANT_DS_ROUTER_V1_1.md`.
+Les formats documentaires facultatifs s'installent séparément :
 
-## Interface locale Nexus V2.1
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-optional.txt
+```
 
-`apps/nexus-local-interface/` fournit une interface locale privee pour poser une question a Nexus sans PowerShell.
+Leur absence ne bloque pas le cœur V1 ; le format concerné est simplement indiqué
+comme indisponible.
 
-Lancement :
+## Lancement et arrêt
+
+Sous Windows, double-cliquer sur :
 
 ```text
 apps\nexus-local-interface\start-nexus-local.bat
 ```
 
-L'interface appelle localement `assistant_ds_router.py ask --format json`, puis enrichit la reponse avec une orchestration locale Juriste + Paie. Le routeur V1.2 reste le socle d'aiguillage ; les experts ajoutent qualification, methode de controle, sources, limites et synthese prudente.
+ou lancer :
 
-## Architecture
+```powershell
+python apps\nexus-local-interface\server.py --open
+```
 
-- `.github/` : automatisations GitHub, modèles d'issues et de pull requests ;
-- `docs/` : documentation produit, technique, sécurité et exploitation ;
-- `agents/` : agents IA spécialisés et prompts système associés ;
-- `prompts/` : prompts réutilisables pour Codex, ChatGPT et systèmes ;
-- `knowledge-base/` : base documentaire organisée par nature de source ;
-- `apps/` : futurs assistants et interfaces applicatives ;
-- `site/` : futur site ou interface web du projet ;
-- `workflows/` : workflows n8n, GitHub et veille ;
-- `automation/` : scripts, jobs et traitements automatisés ;
-- `tests/` : tests agents, prompts, workflows et site ;
-- `config/` : configuration, environnements et schémas.
+L'interface écoute uniquement sur `http://127.0.0.1:8765/`. Le lanceur accepte un
+fichier local ignoré par Git, `local-index\nexus-local-secrets.cmd`, mais démarre
+aussi en mode dégradé s'il est absent.
 
-## Documentation clé
+Pour arrêter proprement :
 
-- `docs/architecture/ARCHITECTURE_GLOBALE_V1.md`
-- `docs/architecture/ASSISTANT_DS_ROUTER_V1.md`
-- `docs/architecture/VEILLE_SOURCES_V1.md`
-- `docs/decisions/ADR-0001-architecture-initiale.md`
-- `agents/README.md`
-- `knowledge-base/README.md`
-- `workflows/README.md`
-- `tests/README.md`
+```text
+apps\nexus-local-interface\stop-nexus-local.bat
+```
+
+## Utilisation
+
+1. Choisir le parcours adapté.
+2. Décrire uniquement les faits utiles, sans donnée personnelle superflue.
+3. Lancer l'analyse.
+4. Lire d'abord la synthèse publique.
+5. Ouvrir l'analyse détaillée pour la traçabilité.
+6. Copier, imprimer ou exporter volontairement la synthèse.
+
+## Sources
+
+Nexus hiérarchise les accords INEOS, la CCNIC IDCC 44, le Code du travail, la
+jurisprudence comparable et les sources officielles complémentaires. Les PV CSE ou
+CSSCT constituent un contexte documentaire, pas une norme juridique.
+
+Les connecteurs avancés sont désactivés par défaut. Leur disponibilité dépend de la
+configuration locale, des métadonnées présentes et, pour les services externes, des
+identifiants autorisés. Un connecteur indisponible n'est jamais présenté comme
+opérationnel.
+
+## Confidentialité
+
+- serveur lié à l'interface de bouclage uniquement ;
+- aucun stockage navigateur automatique ;
+- aucun dossier salarié persisté par le serveur ;
+- secrets attendus dans un fichier local ignoré par Git ;
+- export limité à la synthèse publique et déclenché par l'utilisateur ;
+- diagnostics techniques et chemins locaux exclus des réponses publiques.
+
+## Tests
+
+```powershell
+python -m pytest
+python tools/run_v1_release_validation.py
+```
+
+Les dépendances de `requirements-optional.txt` rendent disponibles des tests et
+formats supplémentaires. Si elles manquent, les tests associés sont marqués
+`SKIPPED`, pas `FAILED`.
+
+## Dépannage
+
+- `/health` ne répond pas : vérifier Python, le port 8765 et le pare-feu local ;
+- port occupé : arrêter l'ancienne instance avec le lanceur d'arrêt ;
+- source externe absente : vérifier la configuration locale, sans placer de secret
+  dans Git ;
+- format indisponible : installer `requirements-optional.txt` ;
+- résultat suspendu : compléter les faits ou fournir le document demandé.
+
+Guides :
+
+- [Guide utilisateur](V1_USER_GUIDE.md)
+- [Guide technique](V1_TECHNICAL_GUIDE.md)
+- [Limites connues](V1_KNOWN_LIMITATIONS.md)
+- [Rapport de préparation](V1_RELEASE_READINESS_REPORT.md)
+
+La version produit est définie une seule fois dans `VERSION`.

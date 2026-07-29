@@ -1,0 +1,671 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "public_response_size_bytes": 35587,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "nexus_version": "1.0.0",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+            "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+            "Le salarié a huit ans d'ancienneté."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — La situation comporte un enjeu de santé ou de sécurité à traiter rapidement."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : Un opérateur travaille sur un site industriel Seveso seuil haut.",
+            "Point fort : L'opération concernait la manipulation d'une vanne d'acide sulfurique.",
+            "Point faible : La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+            "Point faible : Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "Point faible : État des stocks et solutions de remplacement disponibles au moment des faits"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Quelle consigne EPI précise considérez-vous comme violée ? (Délimiter le grief.)",
+            "DIRECTION — Quelle protection compatible avec les lunettes de vue était disponible ? (Contrôler l'adaptation des EPI.)",
+            "SALARIÉ — Quels EPI étaient réellement disponibles au moment de l'opération ? (Établir les moyens accessibles.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Aviez-vous signalé la buée ou l'inadaptation avant l'opération ? (Vérifier l'alerte préalable.)",
+            "SALARIÉ — Pouviez-vous arrêter ou reporter l'opération ? (Apprécier le choix laissé au salarié.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Consigne EPI applicable — Direction ou salarié selon détention — Identifier l'équipement obligatoire. [BLOCKING]",
+            "Registre de fourniture et état du stock EPI — Direction ou salarié selon détention — Vérifier disponibilité et adaptation. [BLOCKING]",
+            "Signalements et DUERP — Direction ou salarié selon détention — Documenter le risque et les alertes. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "comparison",
+          "items": [
+            "Règle : INEOS Sarralbe — 2018.11.19_Accord sur la mise en place du CSE.pdf — Article 5 - Périodicité des réunions du comité social et économique — ...propositions concernant notamment : les modalités de fonctionnement de la CSSCT, - l'élaboration et la mise à jour du document unique, notamment l'analyse des risques professionnels auxquels peuvent être exposés les travailleurs… Salarié : Le salarié peut demander l'application vérifiée de « 2018.11.19_Accord sur la mise en place du CSE.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou… Direction : La direction peut opposer que l'application de « 2018.11.19_Accord sur la mise en place du CSE.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques. Manquant : Texte, affichage et précision de la consigne EPI applicable à l'opération Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Article 5 - Périodicité des réunions du comité social et économique dans « 2018.11.19_Accord sur la mise en place du CSE.pdf ».",
+            "Règle : INEOS Sarralbe — Règlement intérieur.pdf — ...nes devront être éteints dans la cabine. L’ADS en charge de la réception et de l’accompagnement du camion rappellera la consigne avant l’accès en zone non feu. Equipements de protection individuels (EPI) Art 4 Tout membre du personnel… Salarié : Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. Direction : La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques. Manquant : Texte, affichage et précision de la consigne EPI applicable à l'opération Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 2 dans « Règlement intérieur.pdf ».",
+            "Règle : INEOS Sarralbe — ccnic_septembre2013.pdf — ...visent non seulement à l’amélioration des conditions de tra- vail, d’hygiène et de sécurité de l’ensemble du personnel mais également à éviter au maximum tout risque de survenance d’un handicap liée à l’activité professionnelle. Les… Salarié : Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. Direction : La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques. Manquant : Texte, affichage et précision de la consigne EPI applicable à l'opération Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 320 dans « ccnic_septembre2013.pdf »."
+          ],
+          "title": "Règles comparées aux faits"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Quelle consigne EPI précise considérez-vous comme violée ?",
+            "Avant : Quelle protection compatible avec les lunettes de vue était disponible ?",
+            "Avant : Quels EPI étaient réellement disponibles au moment de l'opération ?",
+            "Avant : Obtenir : Consigne EPI applicable",
+            "Avant : Obtenir : Registre de fourniture et état du stock EPI"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "after",
+          "items": [
+            "Obtenir ou vérifier Article 5 - Périodicité des réunions du comité social et économique dans « 2018.11.19_Accord sur la mise en place du CSE.pdf ».",
+            "Obtenir ou vérifier Page 2 dans « Règlement intérieur.pdf ».",
+            "Obtenir ou vérifier Page 320 dans « ccnic_septembre2013.pdf »."
+          ],
+          "title": "Actions à mener ensuite"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "INEOS Sarralbe — 2018.11.19_Accord sur la mise en place du CSE.pdf — INTERNAL_POLICY — Article 5 - Périodicité des réunions du comité social et économique — Le salarié peut demander l'application vérifiée de « 2018.11.19_Accord sur la mise en place du CSE.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque… — POTENTIALLY_APPLICABLE",
+            "INEOS Sarralbe — Règlement intérieur.pdf — INTERNAL_POLICY — Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité… — POTENTIALLY_APPLICABLE",
+            "INEOS Sarralbe — ccnic_septembre2013.pdf — COLLECTIVE_AGREEMENT — Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité… — POTENTIALLY_APPLICABLE"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Formation, information et habilitation reçues par le salarié",
+            "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+            "Signalements antérieurs et comportement du salarié avant et après le retrait"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "PPE_AVAILABILITY_OR_SUITABILITY",
+        "primary_grievance_or_decision": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Consigne EPI applicable",
+        "Registre de fourniture et état du stock EPI",
+        "Signalements et DUERP"
+      ],
+      "findings": [
+        "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Le salarié a huit ans d'ancienneté."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Quelle consigne EPI précise considérez-vous comme violée ?",
+        "Quelle protection compatible avec les lunettes de vue était disponible ?",
+        "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous signalé la buée ou l'inadaptation avant l'opération ?",
+        "Pouviez-vous arrêter ou reporter l'opération ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "rule_to_facts_analysis": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — 2018.11.19_Accord sur la mise en place du CSE.pdf — Article 5 - Périodicité des réunions du comité social et économique"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "short_answer": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": "Article 5 - Périodicité des réunions du comité social et économique",
+          "title": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Consigne EPI applicable",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier l'équipement obligatoire."
+        },
+        {
+          "document": "Registre de fourniture et état du stock EPI",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Vérifier disponibilité et adaptation."
+        },
+        {
+          "document": "Signalements et DUERP",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Documenter le risque et les alertes."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Le salarié a huit ans d'ancienneté."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+        "event_category": "PPE_AVAILABILITY_OR_SUITABILITY",
+        "facts_alleged": [
+          "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+          "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+        ],
+        "facts_certain": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+          "L'opération concernait la manipulation d'une vanne d'acide sulfurique.",
+          "Le salarié porte des lunettes de vue.",
+          "Le modèle correcteur adapté aurait été en rupture de stock.",
+          "Le salarié a huit ans d'ancienneté."
+        ],
+        "facts_missing": [
+          "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+          "État des stocks et solutions de remplacement disponibles au moment des faits",
+          "Formation, information et habilitation reçues par le salarié",
+          "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+          "Signalements antérieurs et comportement du salarié avant et après le retrait"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas conclure que l'indisponibilité alléguée supprime automatiquement toute faute."
+        ],
+        "health_and_safety_context": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+          "L'opération concernait la manipulation d'une vanne d'acide sulfurique."
+        ],
+        "legal_ambiguities": [
+          "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+          "État des stocks et solutions de remplacement disponibles au moment des faits",
+          "Formation, information et habilitation reçues par le salarié",
+          "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+          "Signalements antérieurs et comportement du salarié avant et après le retrait"
+        ],
+        "persons_and_roles": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+          "Le salarié porte des lunettes de vue.",
+          "Le salarié a huit ans d'ancienneté.",
+          "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "Le salarié allègue que les sur-lunettes standards généraient de la buée."
+        ],
+        "primary_event": "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+        "primary_grievance_or_decision": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+        "workplace_context": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut."
+        ]
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle consigne EPI précise considérez-vous comme violée ?",
+          "reason": "Délimiter le grief.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle protection compatible avec les lunettes de vue était disponible ?",
+          "reason": "Contrôler l'adaptation des EPI.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+          "reason": "Établir les moyens accessibles.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous signalé la buée ou l'inadaptation avant l'opération ?",
+          "reason": "Vérifier l'alerte préalable.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Pouviez-vous arrêter ou reporter l'opération ?",
+          "reason": "Apprécier le choix laissé au salarié.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "lien factuel insuffisant avec le dossier"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "lien factuel insuffisant avec le dossier"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2018.11.19_Accord sur la mise en place du CSE.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou…",
+          "employer_argument": "La direction peut opposer que l'application de « 2018.11.19_Accord sur la mise en place du CSE.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "issue": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "matching_facts": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié"
+          ],
+          "next_action": "Obtenir ou vérifier Article 5 - Périodicité des réunions du comité social et économique dans « 2018.11.19_Accord sur la mise en place du CSE.pdf ».",
+          "rule": "...propositions concernant notamment : les modalités de fonctionnement de la CSSCT, - l'élaboration et la mise à jour du document unique, notamment l'analyse des risques professionnels auxquels peuvent être exposés les travailleurs…",
+          "source": "INEOS Sarralbe — 2018.11.19_Accord sur la mise en place du CSE.pdf — Article 5 - Périodicité des réunions du comité social et économique"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_argument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "issue": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "matching_facts": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée."
+          ],
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié"
+          ],
+          "next_action": "Obtenir ou vérifier Page 2 dans « Règlement intérieur.pdf ».",
+          "rule": "...nes devront être éteints dans la cabine. L’ADS en charge de la réception et de l’accompagnement du camion rappellera la consigne avant l’accès en zone non feu. Equipements de protection individuels (EPI) Art 4 Tout membre du personnel…",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_argument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "issue": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "matching_facts": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié"
+          ],
+          "next_action": "Obtenir ou vérifier Page 320 dans « ccnic_septembre2013.pdf ».",
+          "rule": "...visent non seulement à l’amélioration des conditions de tra- vail, d’hygiène et de sécurité de l’ensemble du personnel mais également à éviter au maximum tout risque de survenance d’un handicap liée à l’activité professionnelle. Les…",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "Code du travail : article précis en vigueur.",
+        "CARSAT ou INRS : ressource réelle sur fourniture, adaptation et disponibilité des EPI."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "nexus_version": "1.0.0",
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "cssct_securite",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Quelle consigne EPI précise considérez-vous comme violée ?",
+        "Quelle protection compatible avec les lunettes de vue était disponible ?",
+        "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous signalé la buée ou l'inadaptation avant l'opération ?"
+      ],
+      "reponse_synthetique_nexus": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Consigne EPI applicable",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier l'équipement obligatoire."
+        },
+        {
+          "document": "Registre de fourniture et état du stock EPI",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Vérifier disponibilité et adaptation."
+        },
+        {
+          "document": "Signalements et DUERP",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Documenter le risque et les alertes."
+        }
+      ],
+      "limits": [
+        "Formation, information et habilitation reçues par le salarié",
+        "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+        "Signalements antérieurs et comportement du salarié avant et après le retrait"
+      ],
+      "next_actions": [
+        "Obtenir ou vérifier Article 5 - Périodicité des réunions du comité social et économique dans « 2018.11.19_Accord sur la mise en place du CSE.pdf ».",
+        "Obtenir ou vérifier Page 2 dans « Règlement intérieur.pdf ».",
+        "Obtenir ou vérifier Page 320 dans « ccnic_septembre2013.pdf »."
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle consigne EPI précise considérez-vous comme violée ?",
+          "reason": "Délimiter le grief.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle protection compatible avec les lunettes de vue était disponible ?",
+          "reason": "Contrôler l'adaptation des EPI.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+          "reason": "Établir les moyens accessibles.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous signalé la buée ou l'inadaptation avant l'opération ?",
+          "reason": "Vérifier l'alerte préalable.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Pouviez-vous arrêter ou reporter l'opération ?",
+          "reason": "Apprécier le choix laissé au salarié.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2018.11.19_Accord sur la mise en place du CSE.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou…",
+          "employer_argument": "La direction peut opposer que l'application de « 2018.11.19_Accord sur la mise en place du CSE.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "issue": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "matching_facts": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié"
+          ],
+          "next_action": "Obtenir ou vérifier Article 5 - Périodicité des réunions du comité social et économique dans « 2018.11.19_Accord sur la mise en place du CSE.pdf ».",
+          "rule": "...propositions concernant notamment : les modalités de fonctionnement de la CSSCT, - l'élaboration et la mise à jour du document unique, notamment l'analyse des risques professionnels auxquels peuvent être exposés les travailleurs…",
+          "source": "INEOS Sarralbe — 2018.11.19_Accord sur la mise en place du CSE.pdf — Article 5 - Périodicité des réunions du comité social et économique"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_argument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "issue": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "matching_facts": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée."
+          ],
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié"
+          ],
+          "next_action": "Obtenir ou vérifier Page 2 dans « Règlement intérieur.pdf ».",
+          "rule": "...nes devront être éteints dans la cabine. L’ADS en charge de la réception et de l’accompagnement du camion rappellera la consigne avant l’accès en zone non feu. Equipements de protection individuels (EPI) Art 4 Tout membre du personnel…",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_argument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "issue": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "matching_facts": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié"
+          ],
+          "next_action": "Obtenir ou vérifier Page 320 dans « ccnic_septembre2013.pdf ».",
+          "rule": "...visent non seulement à l’amélioration des conditions de tra- vail, d’hygiène et de sécurité de l’ensemble du personnel mais également à éviter au maximum tout risque de survenance d’un handicap liée à l’activité professionnelle. Les…",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Le salarié a huit ans d'ancienneté."
+      ],
+      "sources": [
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « 2018.11.19_Accord sur la mise en place du CSE.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque…",
+          "nature": "INTERNAL_POLICY",
+          "provider": "INEOS Sarralbe",
+          "reference": "Article 5 - Périodicité des réunions du comité social et économique",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité…",
+          "nature": "INTERNAL_POLICY",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité…",
+          "nature": "COLLECTIVE_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Quelle consigne EPI précise considérez-vous comme violée ?",
+          "Quelle protection compatible avec les lunettes de vue était disponible ?",
+          "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+          "Obtenir : Consigne EPI applicable",
+          "Obtenir : Registre de fourniture et état du stock EPI"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+        "L'opération concernait la manipulation d'une vanne d'acide sulfurique."
+      ],
+      "syndical_position": [
+        "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "La situation comporte un enjeu de santé ou de sécurité à traiter rapidement.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+        "État des stocks et solutions de remplacement disponibles au moment des faits"
+      ]
+    }
+  }
+}

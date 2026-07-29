@@ -1,0 +1,19 @@
+{
+  "anomalies": [
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "message": "Analyse suspendue faute d'informations suffisantes.",
+      "severity": "INFORMATIONAL"
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "message": "Analyse suspendue faute d'informations suffisantes.",
+      "severity": "INFORMATIONAL"
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "message": "Procédure interne applicable absente des sources obtenues.",
+      "severity": "INFORMATIONAL"
+    }
+  ]
+}

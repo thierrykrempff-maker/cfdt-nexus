@@ -1,0 +1,528 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+  "employee_path": "QUESTION_SALARIE",
+  "public_response_size_bytes": 20379,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "nexus_version": "1.0.0",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+            "Le salarié reconnaît certains éléments mais conteste leur portée : L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+            "Le responsable aurait refusé les heures en raison du canal utilisé.",
+            "Les heures avaient été inscrites dans un fichier du service."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "INFORMATION INSUFFISANTE — Une ambiguïté ou un document bloquant empêche une analyse juridique fiable."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Avez-vous pu assister à la réunion malgré le refus ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : Le dossier comporte une ambiguïté bloquante qui interdit une conclusion prématurée.",
+            "Point fort : L'élu indique avoir inscrit les heures dans un fichier du service.",
+            "Point faible : Un élément défavorable est reconnu : L'élu indique avoir inscrit les heures dans un fichier du service.",
+            "Point faible : La validité du refus et la qualification exacte du temps ne sont pas admises.",
+            "Point faible : Fin manquante du récit"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Quel texte impose le canal que vous considérez obligatoire ? (Contrôler le fondement du refus.)",
+            "DIRECTION — Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ? (Empêcher la confusion entre deux régimes.)",
+            "SALARIÉ — Avez-vous pu assister à la réunion malgré le refus ? (Connaître la conséquence réelle.)",
+            "SALARIÉ — Quel mandat exerciez-vous pour cette réunion CSSCT ? (Identifier le droit applicable.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Accord CSE et règle interne de déclaration — Direction ou salarié selon détention — Identifier le régime et le canal applicable. [BLOCKING]",
+            "Convocation CSSCT — Direction ou salarié selon détention — Établir objet, horaires et qualité du participant. [BLOCKING]",
+            "Compteur et bulletin concernés — Direction ou salarié selon détention — Mesurer la conséquence. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Quel texte impose le canal que vous considérez obligatoire ?",
+            "Avant : Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+            "Avant : Avez-vous pu assister à la réunion malgré le refus ?",
+            "Avant : Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+            "Avant : Obtenir : Accord CSE et règle interne de déclaration"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Accords INEOS — Règlement intérieur.pdf — règlement intérieur — À vérifier selon les faits",
+            "Accords INEOS — 2022.02.14_Accord télétravail.pdf — avenant — À vérifier selon les faits",
+            "Accords INEOS — 2018.11.19_Accord sur la mise en place du CSE.pdf — règlement intérieur — À vérifier selon les faits",
+            "Accords INEOS — 2024.02.20_Avenant 1 sur la mise en place du CSE.pdf — avenant — À vérifier selon les faits",
+            "Accords INEOS — ccnic_septembre2013.pdf — convention_collective — À vérifier selon les faits"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Obtenir la partie manquante du récit avant toute conclusion.",
+            "Distinguer le temps de réunion CSSCT du crédit d'heures de délégation.",
+            "Qualité exacte de l'élu et appartenance à la CSSCT"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "CSSCT_MEETING_TIME",
+        "primary_grievance_or_decision": "Refus ou traitement contesté du temps destiné à une réunion CSSCT.",
+        "requested_path": "QUESTION_SALARIE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Accord CSE et règle interne de déclaration",
+        "Convocation CSSCT",
+        "Compteur et bulletin concernés"
+      ],
+      "findings": [
+        "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "Le responsable aurait refusé les heures en raison du canal utilisé.",
+        "Les heures avaient été inscrites dans un fichier du service."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Quel texte impose le canal que vous considérez obligatoire ?",
+        "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+        "Avez-vous pu assister à la réunion malgré le refus ?",
+        "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": true,
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "droit_syndical",
+          "analyse_documentaire"
+        ],
+        "employee_path": "QUESTION_SALARIE"
+      },
+      "rule_to_facts_analysis": [],
+      "short_answer": "Avez-vous pu assister à la réunion malgré le refus ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2024.02.20_Avenant 1 sur la mise en place du CSE.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Accord CSE et règle interne de déclaration",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier le régime et le canal applicable."
+        },
+        {
+          "document": "Convocation CSSCT",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir objet, horaires et qualité du participant."
+        },
+        {
+          "document": "Compteur et bulletin concernés",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Mesurer la conséquence."
+        }
+      ],
+      "factual_core": {
+        "blocking_ambiguities": [
+          "Obtenir la partie manquante du récit avant toute conclusion.",
+          "Distinguer le temps de réunion CSSCT du crédit d'heures de délégation."
+        ],
+        "collective_impact_possible": true,
+        "confidence_level": "LOW",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "Les heures avaient été inscrites dans un fichier du service.",
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT.",
+          "Le responsable aurait refusé les heures en raison du canal utilisé."
+        ],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "employer_position": "Le responsable aurait refusé les heures en raison du canal utilisé.",
+        "event_category": "CSSCT_MEETING_TIME",
+        "facts_admitted": [
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+        ],
+        "facts_alleged": [
+          "Le responsable aurait refusé les heures en raison du canal utilisé.",
+          "Aucune entrave, retenue de salaire ou impossibilité effective d'assister n'est établie."
+        ],
+        "facts_certain": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "Les heures avaient été inscrites dans un fichier du service.",
+          "Elles n'avaient peut-être pas été posées par le canal officiellement attendu.",
+          "L'objectif déclaré était d'assister à une réunion CSSCT.",
+          "Le récit disponible est incomplet."
+        ],
+        "facts_disputed": [
+          "La validité du refus et la qualification exacte du temps ne sont pas admises.",
+          "L'utilisation obligatoire d'un autre canal reste à établir."
+        ],
+        "facts_missing": [
+          "Fin manquante du récit",
+          "Qualité exacte de l'élu et appartenance à la CSSCT",
+          "Convocation officielle, objet, auteur, date et horaires de la réunion",
+          "Réunion pendant le temps de travail ou pendant le repos",
+          "Nature réelle du temps : réunion CSSCT ou crédit d'heures",
+          "Canal interne attendu et texte qui le prévoit",
+          "Connaissance de la réunion par le responsable et délai de prévenance",
+          "Empêchement effectif, retenue de salaire ou autre conséquence",
+          "Accord CSE, règlement intérieur du CSE ou pratique applicable"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable."
+        ],
+        "legal_ambiguities": [
+          "Fin manquante du récit",
+          "Qualité exacte de l'élu et appartenance à la CSSCT",
+          "Convocation officielle, objet, auteur, date et horaires de la réunion",
+          "Réunion pendant le temps de travail ou pendant le repos",
+          "Nature réelle du temps : réunion CSSCT ou crédit d'heures"
+        ],
+        "mandate_context": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "L'objectif déclaré était d'assister à une réunion CSSCT.",
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+        ],
+        "persons_and_roles": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+        ],
+        "primary_event": "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+        "primary_grievance_or_decision": "Refus ou traitement contesté du temps destiné à une réunion CSSCT.",
+        "requested_path": "QUESTION_SALARIE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Refus ou traitement contesté du temps destiné à une réunion CSSCT. L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises."
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quel texte impose le canal que vous considérez obligatoire ?",
+          "reason": "Contrôler le fondement du refus.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+          "reason": "Empêcher la confusion entre deux régimes.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Avez-vous pu assister à la réunion malgré le refus ?",
+          "reason": "Connaître la conséquence réelle.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+          "reason": "Identifier le droit applicable.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "source_requirements": [
+        "Obtenir la partie manquante du récit avant toute conclusion.",
+        "Distinguer le temps de réunion CSSCT du crédit d'heures de délégation.",
+        "La comparaison juridique commencera après clarification des faits."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Avez-vous pu assister à la réunion malgré le refus ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "nexus_version": "1.0.0",
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "cssct_securite",
+        "droit_syndical",
+        "analyse_documentaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Quel texte impose le canal que vous considérez obligatoire ?",
+        "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+        "Avez-vous pu assister à la réunion malgré le refus ?",
+        "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?"
+      ],
+      "reponse_synthetique_nexus": "Avez-vous pu assister à la réunion malgré le refus ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": true,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Accord CSE et règle interne de déclaration",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier le régime et le canal applicable."
+        },
+        {
+          "document": "Convocation CSSCT",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir objet, horaires et qualité du participant."
+        },
+        {
+          "document": "Compteur et bulletin concernés",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Mesurer la conséquence."
+        }
+      ],
+      "limits": [
+        "Obtenir la partie manquante du récit avant toute conclusion.",
+        "Distinguer le temps de réunion CSSCT du crédit d'heures de délégation.",
+        "Qualité exacte de l'élu et appartenance à la CSSCT"
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quel texte impose le canal que vous considérez obligatoire ?",
+          "reason": "Contrôler le fondement du refus.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+          "reason": "Empêcher la confusion entre deux régimes.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Avez-vous pu assister à la réunion malgré le refus ?",
+          "reason": "Connaître la conséquence réelle.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+          "reason": "Identifier le droit applicable.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "Le responsable aurait refusé les heures en raison du canal utilisé.",
+        "Les heures avaient été inscrites dans un fichier du service."
+      ],
+      "sources": [
+        {
+          "nature": "règlement intérieur",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "nature": "avenant",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "nature": "règlement intérieur",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "nature": "avenant",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2024.02.20_Avenant 1 sur la mise en place du CSE.pdf"
+        },
+        {
+          "nature": "convention_collective",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Quel texte impose le canal que vous considérez obligatoire ?",
+          "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+          "Avez-vous pu assister à la réunion malgré le refus ?",
+          "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+          "Obtenir : Accord CSE et règle interne de déclaration"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "Le dossier comporte une ambiguïté bloquante qui interdit une conclusion prématurée.",
+        "L'élu indique avoir inscrit les heures dans un fichier du service."
+      ],
+      "syndical_position": [
+        "Avez-vous pu assister à la réunion malgré le refus ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "INFORMATION INSUFFISANTE",
+      "urgency_reason": "Une ambiguïté ou un document bloquant empêche une analyse juridique fiable.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "Un élément défavorable est reconnu : L'élu indique avoir inscrit les heures dans un fichier du service.",
+        "La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "Fin manquante du récit"
+      ]
+    }
+  }
+}

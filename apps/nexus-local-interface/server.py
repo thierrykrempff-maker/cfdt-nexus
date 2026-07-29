@@ -9,6 +9,7 @@ automation/scripts/assistant_ds_router.py ask --query ... --format json
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import subprocess
@@ -56,12 +57,36 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeSyndicalReasoningConfig,
     RuntimeSyndicalReasoningIntegration,
     RuntimeSyndicalReasoningReportMapper,
+    get_nexus_version,
     sanitize_public_payload,
 )
 
 
+OPTIONAL_DEPENDENCIES = {
+    "pdf_test_fixture": ("reportlab", "reportlab"),
+    "pptx_import": ("python-pptx", "pptx"),
+    "xlsx_import": ("openpyxl", "openpyxl"),
+}
+
+
+def optional_dependency_status() -> dict[str, dict[str, object]]:
+    """Report optional capabilities without importing or installing packages."""
+
+    return {
+        capability: {
+            "package": package,
+            "available": importlib.util.find_spec(module) is not None,
+        }
+        for capability, (package, module) in OPTIONAL_DEPENDENCIES.items()
+    }
+
+
 def router_environment() -> dict[str, str]:
     env = os.environ.copy()
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(ROOT) + (
+        os.pathsep + existing_pythonpath if existing_pythonpath else ""
+    )
     env["PYTHONUTF8"] = "1"
     env["PYTHONIOENCODING"] = "utf-8"
     env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -250,7 +275,7 @@ def analyze_public_question(
 
 
 class NexusHandler(SimpleHTTPRequestHandler):
-    server_version = "NexusLocalInterface/3.0"
+    server_version = "NexusLocalInterface"
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(APP_DIR), **kwargs)
@@ -268,7 +293,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
         self.wfile.write(data)
 
     def send_internal_error(self, exc: Exception) -> None:
-        self.log_error("Internal server error: %s", exc)
+        self.log_error("Internal server error (%s)", type(exc).__name__)
         self.send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": INTERNAL_ERROR_MESSAGE})
 
     def do_GET(self) -> None:  # noqa: N802
@@ -276,7 +301,17 @@ class NexusHandler(SimpleHTTPRequestHandler):
         if parsed.path in {"/", ""}:
             self.path = "/index.html"
         if parsed.path == "/health":
-            self.send_json(HTTPStatus.OK, {"ok": True, "service": "nexus-local-interface", "version": "3.0"})
+            self.send_json(
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "service": "nexus-local-interface",
+                    "version": get_nexus_version(),
+                    "mode": "local",
+                    "persistent_case_storage": False,
+                    "optional_dependencies": optional_dependency_status(),
+                },
+            )
             return
         if parsed.path == "/api/employee-case/scenarios":
             self.send_json(HTTPStatus.OK, {"ok": True, "scenarios": public_scenarios(), "synthetic_only": True})

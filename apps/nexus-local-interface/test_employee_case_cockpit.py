@@ -141,7 +141,8 @@ def test_endpoint_failure_is_explicit_and_safe() -> None:
     assert status == 500
     assert payload == {"ok": False, "error": server_module.INTERNAL_ERROR_MESSAGE}
     assert "Echec synthetique controle" not in json.dumps(payload, ensure_ascii=False)
-    assert "Echec synthetique controle" in logs.getvalue()
+    assert "Echec synthetique controle" not in logs.getvalue()
+    assert "RuntimeError" in logs.getvalue()
 
 
 def test_analyze_endpoint_internal_error_is_generic_and_logged() -> None:
@@ -160,7 +161,8 @@ def test_analyze_endpoint_internal_error_is_generic_and_logged() -> None:
     assert status == 500
     assert payload == {"ok": False, "error": server_module.INTERNAL_ERROR_MESSAGE}
     assert "Detail interne analyse synthetique" not in json.dumps(payload, ensure_ascii=False)
-    assert "Detail interne analyse synthetique" in logs.getvalue()
+    assert "Detail interne analyse synthetique" not in logs.getvalue()
+    assert "RuntimeError" in logs.getvalue()
 
 
 def test_frontend_loads_and_changes_scenarios() -> None:
