@@ -1,0 +1,275 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:30.519102+00:00",
+  "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+  "case_input_sha256": "1e35ad1370ac690830cae9000aaaecab01fcd8a0c9710ade0a32a2991298779f",
+  "employee_path": "QUESTION_SALARIE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/delegation-hours-cssct-incomplete.json",
+  "prompt_sha256": "b206a03114178c7a2d7f662180cbacc7802d57e9e1d01abf8a2f35d02f2ef910",
+  "public_response_size_bytes": 26830,
+  "reduced_response_size_bytes": 11023,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer qu'il s'agit d'une réunion de l'instance.",
+            "document": "Convocation CSSCT",
+            "priority": "BLOCKING",
+            "purpose": "Établir objet, horaires et qualité du participant."
+          },
+          {
+            "confirms_or_rules_out": "Confirmer ou écarter le motif du refus.",
+            "document": "Accord CSE et règle interne de déclaration",
+            "priority": "BLOCKING",
+            "purpose": "Identifier le régime et le canal applicable."
+          },
+          {
+            "confirms_or_rules_out": "Établir imputation ou retenue éventuelle.",
+            "document": "Compteur et bulletin concernés",
+            "priority": "HIGH",
+            "purpose": "Mesurer la conséquence."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Un empêchement effectif change le risque d'entrave.",
+            "follow_up": "Préciser retenue, absence ou autre conséquence.",
+            "priority": "BLOCKING",
+            "purpose": "Connaître la conséquence réelle.",
+            "question": "Avez-vous pu assister à la réunion malgré le refus ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "CHOICE",
+            "changes_analysis_if": "La qualification du temps dépend du rôle.",
+            "follow_up": "Demander la preuve du mandat.",
+            "priority": "BLOCKING",
+            "purpose": "Identifier le droit applicable.",
+            "question": "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une simple pratique peut être insuffisante.",
+            "follow_up": "Demander accord, note ou règlement.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler le fondement du refus.",
+            "question": "Quel texte impose le canal que vous considérez obligatoire ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "CHOICE",
+            "changes_analysis_if": "Paiement et imputation dépendent de la qualification.",
+            "follow_up": "Faire confirmer le traitement du compteur.",
+            "priority": "BLOCKING",
+            "purpose": "Empêcher la confusion entre deux régimes.",
+            "question": "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [
+          "Obtenir la partie manquante du récit avant toute conclusion.",
+          "Distinguer le temps de réunion CSSCT du crédit d'heures de délégation."
+        ],
+        "collective_impact_possible": true,
+        "confidence_level": "LOW",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "Les heures avaient été inscrites dans un fichier du service.",
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT.",
+          "Le responsable aurait refusé les heures en raison du canal utilisé."
+        ],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "employer_position": "Le responsable aurait refusé les heures en raison du canal utilisé.",
+        "event_category": "CSSCT_MEETING_TIME",
+        "evidence_mentioned": [],
+        "facts_admitted": [
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+        ],
+        "facts_alleged": [
+          "Le responsable aurait refusé les heures en raison du canal utilisé.",
+          "Aucune entrave, retenue de salaire ou impossibilité effective d'assister n'est établie."
+        ],
+        "facts_certain": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "Les heures avaient été inscrites dans un fichier du service.",
+          "Elles n'avaient peut-être pas été posées par le canal officiellement attendu.",
+          "L'objectif déclaré était d'assister à une réunion CSSCT.",
+          "Le récit disponible est incomplet."
+        ],
+        "facts_disputed": [
+          "La validité du refus et la qualification exacte du temps ne sont pas admises.",
+          "L'utilisation obligatoire d'un autre canal reste à établir."
+        ],
+        "facts_missing": [
+          "Fin manquante du récit",
+          "Qualité exacte de l'élu et appartenance à la CSSCT",
+          "Convocation officielle, objet, auteur, date et horaires de la réunion",
+          "Réunion pendant le temps de travail ou pendant le repos",
+          "Nature réelle du temps : réunion CSSCT ou crédit d'heures",
+          "Canal interne attendu et texte qui le prévoit",
+          "Connaissance de la réunion par le responsable et délai de prévenance",
+          "Empêchement effectif, retenue de salaire ou autre conséquence",
+          "Accord CSE, règlement intérieur du CSE ou pratique applicable"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable."
+        ],
+        "health_and_safety_context": [],
+        "legal_ambiguities": [
+          "Fin manquante du récit",
+          "Qualité exacte de l'élu et appartenance à la CSSCT",
+          "Convocation officielle, objet, auteur, date et horaires de la réunion",
+          "Réunion pendant le temps de travail ou pendant le repos",
+          "Nature réelle du temps : réunion CSSCT ou crédit d'heures"
+        ],
+        "mandate_context": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "L'objectif déclaré était d'assister à une réunion CSSCT.",
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+        ],
+        "persons_and_roles": [
+          "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+          "L'élu indique avoir inscrit les heures dans un fichier du service.",
+          "L'élu indique que les heures étaient destinées à une réunion CSSCT."
+        ],
+        "primary_event": "Un élu s'est vu refuser des heures qu'il destinait à une réunion CSSCT.",
+        "primary_grievance_or_decision": "Refus ou traitement contesté du temps destiné à une réunion CSSCT.",
+        "requested_path": "QUESTION_SALARIE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Refus ou traitement contesté du temps destiné à une réunion CSSCT. L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "secondary_topics": [],
+        "working_time_context": [],
+        "workplace_context": []
+      },
+      "disciplinary_assistance": null,
+      "documents_to_request": [
+        "Convocation CSSCT",
+        "Accord CSE et règle interne de déclaration",
+        "Compteur et bulletin concernés"
+      ],
+      "findings": [
+        "Fait principal : Refus ou traitement contesté du temps destiné à une réunion CSSCT.",
+        "Position du salarié : Le salarié reconnaît certains éléments mais conteste leur portée : L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises.",
+        "Position de l'employeur : Le responsable aurait refusé les heures en raison du canal utilisé.",
+        "Ambiguïté bloquante : Obtenir la partie manquante du récit avant toute conclusion.",
+        "Ambiguïté bloquante : Distinguer le temps de réunion CSSCT du crédit d'heures de délégation."
+      ],
+      "questions_to_ask": [
+        "Avez-vous pu assister à la réunion malgré le refus ?",
+        "Quel mandat exerciez-vous pour cette réunion CSSCT ?",
+        "Quel texte impose le canal que vous considérez obligatoire ?",
+        "Traitez-vous ce temps comme réunion CSSCT ou crédit d'heures ?"
+      ],
+      "route": {
+        "analysis_suspended": true,
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "droit_syndical",
+          "analyse_documentaire"
+        ],
+        "employee_path": "QUESTION_SALARIE",
+        "search_query": "Refus ou traitement contesté du temps destiné à une réunion CSSCT. L'élu indique avoir inscrit les heures dans un fichier du service. La validité du refus et la qualification exacte du temps ne sont pas admises."
+      },
+      "short_answer": "Avez-vous pu assister à la réunion malgré le refus ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "Le dossier comporte une ambiguïté bloquante qui interdit une conclusion prématurée.",
+        "employee_weakness": "Un élément défavorable est reconnu : L'élu indique avoir inscrit les heures dans un fichier du service.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Document Intelligence Center : module detecte mais connecteur d'execution non disponible.",
+        "Analyse suspendue sur une ambiguïté factuelle déterminante ; aucune conclusion juridique définitive n'est produite.",
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

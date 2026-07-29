@@ -1,0 +1,365 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:29.599277+00:00",
+  "case_id": "REAL-03-TAG_INSTALLATION",
+  "case_input_sha256": "3e6fb483654033e268ff0a9bb21cd708f07ce49760c52b2b97a9b217c7b3d80f",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/tag-on-installation.example.json",
+  "prompt_sha256": "8d2c9c3312cfe9b5a376c1c25ed60d9e9549a24e63883892de690176368c7762",
+  "public_response_size_bytes": 34726,
+  "reduced_response_size_bytes": 16285,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer le grief exact.",
+            "document": "Preuve complète des propos ou écrits",
+            "priority": "BLOCKING",
+            "purpose": "Établir mots, date, destinataires et diffusion."
+          },
+          {
+            "confirms_or_rules_out": "Écarter un grief ajouté tardivement.",
+            "document": "Convocation et lettre de griefs",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler objet, dates et qualification."
+          },
+          {
+            "confirms_or_rules_out": "Comparer l'égalité de traitement.",
+            "document": "Règlement intérieur et sanctions comparables",
+            "priority": "HIGH",
+            "purpose": "Vérifier règle et proportionnalité."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La stratégie diffère entre reconnaissance et contestation.",
+            "follow_up": "Faire préciser chaque élément admis.",
+            "priority": "BLOCKING",
+            "purpose": "Fixer la position avant la stratégie.",
+            "question": "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La gravité dépend des termes exacts.",
+            "follow_up": "Comparer avec la preuve complète.",
+            "priority": "BLOCKING",
+            "purpose": "Délimiter le grief sans reformulation.",
+            "question": "Quels mots exacts ont été employés ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Des excuses rapides peuvent soutenir la proportionnalité.",
+            "follow_up": "Préparer une formulation sincère.",
+            "priority": "HIGH",
+            "purpose": "Préparer une atténuation si les faits sont reconnus.",
+            "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Une menace alléguée doit être prouvée séparément.",
+            "follow_up": "Faire acter la réponse au compte rendu.",
+            "priority": "BLOCKING",
+            "purpose": "Empêcher une aggravation abstraite du grief.",
+            "question": "Quel grief exact retenez-vous, mot pour mot ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une preuve partielle peut changer la qualification.",
+            "follow_up": "Demander les pièces non tronquées.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler preuve, destinataires et publicité.",
+            "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Un traitement incohérent ouvre une contestation ou négociation.",
+            "follow_up": "Demander les précédents anonymisés.",
+            "priority": "HIGH",
+            "purpose": "Examiner proportionnalité et égalité de traitement.",
+            "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur de l'inscription. Le salarié conteste avoir visé une personne déterminée.",
+        "employer_position": "La position précise de l'employeur reste à demander.",
+        "event_category": "INSULTING_TAG",
+        "evidence_mentioned": [],
+        "facts_admitted": [
+          "Le salarié reconnaît être l'auteur de l'inscription.",
+          "Le salarié reconnaît le caractère grossier des termes rapportés."
+        ],
+        "facts_alleged": [
+          "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.",
+          "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
+        ],
+        "facts_certain": [
+          "Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+          "Le salarié indique que l'inscription ne visait personne en particulier.",
+          "Il relie son geste à une journée difficile et à une ambiance de travail dégradée.",
+          "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis."
+        ],
+        "facts_disputed": [
+          "Le salarié conteste avoir visé une personne déterminée.",
+          "Aucune volonté de menace ou de harcèlement n'est reconnue."
+        ],
+        "facts_missing": [
+          "La phrase complète, son support exact et son emplacement",
+          "Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur",
+          "Les preuves détenues par l'employeur et la chronologie exacte",
+          "L'existence d'une dégradation durable, le nettoyage nécessaire et son coût",
+          "Le caractère isolé ou répété et les éventuels antécédents disciplinaires",
+          "La mesure envisagée, les actes déjà notifiés et leurs dates",
+          "Les faits précis décrivant l'ambiance dégradée ou la souffrance et les signalements antérieurs",
+          "Toute demande de nettoyage : auteur de l'ordre, horaire, durée, badgeage et rémunération"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable."
+        ],
+        "health_and_safety_context": [
+          "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.",
+          "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié."
+        ],
+        "legal_ambiguities": [
+          "La phrase complète, son support exact et son emplacement",
+          "Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur",
+          "Les preuves détenues par l'employeur et la chronologie exacte",
+          "L'existence d'une dégradation durable, le nettoyage nécessaire et son coût",
+          "Le caractère isolé ou répété et les éventuels antécédents disciplinaires"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+          "Le salarié indique que l'inscription ne visait personne en particulier.",
+          "Le salarié reconnaît être l'auteur de l'inscription.",
+          "Le salarié reconnaît le caractère grossier des termes rapportés.",
+          "Le salarié conteste avoir visé une personne déterminée.",
+          "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié."
+        ],
+        "primary_event": "Le salarié indique que l'inscription ne visait personne en particulier.",
+        "primary_grievance_or_decision": "Inscription ou tag grossier sur une installation.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Inscription ou tag grossier sur une installation. Le salarié reconnaît être l'auteur de l'inscription. Le salarié conteste avoir visé une personne déterminée.",
+        "secondary_topics": [],
+        "working_time_context": [],
+        "workplace_context": [
+          "Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+          "Il relie son geste à une journée difficile et à une ambiance de travail dégradée.",
+          "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.",
+          "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié."
+        ]
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Inscription ou tag grossier sur une installation.",
+            "Le salarié reconnaît être l'auteur de l'inscription.",
+            "Le salarié reconnaît le caractère grossier des termes rapportés.",
+            "Le salarié conteste avoir visé une personne déterminée.",
+            "Aucune volonté de menace ou de harcèlement n'est reconnue.",
+            "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.",
+            "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "INSULTING_OR_INAPPROPRIATE_BEHAVIOR",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien.",
+            "Prioriser le règlement intérieur sur le respect des personnes, les injures, les inscriptions, les dégradations, les locaux, l'échelle des sanctions et les droits de la défense.",
+            "Écarter les thèmes techniques ou numériques sans volet factuel correspondant.",
+            "Ne retenir une jurisprudence que si les propos, la cible, la diffusion, la répétition, les antécédents, le contexte et la sanction peuvent être comparés.",
+            "Ne pas qualifier automatiquement de harcèlement un fait unique sans personne visée ni répétition établie."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Comportement potentiellement fautif consistant en une inscription ou des propos grossiers sur un support de l'entreprise. La qualification exacte dépend de la preuve de l'auteur, de la personne éventuellement visée, de la visibilité, des conséquences, de la répétition et du contexte."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "faits reconnus",
+          "strategy": "Le salarié reconnaît un geste déplacé et regrettable commis sous le coup de l'énervement. Il conteste toutefois toute volonté de menacer, harceler ou viser personnellement un collègue si ces éléments correspondent aux faits. La défense porte sur le caractère isolé, les conséquences réelles, les antécédents et la proportionnalité de la sanction.",
+          "supporting_points": [
+            "reconnaissance mesurée du geste et regrets",
+            "absence de personne nommément visée si elle est confirmée",
+            "absence de menace ou de violence si elle est confirmée",
+            "caractère isolé et absence d'antécédent à vérifier",
+            "conséquences matérielles et visibilité réelles",
+            "contexte documenté sans le présenter comme une autorisation",
+            "réparation, nettoyage ou suppression rapide à vérifier",
+            "proportionnalité de la sanction"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Preuve complète des propos ou écrits",
+        "Convocation et lettre de griefs",
+        "Règlement intérieur et sanctions comparables"
+      ],
+      "findings": [
+        "Fait principal : Inscription ou tag grossier sur une installation.",
+        "Position du salarié : Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur de l'inscription. Le salarié conteste avoir visé une personne déterminée.",
+        "Position de l'employeur : La position précise de l'employeur reste à demander."
+      ],
+      "questions_to_ask": [
+        "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+        "Quels mots exacts ont été employés ?",
+        "Avez-vous présenté des excuses ou exprimé des regrets ?",
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Inscription ou tag grossier sur une installation. Le salarié reconnaît être l'auteur de l'inscription. Le salarié conteste avoir visé une personne déterminée."
+      },
+      "short_answer": "Inscription ou tag grossier sur une installation. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "Un élément défavorable est reconnu : Le salarié reconnaît être l'auteur de l'inscription.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

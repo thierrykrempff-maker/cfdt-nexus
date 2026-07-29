@@ -1,0 +1,369 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:29.150331+00:00",
+  "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+  "case_input_sha256": "a76411caf7fd54ccaa2b5bdbc6041a45c546dbd2ecd5e3c21776ca059c63f2ef",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/smoking-breaks-seveso-badge.json",
+  "prompt_sha256": "b01dd717e0b8e394c856bd0a4b1a85df82d9cdd92bf750e3d2c0c5928e844533",
+  "public_response_size_bytes": 36110,
+  "reduced_response_size_bytes": 17572,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer ou écarter les durées reprochées.",
+            "document": "Relevés complets du tourniquet",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler dates, passages et méthode."
+          },
+          {
+            "confirms_or_rules_out": "Vérifier si l'usage disciplinaire était déclaré.",
+            "document": "Notice RGPD et registre du traitement",
+            "priority": "BLOCKING",
+            "purpose": "Identifier finalité, accès et conservation."
+          },
+          {
+            "confirms_or_rules_out": "Confirmer les garanties collectives.",
+            "document": "Information ou consultation du CSE",
+            "priority": "HIGH",
+            "purpose": "Contrôler la mise en place du contrôle."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La défense change selon le nombre et la durée reconnus.",
+            "follow_up": "Comparer avec les relevés complets.",
+            "priority": "BLOCKING",
+            "purpose": "Séparer les faits admis du calcul patronal.",
+            "question": "Quelles pauses reconnaissez-vous exactement ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une absence d'information fragilise l'usage disciplinaire.",
+            "follow_up": "Demander la notice remise aux salariés.",
+            "priority": "HIGH",
+            "purpose": "Vérifier la transparence du dispositif.",
+            "question": "Aviez-vous été informé que le tourniquet pouvait contrôler les pauses ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Un calcul approximatif fragilise le grief.",
+            "follow_up": "Exiger le détail date par date.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler la méthode et l'intégrité de la preuve.",
+            "question": "Comment avez-vous calculé chaque pause reprochée ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une finalité différente impose un contrôle de licéité.",
+            "follow_up": "Demander registre, notice RGPD et information CSE.",
+            "priority": "BLOCKING",
+            "purpose": "Comparer la finalité sécurité à l'usage de contrôle.",
+            "question": "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "L'absence de consultation peut fragiliser l'usage.",
+            "follow_up": "Demander l'avis et le procès-verbal.",
+            "priority": "HIGH",
+            "purpose": "Vérifier la garantie collective du dispositif de contrôle.",
+            "question": "Le CSE a-t-il été informé ou consulté sur cet usage ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "La stratégie probatoire dépend des conditions applicables.",
+            "follow_up": "Comparer la source aux faits et à la notice locale.",
+            "priority": "HIGH",
+            "purpose": "Vérifier la licéité sans l'inventer.",
+            "question": "La CNIL ou une source officielle encadre-t-elle cet usage précis ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+        "employer_position": "La direction considère que les pauses constituent un manquement disciplinaire.",
+        "event_category": "BREAKS_AND_BADGE_CONTROL",
+        "evidence_mentioned": [
+          "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+          "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+          "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet.",
+          "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "facts_admitted": [
+          "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+          "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet."
+        ],
+        "facts_alleged": [
+          "La direction considère que les pauses constituent un manquement disciplinaire.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "facts_certain": [
+          "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+          "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+          "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+          "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses."
+        ],
+        "facts_disputed": [
+          "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée."
+        ],
+        "facts_missing": [
+          "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+          "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+          "Finalité déclarée du tourniquet et information remise aux salariés",
+          "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+          "Chronologie des convocations, courriers, sanctions et messages de la direction",
+          "Existence d'un arrêt maladie et contenu exact de toute communication pendant celui-ci",
+          "Objectif du salarié et conditions d'une éventuelle rupture conventionnelle"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas confondre finalité de sécurité du badgeage et licéité de son usage disciplinaire."
+        ],
+        "health_and_safety_context": [
+          "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+          "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée."
+        ],
+        "legal_ambiguities": [
+          "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+          "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+          "Finalité déclarée du tourniquet et information remise aux salariés",
+          "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+          "Chronologie des convocations, courriers, sanctions et messages de la direction"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+          "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+          "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+          "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet.",
+          "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "La direction considère que les pauses constituent un manquement disciplinaire.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "primary_event": "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+        "primary_grievance_or_decision": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction. Finalité de sécurité Seveso du badgeage, distincte du grief relatif aux pauses.",
+        "secondary_topics": [
+          "Finalité de sécurité Seveso du badgeage, distincte du grief relatif aux pauses."
+        ],
+        "working_time_context": [
+          "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+          "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+          "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "La direction considère que les pauses constituent un manquement disciplinaire.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "workplace_context": []
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+            "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+            "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet.",
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+            "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée.",
+            "La direction considère que les pauses constituent un manquement disciplinaire.",
+            "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "UNSPECIFIED_FACTS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Faits disciplinaires non précisément qualifiés. Une stratégie définitive est impossible avant description de l'acte, de son attribution et de ses conséquences."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Relevés complets du tourniquet",
+        "Notice RGPD et registre du traitement",
+        "Information ou consultation du CSE"
+      ],
+      "findings": [
+        "Fait principal : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+        "Position du salarié : Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+        "Position de l'employeur : La direction considère que les pauses constituent un manquement disciplinaire."
+      ],
+      "questions_to_ask": [
+        "Quelles pauses reconnaissez-vous exactement ?",
+        "Aviez-vous été informé que le tourniquet pouvait contrôler les pauses ?",
+        "Comment avez-vous calculé chaque pause reprochée ?",
+        "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+        "Le CSE a-t-il été informé ou consulté sur cet usage ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "temps_travail",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction. Finalité de sécurité Seveso du badgeage, distincte du grief relatif aux pauses."
+      },
+      "short_answer": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "Un élément défavorable est reconnu : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

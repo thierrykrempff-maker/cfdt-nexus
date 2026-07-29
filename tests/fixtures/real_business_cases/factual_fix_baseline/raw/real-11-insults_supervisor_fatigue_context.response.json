@@ -1,0 +1,367 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:33.007456+00:00",
+  "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+  "case_input_sha256": "1020d5e7c9b7d4f9e8367bdc7a958083a9b186a7dcd1991261d3c51366e2f49e",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/insults-supervisor-fatigue-context.json",
+  "prompt_sha256": "9f7051f7fe30df134fae4ba736e33bcb716737a38c76b5f3e0f2fbc5f6298311",
+  "public_response_size_bytes": 30540,
+  "reduced_response_size_bytes": 14614,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer le grief exact.",
+            "document": "Preuve complète des propos ou écrits",
+            "priority": "BLOCKING",
+            "purpose": "Établir mots, date, destinataires et diffusion."
+          },
+          {
+            "confirms_or_rules_out": "Écarter un grief ajouté tardivement.",
+            "document": "Convocation et lettre de griefs",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler objet, dates et qualification."
+          },
+          {
+            "confirms_or_rules_out": "Comparer l'égalité de traitement.",
+            "document": "Règlement intérieur et sanctions comparables",
+            "priority": "HIGH",
+            "purpose": "Vérifier règle et proportionnalité."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La stratégie diffère entre reconnaissance et contestation.",
+            "follow_up": "Faire préciser chaque élément admis.",
+            "priority": "BLOCKING",
+            "purpose": "Fixer la position avant la stratégie.",
+            "question": "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La gravité dépend des termes exacts.",
+            "follow_up": "Comparer avec la preuve complète.",
+            "priority": "BLOCKING",
+            "purpose": "Délimiter le grief sans reformulation.",
+            "question": "Quels mots exacts ont été employés ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Des excuses rapides peuvent soutenir la proportionnalité.",
+            "follow_up": "Préparer une formulation sincère.",
+            "priority": "HIGH",
+            "purpose": "Préparer une atténuation si les faits sont reconnus.",
+            "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Des repos insuffisants renforcent le contexte sans supprimer la faute.",
+            "follow_up": "Rassembler planning et pointage.",
+            "priority": "HIGH",
+            "purpose": "Objectiver la fatigue alléguée.",
+            "question": "Quel planning et quels repos aviez-vous avant les faits ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Une menace alléguée doit être prouvée séparément.",
+            "follow_up": "Faire acter la réponse au compte rendu.",
+            "priority": "BLOCKING",
+            "purpose": "Empêcher une aggravation abstraite du grief.",
+            "question": "Quel grief exact retenez-vous, mot pour mot ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une preuve partielle peut changer la qualification.",
+            "follow_up": "Demander les pièces non tronquées.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler preuve, destinataires et publicité.",
+            "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Un traitement incohérent ouvre une contestation ou négociation.",
+            "follow_up": "Demander les précédents anonymisés.",
+            "priority": "HIGH",
+            "purpose": "Examiner proportionnalité et égalité de traitement.",
+            "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+        "event_category": "INSULTING_BEHAVIOR",
+        "evidence_mentioned": [],
+        "facts_admitted": [],
+        "facts_alleged": [
+          "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "L'absence non remplacée d'un collègue est alléguée.",
+          "Une fatigue importante et une surcharge sont alléguées."
+        ],
+        "facts_certain": [
+          "Un technicien travaillait en poste de nuit.",
+          "Il venait d'intervenir sur une fuite de vapeur sous la pluie.",
+          "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+          "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+          "L'employeur envisage une qualification de faute grave."
+        ],
+        "facts_disputed": [],
+        "facts_missing": [
+          "Mots exacts, ton, durée et présence éventuelle d'une menace",
+          "Nature exacte de la remarque du superviseur et échanges précédents",
+          "Planning, durée du travail et repos quotidien et hebdomadaire",
+          "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+          "Antécédents, regrets, excuses et conséquences sur le service"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas transformer des injures en menace ou violence sans fait correspondant."
+        ],
+        "health_and_safety_context": [
+          "Il venait d'intervenir sur une fuite de vapeur sous la pluie.",
+          "Une fatigue importante et une surcharge sont alléguées."
+        ],
+        "legal_ambiguities": [
+          "Mots exacts, ton, durée et présence éventuelle d'une menace",
+          "Nature exacte de la remarque du superviseur et échanges précédents",
+          "Planning, durée du travail et repos quotidien et hebdomadaire",
+          "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+          "Antécédents, regrets, excuses et conséquences sur le service"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "Un technicien travaillait en poste de nuit.",
+          "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+          "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+          "L'employeur envisage une qualification de faute grave.",
+          "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "L'absence non remplacée d'un collègue est alléguée."
+        ],
+        "primary_event": "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+        "primary_grievance_or_decision": "Propos insultants ou injurieux.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Propos insultants ou injurieux. Fatigue et surcharge alléguées comme contexte, sans effacer les propos.",
+        "secondary_topics": [
+          "Fatigue et surcharge alléguées comme contexte, sans effacer les propos."
+        ],
+        "working_time_context": [
+          "Un technicien travaillait en poste de nuit."
+        ],
+        "workplace_context": [
+          "Un technicien travaillait en poste de nuit."
+        ]
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Propos insultants ou injurieux.",
+            "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+            "L'absence non remplacée d'un collègue est alléguée.",
+            "Une fatigue importante et une surcharge sont alléguées."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "INSULTING_OR_INAPPROPRIATE_BEHAVIOR",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien.",
+            "Prioriser le règlement intérieur sur le respect des personnes, les injures, les inscriptions, les dégradations, les locaux, l'échelle des sanctions et les droits de la défense.",
+            "Écarter les thèmes techniques ou numériques sans volet factuel correspondant.",
+            "Ne retenir une jurisprudence que si les propos, la cible, la diffusion, la répétition, les antécédents, le contexte et la sanction peuvent être comparés.",
+            "Ne pas qualifier automatiquement de harcèlement un fait unique sans personne visée ni répétition établie."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Comportement potentiellement fautif consistant en une inscription ou des propos grossiers sur un support de l'entreprise. La qualification exacte dépend de la preuve de l'auteur, de la personne éventuellement visée, de la visibilité, des conséquences, de la répétition et du contexte."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "charge ou fatigue alléguée"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Preuve complète des propos ou écrits",
+        "Convocation et lettre de griefs",
+        "Règlement intérieur et sanctions comparables"
+      ],
+      "findings": [
+        "Fait principal : Propos insultants ou injurieux.",
+        "Position du salarié : La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Position de l'employeur : Des propos insultants envers son superviseur ont été tenus devant trois collègues."
+      ],
+      "questions_to_ask": [
+        "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+        "Quels mots exacts ont été employés ?",
+        "Avez-vous présenté des excuses ou exprimé des regrets ?",
+        "Quel planning et quels repos aviez-vous avant les faits ?",
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Propos insultants ou injurieux. Fatigue et surcharge alléguées comme contexte, sans effacer les propos."
+      },
+      "short_answer": "Propos insultants ou injurieux. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

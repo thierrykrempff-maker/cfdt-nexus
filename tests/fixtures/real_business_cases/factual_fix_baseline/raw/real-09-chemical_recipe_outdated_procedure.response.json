@@ -1,0 +1,319 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:32.177288+00:00",
+  "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+  "case_input_sha256": "27114da77c59a3c54089c6c93e71ae84137d5d7775eaf36535722aae68dd507c",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/chemical-recipe-outdated-procedure.json",
+  "prompt_sha256": "5c21b4221bf8d27eab39b35001e4f4358ceb0efef1e0c40b534a0be25a254f50",
+  "public_response_size_bytes": 28272,
+  "reduced_response_size_bytes": 12587,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer ou écarter l'obsolescence.",
+            "document": "Version horodatée de la recette",
+            "priority": "BLOCKING",
+            "purpose": "Établir la consigne accessible."
+          },
+          {
+            "confirms_or_rules_out": "Établir la connaissance possible du salarié.",
+            "document": "Journaux de publication et de consultation",
+            "priority": "BLOCKING",
+            "purpose": "Dater la diffusion et l'accès."
+          },
+          {
+            "confirms_or_rules_out": "Répartir les responsabilités techniques.",
+            "document": "Fiche de lot et contrôle croisé",
+            "priority": "HIGH",
+            "purpose": "Reconstituer l'opération."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une version obsolète change la qualification de l'erreur.",
+            "follow_up": "Conserver une copie horodatée.",
+            "priority": "BLOCKING",
+            "purpose": "Identifier la consigne réellement accessible.",
+            "question": "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Une consigne claire peut renforcer le grief.",
+            "follow_up": "Identifier auteur, date et témoins.",
+            "priority": "HIGH",
+            "purpose": "Vérifier la connaissance du nouveau dosage.",
+            "question": "Aviez-vous reçu une autre consigne écrite ou orale ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "DATE",
+            "changes_analysis_if": "Une publication postérieure ou non accessible fragilise le grief.",
+            "follow_up": "Demander les journaux système.",
+            "priority": "BLOCKING",
+            "purpose": "Reconstituer la chronologie informatique.",
+            "question": "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "L'absence de contrôle peut révéler une défaillance organisationnelle.",
+            "follow_up": "Demander la procédure de validation.",
+            "priority": "HIGH",
+            "purpose": "Évaluer l'organisation et les responsabilités.",
+            "question": "Quel contrôle croisé devait empêcher une erreur de dosage ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "L'employeur attribue l'erreur de concentration à l'opération réalisée.",
+        "event_category": "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE",
+        "evidence_mentioned": [
+          "Un historique informatique pourrait dater la diffusion de la nouvelle recette.",
+          "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour."
+        ],
+        "facts_admitted": [],
+        "facts_alleged": [
+          "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour.",
+          "L'employeur attribue l'erreur de concentration à l'opération réalisée."
+        ],
+        "facts_certain": [
+          "Un catalyseur a été incorporé à une concentration erronée.",
+          "Le produit a cristallisé et une perte d'exploitation est annoncée.",
+          "Un changement récent de fournisseur avait entraîné une modification du dosage.",
+          "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+        ],
+        "facts_disputed": [],
+        "facts_missing": [
+          "Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+          "Journaux de publication, de consultation et de modification de la recette",
+          "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+          "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+          "Erreurs antérieures, chiffrage et lien causal de la perte annoncée"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas transformer une procédure potentiellement obsolète en défaut de compétence."
+        ],
+        "health_and_safety_context": [],
+        "legal_ambiguities": [
+          "Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+          "Journaux de publication, de consultation et de modification de la recette",
+          "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+          "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+          "Erreurs antérieures, chiffrage et lien causal de la perte annoncée"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour.",
+          "L'employeur attribue l'erreur de concentration à l'opération réalisée."
+        ],
+        "primary_event": "Un catalyseur a été incorporé à une concentration erronée.",
+        "primary_grievance_or_decision": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+        "secondary_topics": [],
+        "working_time_context": [],
+        "workplace_context": []
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+            "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour.",
+            "L'employeur attribue l'erreur de concentration à l'opération réalisée."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "UNSPECIFIED_FACTS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Faits disciplinaires non précisément qualifiés. Une stratégie définitive est impossible avant description de l'acte, de son attribution et de ses conséquences."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Version horodatée de la recette",
+        "Journaux de publication et de consultation",
+        "Fiche de lot et contrôle croisé"
+      ],
+      "findings": [
+        "Fait principal : Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+        "Position du salarié : La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Position de l'employeur : L'employeur attribue l'erreur de concentration à l'opération réalisée."
+      ],
+      "questions_to_ask": [
+        "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+        "Aviez-vous reçu une autre consigne écrite ou orale ?",
+        "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+        "Quel contrôle croisé devait empêcher une erreur de dosage ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète."
+      },
+      "short_answer": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

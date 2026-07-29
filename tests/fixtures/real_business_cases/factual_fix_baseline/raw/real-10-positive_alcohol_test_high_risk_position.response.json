@@ -1,0 +1,331 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:32.598863+00:00",
+  "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+  "case_input_sha256": "11426ff7580063d4f7bb7cf58036dc7b07f990586444c29481bdd91f84c4602f",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/positive-alcohol-test-high-risk-position.json",
+  "prompt_sha256": "88a61247f8fbcfe979f3c683c9dec70b43bc731a8469961deb18e2ab002c8427",
+  "public_response_size_bytes": 28818,
+  "reduced_response_size_bytes": 12827,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer le fondement du contrôle.",
+            "document": "Règlement intérieur en vigueur",
+            "priority": "BLOCKING",
+            "purpose": "Vérifier postes et procédure contrôlables."
+          },
+          {
+            "confirms_or_rules_out": "Écarter une irrégularité supposée.",
+            "document": "Procès-verbal et calibration de l'éthylotest",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler heure, unité et fiabilité."
+          },
+          {
+            "confirms_or_rules_out": "Confirmer ou écarter une contestation procédurale.",
+            "document": "Preuve de proposition de contre-expertise",
+            "priority": "HIGH",
+            "purpose": "Vérifier la garantie réelle."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une impossibilité peut fragiliser la preuve.",
+            "follow_up": "Préciser l'heure et la réponse donnée.",
+            "priority": "BLOCKING",
+            "purpose": "Vérifier l'effectivité de la garantie.",
+            "question": "Avez-vous pu demander une contre-expertise immédiatement ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "La gravité peut varier selon l'exposition effective.",
+            "follow_up": "Identifier témoins et badgeage.",
+            "priority": "HIGH",
+            "purpose": "Mesurer le risque concret.",
+            "question": "Aviez-vous déjà pris le chariot avant le contrôle ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une clause inapplicable fragilise la procédure.",
+            "follow_up": "Demander la version en vigueur.",
+            "priority": "BLOCKING",
+            "purpose": "Vérifier le fondement du contrôle.",
+            "question": "Quelle clause du règlement intérieur autorise ce contrôle ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une donnée imprécise empêche une conclusion fiable.",
+            "follow_up": "Demander calibration et procès-verbal.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler la fiabilité du résultat.",
+            "question": "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "La prise de poste était prévue à cinq heures.",
+          "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "La position précise de l'employeur reste à demander.",
+        "event_category": "POSITIVE_ALCOHOL_TEST",
+        "evidence_mentioned": [
+          "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+          "Un éthylotest positif annoncé à 0,8 g/l est allégué."
+        ],
+        "facts_admitted": [],
+        "facts_alleged": [
+          "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+          "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+          "Un droit à contre-expertise aurait été annoncé.",
+          "Des difficultés personnelles sont alléguées."
+        ],
+        "facts_certain": [
+          "Un cariste travaille sur un site industriel à risques.",
+          "La prise de poste était prévue à cinq heures.",
+          "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+          "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+        ],
+        "facts_disputed": [],
+        "facts_missing": [
+          "Texte exact et version applicable du règlement intérieur",
+          "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+          "Unité exacte du résultat, heure et conditions de mesure",
+          "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+          "Prise effective du chariot, mise en sécurité et risque concret",
+          "Mesures médicales ou sociales proposées et antécédents vérifiés"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable."
+        ],
+        "health_and_safety_context": [
+          "Un cariste travaille sur un site industriel à risques.",
+          "Une haleine alcoolisée et des troubles de l'équilibre sont allégués."
+        ],
+        "legal_ambiguities": [
+          "Texte exact et version applicable du règlement intérieur",
+          "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+          "Unité exacte du résultat, heure et conditions de mesure",
+          "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+          "Prise effective du chariot, mise en sécurité et risque concret"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "Un cariste travaille sur un site industriel à risques.",
+          "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+        ],
+        "primary_event": "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+        "primary_grievance_or_decision": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+        "secondary_topics": [],
+        "working_time_context": [],
+        "workplace_context": [
+          "Un cariste travaille sur un site industriel à risques."
+        ]
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+            "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+            "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+            "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+            "Un droit à contre-expertise aurait été annoncé.",
+            "Des difficultés personnelles sont alléguées."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "ALCOHOL_OR_DRUGS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Qualification provisoire : alcohol or drugs. La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Règlement intérieur en vigueur",
+        "Procès-verbal et calibration de l'éthylotest",
+        "Preuve de proposition de contre-expertise"
+      ],
+      "findings": [
+        "Fait principal : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+        "Position du salarié : La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Position de l'employeur : La position précise de l'employeur reste à demander."
+      ],
+      "questions_to_ask": [
+        "Avez-vous pu demander une contre-expertise immédiatement ?",
+        "Aviez-vous déjà pris le chariot avant le contrôle ?",
+        "Quelle clause du règlement intérieur autorise ce contrôle ?",
+        "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque."
+      },
+      "short_answer": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

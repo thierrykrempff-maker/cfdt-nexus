@@ -1,0 +1,320 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:30.066491+00:00",
+  "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+  "case_input_sha256": "a77132e4651e309611abb79f9bfacd9acf73ae24c764f536c249d9ff4acadbb0",
+  "employee_path": "QUESTION_SALARIE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/forced-day-to-shift-laboratory.json",
+  "prompt_sha256": "78087966c7ff13e32be9061990404f4ccb1f156db5c8d347f1722e6d5ae935e7",
+  "public_response_size_bytes": 30965,
+  "reduced_response_size_bytes": 13461,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Qualifier contrat ou conditions de travail.",
+            "document": "Contrat et avenants",
+            "priority": "BLOCKING",
+            "purpose": "Lire la clause exacte sur les horaires."
+          },
+          {
+            "confirms_or_rules_out": "Confirmer les contraintes réelles.",
+            "document": "Courrier de changement et planning projeté",
+            "priority": "BLOCKING",
+            "purpose": "Établir durée, cycle et délai."
+          },
+          {
+            "confirms_or_rules_out": "Comparer la décision au droit local.",
+            "document": "Accord INEOS sur horaires postés",
+            "priority": "HIGH",
+            "purpose": "Identifier garanties et contreparties."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "La présence de nuit ou de week-end change l'analyse.",
+            "follow_up": "Demander le planning écrit.",
+            "priority": "BLOCKING",
+            "purpose": "Mesurer le changement réel.",
+            "question": "Quel cycle exact et quels horaires vous ont été communiqués ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "CHOICE",
+            "changes_analysis_if": "La ligne syndicale dépend de la solution recherchée.",
+            "follow_up": "Préparer une proposition prioritaire et une alternative.",
+            "priority": "HIGH",
+            "purpose": "Aligner la stratégie sur l'objectif réel.",
+            "question": "Quel est votre objectif : maintien en journée, aménagement ou négociation ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Une atteinte importante renforce la proportionnalité.",
+            "follow_up": "Identifier un aménagement possible.",
+            "priority": "HIGH",
+            "purpose": "Documenter l'impact sans demander de détail médical excessif.",
+            "question": "Quelle contrainte familiale ou personnelle concrète souhaitez-vous faire valoir ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Une impossibilité concrète peut soutenir un aménagement.",
+            "follow_up": "Rassembler horaires de transport ou justificatifs utiles.",
+            "priority": "MEDIUM",
+            "purpose": "Mesurer une difficulté pratique vérifiable.",
+            "question": "Quelles contraintes de transport le nouveau cycle créerait-il ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "CHOICE",
+            "changes_analysis_if": "Une durée indéterminée contredit le caractère temporaire.",
+            "follow_up": "Faire confirmer la date d'effet par écrit.",
+            "priority": "BLOCKING",
+            "purpose": "Vérifier la durée et l'organisation possible.",
+            "question": "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une clause absente ou limitée peut changer la qualification.",
+            "follow_up": "Demander contrat et avenants.",
+            "priority": "BLOCKING",
+            "purpose": "Qualifier la portée du contrat.",
+            "question": "Quelle clause du contrat autoriserait ce changement ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "L'accord peut prévoir garanties, délais ou contreparties.",
+            "follow_up": "Demander la clause précise.",
+            "priority": "HIGH",
+            "purpose": "Identifier la règle locale prioritaire.",
+            "question": "Quel accord INEOS encadre le passage en horaires postés ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "L'absence de recherche fragilise la proportionnalité.",
+            "follow_up": "Demander les critères de choix.",
+            "priority": "HIGH",
+            "purpose": "Tester les alternatives moins contraignantes.",
+            "question": "Quels volontaires ou quelles permutations avez-vous recherchés ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "dates_and_chronology": [],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "employer_position": "La direction présente le passage en horaires postés comme nécessaire.",
+        "event_category": "WORK_SCHEDULE_CHANGE",
+        "evidence_mentioned": [],
+        "facts_admitted": [
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "La salariée indique ne pas être volontaire pour le passage en horaires postés."
+        ],
+        "facts_alleged": [
+          "La direction présente le passage en horaires postés comme nécessaire.",
+          "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+        ],
+        "facts_certain": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La direction veut la faire passer en horaires postés.",
+          "Les postes mentionnés sont le matin et l'après-midi.",
+          "Les week-ends et jours fériés sont concernés.",
+          "Aucun poste de nuit n'est précisé.",
+          "La salariée n'est pas volontaire.",
+          "Elle est partie en pleurs.",
+          "Aucune suite définitive n'est encore connue."
+        ],
+        "facts_disputed": [
+          "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "La salariée n'a pas accepté le changement du seul fait de la présentation du projet."
+        ],
+        "facts_missing": [
+          "Heures exactes de début et de fin de chaque poste",
+          "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+          "Caractère temporaire ou permanent et date de mise en œuvre",
+          "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+          "Accords INEOS applicables au laboratoire, au travail posté et aux horaires",
+          "Motifs et critères ayant conduit au choix de cette salariée",
+          "Recherche de volontaires et autres possibilités de remplacement",
+          "Effectifs du laboratoire avant et après, notamment en journée",
+          "Information ou consultation du CSE et documents transmis",
+          "Contraintes personnelles, familiales, transport et santé"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas déduire démission, volontariat ou acceptation d'un avantage salarial."
+        ],
+        "health_and_safety_context": [],
+        "legal_ambiguities": [
+          "Heures exactes de début et de fin de chaque poste",
+          "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+          "Caractère temporaire ou permanent et date de mise en œuvre",
+          "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+          "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La direction veut la faire passer en horaires postés.",
+          "La salariée n'est pas volontaire.",
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "La salariée indique ne pas être volontaire pour le passage en horaires postés.",
+          "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+          "La direction présente le passage en horaires postés comme nécessaire."
+        ],
+        "primary_event": "Une salariée travaille en horaire de jour au laboratoire.",
+        "primary_grievance_or_decision": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "requested_path": "QUESTION_SALARIE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté. La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "secondary_topics": [],
+        "working_time_context": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La direction veut la faire passer en horaires postés.",
+          "Les week-ends et jours fériés sont concernés.",
+          "Aucun poste de nuit n'est précisé.",
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "La salariée indique ne pas être volontaire pour le passage en horaires postés.",
+          "La direction présente le passage en horaires postés comme nécessaire."
+        ],
+        "workplace_context": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+        ]
+      },
+      "disciplinary_assistance": null,
+      "documents_to_request": [
+        "Contrat et avenants",
+        "Courrier de changement et planning projeté",
+        "Accord INEOS sur horaires postés"
+      ],
+      "findings": [
+        "Fait principal : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "Position du salarié : Le salarié reconnaît certains éléments mais conteste leur portée : La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "Position de l'employeur : La direction présente le passage en horaires postés comme nécessaire."
+      ],
+      "questions_to_ask": [
+        "Quel cycle exact et quels horaires vous ont été communiqués ?",
+        "Quel est votre objectif : maintien en journée, aménagement ou négociation ?",
+        "Quelle contrainte familiale ou personnelle concrète souhaitez-vous faire valoir ?",
+        "Quelles contraintes de transport le nouveau cycle créerait-il ?",
+        "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+        "Quelle clause du contrat autoriserait ce changement ?",
+        "Quel accord INEOS encadre le passage en horaires postés ?",
+        "Quels volontaires ou quelles permutations avez-vous recherchés ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "temps_travail"
+        ],
+        "employee_path": "QUESTION_SALARIE",
+        "search_query": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté. La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée."
+      },
+      "short_answer": "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Il faut contrôler contrat, accord local, horaires, contraintes et alternatives.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "Un élément défavorable est reconnu : La salariée confirme travailler actuellement en horaire de jour.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

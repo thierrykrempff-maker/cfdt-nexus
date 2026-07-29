@@ -1,0 +1,169 @@
+{
+  "baseline_schema_version": "1.0",
+  "assessment_method": "Relecture sémantique de la réponse publique réduite, dimension par dimension, avant ouverture de l'issue connue.",
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Les courriels insultants restent le grief principal ; l'alcool est isolé comme contexte secondaire reconnu."]},
+        "question_relevance": {"score": 9, "evidence": ["Les questions portent sur les mots exacts, les preuves complètes, la reconnaissance et la sanction."]},
+        "source_relevance": {"score": 7, "evidence": ["Les niveaux documentaires sont distingués et leur indisponibilité locale est visible."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["La comparaison est préparée par le grief et les pièces, mais aucune règle disponible n'est effectivement confrontée aux faits."]},
+        "strategy_realism": {"score": 10, "evidence": ["La stratégie distingue reconnaissance, atténuation, preuve, proportionnalité et négociation."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Les preuves et la sanction de la direction sont anticipées sans nier le fait reconnu."]},
+        "no_invention": {"score": 10, "evidence": ["Aucun fait d'un autre cas ni aucune autorité indisponible n'est présenté comme acquis."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Questions, pièces et suivi sont directement utilisables en entretien."]}
+      },
+      "hard_failures": [], "successes": ["Grief et contexte sont hiérarchisés."], "errors": ["La comparaison juridique reste à alimenter."], "correction_priority": "Comparaison règle-faits."
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "dimensions": {
+        "factual_understanding": {"score": 19, "evidence": ["Les pauses reconnues et le débat distinct sur la finalité du badgeage Seveso sont conservés."]},
+        "question_relevance": {"score": 9, "evidence": ["Finalité, information, consultation CSE, données de badgeage et tolérances sont vérifiées."]},
+        "source_relevance": {"score": 7, "evidence": ["RGPD, CNIL et CSE sont ciblés sans source étrangère au dossier."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["Le test finalité initiale/usage disciplinaire est posé, mais sans texte disponible réellement comparé."]},
+        "strategy_realism": {"score": 10, "evidence": ["La défense ne nie pas les pauses et contrôle loyauté de la preuve et proportionnalité."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Le besoin de sécurité est mis en regard de la finalité déclarée du dispositif."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune irrégularité RGPD n'est affirmée avant vérification."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Questions et documents préparent immédiatement la défense."]}
+      },
+      "hard_failures": [], "successes": ["La contamination paie et insultes a disparu."], "errors": ["Les sources réglementaires restent à comparer."], "correction_priority": "Comparaison règle-faits."
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Le tag reste central et n'est transformé ni en menace ni en harcèlement répété."]},
+        "question_relevance": {"score": 9, "evidence": ["Attribution, mots, diffusion, preuve, sanction et contexte sont questionnés séparément."]},
+        "source_relevance": {"score": 7, "evidence": ["Les niveaux utiles sont explicités sans jurisprudence inventée."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["Preuve et proportionnalité sont reliées au tag, sans règle officielle détaillée disponible."]},
+        "strategy_realism": {"score": 10, "evidence": ["Reconnaissance ou contestation conduisent à des lignes distinctes."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Le grief, les preuves et les conséquences patronales sont anticipés."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune menace, répétition ou preuve inexistante n'est ajoutée."]},
+        "practical_usefulness": {"score": 5, "evidence": ["La fiche est utilisable avant et pendant l'entretien."]}
+      },
+      "hard_failures": [], "successes": ["Les fausses pistes antérieures sont supprimées."], "errors": ["L'application précise des textes reste à compléter."], "correction_priority": "Sources et comparaison."
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Passage imposé, absence de volontariat et impact collectif possible sont séparés."]},
+        "question_relevance": {"score": 9, "evidence": ["Cycle, clause, durée, contraintes, volontaires, accord et effectifs sont demandés."]},
+        "source_relevance": {"score": 7, "evidence": ["Les accords INEOS sont prioritaires et les niveaux absents sont signalés."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["La qualification est préparée, mais les clauses réelles ne sont pas disponibles."]},
+        "strategy_realism": {"score": 10, "evidence": ["Maintien, aménagement et négociation sont distingués sans conseiller un refus non préparé."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Besoin de remplacement et alternatives organisationnelles sont anticipés."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune démission, rémunération, repos ou donnée technique absente n'est injectée."]},
+        "practical_usefulness": {"score": 5, "evidence": ["La fiche prépare le salarié et l'interrogation de la direction."]}
+      },
+      "hard_failures": [], "successes": ["Le cas n'est plus contaminé."], "errors": ["Les clauses applicables doivent être récupérées."], "correction_priority": "Application des accords."
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "dimensions": {
+        "factual_understanding": {"score": 19, "evidence": ["La réunion CSSCT reste un dossier de mandat et le caractère incomplet est reconnu."]},
+        "question_relevance": {"score": 9, "evidence": ["Mandat, présence, conséquence, qualification du temps et canal sont bloquants."]},
+        "source_relevance": {"score": 6, "evidence": ["Les documents locaux sont demandés, mais aucune source officielle ne valide encore le régime."]},
+        "rule_fact_comparison": {"score": 3, "evidence": ["L'analyse est suspendue faute de connaître mandat et conséquence réelle."]},
+        "strategy_realism": {"score": 10, "evidence": ["La stratégie fixe les faits avant toute accusation d'entrave."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Canal invoqué et qualification du temps par l'employeur sont anticipés."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune fin, retenue ou entrave n'est inventée."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Les vérifications permettent de reprendre utilement le cas incomplet."]}
+      },
+      "hard_failures": [], "successes": ["Le parcours demandé est respecté et la conclusion suspendue."], "errors": ["Le fond reste non analysable."], "correction_priority": "Obtenir les réponses bloquantes."
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "dimensions": {
+        "factual_understanding": {"score": 20, "evidence": ["La règle des 10 % indéfinie est l'ambiguïté centrale."]},
+        "question_relevance": {"score": 10, "evidence": ["La première question demande exactement ce que signifie la règle."]},
+        "source_relevance": {"score": 5, "evidence": ["La sélection est suspendue ; aucun texte n'est retenu artificiellement."]},
+        "rule_fact_comparison": {"score": 2, "evidence": ["Aucune comparaison n'est possible avant clarification, ce qui est explicitement indiqué."]},
+        "strategy_realism": {"score": 8, "evidence": ["La stratégie réaliste est d'obtenir définition et document source."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["La position de la direction n'est pas supposée."]},
+        "no_invention": {"score": 10, "evidence": ["Ni dixième légal, ni perte financière, ni jurisprudence ne sont supposés."]},
+        "practical_usefulness": {"score": 5, "evidence": ["La question bloquante débloque directement le dossier."]}
+      },
+      "hard_failures": [], "successes": ["Le verrou d'ambiguïté fonctionne avant la recherche."], "errors": ["Le fond reste nécessairement non analysé."], "correction_priority": "Clarifier la notion."
+    },
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Indisponibilité et inadaptation alléguée des EPI restent centrales."]},
+        "question_relevance": {"score": 9, "evidence": ["Stock, modèle, alerte, remise, risque et instruction sont distingués."]},
+        "source_relevance": {"score": 7, "evidence": ["Les documents sécurité comparables sont ciblés sans source certaine inventée."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["L'obligation de protection est préparée, mais pas confrontée à un texte récupéré."]},
+        "strategy_realism": {"score": 10, "evidence": ["Disponibilité, adaptation, alerte et instruction sont vérifiées ensemble."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Consigne individuelle et responsabilité de fourniture sont anticipées."]},
+        "no_invention": {"score": 10, "evidence": ["L'inadaptation n'est pas transformée en fait prouvé."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Les preuves de stock et fourniture sont actionnables."]}
+      },
+      "hard_failures": [], "successes": ["La fausse piste de compétence a disparu."], "errors": ["Normes et consignes restent à comparer."], "correction_priority": "Comparaison documentaire."
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Caractère temporaire, clause et garde alternée restent distincts."]},
+        "question_relevance": {"score": 9, "evidence": ["Durée, cycle, délai, clause, contrainte et alternatives sont demandés sans effectif injecté."]},
+        "source_relevance": {"score": 7, "evidence": ["Contrat et accord horaires sont ciblés avec disponibilité explicite."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["Portée de la clause et temporalité sont préparées sans texte réel confronté."]},
+        "strategy_realism": {"score": 10, "evidence": ["Maintien, aménagement et négociation dépendent des réponses."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Besoin temporaire et alternatives patronales sont anticipés."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune rémunération ou réduction d'effectif absente n'est ajoutée."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Les questions préparent une discussion ciblée."]}
+      },
+      "hard_failures": [], "successes": ["Le cas temporaire n'est plus confondu avec REAL-04."], "errors": ["La clause réelle reste à lire."], "correction_priority": "Appliquer contrat et accord."
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["La version obsolète de la procédure reste le fait technique central."]},
+        "question_relevance": {"score": 9, "evidence": ["Version affichée, horodatage, alerte, déploiement et mise à jour sont vérifiés."]},
+        "source_relevance": {"score": 7, "evidence": ["Versions et journaux techniques sont ciblés plutôt que des textes lexicaux."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["La règle accessible à la date doit être comparée, mais la pièce manque."]},
+        "strategy_realism": {"score": 10, "evidence": ["Action du salarié, défaut système et déploiement sont distingués."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["L'attente de vérification et la version officielle sont anticipées."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune absence d'habilitation ou faute de compétence n'est inventée."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Horodatage et version sont directement actionnables."]}
+      },
+      "hard_failures": [], "successes": ["La contamination disciplinaire générique a disparu."], "errors": ["Journaux et versions restent à obtenir."], "correction_priority": "Obtenir la preuve de version."
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Contrôle positif et poste à risque sont distingués de la régularité à vérifier."]},
+        "question_relevance": {"score": 9, "evidence": ["Poste, heure, taux, appareil, contre-expertise et règlement sont demandés."]},
+        "source_relevance": {"score": 7, "evidence": ["Règlement et pièces de contrôle sont prioritaires sans jurisprudence certaine inventée."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["La procédure doit être comparée au règlement et au procès-verbal indisponibles."]},
+        "strategy_realism": {"score": 10, "evidence": ["La défense contrôle fiabilité, garanties et proportionnalité sans nier le résultat."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Le risque sécurité patronal est pris au sérieux."]},
+        "no_invention": {"score": 10, "evidence": ["Aucune irrégularité du test n'est affirmée sans preuve."]},
+        "practical_usefulness": {"score": 5, "evidence": ["Les pièces permettent un contrôle concret avant entretien."]}
+      },
+      "hard_failures": [], "successes": ["La prudence remplace l'invention d'une irrégularité."], "errors": ["La règle dépend du règlement réel."], "correction_priority": "Comparer contrôle et règlement."
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "dimensions": {
+        "factual_understanding": {"score": 18, "evidence": ["Les injures restent le grief ; fatigue, planning et repos sont à objectiver."]},
+        "question_relevance": {"score": 9, "evidence": ["Mots, reconnaissance, témoins, planning, repos, excuses et sanction sont séparés."]},
+        "source_relevance": {"score": 7, "evidence": ["Preuves, règlement et planning sont ciblés sans source étrangère."]},
+        "rule_fact_comparison": {"score": 5, "evidence": ["Proportionnalité et contexte sont préparés sans règle disponible appliquée."]},
+        "strategy_realism": {"score": 10, "evidence": ["La fatigue atténue éventuellement mais ne supprime pas automatiquement la faute."]},
+        "adversarial_analysis": {"score": 8, "evidence": ["Preuve des injures et autorité hiérarchique sont anticipées avec le repos."]},
+        "no_invention": {"score": 10, "evidence": ["Aucun harcèlement, menace ou repos insuffisant n'est établi sans preuve."]},
+        "practical_usefulness": {"score": 5, "evidence": ["La préparation guide contestation ou reconnaissance atténuée."]}
+      },
+      "hard_failures": [], "successes": ["La fatigue ne remplace plus le grief."], "errors": ["Preuves et plannings restent à obtenir."], "correction_priority": "Comparaison preuve-règle."
+    }
+  ],
+  "transversal": {
+    "findings": [
+      "Les onze faits principaux sont stables et aucun dossier n'est contaminé par un autre scénario.",
+      "Le parcours explicitement demandé est respecté sur onze cas.",
+      "Les questions sont structurées, hiérarchisées et directement utilisables.",
+      "Les ambiguïtés déterminantes suspendent correctement la conclusion.",
+      "Le risque résiduel principal est la comparaison règle-faits lorsque les sources ne remontent pas."
+    ]
+  }
+}
