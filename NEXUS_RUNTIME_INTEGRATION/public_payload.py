@@ -219,6 +219,21 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
         ][:12],
         "sources": sources,
         "source_layers": source_layers,
+        "source_search_plan": _rows(answer.get("source_search_plan"), limit=6),
+        "applicable_sources": _rows(answer.get("applicable_sources"), limit=8),
+        "rule_to_facts_analysis": _rows(
+            answer.get("rule_to_facts_analysis"), limit=6
+        ),
+        "rejected_sources": _rows(answer.get("rejected_sources"), limit=8),
+        "missing_source_requirements": _rows(
+            answer.get("missing_source_requirements"), limit=8
+        ),
+        "adversarial_source_analysis": answer.get(
+            "adversarial_source_analysis", {}
+        ),
+        "control_device_hypotheses": _rows(
+            answer.get("control_device_hypotheses"), limit=3
+        ),
         "warnings": warnings,
         "issue_groups": [],
     }
@@ -257,6 +272,9 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
         "questions_utiles": compact_answer["questions_to_ask"],
         "limites": warnings,
         "source_layers": compact_answer["source_layers"],
+        "regles_comparees_aux_faits": compact_answer[
+            "rule_to_facts_analysis"
+        ],
     }
     juriste = {
         "active": True,
@@ -270,7 +288,10 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
             *_rows(core.get("facts_missing"), limit=5),
             *_rows(core.get("blocking_ambiguities"), limit=3),
         ][:7],
-        "analyse_et_raisonnement": compact_answer["findings"],
+        "analyse_et_raisonnement": [
+            *compact_answer["findings"],
+            *compact_answer["rule_to_facts_analysis"],
+        ],
         "risques_points_vigilance": _rows(core.get("forbidden_inferences"), limit=5),
         "position_de_travail_proposee": answer.get("working_position"),
         "questions_a_poser_direction": _texts(
@@ -278,7 +299,25 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
         ),
         "limites": warnings,
     }
+    comparison_lines = [
+        (
+            f"{item.get('issue')} — {item.get('source_reference')} — "
+            f"{item.get('provisional_conclusion')} — {item.get('next_action')}"
+        )
+        for item in compact_answer["rule_to_facts_analysis"]
+        if isinstance(item, Mapping)
+    ]
+    if not comparison_lines:
+        comparison_lines = [
+            "Aucune source traçable avec extrait précis ne permet encore une "
+            "comparaison règle–faits.",
+            *[
+                f"Source à obtenir : {item}"
+                for item in compact_answer["missing_source_requirements"]
+            ],
+        ]
     sections = [
+        {"title": "Règles comparées aux faits", "items": comparison_lines},
         {"title": "Compréhension factuelle", "items": compact_answer["findings"]},
         {
             "title": "Questions prioritaires au salarié",

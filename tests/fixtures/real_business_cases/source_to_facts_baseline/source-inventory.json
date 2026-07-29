@@ -1,0 +1,1226 @@
+{
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "missing_source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "facts_limiting_application": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+            "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+            "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+            "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée",
+            "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+            "Nature, durée, lieu et effets d'une éventuelle mutation"
+          ],
+          "precise_excerpt": "...ubi ou refusé de subir des faits de harcèlement sexuel tels que définis au paragraphe ci-dessus, y compris, dans le cas mentionné au 1° du même article, si les propos et comportements n’ont pas été répétés. Aucun salarié, aucune personne en formation ou en stage ne peut être sanctionné, licencié ou faire l’objet d’une mesure discriminatoire pour avoir témoigné de faits de harcèlement sexuel ou pour les avoir relatés. Toute disposition ou tout acte contraire aux dispositions d...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 61,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-4792f00b774146efdb4c",
+          "source_location": "Page 8",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "Règlement intérieur.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "facts_limiting_application": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+            "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée",
+            "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+            "Nature, durée, lieu et effets d'une éventuelle mutation"
+          ],
+          "precise_excerpt": "INEOS Polymers Sarralbe SAS rue Ernest Solvay, BP 40003, 57430 Sarralbe, France Tel. 03 87 97 70 00 Fax 03 87 97 96 63 www.ineos.com REGLEMENT INTERIEUR Date de mise en application : 01.10.2018 Annule et remplace le règlement intérieur du mois de novembre 2012 OBJET ET DOMAINE D’APPLICATION DU PRESENT REGLEMENT Dans le présent règlement établi pour satisfaire à l’obligation légale (Code du Travail art. L 1311-1), le mot « Entreprise » concerne tous les espaces, bureaux, ateli...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 23,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-e28be6e96ce7e3e8f055",
+          "source_location": "Page 1",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "Règlement intérieur.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "APPLICABLE",
+          "article_or_clause": "L1332-2",
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "code_travail",
+          "effective_date": "2012-03-24",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "facts_limiting_application": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+            "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+            "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels."
+          ],
+          "factual_similarity_score": 44,
+          "hierarchy_level": 3,
+          "legal_nature": "STATUTE",
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée",
+            "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+            "Nature, durée, lieu et effets d'une éventuelle mutation"
+          ],
+          "precise_excerpt": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretie",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 60,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "LEGIARTI000025560074",
+          "source_location": "L1332-2",
+          "source_provider": "Légifrance",
+          "source_title": "Code du travail",
+          "version_date": "2012-03-24"
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": "L1331-1",
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "code_travail",
+          "effective_date": "2008-05-01",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "facts_limiting_application": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+            "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 3,
+          "legal_nature": "STATUTE",
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée",
+            "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+            "Nature, durée, lieu et effets d'une éventuelle mutation"
+          ],
+          "precise_excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 21,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "LEGIARTI000006901445",
+          "source_location": "L1331-1",
+          "source_provider": "Légifrance",
+          "source_title": "Code du travail",
+          "version_date": "2008-05-01"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "missing_source_requirements": [
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "CNIL : ressource réelle sur finalité, information, conservation et usage secondaire du dispositif de contrôle."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "facts_limiting_application": [
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+            "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée.",
+            "La direction considère que les pauses constituent un manquement disciplinaire.",
+            "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+          ],
+          "facts_supporting_application": [
+            "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction."
+          ],
+          "factual_similarity_score": 44,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés",
+            "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+            "Chronologie des convocations, courriers, sanctions et messages de la direction"
+          ],
+          "precise_excerpt": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels 25 25 Durée annuelle théorique correspondante du temps de travail 1648 h / an 206 postes 34,93 heures Déduction à prendre en compte Jours fériés 13 JF 13 13 104 h Repos compensateurs de temps de poste 3 RCTP 3 3 ane ANNEXE 2.2.1: CALCUL DU T...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 47,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-5fdc266fa8a0e777fa33",
+          "source_location": "Page 4",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "facts_limiting_application": [
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+            "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée.",
+            "La direction considère que les pauses constituent un manquement disciplinaire.",
+            "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+          ],
+          "facts_supporting_application": [
+            "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés",
+            "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+            "Chronologie des convocations, courriers, sanctions et messages de la direction"
+          ],
+          "precise_excerpt": "...an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3 RCTP 3 3 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190] [Compensation 0 -12] [Négociation NAO 2012 -11} 10,43 cycles 219 postes / an Nombre de postes de travail théorique 231 219] Congés annuels 25 25 Durée annuelle théorique correspondante du temps de travail 1648 h/an 206 postes...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 26,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-4b2abd9a90c8b59902b7",
+          "source_location": "Page 5",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "APPLICABLE",
+          "article_or_clause": "L1332-2",
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "code_travail",
+          "effective_date": "2012-03-24",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "facts_limiting_application": [
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+            "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée.",
+            "La direction considère que les pauses constituent un manquement disciplinaire.",
+            "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+          ],
+          "facts_supporting_application": [
+            "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+            "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+            "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+            "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso."
+          ],
+          "factual_similarity_score": 88,
+          "hierarchy_level": 3,
+          "legal_nature": "STATUTE",
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés",
+            "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+            "Chronologie des convocations, courriers, sanctions et messages de la direction"
+          ],
+          "precise_excerpt": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretie",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 78,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "LEGIARTI000025560074",
+          "source_location": "L1332-2",
+          "source_provider": "Légifrance",
+          "source_title": "Code du travail",
+          "version_date": "2012-03-24"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "missing_source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Le salarié indique que l'inscription ne visait personne en particulier.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Le salarié conteste avoir visé une personne déterminée.",
+          "facts_limiting_application": [
+            "Le salarié conteste avoir visé une personne déterminée.",
+            "Aucune volonté de menace ou de harcèlement n'est reconnue.",
+            "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.",
+            "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Le salarié indique que l'inscription ne visait personne en particulier.",
+            "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.",
+            "Le salarié conteste avoir visé une personne déterminée.",
+            "Aucune volonté de menace ou de harcèlement n'est reconnue.",
+            "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "La phrase complète, son support exact et son emplacement",
+            "Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur",
+            "Les preuves détenues par l'employeur et la chronologie exacte",
+            "L'existence d'une dégradation durable, le nettoyage nécessaire et son coût",
+            "Le caractère isolé ou répété et les éventuels antécédents disciplinaires"
+          ],
+          "precise_excerpt": "...gnité, d’altérer sa santé physique ou mentale ou de compromettre son avenir professionnel. Aucun salarié, aucune personne en formation ou en stage ne peut être sanctionné, licencié ou faire l’objet d’une mesure discriminatoire, directe ou indirecte, notamment en matière de rémunération, de formation, de reclassement, d’affectation, de qualification, de classification, de promotion professionnelle, de mutation ou de renouvellement de contrat pour avoir subi ou refusé de subir...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 89,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-b819789539386595ac26",
+          "source_location": "Page 9",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "Règlement intérieur.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "APPLICABLE",
+          "article_or_clause": "L1332-2",
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "code_travail",
+          "effective_date": "2012-03-24",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+          "employer_counterargument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié conteste avoir visé une personne déterminée.",
+          "facts_limiting_application": [
+            "Le salarié conteste avoir visé une personne déterminée.",
+            "Aucune volonté de menace ou de harcèlement n'est reconnue.",
+            "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.",
+            "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+            "Le salarié indique que l'inscription ne visait personne en particulier.",
+            "Il relie son geste à une journée difficile et à une ambiance de travail dégradée.",
+            "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.",
+            "Le salarié conteste avoir visé une personne déterminée."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 3,
+          "legal_nature": "STATUTE",
+          "missing_facts": [
+            "La phrase complète, son support exact et son emplacement",
+            "Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur",
+            "Les preuves détenues par l'employeur et la chronologie exacte",
+            "L'existence d'une dégradation durable, le nettoyage nécessaire et son coût",
+            "Le caractère isolé ou répété et les éventuels antécédents disciplinaires"
+          ],
+          "precise_excerpt": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate ou non, sur la présence dans l'entreprise, la fonction, la carrière ou la rémunération du salarié. Lors de son audition, le salarié peut se faire assister par une personne de son choix appartenant au personnel de l'entreprise. Au cours de l'entretien, l'employeur indique le motif de la sanction envisagée et recueille les explications du salarié. La sanction ne peut intervenir moins de deux jours ouvrables, ni plus d'un mois après le jour fixé pour l'entretie",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 87,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "LEGIARTI000025560074",
+          "source_location": "L1332-2",
+          "source_provider": "Légifrance",
+          "source_title": "Code du travail",
+          "version_date": "2012-03-24"
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": "L1331-1",
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "code_travail",
+          "effective_date": "2008-05-01",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+          "employer_counterargument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié conteste avoir visé une personne déterminée.",
+          "facts_limiting_application": [
+            "Le salarié conteste avoir visé une personne déterminée.",
+            "Aucune volonté de menace ou de harcèlement n'est reconnue.",
+            "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié.",
+            "Aucune qualification de harcèlement, de menace ou de dommage matériel n'est établie dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Un salarié a écrit sur une installation de l'entreprise une phrase grossière contenant les termes « fils de pute ».",
+            "Il relie son geste à une journée difficile et à une ambiance de travail dégradée.",
+            "Une situation de souffrance au travail est alléguée, sans élément médical ni qualification juridique fournis.",
+            "Une ambiance de travail dégradée et une situation de souffrance au travail sont alléguées par le salarié."
+          ],
+          "factual_similarity_score": 88,
+          "hierarchy_level": 3,
+          "legal_nature": "STATUTE",
+          "missing_facts": [
+            "La phrase complète, son support exact et son emplacement",
+            "Les personnes ayant vu l'inscription et la personne éventuellement identifiée par l'employeur",
+            "Les preuves détenues par l'employeur et la chronologie exacte",
+            "L'existence d'une dégradation durable, le nettoyage nécessaire et son coût",
+            "Le caractère isolé ou répété et les éventuels antécédents disciplinaires"
+          ],
+          "precise_excerpt": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non la présence du salarié dans l'entreprise, sa fonction, sa carrière ou sa rémunération.",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 51,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "LEGIARTI000006901445",
+          "source_location": "L1331-1",
+          "source_provider": "Légifrance",
+          "source_title": "Code du travail",
+          "version_date": "2008-05-01"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "missing_source_requirements": [
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "facts_limiting_application": [
+            "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+            "La direction présente le passage en horaires postés comme nécessaire.",
+            "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi.",
+            "Les week-ends et jours fériés sont concernés.",
+            "Aucun poste de nuit n'est précisé."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre",
+            "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+            "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+          ],
+          "precise_excerpt": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels 25 25 Durée annuelle théorique correspondante du temps de travail 1648 h / an 206 postes 34,93 heures Déduction à prendre en compte Jours fériés 13 JF 13 13 104 h Repos compensateurs de temps de poste 3 RCTP 3 3 ane ANNEXE 2.2.1: CALCUL DU T...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 92,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-5fdc266fa8a0e777fa33",
+          "source_location": "Page 4",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "facts_limiting_application": [
+            "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+            "La direction présente le passage en horaires postés comme nécessaire.",
+            "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi.",
+            "Les week-ends et jours fériés sont concernés.",
+            "Aucun poste de nuit n'est précisé."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre",
+            "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+            "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+          ],
+          "precise_excerpt": "ode 34,93 heures Bh / poste 52,18 semaines / an 5 semaines /an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3 RCTP 3 3 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190] [Compensation 0 -12] [Négociation NAO 2012 -11} 10,43 cycles 219 postes / an Nombre de postes de travail théorique 231 219] Congés annuels 25 25 Durée annuelle théor...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 92,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-39b18239baf99d73b844",
+          "source_location": "Page 5",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "facts_limiting_application": [
+            "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+            "La direction présente le passage en horaires postés comme nécessaire.",
+            "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "Une salariée travaille en horaire de jour au laboratoire.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi.",
+            "Aucun poste de nuit n'est précisé."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre",
+            "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+            "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+          ],
+          "precise_excerpt": "...Primes générales est mis à jour pour intégrer le nouveau roulement de postes « 2 postes SD2/3 JFT ». Article 3 - Dépôt Conformément aux dispositions du Code du Travail, le texte du présent avenant sera déposé à la DIRECCTE, ainsi qu'au Secrétariat du Greffe du Conseil des Prud'hommes. Fait à Sarralbe, le 4A 2 } 6 / Jot.",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 83,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-3aabac2191b601eaf820",
+          "source_location": "Page 3",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "facts_limiting_application": [
+            "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+            "La direction présente le passage en horaires postés comme nécessaire.",
+            "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi.",
+            "Les week-ends et jours fériés sont concernés.",
+            "Aucun poste de nuit n'est précisé."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre",
+            "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+            "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+          ],
+          "precise_excerpt": "...ent. Paragraphe identique au paragraphe 2.4.1 de l’accord du 30.03.2000. 2.4.2 Prise des congés — jours de fractionnement e Prise des congés Le personnel posté travaillant dans le cadre du roulement 5x8 aura la possibilité de prendre au minimum un congé de 18 jours ouvrés pendant la période légale. Une organisation ponctuelle au sein des équipes pourra permettre un repos plus important. © Jours de fractionnement",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 74,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-8dfa5d35654f0d3665e9",
+          "source_location": "Page 3",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "convention_collective",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "facts_limiting_application": [
+            "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+            "La direction présente le passage en horaires postés comme nécessaire.",
+            "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+          ],
+          "facts_supporting_application": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "Une salariée travaille en horaire de jour au laboratoire.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi.",
+            "Aucun poste de nuit n'est précisé."
+          ],
+          "factual_similarity_score": 100,
+          "hierarchy_level": 2,
+          "legal_nature": "COLLECTIVE_AGREEMENT",
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre",
+            "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+            "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+          ],
+          "precise_excerpt": "CLAUSES COMMUNES > Les entreprises s’attachent à adopter des formes d’organisation du travail permettant : (cid:129) de réduire pour chaque salarié le nombre de postes effectués la nuit ou de diminuer la durée du travail de nuit ; (cid:129) d’éviter les situations de travail isolé. Les entreprises s’emploient à offrir aux salariés travaillant habituellement de nuit, par l’acquisition de compétences complémentaires, des possibilités de nouvelles carrières, notamment dans le ca...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 83,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-e71bf2f149c4da15b9e2",
+          "source_location": "Page 203",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "ccnic_septembre2013.pdf",
+          "version_date": "septembre 2013"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "missing_source_requirements": [
+        "Obtenir la partie manquante du récit avant toute conclusion.",
+        "Distinguer le temps de réunion CSSCT du crédit d'heures de délégation.",
+        "La comparaison juridique commencera après clarification des faits."
+      ],
+      "sources": []
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "missing_source_requirements": [
+        "Définir ce que désigne exactement l'expression « règle des 10 % ».",
+        "La comparaison juridique commencera après clarification des faits."
+      ],
+      "sources": []
+    },
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "missing_source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "Code du travail : article précis en vigueur.",
+        "CARSAT ou INRS : ressource réelle sur fourniture, adaptation et disponibilité des EPI."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": "Article 5 - Périodicité des réunions du comité social et économique",
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2018.11.19_Accord sur la mise en place du CSE.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2018.11.19_Accord sur la mise en place du CSE.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "facts_limiting_application": [
+            "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+            "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "facts_supporting_application": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "factual_similarity_score": 44,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié",
+            "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+            "Signalements antérieurs et comportement du salarié avant et après le retrait"
+          ],
+          "precise_excerpt": "...propositions concernant notamment : les modalités de fonctionnement de la CSSCT, - l'élaboration et la mise à jour du document unique, notamment l'analyse des risques professionnels auxquels peuvent être exposés les travailleurs, notamment les femmes enceintes, ainsi que des effets de l'exposition aux facteurs de risques professionnels, - le contenu des programmes d'amélioration à la sécurité et les mesures adoptées à la suite de l’analyse d’un accident, - les améliorations...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 47,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-7aa7fce460b5354aa2b3",
+          "source_location": "Article 5 - Périodicité des réunions du comité social et économique",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2018.11.19_Accord sur la mise en place du CSE.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "facts_limiting_application": [
+            "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+            "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "facts_supporting_application": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié",
+            "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+            "Signalements antérieurs et comportement du salarié avant et après le retrait"
+          ],
+          "precise_excerpt": "...nes devront être éteints dans la cabine. L’ADS en charge de la réception et de l’accompagnement du camion rappellera la consigne avant l’accès en zone non feu. Equipements de protection individuels (EPI) Art 4 Tout membre du personnel, toute personne présente dans l’Entreprise en qualité de salarié d’une entreprise extérieure ainsi que tout intérimaire ou stagiaire, est tenu d’utiliser, conformément à leur destination et chaque fois que cela est prévu, les Équipements de Prot...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 26,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-49ccd2b4f40389ed2e14",
+          "source_location": "Page 2",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "Règlement intérieur.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "convention_collective",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+          "employer_counterargument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "facts_limiting_application": [
+            "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+            "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "facts_supporting_application": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "factual_similarity_score": 44,
+          "hierarchy_level": 2,
+          "legal_nature": "COLLECTIVE_AGREEMENT",
+          "missing_facts": [
+            "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+            "État des stocks et solutions de remplacement disponibles au moment des faits",
+            "Formation, information et habilitation reçues par le salarié",
+            "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+            "Signalements antérieurs et comportement du salarié avant et après le retrait"
+          ],
+          "precise_excerpt": "...visent non seulement à l’amélioration des conditions de tra- vail, d’hygiène et de sécurité de l’ensemble du personnel mais également à éviter au maximum tout risque de survenance d’un handicap liée à l’activité professionnelle. Les parties signataires ont réuni dans le présent texte toutes les dispositions de la convention col- lective nationale des Industries Chimiques relatives aux personnes handicapées. PARTIE I : SITUATION DE L’EMPLOI DES SALARIÉS HANDICAPÉS DANS LES IND...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 56,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-1a9e60c5c1e8901227ee",
+          "source_location": "Page 320",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "ccnic_septembre2013.pdf",
+          "version_date": "septembre 2013"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "missing_source_requirements": [
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+          "facts_limiting_application": [
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+            "L'employeur allègue que le besoin est temporaire et lié à un pic de production."
+          ],
+          "facts_supporting_application": [
+            "Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+            "L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.",
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé."
+          ],
+          "factual_similarity_score": 66,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Texte exact de la clause de variabilité et fonctions contractuelles",
+            "Horaires détaillés du 3x8, présence de nuit et calendrier des six mois",
+            "Délai de prévenance et date d'effet",
+            "Justificatifs et organisation précise de la garde alternée",
+            "Recherche de volontaires, permutations et traitement des salariés comparables"
+          ],
+          "precise_excerpt": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels 25 25 Durée annuelle théorique correspondante du temps de travail 1648 h / an 206 postes 34,93 heures Déduction à prendre en compte Jours fériés 13 JF 13 13 104 h Repos compensateurs de temps de poste 3 RCTP 3 3 ane ANNEXE 2.2.1: CALCUL DU T...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 47,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-5fdc266fa8a0e777fa33",
+          "source_location": "Page 4",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+          "facts_limiting_application": [
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+            "L'employeur allègue que le besoin est temporaire et lié à un pic de production."
+          ],
+          "facts_supporting_application": [
+            "Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+            "L'employeur lui notifie un passage temporaire de six mois en cycle 3x8.",
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé."
+          ],
+          "factual_similarity_score": 66,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Texte exact de la clause de variabilité et fonctions contractuelles",
+            "Horaires détaillés du 3x8, présence de nuit et calendrier des six mois",
+            "Délai de prévenance et date d'effet",
+            "Justificatifs et organisation précise de la garde alternée",
+            "Recherche de volontaires, permutations et traitement des salariés comparables"
+          ],
+          "precise_excerpt": "ode 34,93 heures Bh / poste 52,18 semaines / an 5 semaines /an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3 RCTP 3 3 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190] [Compensation 0 -12] [Négociation NAO 2012 -11} 10,43 cycles 219 postes / an Nombre de postes de travail théorique 231 219] Congés annuels 25 25 Durée annuelle théor...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 47,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-39b18239baf99d73b844",
+          "source_location": "Page 5",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+          "facts_limiting_application": [
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+            "L'employeur allègue que le besoin est temporaire et lié à un pic de production."
+          ],
+          "facts_supporting_application": [
+            "Passage temporaire annoncé d'un horaire de jour vers un cycle posté."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Texte exact de la clause de variabilité et fonctions contractuelles",
+            "Horaires détaillés du 3x8, présence de nuit et calendrier des six mois",
+            "Délai de prévenance et date d'effet",
+            "Justificatifs et organisation précise de la garde alternée",
+            "Recherche de volontaires, permutations et traitement des salariés comparables"
+          ],
+          "precise_excerpt": "...Primes générales est mis à jour pour intégrer le nouveau roulement de postes « 2 postes SD2/3 JFT ». Article 3 - Dépôt Conformément aux dispositions du Code du Travail, le texte du présent avenant sera déposé à la DIRECCTE, ainsi qu'au Secrétariat du Greffe du Conseil des Prud'hommes. Fait à Sarralbe, le 4A 2 } 6 / Jot.",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 35,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-3aabac2191b601eaf820",
+          "source_location": "Page 3",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+          "facts_limiting_application": [
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+            "L'employeur allègue que le besoin est temporaire et lié à un pic de production."
+          ],
+          "facts_supporting_application": [
+            "Passage temporaire annoncé d'un horaire de jour vers un cycle posté."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Texte exact de la clause de variabilité et fonctions contractuelles",
+            "Horaires détaillés du 3x8, présence de nuit et calendrier des six mois",
+            "Délai de prévenance et date d'effet",
+            "Justificatifs et organisation précise de la garde alternée",
+            "Recherche de volontaires, permutations et traitement des salariés comparables"
+          ],
+          "precise_excerpt": "...ent. Paragraphe identique au paragraphe 2.4.1 de l’accord du 30.03.2000. 2.4.2 Prise des congés — jours de fractionnement e Prise des congés Le personnel posté travaillant dans le cadre du roulement 5x8 aura la possibilité de prendre au minimum un congé de 18 jours ouvrés pendant la période légale. Une organisation ponctuelle au sein des équipes pourra permettre un repos plus important. © Jours de fractionnement",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 26,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-8dfa5d35654f0d3665e9",
+          "source_location": "Page 3",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "convention_collective",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+          "employer_counterargument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+          "facts_limiting_application": [
+            "Le salarié allègue une garde alternée incompatible avec le cycle annoncé.",
+            "L'employeur allègue que le besoin est temporaire et lié à un pic de production."
+          ],
+          "facts_supporting_application": [
+            "Passage temporaire annoncé d'un horaire de jour vers un cycle posté.",
+            "Le contrat contient une clause de variabilité des horaires."
+          ],
+          "factual_similarity_score": 44,
+          "hierarchy_level": 2,
+          "legal_nature": "COLLECTIVE_AGREEMENT",
+          "missing_facts": [
+            "Texte exact de la clause de variabilité et fonctions contractuelles",
+            "Horaires détaillés du 3x8, présence de nuit et calendrier des six mois",
+            "Délai de prévenance et date d'effet",
+            "Justificatifs et organisation précise de la garde alternée",
+            "Recherche de volontaires, permutations et traitement des salariés comparables"
+          ],
+          "precise_excerpt": "CLAUSES COMMUNES > Les entreprises s’attachent à adopter des formes d’organisation du travail permettant : (cid:129) de réduire pour chaque salarié le nombre de postes effectués la nuit ou de diminuer la durée du travail de nuit ; (cid:129) d’éviter les situations de travail isolé. Les entreprises s’emploient à offrir aux salariés travaillant habituellement de nuit, par l’acquisition de compétences complémentaires, des possibilités de nouvelles carrières, notamment dans le ca...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 47,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-e71bf2f149c4da15b9e2",
+          "source_location": "Page 203",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "ccnic_septembre2013.pdf",
+          "version_date": "septembre 2013"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "missing_source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "Code du travail : article précis en vigueur.",
+        "Procédure ou instruction chimique réellement accessible à la date des faits, avec son numéro et sa version."
+      ],
+      "sources": []
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "missing_source_requirements": [
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "facts_limiting_application": [
+            "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+            "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+            "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+            "Un droit à contre-expertise aurait été annoncé.",
+            "Des difficultés personnelles sont alléguées."
+          ],
+          "facts_supporting_application": [
+            "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+            "Un cariste travaille sur un site industriel à risques.",
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+            "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré."
+          ],
+          "factual_similarity_score": 88,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure",
+            "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+            "Prise effective du chariot, mise en sécurité et risque concret"
+          ],
+          "precise_excerpt": "Art 6 Tout salarié amené à utiliser un véhicule de service à l’intérieur ou à l’extérieur du site, dans le cadre de ses fonctions, doit signaler à sa hiérarchie toutes les modifications, même temporaires, concernant la validité de son permis de conduire. Obligation d’alerte Art 7 Tout membre du personnel, toute personne présente dans l’Entreprise en qualité de salarié d’une entreprise extérieure ainsi que tout intérimaire ou stagiaire qui aura un motif raisonnable de penser q...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 89,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-d5c4e817cdaff9d3fca0",
+          "source_location": "Page 3",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "Règlement intérieur.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "HIGH",
+          "document_type": "règlement intérieur",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "employer_counterargument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "facts_limiting_application": [
+            "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+            "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+            "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+            "Un droit à contre-expertise aurait été annoncé.",
+            "Des difficultés personnelles sont alléguées."
+          ],
+          "facts_supporting_application": [
+            "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles."
+          ],
+          "factual_similarity_score": 44,
+          "hierarchy_level": 1,
+          "legal_nature": "INTERNAL_POLICY",
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure",
+            "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+            "Prise effective du chariot, mise en sécurité et risque concret"
+          ],
+          "precise_excerpt": "Il pourra être demandé de se soumettre à un test pour vérifier le taux d’alcoolémie aux : - salariés occupés à l’exécution de travaux nécessitants des précautions particulières en matière de sécurité (notamment usage de machine, d’engins ou de produits dangereux), - salariés conduisant un véhicule à moteur, - salariés dont l’état présente un danger pour leur sécurité ou celle des autres. La recherche de l’état d’ébriété ne pourra être faite qu’en présence d’un tiers et qu’à c...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 80,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-b8b22750abff9be5b809",
+          "source_location": "Page 4",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "Règlement intérieur.pdf",
+          "version_date": null
+        },
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "avenant",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 1997.04.01_Statut collectif applicable au personnel.pdf » au fait suivant : Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+          "employer_counterargument": "La direction peut opposer que l'application de « 1997.04.01_Statut collectif applicable au personnel.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "facts_limiting_application": [
+            "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+            "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+            "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+            "Un droit à contre-expertise aurait été annoncé.",
+            "Des difficultés personnelles sont alléguées."
+          ],
+          "facts_supporting_application": [
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles."
+          ],
+          "factual_similarity_score": 22,
+          "hierarchy_level": 1,
+          "legal_nature": "COMPANY_AGREEMENT",
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure",
+            "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+            "Prise effective du chariot, mise en sécurité et risque concret"
+          ],
+          "precise_excerpt": "+ Généralités ‘© Réplament des Bourses d'Etudes . + | Prévoyance . . Règlement intérieur + Absences | Horaire variable _ + Règlement des congés ae Récompenses jubilaires 4 Logement : | LE Prêt 1 % Logement : + Bourses d'études | + Liste des éléments de paie non retenus dans l'assiette des cotisations = + Liste des rubriques de paie retenues dans l'assiette garantie maladie conventionnelle + Rémunérations e SMIC. e Salaire minimum UIC e. Indemnités de résidence e Primes d'inst...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 41,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-f51b32e2d6286b6ff2ec",
+          "source_location": "Page 11",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "1997.04.01_Statut collectif applicable au personnel.pdf",
+          "version_date": null
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "missing_source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels.",
+        "ANACT, INRS ou CARSAT : ressource réelle sur fatigue, repos ou organisation du travail."
+      ],
+      "sources": [
+        {
+          "applicability_status": "POTENTIALLY_APPLICABLE",
+          "article_or_clause": null,
+          "authenticity_status": "TRACEABLE_REFERENCE",
+          "citation_ready": true,
+          "confidence_level": "MEDIUM",
+          "document_type": "convention_collective",
+          "effective_date": null,
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Un technicien travaillait en poste de nuit.",
+          "employer_counterargument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "facts_limiting_application": [
+            "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+            "L'absence non remplacée d'un collègue est alléguée.",
+            "Une fatigue importante et une surcharge sont alléguées."
+          ],
+          "facts_supporting_application": [
+            "Un technicien travaillait en poste de nuit.",
+            "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+            "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+          ],
+          "factual_similarity_score": 66,
+          "hierarchy_level": 2,
+          "legal_nature": "COLLECTIVE_AGREEMENT",
+          "missing_facts": [
+            "Mots exacts, ton, durée et présence éventuelle d'une menace",
+            "Nature exacte de la remarque du superviseur et échanges précédents",
+            "Planning, durée du travail et repos quotidien et hebdomadaire",
+            "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+            "Antécédents, regrets, excuses et conséquences sur le service"
+          ],
+          "precise_excerpt": "...e jour s’il est travailleur de nuit; (cid:129) refuser d’être affecté sur un poste de nuit s’il travaille sur un poste de jour, sans que ce refus constitue une sanction ou un motif de licenciement. Article 14 : suivi et bilan de l’accord Les parties signataires conviennent de se rencontrer 3 ans après l’entrée en vigueur du présent ac- cord, afin d’établir un bilan permettant d’en apprécier les résultats. Ce bilan sera préparé par la Commission Paritaire Nationale des Conditi...",
+          "publication_date": null,
+          "rejection_reason": null,
+          "relevance_score": 53,
+          "retrieval_status": "RETRIEVED",
+          "source_id": "source-7946b285036275e10b94",
+          "source_location": "Page 204",
+          "source_provider": "INEOS Sarralbe",
+          "source_title": "ccnic_septembre2013.pdf",
+          "version_date": "septembre 2013"
+        }
+      ]
+    }
+  ]
+}

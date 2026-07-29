@@ -1,0 +1,237 @@
+{
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "ccnic_septembre2013.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "1999.02.04_Repos compensateur de remplacement heures d'astreinte.PDF"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "ccnic_septembre2013.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Règlement intérieur.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "ccnic_septembre2013.pdf"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2025.05.07 - Accord restauration 2025.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "1999.02.04_Repos compensateur de remplacement heures d'astreinte.PDF"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2024-01-31, 22-10.176"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "sources": []
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "sources": []
+    },
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "sources": [
+        {
+          "reason": "lien factuel insuffisant avec le dossier",
+          "source_reference": "Règlement intérieur.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "reason": "lien factuel insuffisant avec le dossier",
+          "source_reference": "ccnic_septembre2013.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "1999.02.04_Repos compensateur de remplacement heures d'astreinte.PDF"
+        },
+        {
+          "reason": "lien factuel insuffisant avec le dossier",
+          "source_reference": "ccnic_septembre2013.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2024-01-31, 22-10.176"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Règlement intérieur.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Règlement intérieur.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "ccnic_septembre2013.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "ccnic_septembre2013.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185"
+        }
+      ]
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Règlement intérieur.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2006.12.14_Avenant_2_Reglement_PEE_INEOS.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "2024.02.20_Avenant 1 sur la mise en place du CSE.pdf"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 2015-03-03, 13-15.551"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal",
+          "source_reference": "Cour de cassation, Chambre sociale, 1973-12-06, 72-40.786"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "average_after": 85.36,
+  "average_before": 71.55,
+  "cases": [
+    {
+      "after": 92,
+      "before": 72,
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "variation": 20
+    },
+    {
+      "after": 93,
+      "before": 73,
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "variation": 20
+    },
+    {
+      "after": 92,
+      "before": 72,
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "variation": 20
+    },
+    {
+      "after": 92,
+      "before": 72,
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "variation": 20
+    },
+    {
+      "after": 70,
+      "before": 70,
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "variation": 0
+    },
+    {
+      "after": 70,
+      "before": 68,
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "variation": 2
+    },
+    {
+      "after": 92,
+      "before": 72,
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "variation": 20
+    },
+    {
+      "after": 92,
+      "before": 72,
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "variation": 20
+    },
+    {
+      "after": 74,
+      "before": 72,
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "variation": 2
+    },
+    {
+      "after": 90,
+      "before": 72,
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "variation": 18
+    },
+    {
+      "after": 82,
+      "before": 72,
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "variation": 10
+    }
+  ]
+}
