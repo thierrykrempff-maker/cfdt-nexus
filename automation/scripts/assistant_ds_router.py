@@ -84,9 +84,9 @@ SOURCE_LAYER_ORDER = [
     "convention_collective",
     "code_travail",
     "jurisprudence",
-    "historique_cse",
     "prudhommes",
     "pratique_officielle",
+    "historique_cse",
     "pratique",
     "autre",
 ]
@@ -480,8 +480,6 @@ DOMAIN_RULES: list[dict[str, Any]] = [
         "patterns": [
             r"\brgpd\b",
             r"donnees? personnelles?",
-            r"details? personnels?",
-            r"\bconfidentialite\b",
             r"\bcamera\b",
             r"\bvideosurveillance\b",
             r"\bgeolocalisation\b",
@@ -519,7 +517,8 @@ DOMAIN_RULES: list[dict[str, Any]] = [
             r"\bc2p\b",
             r"depart anticipe",
             r"\btrimestres?\b",
-            r"\bexposition\b",
+            r"\bexposition\b.{0,60}\b(?:c2p|penibilite|carriere|retraite|annees?)\b",
+            r"\b(?:c2p|penibilite|carriere|retraite)\b.{0,60}\bexposition\b",
             r"fin de carriere",
             r"annees? de nuit",
         ],
@@ -2407,33 +2406,56 @@ def needs_code_travail(query: str, domains: list[str], intents: list[str]) -> bo
 
 def needs_jurisprudence(query: str, domains: list[str], intents: list[str]) -> bool:
     text = normalize(query)
-    # Jurisprudence is useful for a bounded dispute or interpretation issue, not
-    # for every legal or payroll question. Keeping this decision semantic avoids
-    # activating JUDILIBRE for routine calculations and documentary checks.
-    return bool(
+    # JUDILIBRE is selected only when a factual comparison is possible.  A
+    # disciplinary domain or a legal keyword alone is deliberately insufficient.
+    explicit = bool(re.search(r"jurisprudence|cour de cassation|pourvoi", text))
+    established_comparators = bool(
         re.search(
-            r"jurisprudence|cour de cassation|pourvoi|"
             r"(?:taches?|niveau).*\breclassification\b|\breclassification\b.*(?:taches?|niveau)|"
-            r"\brequalification\b|"
-            r"periode d.?essai.*(?:rompt|rupt|contest)|(?:rompt|rupt|contest).*periode d.?essai|"
-            r"insuffisance professionnelle|avis d inaptitude|"
-            r"inaptitude.*(?:employeur|accident du travail|poste moins qualifie)|"
-            r"\breclassement\b|\bdiscrimination\b|activite syndicale|"
+            r"\brequalification\b|periode d.?essai.*(?:rompt|rupt|contest)|"
+            r"(?:rompt|rupt|contest).*periode d.?essai|insuffisance professionnelle|"
+            r"avis d inaptitude|\breclassement\b|\bdiscrimination\b|activite syndicale|"
             r"remarques? humiliantes?|forfait jours|"
-            r"geolocalisation|messagerie|boite professionnelle|"
-            r"classe automatiquement|decision automatisee|"
             r"(?:envisager|consultation|quels cas).*\bexpertise\b|"
             r"\bexpertise\b.*\bconsultation\b|\bresolution\b|president a vote|"
-            r"astreinte.*repos|repos.*astreinte|"
-            r"risque grave.*licenciement|licenciement.*(?:signal|risque grave)|"
-            r"accident du travail.*inaptitude|inaptitude.*accident du travail|"
-            r"\benquete interne\b|"
-            r"affectation durable|\bmobilite\b.*(?:coefficient|perspectives|garanties)|"
+            r"astreinte.*repos|repos.*astreinte|risque grave.*licenciement|"
+            r"licenciement.*(?:signal|risque grave)|accident du travail.*inaptitude|"
+            r"inaptitude.*accident du travail|\benquete interne\b|affectation durable|"
+            r"\bmobilite\b.*(?:coefficient|perspectives|garanties)|"
             r"poste combine.*niveau conventionnel|"
             r"accord.*plus favorable.*bulletins?|bulletins?.*autre methode",
             text,
         )
     )
+    disciplinary_comparison = "disciplinaire" in domains and bool(
+        re.search(
+            r"insult|injur|propos grossier|courriels?|emails?|alcool|ethylotest|"
+            r"faute grave|anciennete|antecedent|isole|repete|proportionnalite|"
+            r"badgeage|tourniquet|camera|videosurveillance|geolocalisation|messagerie|"
+            r"erreur de fabrication|procedure.*(?:obsolet|pas ete mise a jour)|"
+            r"epi|visiere|gants?|equipement de protection",
+            text,
+        )
+    )
+    shift_change = bool(
+        re.search(
+            r"(?:passage|changement|modification).{0,100}"
+            r"(?:des? horaires?|de jour|cycle|3x8|travail poste|rythme poste)|"
+            r"(?:cycle 3x8|passage de jour|travail poste|rythme poste)",
+            text,
+        )
+    )
+    schedule_refusal = shift_change and bool(
+        re.search(r"(?:refus|impose|sans (?:son )?accord|pas volontaire|ne souhaite pas)", text)
+    )
+    monitoring_proof = bool(
+        re.search(
+            r"(?:badgeage|tourniquet|camera|videosurveillance|geolocalisation|messagerie)"
+            r".{0,160}(?:preuve|disciplinaire|sanction|controle du temps|mesurer|reconstituer)",
+            text,
+        )
+    )
+    return explicit or established_comparators or disciplinary_comparison or schedule_refusal or monitoring_proof
 
 
 def needs_pratique_officielle(query: str, domains: list[str], intents: list[str]) -> bool:
@@ -2441,26 +2463,35 @@ def needs_pratique_officielle(query: str, domains: list[str], intents: list[str]
     # The CDTN practical layer is selected for operational employment questions.
     # A generic domain or intent is not sufficient: that used to activate it for
     # retirement, RGPD and agreement-only questions where it added no value.
-    if "retraite_penibilite" in domains or "ineos" in text:
+    if "retraite_penibilite" in domains:
         return False
-    return bool(
+    operational_domain = any(
+        domain in domains
+        for domain in (
+            "droit_travail_general",
+            "disciplinaire",
+            "cssct_securite",
+            "temps_travail",
+            "astreinte",
+            "conges_payes",
+            "droit_syndical",
+            "cse",
+            "inaptitude_reclassement",
+        )
+    )
+    practical_subject = bool(
         re.search(
-            r"lieu de travail.*horaires?.*avenant|periode d.?essai|\bcdd\b|"
-            r"\bavertissement\b|\bentretien disciplinaire\b|"
-            r"(?:sept|7) heures?.*\bpause\b|\brequalification\b|"
-            r"avis d.?inaptitude|\breclassement\b|remarques? humiliantes?|"
-            r"repos entre deux postes|astreinte.*repos|repos.*astreinte|forfait jours|"
-            r"travail.*\bnuit\b|equipes? alternantes?|prime d.?astreinte|"
-            r"\b5x8\b|heures?.*(?:au-dela|supplementaires?).*(?:paie|apparaissent)|"
-            r"compteur de conges|semaine de maladie|accident du travail.*(?:code|maladie)|"
-            r"indemnite de conges payes|cycle change|solde de tout compte|"
-            r"delai de consultation|heures? de delegation|projet sans donnees|"
-            r"protocole electoral|mutualiser.*heures? de delegation|"
-            r"rupture du contrat.*(?:mutuelle|prevoyance)|"
-            r"arret maladie.*(?:salaire|prevoyance)",
+            r"lieu de travail|horaires?|avenant|periode d.?essai|\bcdd\b|"
+            r"sanction|avertissement|entretien disciplinaire|faute|licenciement|"
+            r"pause|repos|travail poste|cycle|3x8|\b5x8\b|travail.*\bnuit\b|"
+            r"heures? supplementaires?|conges?|indemnite de conges payes|"
+            r"inaptitude|reclassement|accident du travail|securite|epi|"
+            r"heures? de delegation|elu|cse|cssct|consultation|protocole electoral|"
+            r"modification du contrat|conditions de travail|reglement interieur",
             text,
         )
     )
+    return operational_domain and practical_subject
 
 
 def judilibre_status_from_env() -> dict[str, Any]:

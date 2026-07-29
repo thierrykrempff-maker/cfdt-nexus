@@ -160,8 +160,65 @@ class RuntimeConnectorPayloadMapper:
             "fr",
             excerpt=str(source.get("excerpt") or "").strip() or None,
             validity_status=str(source.get("etat") or source.get("status") or "").strip() or None,
-            metadata=(("runtime_origin", origin), ("source_layer", str(source.get("source_layer") or ""))),
+            metadata=(
+                ("runtime_origin", origin),
+                ("source_layer", str(source.get("source_layer") or "")),
+                ("source_nature", self._source_nature(origin)),
+                ("organisme", self._source_organism(origin)),
+                ("statut_disponibilite", "DISPONIBLE"),
+                ("portee_indicative", self._source_scope(origin)),
+                (
+                    "lien_avec_faits",
+                    str(source.get("relevance_reason") or source.get("selection_reason") or "").strip()
+                    or "Lien établi par la sélection factuelle du routeur.",
+                ),
+                (
+                    "question_dossier",
+                    str(source.get("question_juridique") or "").strip()
+                    or "Question juridique transmise au Runtime.",
+                ),
+            ),
         )
+
+    @staticmethod
+    def _source_nature(origin: str) -> str:
+        return {
+            "legifrance_code_travail": (
+                "source_officielle_publication_acces_textes_portee_selon_document"
+            ),
+            "judilibre_jurisprudence": (
+                "source_officielle_decisions_judiciaires_portee_selon_juridiction"
+                "_et_comparabilite"
+            ),
+            "cdtn_pratique_officielle": (
+                "service_public_information_pedagogique_non_substitutif"
+            ),
+        }[origin]
+
+    @staticmethod
+    def _source_organism(origin: str) -> str:
+        return {
+            "legifrance_code_travail": "Légifrance",
+            "judilibre_jurisprudence": "Cour de cassation - JUDILIBRE",
+            "cdtn_pratique_officielle": "Code du travail numérique",
+        }[origin]
+
+    @staticmethod
+    def _source_scope(origin: str) -> str:
+        return {
+            "legifrance_code_travail": (
+                "La valeur juridique dépend du document retrouvé : loi, règlement, "
+                "convention collective, accord, décision ou autre texte."
+            ),
+            "judilibre_jurisprudence": (
+                "La portée dépend de la juridiction, du type de décision et de la "
+                "comparabilité factuelle."
+            ),
+            "cdtn_pratique_officielle": (
+                "Information pédagogique officielle qui ne remplace pas le texte légal, "
+                "conventionnel ou contractuel applicable."
+            ),
+        }[origin]
 
     @staticmethod
     def _date(value: object) -> date | None:

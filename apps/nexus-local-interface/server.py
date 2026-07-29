@@ -118,16 +118,34 @@ def analyze_question(
         if employee_path
         else run_router(cleaned, source_limit)
     )
+    connector_config = RuntimeConnectorConfig.from_env()
+    connector_mapping = RuntimeConnectorPayloadMapper(connector_config).map(answer)
+    official_config = RuntimeOfficialConnectorsConfig.from_env()
+    official_connectors = RuntimeOfficialConnectorsIntegration(official_config).integrate(answer)
+    if official_connectors.questions or official_connectors.source_qualifications:
+        answer = dict(answer)
+        answer["questions_to_ask"] = list(
+            dict.fromkeys(
+                (
+                    *(
+                        answer.get("questions_to_ask", ())
+                        if isinstance(answer.get("questions_to_ask"), list)
+                        else ()
+                    ),
+                    *official_connectors.questions,
+                )
+            )
+        )
+        answer["official_source_qualifications"] = [
+            qualification.to_dict()
+            for qualification in official_connectors.source_qualifications
+        ]
     expert_payload = orchestrator.orchestrate(answer)
     payload = {
         "ok": True,
         "answer": answer,
         **expert_payload,
     }
-    connector_config = RuntimeConnectorConfig.from_env()
-    connector_mapping = RuntimeConnectorPayloadMapper(connector_config).map(answer)
-    official_config = RuntimeOfficialConnectorsConfig.from_env()
-    official_connectors = RuntimeOfficialConnectorsIntegration(official_config).integrate(answer)
     payload["official_connectors_runtime"] = official_connectors.to_dict()
     integration = RuntimeCoreIntegration(RuntimeIntegrationConfig.from_env()).integrate(
         RuntimeCoreIntegrationInput(
