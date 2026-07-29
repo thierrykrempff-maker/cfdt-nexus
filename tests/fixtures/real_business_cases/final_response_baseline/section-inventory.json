@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "section_count": 10,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "section_count": 10,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "section_count": 10,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "section_count": 12,
+      "within_limit": true
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "section_count": 12,
+      "within_limit": true
+    }
+  ],
+  "maximum_sections": 12,
+  "observed_sections": {
+    "after": 8,
+    "avoid": 11,
+    "comparison": 8,
+    "documents": 11,
+    "limits": 11,
+    "position": 11,
+    "questions": 11,
+    "situation": 11,
+    "sources": 11,
+    "strategy": 11,
+    "strengths_weaknesses": 11,
+    "urgency": 11
+  }
+}

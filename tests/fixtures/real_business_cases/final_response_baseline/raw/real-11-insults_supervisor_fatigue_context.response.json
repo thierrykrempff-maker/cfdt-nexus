@@ -1,0 +1,596 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "public_response_size_bytes": 24490,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+            "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+            "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — La situation comporte un enjeu de santé ou de sécurité à traiter rapidement."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Propos insultants ou injurieux. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : Un technicien travaillait en poste de nuit.",
+            "Point fort : Il venait d'intervenir sur une fuite de vapeur sous la pluie.",
+            "Point faible : La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+            "Point faible : Mots exacts, ton, durée et présence éventuelle d'une menace",
+            "Point faible : Nature exacte de la remarque du superviseur et échanges précédents"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Quel grief exact retenez-vous, mot pour mot ? (Empêcher une aggravation abstraite du grief.)",
+            "DIRECTION — Quelles preuves complètes établissent le contenu et la diffusion ? (Contrôler preuve, destinataires et publicité.)",
+            "SALARIÉ — Que reconnaissez-vous exactement concernant les propos ou inscription ? (Fixer la position avant la stratégie.)",
+            "SALARIÉ — Quels mots exacts ont été employés ? (Délimiter le grief sans reformulation.)",
+            "DIRECTION — Quelle sanction envisagez-vous et quels précédents comparez-vous ? (Examiner proportionnalité et égalité de traitement.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Avez-vous présenté des excuses ou exprimé des regrets ? (Préparer une atténuation si les faits sont reconnus.)",
+            "SALARIÉ — Quel planning et quels repos aviez-vous avant les faits ? (Objectiver la fatigue alléguée.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Convocation et lettre de griefs — Direction ou salarié selon détention — Contrôler objet, dates et qualification. [BLOCKING]",
+            "Preuve complète des propos ou écrits — Direction ou salarié selon détention — Établir mots, date, destinataires et diffusion. [BLOCKING]",
+            "Règlement intérieur et sanctions comparables — Direction ou salarié selon détention — Vérifier règle et proportionnalité. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "comparison",
+          "items": [
+            "Règle : INEOS Sarralbe — ccnic_septembre2013.pdf — ...e jour s’il est travailleur de nuit; (cid:129) refuser d’être affecté sur un poste de nuit s’il travaille sur un poste de jour, sans que ce refus constitue une sanction ou un motif de licenciement. Article 14 : suivi et bilan de… Salarié : Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Un technicien travaillait en poste de nuit. Direction : La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : Le salarié allègue avoir effectué cinq postes de nuit successifs. Manquant : Mots exacts, ton, durée et présence éventuelle d'une menace Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 204 dans « ccnic_septembre2013.pdf »."
+          ],
+          "title": "Règles comparées aux faits"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Quel grief exact retenez-vous, mot pour mot ?",
+            "Avant : Quelles preuves complètes établissent le contenu et la diffusion ?",
+            "Avant : Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+            "Avant : Quels mots exacts ont été employés ?",
+            "Avant : Obtenir : Convocation et lettre de griefs"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "after",
+          "items": [
+            "Obtenir ou vérifier Page 204 dans « ccnic_septembre2013.pdf »."
+          ],
+          "title": "Actions à mener ensuite"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "INEOS Sarralbe — ccnic_septembre2013.pdf — COLLECTIVE_AGREEMENT — Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Un technicien travaillait en poste de nuit. — POTENTIALLY_APPLICABLE"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Planning, durée du travail et repos quotidien et hebdomadaire",
+            "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+            "Antécédents, regrets, excuses et conséquences sur le service"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "INSULTING_BEHAVIOR",
+        "primary_grievance_or_decision": "Propos insultants ou injurieux.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Convocation et lettre de griefs",
+        "Preuve complète des propos ou écrits",
+        "Règlement intérieur et sanctions comparables"
+      ],
+      "findings": [
+        "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+        "Quels mots exacts ont été employés ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Avez-vous présenté des excuses ou exprimé des regrets ?",
+        "Quel planning et quels repos aviez-vous avant les faits ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "rule_to_facts_analysis": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "short_answer": "Propos insultants ou injurieux. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Convocation et lettre de griefs",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler objet, dates et qualification."
+        },
+        {
+          "document": "Preuve complète des propos ou écrits",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir mots, date, destinataires et diffusion."
+        },
+        {
+          "document": "Règlement intérieur et sanctions comparables",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Vérifier règle et proportionnalité."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+        "event_category": "INSULTING_BEHAVIOR",
+        "facts_alleged": [
+          "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "L'absence non remplacée d'un collègue est alléguée.",
+          "Une fatigue importante et une surcharge sont alléguées."
+        ],
+        "facts_certain": [
+          "Un technicien travaillait en poste de nuit.",
+          "Il venait d'intervenir sur une fuite de vapeur sous la pluie.",
+          "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+          "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+          "L'employeur envisage une qualification de faute grave."
+        ],
+        "facts_missing": [
+          "Mots exacts, ton, durée et présence éventuelle d'une menace",
+          "Nature exacte de la remarque du superviseur et échanges précédents",
+          "Planning, durée du travail et repos quotidien et hebdomadaire",
+          "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+          "Antécédents, regrets, excuses et conséquences sur le service"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas transformer des injures en menace ou violence sans fait correspondant."
+        ],
+        "health_and_safety_context": [
+          "Il venait d'intervenir sur une fuite de vapeur sous la pluie.",
+          "Une fatigue importante et une surcharge sont alléguées."
+        ],
+        "legal_ambiguities": [
+          "Mots exacts, ton, durée et présence éventuelle d'une menace",
+          "Nature exacte de la remarque du superviseur et échanges précédents",
+          "Planning, durée du travail et repos quotidien et hebdomadaire",
+          "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+          "Antécédents, regrets, excuses et conséquences sur le service"
+        ],
+        "persons_and_roles": [
+          "Un technicien travaillait en poste de nuit.",
+          "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+          "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+          "L'employeur envisage une qualification de faute grave.",
+          "Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "L'absence non remplacée d'un collègue est alléguée."
+        ],
+        "primary_event": "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+        "primary_grievance_or_decision": "Propos insultants ou injurieux.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Propos insultants ou injurieux. Fatigue et surcharge alléguées comme contexte, sans effacer les propos.",
+        "secondary_topics": [
+          "Fatigue et surcharge alléguées comme contexte, sans effacer les propos."
+        ],
+        "working_time_context": [
+          "Un technicien travaillait en poste de nuit."
+        ],
+        "workplace_context": [
+          "Un technicien travaillait en poste de nuit."
+        ]
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quel grief exact retenez-vous, mot pour mot ?",
+          "reason": "Empêcher une aggravation abstraite du grief.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+          "reason": "Contrôler preuve, destinataires et publicité.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+          "reason": "Fixer la position avant la stratégie.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quels mots exacts ont été employés ?",
+          "reason": "Délimiter le grief sans reformulation.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+          "reason": "Examiner proportionnalité et égalité de traitement.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+          "reason": "Préparer une atténuation si les faits sont reconnus.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel planning et quels repos aviez-vous avant les faits ?",
+          "reason": "Objectiver la fatigue alléguée.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Un technicien travaillait en poste de nuit.",
+          "employer_argument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "issue": "Propos insultants ou injurieux.",
+          "matching_facts": [
+            "Un technicien travaillait en poste de nuit.",
+            "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+            "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+          ],
+          "missing_facts": [
+            "Mots exacts, ton, durée et présence éventuelle d'une menace",
+            "Nature exacte de la remarque du superviseur et échanges précédents",
+            "Planning, durée du travail et repos quotidien et hebdomadaire"
+          ],
+          "next_action": "Obtenir ou vérifier Page 204 dans « ccnic_septembre2013.pdf ».",
+          "rule": "...e jour s’il est travailleur de nuit; (cid:129) refuser d’être affecté sur un poste de nuit s’il travaille sur un poste de jour, sans que ce refus constitue une sanction ou un motif de licenciement. Article 14 : suivi et bilan de…",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels.",
+        "ANACT, INRS ou CARSAT : ressource réelle sur fatigue, repos ou organisation du travail."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Propos insultants ou injurieux. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "cssct_securite",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+        "Quels mots exacts ont été employés ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?"
+      ],
+      "reponse_synthetique_nexus": "Propos insultants ou injurieux. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Convocation et lettre de griefs",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler objet, dates et qualification."
+        },
+        {
+          "document": "Preuve complète des propos ou écrits",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir mots, date, destinataires et diffusion."
+        },
+        {
+          "document": "Règlement intérieur et sanctions comparables",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Vérifier règle et proportionnalité."
+        }
+      ],
+      "limits": [
+        "Planning, durée du travail et repos quotidien et hebdomadaire",
+        "Charge réelle, remplacement du collègue absent et conditions de l'intervention",
+        "Antécédents, regrets, excuses et conséquences sur le service"
+      ],
+      "next_actions": [
+        "Obtenir ou vérifier Page 204 dans « ccnic_septembre2013.pdf »."
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quel grief exact retenez-vous, mot pour mot ?",
+          "reason": "Empêcher une aggravation abstraite du grief.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+          "reason": "Contrôler preuve, destinataires et publicité.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+          "reason": "Fixer la position avant la stratégie.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quels mots exacts ont été employés ?",
+          "reason": "Délimiter le grief sans reformulation.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+          "reason": "Examiner proportionnalité et égalité de traitement.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+          "reason": "Préparer une atténuation si les faits sont reconnus.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel planning et quels repos aviez-vous avant les faits ?",
+          "reason": "Objectiver la fatigue alléguée.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Un technicien travaillait en poste de nuit.",
+          "employer_argument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : Le salarié allègue avoir effectué cinq postes de nuit successifs.",
+          "issue": "Propos insultants ou injurieux.",
+          "matching_facts": [
+            "Un technicien travaillait en poste de nuit.",
+            "Les propos ont suivi une remarque du superviseur sur le temps d'intervention.",
+            "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+          ],
+          "missing_facts": [
+            "Mots exacts, ton, durée et présence éventuelle d'une menace",
+            "Nature exacte de la remarque du superviseur et échanges précédents",
+            "Planning, durée du travail et repos quotidien et hebdomadaire"
+          ],
+          "next_action": "Obtenir ou vérifier Page 204 dans « ccnic_septembre2013.pdf ».",
+          "rule": "...e jour s’il est travailleur de nuit; (cid:129) refuser d’être affecté sur un poste de nuit s’il travaille sur un poste de jour, sans que ce refus constitue une sanction ou un motif de licenciement. Article 14 : suivi et bilan de…",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Des propos insultants envers son superviseur ont été tenus devant trois collègues.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Le salarié allègue avoir effectué cinq postes de nuit successifs."
+      ],
+      "sources": [
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Un technicien travaillait en poste de nuit.",
+          "nature": "COLLECTIVE_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Quel grief exact retenez-vous, mot pour mot ?",
+          "Quelles preuves complètes établissent le contenu et la diffusion ?",
+          "Que reconnaissez-vous exactement concernant les propos ou inscription ?",
+          "Quels mots exacts ont été employés ?",
+          "Obtenir : Convocation et lettre de griefs"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "Un technicien travaillait en poste de nuit.",
+        "Il venait d'intervenir sur une fuite de vapeur sous la pluie."
+      ],
+      "syndical_position": [
+        "Propos insultants ou injurieux. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "La situation comporte un enjeu de santé ou de sécurité à traiter rapidement.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "Mots exacts, ton, durée et présence éventuelle d'une menace",
+        "Nature exacte de la remarque du superviseur et échanges précédents"
+      ]
+    }
+  }
+}

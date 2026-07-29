@@ -1,0 +1,60 @@
+{
+  "all_cases_without_duplicate": true,
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "duplicate_count": 0,
+      "duplicates": []
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "duplicate_count": 0,
+      "duplicates": []
+    }
+  ]
+}

@@ -1,0 +1,683 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "public_response_size_bytes": 34170,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+            "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "La position précise de l'employeur reste à demander."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — La situation comporte un enjeu de santé ou de sécurité à traiter rapidement."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Envoi de courriels insultants. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : Le collègue destinataire est secrétaire du CSE.",
+            "Point fort : Le salarié reconnaît être l'auteur des courriels.",
+            "Point faible : Un élément défavorable est reconnu : Le salarié reconnaît être l'auteur des courriels.",
+            "Point faible : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Point faible : Contenu exact, nombre, dates, destinataires et diffusion des courriels"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Quel grief exact retenez-vous, mot pour mot ? (Empêcher une aggravation abstraite du grief.)",
+            "DIRECTION — Quelles preuves complètes établissent le contenu et la diffusion ? (Contrôler preuve, destinataires et publicité.)",
+            "SALARIÉ — Que reconnaissez-vous exactement concernant les courriels ? (Fixer la position avant la stratégie.)",
+            "SALARIÉ — Quels mots exacts ont été employés ? (Délimiter le grief sans reformulation.)",
+            "DIRECTION — Quelle sanction envisagez-vous et quels précédents comparez-vous ? (Examiner proportionnalité et égalité de traitement.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Avez-vous présenté des excuses ou exprimé des regrets ? (Préparer une atténuation si les faits sont reconnus.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Convocation et lettre de griefs — Direction ou salarié selon détention — Contrôler objet, dates et qualification. [BLOCKING]",
+            "Preuve complète des propos ou écrits — Direction ou salarié selon détention — Établir mots, date, destinataires et diffusion. [BLOCKING]",
+            "Règlement intérieur et sanctions comparables — Direction ou salarié selon détention — Vérifier règle et proportionnalité. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "comparison",
+          "items": [
+            "Règle : INEOS Sarralbe — Règlement intérieur.pdf — ...ubi ou refusé de subir des faits de harcèlement sexuel tels que définis au paragraphe ci-dessus, y compris, dans le cas mentionné au 1° du même article, si les propos et comportements n’ont pas été répétés. Aucun salarié, aucune… Salarié : Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Aucun lien avec l'activité syndicale ou le mandat n'est allégué. Direction : La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Manquant : Contenu exact, nombre, dates, destinataires et diffusion des courriels Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 8 dans « Règlement intérieur.pdf ».",
+            "Règle : Légifrance — Code du travail — L1332-2 — Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate… Salarié : Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié est convoqué après l'envoi de courriels insultants à un collègue. Direction : La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Manquant : Contenu exact, nombre, dates, destinataires et diffusion des courriels Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+            "Règle : Légifrance — Code du travail — L1331-1 — Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non… Salarié : Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Direction : La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Manquant : Contenu exact, nombre, dates, destinataires et diffusion des courriels Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier L1331-1 dans « Code du travail »."
+          ],
+          "title": "Règles comparées aux faits"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Quel grief exact retenez-vous, mot pour mot ?",
+            "Avant : Quelles preuves complètes établissent le contenu et la diffusion ?",
+            "Avant : Que reconnaissez-vous exactement concernant les courriels ?",
+            "Avant : Quels mots exacts ont été employés ?",
+            "Avant : Obtenir : Convocation et lettre de griefs"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "after",
+          "items": [
+            "Obtenir ou vérifier Page 8 dans « Règlement intérieur.pdf ».",
+            "Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+            "Obtenir ou vérifier L1331-1 dans « Code du travail »."
+          ],
+          "title": "Actions à mener ensuite"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "INEOS Sarralbe — Règlement intérieur.pdf — INTERNAL_POLICY — Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Aucun lien avec l'activité syndicale ou le mandat n'est allégué. — POTENTIALLY_APPLICABLE",
+            "Légifrance — Code du travail — STATUTE — L1332-2 — Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié est convoqué après l'envoi de courriels insultants à un collègue. — APPLICABLE"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée",
+            "Antécédents, caractère isolé ou répété et comportement professionnel habituel"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "INSULTING_EMAILS",
+        "primary_grievance_or_decision": "Envoi de courriels insultants.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Convocation et lettre de griefs",
+        "Preuve complète des propos ou écrits",
+        "Règlement intérieur et sanctions comparables"
+      ],
+      "findings": [
+        "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+        "La position précise de l'employeur reste à demander."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Que reconnaissez-vous exactement concernant les courriels ?",
+        "Quels mots exacts ont été employés ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Avez-vous présenté des excuses ou exprimé des regrets ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "rule_to_facts_analysis": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "Légifrance — Code du travail — L1332-2"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "Légifrance — Code du travail — L1331-1"
+        }
+      ],
+      "short_answer": "Envoi de courriels insultants. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "provider": "Légifrance",
+          "reference": "L1332-2",
+          "title": "Code du travail"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Convocation et lettre de griefs",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler objet, dates et qualification."
+        },
+        {
+          "document": "Preuve complète des propos ou écrits",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir mots, date, destinataires et diffusion."
+        },
+        {
+          "document": "Règlement intérieur et sanctions comparables",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Vérifier règle et proportionnalité."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": true,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+        "employer_position": "La position précise de l'employeur reste à demander.",
+        "event_category": "INSULTING_EMAILS",
+        "evidence_mentioned": [
+          "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+          "Le salarié reconnaît être l'auteur des courriels.",
+          "Le salarié reconnaît le caractère insultant des courriels rapportés.",
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool."
+        ],
+        "facts_admitted": [
+          "Le salarié reconnaît être l'auteur des courriels.",
+          "Le salarié reconnaît le caractère insultant des courriels rapportés."
+        ],
+        "facts_alleged": [
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+          "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+        ],
+        "facts_certain": [
+          "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "Le collègue destinataire est secrétaire du CSE.",
+          "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels."
+        ],
+        "facts_disputed": [
+          "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+        ],
+        "facts_missing": [
+          "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+          "Contexte et objet de l'échange avec le collègue",
+          "Preuves communiquées, procédure suivie et mesure précise envisagée",
+          "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+          "Nature, durée, lieu et effets d'une éventuelle mutation",
+          "Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations",
+          "Existence d'autres mesures déjà prises pour les mêmes faits"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas remplacer les courriels insultants par l'alcool comme grief principal."
+        ],
+        "health_and_safety_context": [
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool."
+        ],
+        "legal_ambiguities": [
+          "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+          "Contexte et objet de l'échange avec le collègue",
+          "Preuves communiquées, procédure suivie et mesure précise envisagée",
+          "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+          "Nature, durée, lieu et effets d'une éventuelle mutation"
+        ],
+        "mandate_context": [
+          "Le collègue destinataire est secrétaire du CSE.",
+          "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+        ],
+        "persons_and_roles": [
+          "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "Le collègue destinataire est secrétaire du CSE.",
+          "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+          "Le salarié reconnaît être l'auteur des courriels.",
+          "Le salarié reconnaît le caractère insultant des courriels rapportés.",
+          "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool."
+        ],
+        "primary_event": "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+        "primary_grievance_or_decision": "Envoi de courriels insultants.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Envoi de courriels insultants. Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief.",
+        "secondary_topics": [
+          "Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief."
+        ]
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quel grief exact retenez-vous, mot pour mot ?",
+          "reason": "Empêcher une aggravation abstraite du grief.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+          "reason": "Contrôler preuve, destinataires et publicité.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Que reconnaissez-vous exactement concernant les courriels ?",
+          "reason": "Fixer la position avant la stratégie.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quels mots exacts ont été employés ?",
+          "reason": "Délimiter le grief sans reformulation.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+          "reason": "Examiner proportionnalité et égalité de traitement.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+          "reason": "Préparer une atténuation si les faits sont reconnus.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "employer_argument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "issue": "Envoi de courriels insultants.",
+          "matching_facts": [
+            "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+            "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+          ],
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée"
+          ],
+          "next_action": "Obtenir ou vérifier Page 8 dans « Règlement intérieur.pdf ».",
+          "rule": "...ubi ou refusé de subir des faits de harcèlement sexuel tels que définis au paragraphe ci-dessus, y compris, dans le cas mentionné au 1° du même article, si les propos et comportements n’ont pas été répétés. Aucun salarié, aucune…",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "employer_argument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "issue": "Envoi de courriels insultants.",
+          "matching_facts": [
+            "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+            "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels."
+          ],
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée"
+          ],
+          "next_action": "Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+          "rule": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate…",
+          "source": "Légifrance — Code du travail — L1332-2"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "employer_argument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "issue": "Envoi de courriels insultants.",
+          "matching_facts": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+          ],
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée"
+          ],
+          "next_action": "Obtenir ou vérifier L1331-1 dans « Code du travail ».",
+          "rule": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non…",
+          "source": "Légifrance — Code du travail — L1331-1"
+        }
+      ],
+      "source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Envoi de courriels insultants. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Que reconnaissez-vous exactement concernant les courriels ?",
+        "Quels mots exacts ont été employés ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?"
+      ],
+      "reponse_synthetique_nexus": "Envoi de courriels insultants. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Convocation et lettre de griefs",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler objet, dates et qualification."
+        },
+        {
+          "document": "Preuve complète des propos ou écrits",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir mots, date, destinataires et diffusion."
+        },
+        {
+          "document": "Règlement intérieur et sanctions comparables",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Vérifier règle et proportionnalité."
+        }
+      ],
+      "limits": [
+        "Contexte et objet de l'échange avec le collègue",
+        "Preuves communiquées, procédure suivie et mesure précise envisagée",
+        "Antécédents, caractère isolé ou répété et comportement professionnel habituel"
+      ],
+      "next_actions": [
+        "Obtenir ou vérifier Page 8 dans « Règlement intérieur.pdf ».",
+        "Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+        "Obtenir ou vérifier L1331-1 dans « Code du travail »."
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quel grief exact retenez-vous, mot pour mot ?",
+          "reason": "Empêcher une aggravation abstraite du grief.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+          "reason": "Contrôler preuve, destinataires et publicité.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Que reconnaissez-vous exactement concernant les courriels ?",
+          "reason": "Fixer la position avant la stratégie.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quels mots exacts ont été employés ?",
+          "reason": "Délimiter le grief sans reformulation.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+          "reason": "Examiner proportionnalité et égalité de traitement.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+          "reason": "Préparer une atténuation si les faits sont reconnus.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "employer_argument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "issue": "Envoi de courriels insultants.",
+          "matching_facts": [
+            "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+            "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+          ],
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée"
+          ],
+          "next_action": "Obtenir ou vérifier Page 8 dans « Règlement intérieur.pdf ».",
+          "rule": "...ubi ou refusé de subir des faits de harcèlement sexuel tels que définis au paragraphe ci-dessus, y compris, dans le cas mentionné au 1° du même article, si les propos et comportements n’ont pas été répétés. Aucun salarié, aucune…",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "employer_argument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "issue": "Envoi de courriels insultants.",
+          "matching_facts": [
+            "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+            "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels."
+          ],
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée"
+          ],
+          "next_action": "Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+          "rule": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate…",
+          "source": "Légifrance — Code du travail — L1332-2"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "employer_argument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "issue": "Envoi de courriels insultants.",
+          "matching_facts": [
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+          ],
+          "missing_facts": [
+            "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+            "Contexte et objet de l'échange avec le collègue",
+            "Preuves communiquées, procédure suivie et mesure précise envisagée"
+          ],
+          "next_action": "Obtenir ou vérifier L1331-1 dans « Code du travail ».",
+          "rule": "Constitue une sanction toute mesure, autre que les observations verbales, prise par l'employeur à la suite d'un agissement du salarié considéré par l'employeur comme fautif, que cette mesure soit de nature à affecter immédiatement ou non…",
+          "source": "Légifrance — Code du travail — L1331-1"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+        "La position précise de l'employeur reste à demander."
+      ],
+      "sources": [
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "nature": "INTERNAL_POLICY",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "nature": "STATUTE",
+          "provider": "Légifrance",
+          "reference": "L1332-2",
+          "scope": "APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "Code du travail"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Quel grief exact retenez-vous, mot pour mot ?",
+          "Quelles preuves complètes établissent le contenu et la diffusion ?",
+          "Que reconnaissez-vous exactement concernant les courriels ?",
+          "Quels mots exacts ont été employés ?",
+          "Obtenir : Convocation et lettre de griefs"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "Le collègue destinataire est secrétaire du CSE.",
+        "Le salarié reconnaît être l'auteur des courriels."
+      ],
+      "syndical_position": [
+        "Envoi de courriels insultants. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "La situation comporte un enjeu de santé ou de sécurité à traiter rapidement.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "Un élément défavorable est reconnu : Le salarié reconnaît être l'auteur des courriels.",
+        "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+        "Contenu exact, nombre, dates, destinataires et diffusion des courriels"
+      ]
+    }
+  }
+}

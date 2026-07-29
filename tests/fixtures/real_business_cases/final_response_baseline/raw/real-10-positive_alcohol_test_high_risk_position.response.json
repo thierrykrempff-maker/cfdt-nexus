@@ -1,0 +1,602 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "public_response_size_bytes": 28576,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+            "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+            "La position précise de l'employeur reste à demander.",
+            "La prise de poste était prévue à cinq heures.",
+            "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — La situation comporte un enjeu de santé ou de sécurité à traiter rapidement."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : Un cariste travaille sur un site industriel à risques.",
+            "Point faible : La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+            "Point faible : Texte exact et version applicable du règlement intérieur",
+            "Point faible : Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Quelle clause du règlement intérieur autorise ce contrôle ? (Vérifier le fondement du contrôle.)",
+            "DIRECTION — Quelle unité, quel appareil et quelle heure figurent au procès-verbal ? (Contrôler la fiabilité du résultat.)",
+            "SALARIÉ — Avez-vous pu demander une contre-expertise immédiatement ? (Vérifier l'effectivité de la garantie.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Aviez-vous déjà pris le chariot avant le contrôle ? (Mesurer le risque concret.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Procès-verbal et calibration de l'éthylotest — Direction ou salarié selon détention — Contrôler heure, unité et fiabilité. [BLOCKING]",
+            "Règlement intérieur en vigueur — Direction ou salarié selon détention — Vérifier postes et procédure contrôlables. [BLOCKING]",
+            "Preuve de proposition de contre-expertise — Direction ou salarié selon détention — Vérifier la garantie réelle. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "comparison",
+          "items": [
+            "Règle : INEOS Sarralbe — Règlement intérieur.pdf — Art 6 Tout salarié amené à utiliser un véhicule de service à l’intérieur ou à l’extérieur du site, dans le cadre de ses fonctions, doit signaler à sa hiérarchie toutes les modifications, même temporaires, concernant la validité de son… Salarié : Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. Direction : La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués. Manquant : Texte exact et version applicable du règlement intérieur Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 3 dans « Règlement intérieur.pdf ».",
+            "Règle : INEOS Sarralbe — 1997.04.01_Statut collectif applicable au personnel.pdf — + Généralités ‘© Réplament des Bourses d'Etudes . + | Prévoyance . . Règlement intérieur + Absences | Horaire variable _ + Règlement des congés ae Récompenses jubilaires 4 Logement : | LE Prêt 1 % Logement : + Bourses d'études | + Liste… Salarié : Le salarié peut demander l'application vérifiée de « 1997.04.01_Statut collectif applicable au personnel.pdf » au fait suivant : Le poste serait listé dans le règlement intérieur parmi les postes concernés par les… Direction : La direction peut opposer que l'application de « 1997.04.01_Statut collectif applicable au personnel.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués. Manquant : Texte exact et version applicable du règlement intérieur Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 11 dans « 1997.04.01_Statut collectif applicable au personnel.pdf »."
+          ],
+          "title": "Règles comparées aux faits"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Quelle clause du règlement intérieur autorise ce contrôle ?",
+            "Avant : Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+            "Avant : Avez-vous pu demander une contre-expertise immédiatement ?",
+            "Avant : Obtenir : Procès-verbal et calibration de l'éthylotest",
+            "Avant : Obtenir : Règlement intérieur en vigueur"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "after",
+          "items": [
+            "Obtenir ou vérifier Page 3 dans « Règlement intérieur.pdf ».",
+            "Obtenir ou vérifier Page 11 dans « 1997.04.01_Statut collectif applicable au personnel.pdf »."
+          ],
+          "title": "Actions à mener ensuite"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "INEOS Sarralbe — Règlement intérieur.pdf — INTERNAL_POLICY — Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. — POTENTIALLY_APPLICABLE",
+            "INEOS Sarralbe — 1997.04.01_Statut collectif applicable au personnel.pdf — COMPANY_AGREEMENT — Le salarié peut demander l'application vérifiée de « 1997.04.01_Statut collectif applicable au personnel.pdf » au fait suivant : Le poste serait listé dans le règlement intérieur… — POTENTIALLY_APPLICABLE"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Unité exacte du résultat, heure et conditions de mesure",
+            "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+            "Prise effective du chariot, mise en sécurité et risque concret"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "POSITIVE_ALCOHOL_TEST",
+        "primary_grievance_or_decision": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Procès-verbal et calibration de l'éthylotest",
+        "Règlement intérieur en vigueur",
+        "Preuve de proposition de contre-expertise"
+      ],
+      "findings": [
+        "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "La position précise de l'employeur reste à demander.",
+        "La prise de poste était prévue à cinq heures.",
+        "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Quelle clause du règlement intérieur autorise ce contrôle ?",
+        "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+        "Avez-vous pu demander une contre-expertise immédiatement ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous déjà pris le chariot avant le contrôle ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "rule_to_facts_analysis": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — 1997.04.01_Statut collectif applicable au personnel.pdf"
+        }
+      ],
+      "short_answer": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "1997.04.01_Statut collectif applicable au personnel.pdf"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Procès-verbal et calibration de l'éthylotest",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler heure, unité et fiabilité."
+        },
+        {
+          "document": "Règlement intérieur en vigueur",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Vérifier postes et procédure contrôlables."
+        },
+        {
+          "document": "Preuve de proposition de contre-expertise",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Vérifier la garantie réelle."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "La prise de poste était prévue à cinq heures.",
+          "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "La position précise de l'employeur reste à demander.",
+        "event_category": "POSITIVE_ALCOHOL_TEST",
+        "evidence_mentioned": [
+          "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+          "Un éthylotest positif annoncé à 0,8 g/l est allégué."
+        ],
+        "facts_alleged": [
+          "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "Un éthylotest positif annoncé à 0,8 g/l est allégué.",
+          "Le contrôle aurait été réalisé par une personne habilitée avec un matériel calibré.",
+          "Un droit à contre-expertise aurait été annoncé.",
+          "Des difficultés personnelles sont alléguées."
+        ],
+        "facts_certain": [
+          "Un cariste travaille sur un site industriel à risques.",
+          "La prise de poste était prévue à cinq heures.",
+          "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles.",
+          "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+        ],
+        "facts_missing": [
+          "Texte exact et version applicable du règlement intérieur",
+          "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+          "Unité exacte du résultat, heure et conditions de mesure",
+          "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+          "Prise effective du chariot, mise en sécurité et risque concret",
+          "Mesures médicales ou sociales proposées et antécédents vérifiés"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable."
+        ],
+        "health_and_safety_context": [
+          "Un cariste travaille sur un site industriel à risques.",
+          "Une haleine alcoolisée et des troubles de l'équilibre sont allégués."
+        ],
+        "legal_ambiguities": [
+          "Texte exact et version applicable du règlement intérieur",
+          "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+          "Unité exacte du résultat, heure et conditions de mesure",
+          "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+          "Prise effective du chariot, mise en sécurité et risque concret"
+        ],
+        "persons_and_roles": [
+          "Un cariste travaille sur un site industriel à risques.",
+          "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+        ],
+        "primary_event": "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+        "primary_grievance_or_decision": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+        "workplace_context": [
+          "Un cariste travaille sur un site industriel à risques."
+        ]
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle clause du règlement intérieur autorise ce contrôle ?",
+          "reason": "Vérifier le fondement du contrôle.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+          "reason": "Contrôler la fiabilité du résultat.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Avez-vous pu demander une contre-expertise immédiatement ?",
+          "reason": "Vérifier l'effectivité de la garantie.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous déjà pris le chariot avant le contrôle ?",
+          "reason": "Mesurer le risque concret.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "employer_argument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "issue": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "matching_facts": [
+            "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+            "Un cariste travaille sur un site industriel à risques.",
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles."
+          ],
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure"
+          ],
+          "next_action": "Obtenir ou vérifier Page 3 dans « Règlement intérieur.pdf ».",
+          "rule": "Art 6 Tout salarié amené à utiliser un véhicule de service à l’intérieur ou à l’extérieur du site, dans le cadre de ses fonctions, doit signaler à sa hiérarchie toutes les modifications, même temporaires, concernant la validité de son…",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 1997.04.01_Statut collectif applicable au personnel.pdf » au fait suivant : Le poste serait listé dans le règlement intérieur parmi les postes concernés par les…",
+          "employer_argument": "La direction peut opposer que l'application de « 1997.04.01_Statut collectif applicable au personnel.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "issue": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "matching_facts": [
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles."
+          ],
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure"
+          ],
+          "next_action": "Obtenir ou vérifier Page 11 dans « 1997.04.01_Statut collectif applicable au personnel.pdf ».",
+          "rule": "+ Généralités ‘© Réplament des Bourses d'Etudes . + | Prévoyance . . Règlement intérieur + Absences | Horaire variable _ + Règlement des congés ae Récompenses jubilaires 4 Logement : | LE Prêt 1 % Logement : + Bourses d'études | + Liste…",
+          "source": "INEOS Sarralbe — 1997.04.01_Statut collectif applicable au personnel.pdf"
+        }
+      ],
+      "source_requirements": [
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Quelle clause du règlement intérieur autorise ce contrôle ?",
+        "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+        "Avez-vous pu demander une contre-expertise immédiatement ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous déjà pris le chariot avant le contrôle ?"
+      ],
+      "reponse_synthetique_nexus": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Procès-verbal et calibration de l'éthylotest",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler heure, unité et fiabilité."
+        },
+        {
+          "document": "Règlement intérieur en vigueur",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Vérifier postes et procédure contrôlables."
+        },
+        {
+          "document": "Preuve de proposition de contre-expertise",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Vérifier la garantie réelle."
+        }
+      ],
+      "limits": [
+        "Unité exacte du résultat, heure et conditions de mesure",
+        "Possibilité réelle de contestation ou contre-expertise et choix du salarié",
+        "Prise effective du chariot, mise en sécurité et risque concret"
+      ],
+      "next_actions": [
+        "Obtenir ou vérifier Page 3 dans « Règlement intérieur.pdf ».",
+        "Obtenir ou vérifier Page 11 dans « 1997.04.01_Statut collectif applicable au personnel.pdf »."
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle clause du règlement intérieur autorise ce contrôle ?",
+          "reason": "Vérifier le fondement du contrôle.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+          "reason": "Contrôler la fiabilité du résultat.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Avez-vous pu demander une contre-expertise immédiatement ?",
+          "reason": "Vérifier l'effectivité de la garantie.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous déjà pris le chariot avant le contrôle ?",
+          "reason": "Mesurer le risque concret.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "employer_argument": "La direction peut opposer que l'application de « Règlement intérieur.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "issue": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "matching_facts": [
+            "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+            "Un cariste travaille sur un site industriel à risques.",
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles."
+          ],
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure"
+          ],
+          "next_action": "Obtenir ou vérifier Page 3 dans « Règlement intérieur.pdf ».",
+          "rule": "Art 6 Tout salarié amené à utiliser un véhicule de service à l’intérieur ou à l’extérieur du site, dans le cadre de ses fonctions, doit signaler à sa hiérarchie toutes les modifications, même temporaires, concernant la validité de son…",
+          "source": "INEOS Sarralbe — Règlement intérieur.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 1997.04.01_Statut collectif applicable au personnel.pdf » au fait suivant : Le poste serait listé dans le règlement intérieur parmi les postes concernés par les…",
+          "employer_argument": "La direction peut opposer que l'application de « 1997.04.01_Statut collectif applicable au personnel.pdf » reste limitée par : Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+          "issue": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "matching_facts": [
+            "Le poste serait listé dans le règlement intérieur parmi les postes concernés par les contrôles."
+          ],
+          "missing_facts": [
+            "Texte exact et version applicable du règlement intérieur",
+            "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité",
+            "Unité exacte du résultat, heure et conditions de mesure"
+          ],
+          "next_action": "Obtenir ou vérifier Page 11 dans « 1997.04.01_Statut collectif applicable au personnel.pdf ».",
+          "rule": "+ Généralités ‘© Réplament des Bourses d'Etudes . + | Prévoyance . . Règlement intérieur + Absences | Horaire variable _ + Règlement des congés ae Récompenses jubilaires 4 Logement : | LE Prêt 1 % Logement : + Bourses d'études | + Liste…",
+          "source": "INEOS Sarralbe — 1997.04.01_Statut collectif applicable au personnel.pdf"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Une haleine alcoolisée et des troubles de l'équilibre sont allégués.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "La position précise de l'employeur reste à demander.",
+        "La prise de poste était prévue à cinq heures.",
+        "Le salarié a quinze ans d'ancienneté sans antécédent annoncé."
+      ],
+      "sources": [
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « Règlement intérieur.pdf » au fait suivant : Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
+          "nature": "INTERNAL_POLICY",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « 1997.04.01_Statut collectif applicable au personnel.pdf » au fait suivant : Le poste serait listé dans le règlement intérieur…",
+          "nature": "COMPANY_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "1997.04.01_Statut collectif applicable au personnel.pdf"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Quelle clause du règlement intérieur autorise ce contrôle ?",
+          "Quelle unité, quel appareil et quelle heure figurent au procès-verbal ?",
+          "Avez-vous pu demander une contre-expertise immédiatement ?",
+          "Obtenir : Procès-verbal et calibration de l'éthylotest",
+          "Obtenir : Règlement intérieur en vigueur"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "Un cariste travaille sur un site industriel à risques."
+      ],
+      "syndical_position": [
+        "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "La situation comporte un enjeu de santé ou de sécurité à traiter rapidement.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "Texte exact et version applicable du règlement intérieur",
+        "Procédure complète, identité fonctionnelle de l'opérateur, calibration et traçabilité"
+      ]
+    }
+  }
+}

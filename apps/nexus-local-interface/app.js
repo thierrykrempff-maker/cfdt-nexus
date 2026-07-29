@@ -699,13 +699,23 @@ function reportBlock(title, values) {
   return section;
 }
 
+function summaryReportMarkdown(report) {
+  const lines = [`# ${report.title || "Synthèse opérationnelle Nexus"}`];
+  for (const section of report.sections || []) {
+    if (!section.items?.length) continue;
+    lines.push("", `## ${section.title}`);
+    for (const item of section.items) lines.push(`- ${String(item)}`);
+  }
+  return lines.join("\n");
+}
+
 function renderReport() {
   const report = currentPayload?.analysis_report;
   if (!report) {
     resetReportState("Aucun rapport Nexus n'est disponible pour cette analyse.");
     return;
   }
-  currentReportMarkdown = report.markdown || "";
+  currentReportMarkdown = summaryReportMarkdown(report);
   reportOutput.textContent = "";
 
   const meta = document.createElement("div");
@@ -725,6 +735,42 @@ function renderReport() {
 
   for (const item of report.sections || []) {
     reportOutput.appendChild(reportBlock(item.title, item.items));
+  }
+
+  const detailedAnalysis = currentPayload?.detailed_analysis || {};
+  const detailSections = [
+    { title: "Faits détaillés", items: detailedAnalysis.factual_core },
+    { title: "Sources secondaires", items: detailedAnalysis.secondary_sources },
+    { title: "Sources écartées", items: detailedAnalysis.rejected_sources },
+    { title: "Sources encore nécessaires", items: detailedAnalysis.source_requirements },
+    { title: "Limites détaillées", items: detailedAnalysis.warnings }
+  ].filter((section) =>
+    Array.isArray(section.items)
+      ? section.items.length
+      : section.items && Object.keys(section.items).length
+  );
+  if (report.detail_available && detailSections.length) {
+    const details = document.createElement("details");
+    details.className = "report-details";
+    const summary = document.createElement("summary");
+    summary.textContent = "Afficher l’analyse détaillée";
+    details.appendChild(summary);
+    const note = document.createElement("p");
+    note.className = "report-details-note";
+    note.textContent =
+      "Cette partie complète la synthèse. Elle n’est pas incluse dans la copie, l’impression ou l’export.";
+    details.appendChild(note);
+    for (const section of detailSections) {
+      const values = Array.isArray(section.items)
+        ? section.items.map((item) =>
+            typeof item === "object" ? JSON.stringify(item, null, 2) : item
+          )
+        : Object.entries(section.items || {}).flatMap(([label, items]) =>
+            (Array.isArray(items) ? items : [items]).map((item) => `${label} : ${item}`)
+          );
+      details.appendChild(reportBlock(section.title, values));
+    }
+    reportOutput.appendChild(details);
   }
 
   const juristeSections = report.expert_sections?.juriste || [];
@@ -781,6 +827,7 @@ function renderResult(payload) {
   const finalAssistant = payload.final_assistant_runtime?.assistant || null;
   const finalSummary = finalAssistant?.summary || {};
   const finalTrace = finalAssistant?.trace || {};
+  const publicSummary = payload.public_summary || answer.public_summary || {};
   emptyState.hidden = true;
   resultContent.hidden = false;
   resultQuestion.textContent = currentWorkspace
@@ -792,14 +839,32 @@ function renderResult(payload) {
     : null;
   fillInlineList(domainsList, finalDomains || orchestration.domaines_detectes || answer.route.domains || []);
   fillInlineList(expertsList, finalTrace.engines_called || orchestration.experts_mobilises || []);
-  shortAnswer.textContent = orchestration.reponse_synthetique_nexus || answer.short_answer || "A completer.";
-  workingPosition.textContent = orchestration.position_de_travail || answer.working_position || "A completer.";
+  shortAnswer.textContent =
+    (publicSummary.situation || []).join(" ") ||
+    orchestration.reponse_synthetique_nexus ||
+    answer.short_answer ||
+    "A completer.";
+  workingPosition.textContent =
+    (publicSummary.syndical_position || []).join(" ") ||
+    orchestration.position_de_travail ||
+    answer.working_position ||
+    "A completer.";
   renderSources(sourcesList, answer, orchestration);
-  fillList(findingsList, answer.findings || []);
-  fillList(documentsList, finalSummary.documents_or_actions || orchestration.documents_necessaires || answer.documents_to_request || []);
+  fillList(findingsList, publicSummary.strengths || answer.findings || []);
+  fillList(
+    documentsList,
+    (publicSummary.documents || []).map((item) => item.document) ||
+      finalSummary.documents_or_actions ||
+      orchestration.documents_necessaires ||
+      answer.documents_to_request ||
+      []
+  );
   fillList(
     questionsList,
-    finalAssistant?.questions?.map((item) => `${item.priority}: ${item.text}`) ||
+    (publicSummary.priority_questions || []).map(
+      (item) => `${item.target} — ${item.question}`
+    ) ||
+      finalAssistant?.questions?.map((item) => `${item.priority}: ${item.text}`) ||
       orchestration.questions_utiles ||
       answer.questions_to_ask ||
       []
