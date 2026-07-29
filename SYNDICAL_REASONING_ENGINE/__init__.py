@@ -164,6 +164,7 @@ from .source_to_facts import (
     SourceToFactsReport,
     analyze_source_to_facts,
     build_source_search_queries,
+    qualify_sources_for_extraction,
 )
 from .discrimination_articulation import articulate_discrimination_domains
 from .discrimination_engine import (
@@ -300,6 +301,7 @@ __all__ = (
     "SourceToFactsReport",
     "analyze_source_to_facts",
     "build_source_search_queries",
+    "qualify_sources_for_extraction",
     "build_actionable_preparation",
     "build_case_factual_core",
     "build_provisional_union_position",

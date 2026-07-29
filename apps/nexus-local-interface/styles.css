@@ -213,6 +213,10 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .history-detail-score span { font-weight: 800; }
 .history-special-notes { margin: 20px 0; padding: 18px; border-left: 5px solid var(--violet); border-radius: 10px; background: #f8f2fa; }
 .history-special-notes h3 { margin-top: 0; }
+.history-source-refresh { margin: 20px 0; padding: 18px; border: 1px solid #9fc8b5; border-radius: 12px; background: #f1faf5; }
+.history-source-refresh h3, .history-source-refresh h4 { margin-top: 0; }
+.history-source-refresh h4 { margin-bottom: 8px; color: var(--green); }
+.history-source-refresh ul { margin: 0 0 16px; padding-left: 21px; }
 .history-detail-section { padding: 19px 0; border-top: 1px solid var(--line); }
 .history-detail-section h3 { margin: 0 0 12px; font-size: 21px; }
 .history-detail-section ul { margin: 0; padding-left: 21px; }

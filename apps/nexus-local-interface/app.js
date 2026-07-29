@@ -103,6 +103,8 @@ const historyDetailMeta = document.getElementById("historyDetailMeta");
 const historyDetailScore = document.getElementById("historyDetailScore");
 const historyDetailBadges = document.getElementById("historyDetailBadges");
 const historySpecialNotes = document.getElementById("historySpecialNotes");
+const historyRefreshSourcesButton = document.getElementById("historyRefreshSourcesButton");
+const historySourceRefresh = document.getElementById("historySourceRefresh");
 const historySections = document.getElementById("historySections");
 const historyCopyButton = document.getElementById("historyCopyButton");
 const historyPrintButton = document.getElementById("historyPrintButton");
@@ -1206,6 +1208,17 @@ function renderHistoricalDetail(detail) {
 
   const summary = detail.public_summary || {};
   historySections.textContent = "";
+  const sourceStatusAtTest = detail.source_status_at_test || {};
+  appendHistoricalSection(
+    "Sources disponibles lors du test V1",
+    sourceStatusAtTest.retrieved_sources || [],
+    (item) =>
+      `${item.provider || "Source"} — ${item.title || "Titre non restitué"}${item.nature ? ` — ${item.nature}` : ""} [${item.status || "DISPONIBLE"}]`
+  );
+  appendHistoricalSection(
+    "Sources encore à obtenir lors du test V1",
+    sourceStatusAtTest.sources_to_obtain || []
+  );
   appendHistoricalSection("Situation étudiée", summary.situation || []);
   appendHistoricalSection("Faits principaux compris", summary.strengths || []);
   appendHistoricalSection(
@@ -1237,8 +1250,72 @@ function renderHistoricalDetail(detail) {
     detail.score_explanation
   ]);
   historyCopyStatus.textContent = "";
+  historySourceRefresh.hidden = true;
+  historySourceRefresh.textContent = "";
+  historyRefreshSourcesButton.disabled = false;
   historyDetail.focus();
   window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+function sourceRefreshLine(item) {
+  if (!item || typeof item !== "object") return String(item || "");
+  return [
+    item.provider,
+    item.title,
+    item.article_or_clause,
+    item.excerpt,
+    item.availability_status,
+    item.message
+  ].filter(Boolean).join(" — ");
+}
+
+async function refreshHistoricalSources() {
+  if (!currentHistoricalCase) return;
+  historyRefreshSourcesButton.disabled = true;
+  historyCopyStatus.textContent = "Actualisation documentaire en cours…";
+  try {
+    const response = await fetch(
+      `/api/historical-cases/${encodeURIComponent(currentHistoricalCase.id)}/refresh-sources`
+    );
+    const payload = await response.json();
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.error || "Actualisation documentaire indisponible.");
+    }
+    const refresh = payload.refresh;
+    historySourceRefresh.textContent = "";
+    historySourceRefresh.hidden = false;
+    const heading = document.createElement("h3");
+    heading.textContent = "Analyse documentaire actuelle";
+    const date = document.createElement("p");
+    date.textContent = `Dernière actualisation : ${new Date(refresh.last_refreshed_at).toLocaleString("fr-FR")}. Le score V1 reste ${refresh.score}/100.`;
+    historySourceRefresh.append(heading, date);
+    const currentSources =
+      refresh.current_documentary_analysis?.sources || [];
+    const groups = [
+      ["Sources actuellement retrouvées", currentSources],
+      ["Nouvelles sources depuis le test", refresh.newly_found || []],
+      ["Sources toujours absentes ou à clarifier", refresh.still_absent || []]
+    ];
+    for (const [title, rows] of groups) {
+      if (!rows.length) continue;
+      const label = document.createElement("h4");
+      label.textContent = title;
+      const list = document.createElement("ul");
+      rows.forEach((item) => {
+        const row = document.createElement("li");
+        row.textContent = sourceRefreshLine(item);
+        list.appendChild(row);
+      });
+      historySourceRefresh.append(label, list);
+    }
+    historyCopyStatus.textContent =
+      "Sources actualisées séparément. L’analyse et le score historiques sont inchangés.";
+  } catch (_error) {
+    historyCopyStatus.textContent =
+      "Les sources n’ont pas pu être actualisées. L’analyse historique reste inchangée.";
+  } finally {
+    historyRefreshSourcesButton.disabled = false;
+  }
 }
 
 async function openHistoricalCase(caseId) {
@@ -1745,6 +1822,7 @@ historyBackToList.addEventListener("click", showHistoricalList);
 historySearch.addEventListener("input", renderHistoricalCards);
 historyCopyButton.addEventListener("click", copyHistoricalCase);
 historyPrintButton.addEventListener("click", printHistoricalCase);
+historyRefreshSourcesButton.addEventListener("click", refreshHistoricalSources);
 historyView.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !historyDetail.hidden) {
     event.preventDefault();

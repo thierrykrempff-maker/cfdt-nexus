@@ -23,9 +23,18 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
     all_questions = _questions(preparation, bounded=False)
     questions = _bounded_questions(all_questions)
     all_documents = _documents(preparation, bounded=False)
+    extraction = _mapping(answer.get("source_extraction"))
+    all_documents = _resolved_documents(
+        all_documents,
+        extraction.get("document_resolutions"),
+    )
     documents = all_documents[:5]
     comparisons = _comparisons(answer.get("rule_to_facts_analysis"))
-    sources = _sources(answer.get("applicable_sources") or answer.get("sources"))
+    sources = _sources(
+        extraction.get("sources")
+        or answer.get("applicable_sources")
+        or answer.get("sources")
+    )
 
     avoid = _dedupe(
         [
@@ -136,7 +145,8 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
             limit=5,
             width=340,
         ),
-        "sources": sources[:5],
+        "sources": _compact_public_sources(sources[:5]),
+        "source_extractions": sources[:3],
         "limits": _dedupe_excluding(
             [
                 *_strings(core.get("blocking_ambiguities"), limit=3),
@@ -150,7 +160,10 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
     }
     summary["sections"] = _summary_sections(summary)
     all_sources = _sources(
-        answer.get("applicable_sources") or answer.get("sources"), limit=10
+        extraction.get("sources")
+        or answer.get("applicable_sources")
+        or answer.get("sources"),
+        limit=10,
     )
     details = {
         "factual_core": _compact_core(core),
@@ -158,6 +171,7 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
         "documents": all_documents,
         "rule_to_facts": comparisons,
         "secondary_sources": all_sources[5:],
+        "source_extraction": extraction,
         "source_requirements": _dedupe(
             _strings(answer.get("missing_source_requirements"), limit=8),
             limit=8,
@@ -266,6 +280,26 @@ def _summary_sections(summary: Mapping[str, Any]) -> list[dict[str, Any]]:
         ("avoid", "À éviter", summary.get("avoid")),
         ("after", "Actions à mener ensuite", summary.get("next_actions")),
         (
+            "source_extractions",
+            "Sources déjà retrouvées",
+            [
+                " — ".join(
+                    part
+                    for part in (
+                        item.get("provider"),
+                        item.get("title"),
+                        item.get("reference"),
+                        item.get("excerpt"),
+                        item.get("availability_status"),
+                        item.get("link_to_facts"),
+                    )
+                    if part
+                )
+                for item in _sequence(summary.get("source_extractions"))
+                if isinstance(item, Mapping)
+            ],
+        ),
+        (
             "sources",
             "Sources réellement mobilisées",
             [
@@ -365,6 +399,40 @@ def _documents(
     return deduplicated[:5] if bounded else deduplicated
 
 
+def _resolved_documents(
+    documents: Sequence[dict[str, str]],
+    resolutions: Any,
+) -> list[dict[str, str]]:
+    """Remove only documents actually found and qualify uncertain versions."""
+
+    by_document = {
+        _text(item.get("requested_document"), 220).casefold(): item
+        for item in _sequence(resolutions)
+        if isinstance(item, Mapping) and item.get("requested_document")
+    }
+    output: list[dict[str, str]] = []
+    for document in documents:
+        resolution = by_document.get(document["document"].casefold())
+        status = (
+            str(resolution.get("availability_status") or "")
+            if isinstance(resolution, Mapping)
+            else ""
+        )
+        if status == "FOUND":
+            continue
+        row = dict(document)
+        if status == "FOUND_VERSION_UNCERTAIN":
+            row["document"] = "Confirmer la version applicable : " + row["document"]
+            row["utility"] = _text(
+                resolution.get("message") or row["utility"],
+                280,
+            )
+        elif status == "NEEDS_CLARIFICATION":
+            row["document"] = "Clarifier avant recherche : " + row["document"]
+        output.append(row)
+    return _dedupe_dicts(output, "document")
+
+
 def _comparisons(value: Any) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     for item in _sequence(value):
@@ -400,8 +468,17 @@ def _sources(value: Any, *, limit: int = 5) -> list[dict[str, str]]:
     for item in _sequence(value):
         if not isinstance(item, Mapping):
             continue
-        provider = item.get("source_provider") or item.get("official_origin") or item.get("origin")
-        title = item.get("source_title") or item.get("document") or item.get("title")
+        provider = (
+            item.get("provider")
+            or item.get("source_provider")
+            or item.get("official_origin")
+            or item.get("origin")
+        )
+        title = (
+            item.get("title")
+            or item.get("source_title")
+            or item.get("document")
+        )
         if not provider and not title:
             continue
         output.append(
@@ -422,10 +499,53 @@ def _sources(value: Any, *, limit: int = 5) -> list[dict[str, str]]:
                     or "À vérifier selon les faits",
                     180,
                 ),
-                "link_to_facts": _text(item.get("employee_argument"), 180),
+                "link_to_facts": _text(
+                    item.get("link_to_facts") or item.get("employee_argument"),
+                    180,
+                ),
+                "publication_date": _text(item.get("publication_date"), 40),
+                "effective_date": _text(item.get("effective_date"), 40),
+                "version_date": _text(item.get("version_date"), 40),
+                "excerpt": _text(
+                    item.get("excerpt") or item.get("precise_excerpt"),
+                    480,
+                ),
+                "location": _text(
+                    item.get("location") or item.get("source_location"),
+                    160,
+                ),
+                "confidence": _text(
+                    item.get("confidence") or item.get("confidence_level"),
+                    80,
+                ),
+                "availability_status": _text(
+                    item.get("availability_status")
+                    or item.get("retrieval_status")
+                    or "DISPONIBLE",
+                    100,
+                ),
+                "normative_role": _text(item.get("normative_role"), 160),
             }
         )
     return _dedupe_dicts(output, "provider", secondary="title")[:limit]
+
+
+def _compact_public_sources(
+    sources: Sequence[dict[str, str]],
+) -> list[dict[str, str]]:
+    keys = (
+        "provider",
+        "title",
+        "reference",
+        "nature",
+        "status",
+        "scope",
+        "link_to_facts",
+    )
+    return [
+        {key: item[key] for key in keys if item.get(key)}
+        for item in sources
+    ]
 
 
 def _compact_rejections(value: Any) -> list[dict[str, str]]:

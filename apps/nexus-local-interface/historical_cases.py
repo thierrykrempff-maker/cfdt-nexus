@@ -11,8 +11,15 @@ from __future__ import annotations
 import json
 import re
 from copy import deepcopy
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, Iterable, Mapping
+
+from NEXUS_RUNTIME_INTEGRATION.source_extraction import (
+    DocumentAvailability,
+    build_source_extraction_report,
+)
+from SYNDICAL_REASONING_ENGINE import CaseFactualCore
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,6 +28,14 @@ VALIDATION_ROOT = (
 )
 RESULTS_PATH = VALIDATION_ROOT / "v1-release-results.json"
 RAW_ROOT = VALIDATION_ROOT / "raw"
+SOURCE_BASELINE_ROOT = (
+    ROOT
+    / "tests"
+    / "fixtures"
+    / "real_business_cases"
+    / "source_to_facts_baseline"
+    / "raw"
+)
 
 PUBLIC_SUMMARY_FIELDS = (
     "situation",
@@ -334,6 +349,9 @@ def get_historical_case(case_id: str) -> dict[str, Any]:
         "score_explanation": catalog["score_explanation"],
         "special_notes": list(presentation.get("notes", ())),
         "public_summary": _public_summary(raw_case),
+        "source_status_at_test": _source_status_at_test(
+            _public_summary(raw_case)
+        ),
         "usage": (
             "Consultation, démonstration, formation, validation et comparaison "
             "manuelle uniquement."
@@ -342,3 +360,122 @@ def get_historical_case(case_id: str) -> dict[str, Any]:
     }
     _validate_public_value(detail, f"detail.{short_id}")
     return detail
+
+
+def _source_status_at_test(summary: Mapping[str, Any]) -> dict[str, Any]:
+    sources = [
+        {
+            "provider": str(item.get("provider") or ""),
+            "title": str(item.get("title") or ""),
+            "nature": str(item.get("nature") or ""),
+            "status": str(item.get("status") or "DISPONIBLE"),
+        }
+        for item in summary.get("sources", ())
+        if isinstance(item, Mapping)
+    ]
+    missing = [
+        str(item.get("document") or "")
+        for item in summary.get("documents", ())
+        if isinstance(item, Mapping) and item.get("document")
+    ]
+    return {
+        "retrieved_sources": sources,
+        "sources_to_obtain": missing,
+        "captured_during_v1_validation": True,
+    }
+
+
+def _source_refresh_input(short_id: str) -> tuple[CaseFactualCore, list[str], list[Any]]:
+    presentation = CASE_PRESENTATION[short_id]
+    raw = _load_json(SOURCE_BASELINE_ROOT / str(presentation["fixture"]))
+    answer = raw.get("response", {}).get("answer", {})
+    core_payload = answer.get("case_factual_core")
+    if not isinstance(core_payload, dict):
+        raise ValueError("Noyau factuel historique absent.")
+    plans = answer.get("source_search_plan") or ()
+    queries = [
+        str(item.get("query") or "")
+        for item in plans
+        if isinstance(item, Mapping) and item.get("query")
+    ]
+    preparation = answer.get("actionable_preparation") or {}
+    documents = (
+        preparation.get("documents_to_request")
+        if isinstance(preparation, Mapping)
+        else ()
+    )
+    source_requirements = answer.get("missing_source_requirements") or ()
+    return (
+        CaseFactualCore(**core_payload),
+        queries,
+        [*(documents or ()), *source_requirements],
+    )
+
+
+def _default_historical_source_fetcher(queries: Iterable[str]) -> list[dict[str, Any]]:
+    """Search only the existing local agreements index; never rerun an analysis."""
+
+    from automation.scripts.assistant_ds_router import normalize_source, search_bible
+
+    sources: list[dict[str, Any]] = []
+    for query in dict.fromkeys(item.strip() for item in queries if item.strip()):
+        result = search_bible(query, 8)
+        for source in result.get("sources_used", ())[:8]:
+            if isinstance(source, dict):
+                sources.append(normalize_source(source, "bible_accords"))
+    return sources
+
+
+def refresh_historical_case_sources(
+    case_id: str,
+    *,
+    source_fetcher: Callable[[Iterable[str]], list[dict[str, Any]]] | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Refresh documentary availability without changing the historical analysis."""
+
+    detail = get_historical_case(case_id)
+    short_id = detail["id"]
+    core, queries, documents = _source_refresh_input(short_id)
+    fetcher = source_fetcher or _default_historical_source_fetcher
+    sources = fetcher(tuple(queries))
+    report = build_source_extraction_report(core, sources, documents).to_dict()
+    at_test = detail["source_status_at_test"]
+    former_titles = {
+        str(item.get("title") or "").casefold()
+        for item in at_test["retrieved_sources"]
+        if isinstance(item, Mapping)
+    }
+    newly_found = [
+        item
+        for item in report["sources"]
+        if str(item.get("title") or "").casefold() not in former_titles
+    ]
+    absent_statuses = {
+        DocumentAvailability.ABSENT.value,
+        DocumentAvailability.CONNECTOR_UNAVAILABLE.value,
+        DocumentAvailability.NEEDS_CLARIFICATION.value,
+        DocumentAvailability.TITLE_ONLY.value,
+    }
+    still_absent = [
+        item
+        for item in report["document_resolutions"]
+        if item.get("availability_status") in absent_statuses
+    ]
+    refreshed_at = now or datetime.now(timezone.utc)
+    result = {
+        "id": short_id,
+        "score": detail["score"],
+        "state": detail["state"],
+        "validated_version": detail["validated_version"],
+        "last_refreshed_at": refreshed_at.isoformat(),
+        "source_status_at_test": at_test,
+        "current_documentary_analysis": report,
+        "newly_found": newly_found,
+        "still_absent": still_absent,
+        "analysis_unchanged": True,
+        "score_unchanged": True,
+        "automatic_reuse": False,
+    }
+    _validate_public_value(result, f"refresh.{short_id}")
+    return result

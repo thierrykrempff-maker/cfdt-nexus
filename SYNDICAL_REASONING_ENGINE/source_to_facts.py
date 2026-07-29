@@ -858,6 +858,38 @@ def _source(
     )
 
 
+def qualify_sources_for_extraction(
+    core: CaseFactualCore,
+    sources: Sequence[Mapping[str, object]],
+) -> tuple[tuple[ApplicableSource, ...], tuple[tuple[str, str], ...]]:
+    """Qualify retrieved documents without drawing a legal conclusion.
+
+    Unlike :func:`analyze_source_to_facts`, this read-only projection remains
+    available when the factual analysis is suspended.  It is therefore safe to
+    say that a document or clause was found while still refusing to choose a
+    legal interpretation until the blocking facts are clarified.
+    """
+
+    qualified = tuple(_source(source, core) for source in sources)
+    accepted = tuple(
+        sorted(
+            (item for item in qualified if not item.rejection_reason),
+            key=lambda item: (
+                item.hierarchy_level,
+                -item.relevance_score,
+                item.source_title.casefold(),
+                item.source_id,
+            ),
+        )
+    )
+    rejected = tuple(
+        (item.source_title, item.rejection_reason or "source non retenue")
+        for item in qualified
+        if item.rejection_reason
+    )
+    return accepted, rejected
+
+
 def _conclusion(source: ApplicableSource) -> ProvisionalConclusion:
     if source.legal_nature is LegalNature.PREVENTION_GUIDANCE:
         return ProvisionalConclusion.PREVENTION_ISSUE
@@ -1011,22 +1043,7 @@ def analyze_source_to_facts(
             True,
         )
 
-    qualified = tuple(_source(source, core) for source in sources)
-    accepted = tuple(
-        sorted(
-            (item for item in qualified if not item.rejection_reason),
-            key=lambda item: (
-                item.hierarchy_level,
-                -item.relevance_score,
-                item.source_title.casefold(),
-            ),
-        )
-    )
-    rejected = tuple(
-        (item.source_title, item.rejection_reason or "source non retenue")
-        for item in qualified
-        if item.rejection_reason
-    )
+    accepted, rejected = qualify_sources_for_extraction(core, sources)
     analyses = tuple(
         _analysis(item, core) for item in accepted if item.citation_ready
     )
