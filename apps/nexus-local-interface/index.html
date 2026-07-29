@@ -178,7 +178,7 @@
             </button>
             <button class="tool-card" type="button" data-secondary-action="history">
               <span aria-hidden="true">↺</span><strong>Historique</strong>
-              <small>Analyses disponibles pendant cette session uniquement</small>
+              <small>11 cas métier anonymisés et testés pour la validation V1</small>
             </button>
             <button class="tool-card" type="button" data-secondary-action="templates">
               <span aria-hidden="true">✎</span><strong>Outils et modèles</strong>
@@ -192,6 +192,80 @@
           <div aria-hidden="true">i</div>
           <p><strong>Avant de commencer</strong> — anonymisez les situations. Ne saisissez ni NIR, ni coordonnées bancaires, ni diagnostic médical, ni mot de passe.</p>
         </div>
+      </section>
+
+      <section class="history-view" id="historyView" hidden aria-labelledby="historyTitle" tabindex="-1">
+        <div class="view-toolbar">
+          <button class="back-button" type="button" id="historyHomeButton">← Revenir à l’accueil</button>
+          <span class="confidentiality-label">Consultation uniquement · aucune réutilisation automatique</span>
+        </div>
+
+        <div class="history-heading">
+          <div>
+            <p class="eyebrow">Analyse historique</p>
+            <h1 id="historyTitle">Cas métier anonymisés et testés dans le cadre de la validation V1</h1>
+            <p id="historyVersion">Validation V1.0.0</p>
+          </div>
+          <div class="history-average" aria-label="Score moyen de la validation V1">
+            <strong id="historyAverage">85,36</strong>
+            <span>/100 de moyenne</span>
+          </div>
+        </div>
+
+        <div class="history-warning" role="note" id="historyWarning">
+          Ces cas sont des exemples anonymisés utilisés pour tester CFDT Nexus. Ils ne constituent ni une jurisprudence,
+          ni une garantie de résultat. Chaque situation réelle doit être analysée à partir de ses propres faits,
+          documents et sources applicables.
+        </div>
+        <p class="history-score-note" id="historyScoreExplanation"></p>
+
+        <section id="historyListPanel" aria-labelledby="historyListTitle">
+          <div class="history-controls">
+            <div>
+              <label for="historySearch">Rechercher dans les cas testés</label>
+              <input
+                id="historySearch"
+                type="search"
+                autocomplete="off"
+                placeholder="Alcool, EPI, badgeage, horaires, CSSCT…"
+              >
+            </div>
+            <p id="historyResultCount" role="status" aria-live="polite"></p>
+          </div>
+          <div class="history-filters" id="historyFilters" role="group" aria-label="Filtrer les cas historiques"></div>
+          <h2 class="sr-only" id="historyListTitle">Liste des cas métier testés</h2>
+          <div class="history-grid" id="historyCases"></div>
+          <div class="history-empty" id="historyEmpty" hidden>Aucun cas ne correspond à cette recherche.</div>
+        </section>
+
+        <article class="history-detail" id="historyDetail" hidden aria-labelledby="historyDetailTitle" tabindex="-1">
+          <div class="history-detail-toolbar">
+            <button class="back-button" type="button" id="historyBackToList">← Retour aux cas</button>
+            <div class="history-detail-actions">
+              <button class="secondary-button" type="button" id="historyCopyButton">Copier la synthèse</button>
+              <button class="secondary-button" type="button" id="historyPrintButton">Imprimer ce cas</button>
+            </div>
+          </div>
+          <div class="history-detail-heading">
+            <div>
+              <p class="eyebrow" id="historyDetailId">REAL-00</p>
+              <h2 id="historyDetailTitle">Cas historique</h2>
+              <p id="historyDetailMeta"></p>
+            </div>
+            <div class="history-detail-score"><strong id="historyDetailScore">-</strong><span>/100</span></div>
+          </div>
+          <div class="history-detail-badges" id="historyDetailBadges"></div>
+          <div class="history-special-notes" id="historySpecialNotes" hidden></div>
+          <div class="history-sections" id="historySections"></div>
+          <details class="history-boundary-note">
+            <summary>Pourquoi ce cas ne sera pas réutilisé automatiquement</summary>
+            <p>
+              Cette rubrique est une bibliothèque de consultation. Ses faits, stratégies et scores ne sont jamais
+              ajoutés à une nouvelle question salarié ni au prompt d’un moteur.
+            </p>
+          </details>
+          <p class="history-copy-status" id="historyCopyStatus" role="status" aria-live="polite"></p>
+        </article>
       </section>
 
       <section class="wizard-view" id="wizardView" hidden aria-labelledby="wizardTitle">
