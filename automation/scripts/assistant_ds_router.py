@@ -18,10 +18,14 @@ from typing import Any
 
 import agreements_bible as bible
 from SYNDICAL_REASONING_ENGINE import (
+    CaseFactualCore,
     DisciplinaryActCategory,
     DisciplinaryFactExtraction,
     DisciplinaryReasoningEngine,
     SyndicalCaseInput,
+    build_actionable_preparation,
+    build_case_factual_core,
+    build_provisional_union_position,
     extract_disciplinary_facts,
 )
 
@@ -2702,6 +2706,16 @@ def employee_path_for(
     """Select one explicit employee path without treating every interview as discipline."""
     if requested_path is not None and requested_path not in EMPLOYEE_PATHS:
         raise ValueError("Parcours salarié inconnu.")
+    if requested_path is not None:
+        return (
+            requested_path,
+            (
+                "Le parcours approfondi a été choisi explicitement."
+                if requested_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
+                else "Le parcours salarié général a été choisi explicitement."
+            ),
+            None,
+        )
     text = normalize(query)
     non_disciplinary_interview = bool(
         re.search(
@@ -2724,12 +2738,6 @@ def employee_path_for(
             text,
         )
     )
-    if requested_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE:
-        return (
-            ASSISTANCE_ENTRETIEN_DISCIPLINAIRE,
-            "Le parcours approfondi a été choisi explicitement.",
-            None,
-        )
     if hard_disciplinary_signal or (
         interview_assistance_signal and not non_disciplinary_interview
     ):
@@ -2763,11 +2771,47 @@ def route_query(
     query: str,
     employee_path: str | None = None,
 ) -> dict[str, Any]:
+    factual_core = build_case_factual_core(query, employee_path)
     selected_path, path_reason, path_advisory = employee_path_for(
         query, employee_path
     )
-    domains, domain_reasons, domain_scores = detect_domains(query)
-    intents, intent_reasons, intent_scores = detect_intents(query, domains)
+    factual_query = factual_core.search_query or factual_core.primary_grievance_or_decision
+    domains, domain_reasons, domain_scores = detect_domains(factual_query)
+    intents, intent_reasons, intent_scores = detect_intents(factual_query, domains)
+    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+        for domain, score in (
+            ("droit_travail_general", 4),
+            ("temps_travail", 3),
+        ):
+            if domain not in domains:
+                domains.append(domain)
+            domain_scores[domain] = max(domain_scores.get(domain, 0), score)
+        if employee_path is None and "equipes alternantes" in normalize(query):
+            if "paie_remuneration" not in domains:
+                domains.append("paie_remuneration")
+            domain_scores["paie_remuneration"] = max(
+                domain_scores.get("paie_remuneration", 0), 2
+            )
+        if factual_core.collective_impact_possible:
+            if "cse" not in domains:
+                domains.append("cse")
+            domain_scores["cse"] = max(domain_scores.get("cse", 0), 2)
+        if "analyser_situation_individuelle" not in intents:
+            intents.append("analyser_situation_individuelle")
+        intent_scores["analyser_situation_individuelle"] = max(
+            intent_scores.get("analyser_situation_individuelle", 0), 2
+        )
+        if factual_core.collective_impact_possible:
+            if "preparer_cse" not in intents:
+                intents.append("preparer_cse")
+            intent_scores["preparer_cse"] = max(
+                intent_scores.get("preparer_cse", 0), 1
+            )
+    if pay_is_explicitly_secondary(query):
+        domains = [domain for domain in domains if domain != "paie_remuneration"]
+        domain_scores.pop("paie_remuneration", None)
+        intents = [intent for intent in intents if intent != "analyser_paie"]
+        intent_scores.pop("analyser_paie", None)
     if (
         selected_path == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
         and "disciplinaire" not in domains
@@ -2788,13 +2832,33 @@ def route_query(
         intent_reasons.append(
             "Le dossier disciplinaire requiert une analyse individuelle approfondie."
         )
-    engines, execution_plan, warnings = choose_engines(query, domains, intents)
+    engines, execution_plan, warnings = choose_engines(factual_query, domains, intents)
+    if factual_core.blocking_ambiguities:
+        engines = [
+            engine
+            for engine in engines
+            if engine not in {
+                "legifrance_code_travail",
+                "judilibre_jurisprudence",
+                "pratique_officielle",
+                "nexus_bible_bridge",
+            }
+        ]
+        execution_plan = [
+            step for step in execution_plan if step.get("engine") in engines
+        ]
+        warnings.append(
+            "Analyse suspendue sur une ambiguïté factuelle déterminante ; aucune conclusion juridique définitive n'est produite."
+        )
     score_total = sum(domain_scores.values()) + sum(intent_scores.values())
     confidence = "fort" if score_total >= 5 else "moyen" if score_total >= 2 else "faible"
     main_domain = "droit_syndical" if mandate_meeting_query(query) and "droit_syndical" in domains else primary_domain(domains)
     secondary_domains = [domain for domain in business_domains({"domains": domains}) if domain != main_domain]
     route = {
         "query": query,
+        "search_query": factual_query,
+        "case_factual_core": factual_core.to_dict(),
+        "analysis_suspended": bool(factual_core.blocking_ambiguities),
         "router_version": ROUTER_VERSION,
         "domains": domains,
         "main_domain": main_domain,
@@ -2834,6 +2898,14 @@ def search_bible(query: str, limit: int) -> dict[str, Any]:
 
 
 def understanding_for(route: dict[str, Any]) -> str:
+    core = route.get("case_factual_core") or {}
+    if core.get("primary_grievance_or_decision"):
+        return (
+            "Fait principal : "
+            + str(core["primary_grievance_or_decision"])
+            + " Position du salarié : "
+            + str(core.get("employee_position") or "à préciser")
+        )
     main = label_for(route["main_domain"], DOMAIN_LABELS)
     secondary = [label_for(domain, DOMAIN_LABELS) for domain in route.get("secondary_domains", []) if domain != "cse"]
     intents = [label_for(intent, INTENT_LABELS) for intent in route["intents"][:4]]
@@ -3689,9 +3761,20 @@ def build_employee_method_analysis(answer: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_disciplinary_assistance(answer: dict[str, Any]) -> dict[str, Any]:
+def build_disciplinary_assistance(
+    answer: dict[str, Any],
+    factual_core: CaseFactualCore | None = None,
+) -> dict[str, Any]:
     """Build a fact-driven disciplinary dossier without deciding the sanction."""
-    query = str(answer.get("query") or "")
+    original_query = str(answer.get("query") or "")
+    structured_request = "faits fournis :" in normalize(original_query)
+    query = (
+        factual_core.search_query
+        if structured_request
+        and factual_core is not None
+        and factual_core.search_query
+        else original_query
+    )
     reasoning = DisciplinaryReasoningEngine().analyze(SyndicalCaseInput(query))
     facts = reasoning.fact_extraction
     aggravating, mitigating = _disciplinary_risk_factors(facts)
@@ -3743,7 +3826,16 @@ def build_disciplinary_assistance(answer: dict[str, Any]) -> dict[str, Any]:
         ),
         "fact_extraction": facts.to_dict(),
         "1_facts_understood": {
-            "facts_from_request": _disciplinary_fact_rows(facts),
+            "facts_from_request": (
+                [
+                    factual_core.primary_grievance_or_decision,
+                    *factual_core.facts_admitted,
+                    *factual_core.facts_disputed,
+                    *factual_core.facts_alleged,
+                ]
+                if factual_core is not None
+                else _disciplinary_fact_rows(facts)
+            ),
             "guardrail": "Aucun fait absent de la demande n'est présenté comme établi.",
         },
         "2_points_to_verify": {
@@ -4449,9 +4541,99 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     if is_incomplete_prime_route(route):
         answer["confidence"] = "faible"
     answer["response_depth"] = response_depth(route)
+    factual_core = answer.pop("_case_factual_core_model", None)
+    if not isinstance(factual_core, CaseFactualCore):
+        factual_core = build_case_factual_core(
+            str(answer.get("query") or ""),
+            route.get("employee_path"),
+        )
+    preparation = build_actionable_preparation(factual_core)
+    union_position = build_provisional_union_position(factual_core)
+    answer["case_factual_core"] = factual_core.to_dict()
+    answer["actionable_preparation"] = preparation
+    answer["syndical_position"] = union_position
+    question_rows = [
+        *preparation["questions_for_employee"],
+        *preparation["questions_for_employer"],
+        *preparation["representative_checks"],
+    ]
+    answer["questions_to_ask"] = [row["question"] for row in question_rows]
+    answer["documents_to_request"] = [
+        row["document"] for row in preparation["documents_to_request"]
+    ]
+    answer["findings"] = semantic_dedupe(
+        [
+            "Fait principal : " + factual_core.primary_grievance_or_decision,
+            "Position du salarié : " + factual_core.employee_position,
+            "Position de l'employeur : " + factual_core.employer_position,
+            *[
+                "Ambiguïté bloquante : " + item
+                for item in factual_core.blocking_ambiguities
+            ],
+        ]
+    )[:6]
+    answer["issue_groups"] = []
+    answer["working_position"] = (
+        union_position["point_to_challenge"]
+        + " "
+        + union_position["point_to_negotiate"]
+    )
+    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+        answer["working_position"] = (
+            "Défendre la salariée sans laisser entendre qu'elle a accepté : contrôler le contrat, "
+            "le cycle, le délai, l'accord INEOS et les effectifs, puis rechercher un maintien ou "
+            "un aménagement négocié. Éviter un refus non préparé comme toute promesse de victoire."
+        )
+    if factual_core.blocking_ambiguities:
+        first_question = preparation["questions_for_employee"][0]["question"]
+        answer["short_answer"] = (
+            first_question
+            + " Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée."
+        )
+        answer["next_action"] = first_question
+        answer["confidence"] = "faible"
+    else:
+        if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+            remuneration_note = (
+                " Une rémunération supérieure ne prouve ni accord, ni volontariat, ni caractère favorable."
+                if any(
+                    "remuner" in normalize(item)
+                    for item in factual_core.secondary_topics
+                )
+                else ""
+            )
+            answer["short_answer"] = (
+                "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. "
+                + factual_core.primary_grievance_or_decision
+                + remuneration_note
+                + " "
+                "Il faut contrôler contrat, accord local, horaires, contraintes et alternatives."
+            )
+        else:
+            answer["short_answer"] = (
+                factual_core.primary_grievance_or_decision
+                + " La position reste provisoire : il faut séparer les faits admis, contestés et allégués, "
+                "contrôler les preuves de la direction puis distinguer contestation et négociation."
+            )
+        answer["next_action"] = (
+            preparation["questions_for_employee"][0]["question"]
+            if preparation["questions_for_employee"]
+            else "Faire préciser le fait principal et l'objectif du salarié."
+        )
     if route.get("employee_path") == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE:
         answer["employee_method_analysis"] = None
-        answer["disciplinary_assistance"] = build_disciplinary_assistance(answer)
+        answer["disciplinary_assistance"] = build_disciplinary_assistance(
+            answer, factual_core
+        )
+        answer["disciplinary_assistance"]["6_questions_for_employee"] = [
+            row["question"] for row in preparation["questions_for_employee"]
+        ]
+        answer["disciplinary_assistance"]["7_questions_for_management"] = [
+            row["question"] for row in preparation["questions_for_employer"]
+        ]
+        answer["disciplinary_assistance"]["8_interview_preparation"][
+            "documents_to_request"
+        ] = [row["document"] for row in preparation["documents_to_request"]]
     else:
         answer["employee_method_analysis"] = build_employee_method_analysis(answer)
         answer["disciplinary_assistance"] = None
@@ -4468,10 +4650,24 @@ def ask(
     employee_path: str | None = None,
 ) -> dict[str, Any]:
     route = route_query(query, employee_path)
+    factual_core = build_case_factual_core(query, route["employee_path"])
+    retrieval_query = str(route.get("search_query") or query)
     retrieval_limit = max(limit, source_limit, 8)
     answer: dict[str, Any] = {
         "query": query,
-        "facts": declared_case_facts(query),
+        "facts": [
+            {
+                "statement": statement,
+                "documented": False,
+                "source": "user_statement",
+            }
+            for statement in semantic_dedupe(
+                [
+                    factual_core.primary_grievance_or_decision,
+                    *factual_core.facts_certain,
+                ]
+            )
+        ],
         "understanding": understanding_for(route),
         "short_answer": "",
         "route": route,
@@ -4487,6 +4683,8 @@ def ask(
         "next_action": "",
         "confidence": route["confidence"],
         "warnings": list(route["warnings"]),
+        "case_factual_core": factual_core.to_dict(),
+        "_case_factual_core_model": factual_core,
     }
 
     if needs_code_travail(query, route.get("domains", []), route.get("intents", [])) and "legifrance_code_travail" not in route["engines"]:
@@ -4505,13 +4703,15 @@ def ask(
 
     if "bible_accords" in route["engines"]:
         try:
-            merge_bible_result(answer, search_bible(query, retrieval_limit))
+            merge_bible_result(answer, search_bible(retrieval_query, retrieval_limit))
         except SystemExit as exc:
             answer["warnings"].append(f"Bible Accords indisponible ou index vide: {exc}")
 
     if "nexus_bible_bridge" in route["engines"] and bridge is not None:
         try:
-            report = bridge.build_cse_analysis(query[:80], query, retrieval_limit)
+            report = bridge.build_cse_analysis(
+                retrieval_query[:80], retrieval_query, retrieval_limit
+            )
             merge_bridge_result(answer, report)
         except SystemExit as exc:
             answer["warnings"].append(f"Pont Nexus/Bible indisponible: {exc}")
@@ -4519,7 +4719,9 @@ def ask(
     if "legifrance_code_travail" in route["engines"] and legifrance is not None:
         try:
             client = legifrance.LegifranceClient()
-            merge_legifrance_result(answer, client.search_code_sources(query, limit=5))
+            merge_legifrance_result(
+                answer, client.search_code_sources(retrieval_query, limit=5)
+            )
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             error = str(exc)
             answer["legifrance_audit"].append(
@@ -4539,7 +4741,7 @@ def ask(
     if "judilibre_jurisprudence" in route["engines"] and judilibre is not None:
         try:
             client = judilibre.JudilibreClient()
-            search_query, theme = judilibre_query_for_route(query, route)
+            search_query, theme = judilibre_query_for_route(retrieval_query, route)
             merge_judilibre_result(answer, client.search_sources(search_query, limit=2, theme=theme))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {exc}")
@@ -4547,7 +4749,7 @@ def ask(
     if "pratique_officielle" in route["engines"] and cdtn is not None:
         try:
             client = cdtn.CdtnClient()
-            search_query, theme = cdtn_query_for_route(query, route)
+            search_query, theme = cdtn_query_for_route(retrieval_query, route)
             merge_cdtn_result(answer, client.search_sources(search_query, limit=2, theme=theme))
         except Exception as exc:  # pragma: no cover - public network boundary.
             answer["warnings"].append(f"Pratique officielle indisponible: {exc}")

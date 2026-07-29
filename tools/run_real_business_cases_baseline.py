@@ -135,6 +135,8 @@ def reduce_public_response(payload: Mapping[str, Any]) -> dict[str, Any]:
         key: deepcopy(answer[key])
         for key in (
             "confidence",
+            "actionable_preparation",
+            "case_factual_core",
             "disciplinary_assistance",
             "documents_to_request",
             "employee_method_analysis",
@@ -152,6 +154,7 @@ def reduce_public_response(payload: Mapping[str, Any]) -> dict[str, Any]:
             "short_answer",
             "source_layers",
             "sources",
+            "syndical_position",
             "understanding",
             "warnings",
             "working_position",

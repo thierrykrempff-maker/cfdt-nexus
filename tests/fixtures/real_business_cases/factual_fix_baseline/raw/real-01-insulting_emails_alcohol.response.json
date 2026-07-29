@@ -1,0 +1,366 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:28.666181+00:00",
+  "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+  "case_input_sha256": "bf4c84cfa505017106f688e8cc9537194cd4ad3d361f4d4892cb9f41c62dee50",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/insulting-emails-alcohol.json",
+  "prompt_sha256": "651847b58e00d087465bd2c93e8c5678dc293d964db3b0c04270cb33b62ba1ab",
+  "public_response_size_bytes": 33034,
+  "reduced_response_size_bytes": 15690,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer le grief exact.",
+            "document": "Preuve complète des propos ou écrits",
+            "priority": "BLOCKING",
+            "purpose": "Établir mots, date, destinataires et diffusion."
+          },
+          {
+            "confirms_or_rules_out": "Écarter un grief ajouté tardivement.",
+            "document": "Convocation et lettre de griefs",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler objet, dates et qualification."
+          },
+          {
+            "confirms_or_rules_out": "Comparer l'égalité de traitement.",
+            "document": "Règlement intérieur et sanctions comparables",
+            "priority": "HIGH",
+            "purpose": "Vérifier règle et proportionnalité."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La stratégie diffère entre reconnaissance et contestation.",
+            "follow_up": "Faire préciser chaque élément admis.",
+            "priority": "BLOCKING",
+            "purpose": "Fixer la position avant la stratégie.",
+            "question": "Que reconnaissez-vous exactement concernant les courriels ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La gravité dépend des termes exacts.",
+            "follow_up": "Comparer avec la preuve complète.",
+            "priority": "BLOCKING",
+            "purpose": "Délimiter le grief sans reformulation.",
+            "question": "Quels mots exacts ont été employés ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Des excuses rapides peuvent soutenir la proportionnalité.",
+            "follow_up": "Préparer une formulation sincère.",
+            "priority": "HIGH",
+            "purpose": "Préparer une atténuation si les faits sont reconnus.",
+            "question": "Avez-vous présenté des excuses ou exprimé des regrets ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Une menace alléguée doit être prouvée séparément.",
+            "follow_up": "Faire acter la réponse au compte rendu.",
+            "priority": "BLOCKING",
+            "purpose": "Empêcher une aggravation abstraite du grief.",
+            "question": "Quel grief exact retenez-vous, mot pour mot ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une preuve partielle peut changer la qualification.",
+            "follow_up": "Demander les pièces non tronquées.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler preuve, destinataires et publicité.",
+            "question": "Quelles preuves complètes établissent le contenu et la diffusion ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "Un traitement incohérent ouvre une contestation ou négociation.",
+            "follow_up": "Demander les précédents anonymisés.",
+            "priority": "HIGH",
+            "purpose": "Examiner proportionnalité et égalité de traitement.",
+            "question": "Quelle sanction envisagez-vous et quels précédents comparez-vous ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": true,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+        "employer_position": "La position précise de l'employeur reste à demander.",
+        "event_category": "INSULTING_EMAILS",
+        "evidence_mentioned": [
+          "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+          "Le salarié reconnaît être l'auteur des courriels.",
+          "Le salarié reconnaît le caractère insultant des courriels rapportés.",
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool."
+        ],
+        "facts_admitted": [
+          "Le salarié reconnaît être l'auteur des courriels.",
+          "Le salarié reconnaît le caractère insultant des courriels rapportés."
+        ],
+        "facts_alleged": [
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+          "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+        ],
+        "facts_certain": [
+          "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "Le collègue destinataire est secrétaire du CSE.",
+          "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels."
+        ],
+        "facts_disputed": [
+          "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir."
+        ],
+        "facts_missing": [
+          "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+          "Contexte et objet de l'échange avec le collègue",
+          "Preuves communiquées, procédure suivie et mesure précise envisagée",
+          "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+          "Nature, durée, lieu et effets d'une éventuelle mutation",
+          "Nature d'un éventuel suivi relatif à l'alcool, auteur de la demande et destinataires des informations",
+          "Existence d'autres mesures déjà prises pour les mêmes faits"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas remplacer les courriels insultants par l'alcool comme grief principal."
+        ],
+        "health_and_safety_context": [
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool."
+        ],
+        "legal_ambiguities": [
+          "Contenu exact, nombre, dates, destinataires et diffusion des courriels",
+          "Contexte et objet de l'échange avec le collègue",
+          "Preuves communiquées, procédure suivie et mesure précise envisagée",
+          "Antécédents, caractère isolé ou répété et comportement professionnel habituel",
+          "Nature, durée, lieu et effets d'une éventuelle mutation"
+        ],
+        "mandate_context": [
+          "Le collègue destinataire est secrétaire du CSE.",
+          "Aucun lien avec l'activité syndicale ou le mandat n'est allégué.",
+          "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+        ],
+        "persons_and_roles": [
+          "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+          "Le collègue destinataire est secrétaire du CSE.",
+          "Lors de l'entretien, le salarié reconnaît avoir envoyé les courriels.",
+          "Le salarié reconnaît être l'auteur des courriels.",
+          "Le salarié reconnaît le caractère insultant des courriels rapportés.",
+          "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+          "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool."
+        ],
+        "primary_event": "Un salarié est convoqué après l'envoi de courriels insultants à un collègue.",
+        "primary_grievance_or_decision": "Envoi de courriels insultants.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Envoi de courriels insultants. Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief.",
+        "secondary_topics": [
+          "Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief."
+        ],
+        "working_time_context": [],
+        "workplace_context": []
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Envoi de courriels insultants.",
+            "Le salarié reconnaît être l'auteur des courriels.",
+            "Le salarié reconnaît le caractère insultant des courriels rapportés.",
+            "Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+            "Le salarié déclare avoir écrit les courriels sous l'emprise de l'alcool.",
+            "Aucune discrimination, entrave ou attaque liée au mandat n'est alléguée dans les faits initiaux."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "ALCOHOL_OR_DRUGS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Qualification provisoire : alcohol or drugs. La preuve, le contexte, les conséquences et la proportionnalité restent à vérifier."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "faits reconnus",
+          "strategy": "Le salarié reconnaît un geste déplacé et regrettable commis sous le coup de l'énervement. Il conteste toutefois toute volonté de menacer, harceler ou viser personnellement un collègue si ces éléments correspondent aux faits. La défense porte sur le caractère isolé, les conséquences réelles, les antécédents et la proportionnalité de la sanction.",
+          "supporting_points": [
+            "reconnaissance mesurée du geste et regrets",
+            "absence de personne nommément visée si elle est confirmée",
+            "absence de menace ou de violence si elle est confirmée",
+            "caractère isolé et absence d'antécédent à vérifier",
+            "conséquences matérielles et visibilité réelles",
+            "contexte documenté sans le présenter comme une autorisation",
+            "réparation, nettoyage ou suppression rapide à vérifier",
+            "proportionnalité de la sanction"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Preuve complète des propos ou écrits",
+        "Convocation et lettre de griefs",
+        "Règlement intérieur et sanctions comparables"
+      ],
+      "findings": [
+        "Fait principal : Envoi de courriels insultants.",
+        "Position du salarié : Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir.",
+        "Position de l'employeur : La position précise de l'employeur reste à demander."
+      ],
+      "questions_to_ask": [
+        "Que reconnaissez-vous exactement concernant les courriels ?",
+        "Quels mots exacts ont été employés ?",
+        "Avez-vous présenté des excuses ou exprimé des regrets ?",
+        "Quel grief exact retenez-vous, mot pour mot ?",
+        "Quelles preuves complètes établissent le contenu et la diffusion ?",
+        "Quelle sanction envisagez-vous et quels précédents comparez-vous ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Envoi de courriels insultants. Le salarié reconnaît être l'auteur des courriels. Le salarié n'accepte pas par sa seule reconnaissance toutes les qualifications ou mesures que l'employeur pourrait retenir. Consommation d'alcool alléguée comme contexte, sans remplacer les courriels comme grief."
+      },
+      "short_answer": "Envoi de courriels insultants. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "Un élément défavorable est reconnu : Le salarié reconnaît être l'auteur des courriels.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}

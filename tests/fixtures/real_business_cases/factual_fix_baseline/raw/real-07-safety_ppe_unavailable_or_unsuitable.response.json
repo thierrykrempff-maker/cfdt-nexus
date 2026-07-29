@@ -1,0 +1,338 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "factual_fix",
+  "captured_at": "2026-07-29T07:11:31.376833+00:00",
+  "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+  "case_input_sha256": "6d383e4094a86cb81e3eae311d56690830ee12b5991067638bc32f4fa9adc983",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "evaluation_data_exposed_to_nexus": false,
+  "fixture_path": "tests/fixtures/real_business_cases/second_set/safety-ppe-unavailable-or-unsuitable.json",
+  "prompt_sha256": "25d5a1c22334a10ed40e9ca785b7f13f01c42abbcabf62954092d39427c9cd55",
+  "public_response_size_bytes": 29986,
+  "reduced_response_size_bytes": 13476,
+  "response": {
+    "answer": {
+      "actionable_preparation": {
+        "documents_to_request": [
+          {
+            "confirms_or_rules_out": "Confirmer le manquement exact.",
+            "document": "Consigne EPI applicable",
+            "priority": "BLOCKING",
+            "purpose": "Identifier l'équipement obligatoire."
+          },
+          {
+            "confirms_or_rules_out": "Confirmer ou écarter la rupture annoncée.",
+            "document": "Registre de fourniture et état du stock EPI",
+            "priority": "BLOCKING",
+            "purpose": "Vérifier disponibilité et adaptation."
+          },
+          {
+            "confirms_or_rules_out": "Évaluer la responsabilité préventive.",
+            "document": "Signalements et DUERP",
+            "priority": "HIGH",
+            "purpose": "Documenter le risque et les alertes."
+          }
+        ],
+        "questions_for_employee": [
+          {
+            "answer_type": "FREE_TEXT",
+            "changes_analysis_if": "La responsabilité change si l'EPI requis manquait.",
+            "follow_up": "Identifier témoins et signalements.",
+            "priority": "BLOCKING",
+            "purpose": "Établir les moyens accessibles.",
+            "question": "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Un signalement connu renforce la défaillance préventive.",
+            "follow_up": "Demander la trace du signalement.",
+            "priority": "HIGH",
+            "purpose": "Vérifier l'alerte préalable.",
+            "question": "Aviez-vous signalé la buée ou l'inadaptation avant l'opération ?",
+            "target": "EMPLOYEE"
+          },
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "La poursuite malgré une alternative peut fragiliser sa position.",
+            "follow_up": "Préciser l'urgence et la consigne reçue.",
+            "priority": "HIGH",
+            "purpose": "Apprécier le choix laissé au salarié.",
+            "question": "Pouviez-vous arrêter ou reporter l'opération ?",
+            "target": "EMPLOYEE"
+          }
+        ],
+        "questions_for_employer": [
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Sans consigne précise, le grief reste incomplet.",
+            "follow_up": "Demander sa version applicable.",
+            "priority": "BLOCKING",
+            "purpose": "Délimiter le grief.",
+            "question": "Quelle consigne EPI précise considérez-vous comme violée ?",
+            "target": "EMPLOYER"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Une protection inadaptée peut engager l'organisation.",
+            "follow_up": "Demander registre de fourniture et stock.",
+            "priority": "BLOCKING",
+            "purpose": "Contrôler l'adaptation des EPI.",
+            "question": "Quelle protection compatible avec les lunettes de vue était disponible ?",
+            "target": "EMPLOYER"
+          }
+        ],
+        "representative_checks": [
+          {
+            "answer_type": "YES_NO",
+            "changes_analysis_if": "Une confusion fragilise la défense.",
+            "follow_up": "Corriger la chronologie factuelle.",
+            "priority": "HIGH",
+            "purpose": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+            "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+            "target": "DOCUMENT"
+          },
+          {
+            "answer_type": "DOCUMENT",
+            "changes_analysis_if": "Un écart peut soutenir contestation ou négociation.",
+            "follow_up": "Comparer faits, preuve et sanction.",
+            "priority": "MEDIUM",
+            "purpose": "Contrôler l'égalité de traitement.",
+            "question": "Existe-t-il un précédent interne réellement comparable ?",
+            "target": "DOCUMENT"
+          }
+        ]
+      },
+      "case_factual_core": {
+        "blocking_ambiguities": [],
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Le salarié a huit ans d'ancienneté."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+        "event_category": "PPE_AVAILABILITY_OR_SUITABILITY",
+        "evidence_mentioned": [],
+        "facts_admitted": [],
+        "facts_alleged": [
+          "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+          "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+        ],
+        "facts_certain": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+          "L'opération concernait la manipulation d'une vanne d'acide sulfurique.",
+          "Le salarié porte des lunettes de vue.",
+          "Le modèle correcteur adapté aurait été en rupture de stock.",
+          "Le salarié a huit ans d'ancienneté."
+        ],
+        "facts_disputed": [],
+        "facts_missing": [
+          "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+          "État des stocks et solutions de remplacement disponibles au moment des faits",
+          "Formation, information et habilitation reçues par le salarié",
+          "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+          "Signalements antérieurs et comportement du salarié avant et après le retrait"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas conclure que l'indisponibilité alléguée supprime automatiquement toute faute."
+        ],
+        "health_and_safety_context": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+          "L'opération concernait la manipulation d'une vanne d'acide sulfurique."
+        ],
+        "legal_ambiguities": [
+          "Texte, affichage et précision de la consigne EPI applicable à l'opération",
+          "État des stocks et solutions de remplacement disponibles au moment des faits",
+          "Formation, information et habilitation reçues par le salarié",
+          "Possibilité d'arrêter ou reporter l'opération et existence d'une urgence réelle",
+          "Signalements antérieurs et comportement du salarié avant et après le retrait"
+        ],
+        "mandate_context": [],
+        "persons_and_roles": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut.",
+          "Le salarié porte des lunettes de vue.",
+          "Le salarié a huit ans d'ancienneté.",
+          "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+          "Le salarié allègue que les sur-lunettes standards généraient de la buée."
+        ],
+        "primary_event": "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+        "primary_grievance_or_decision": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+        "secondary_topics": [],
+        "working_time_context": [],
+        "workplace_context": [
+          "Un opérateur travaille sur un site industriel Seveso seuil haut."
+        ]
+      },
+      "disciplinary_assistance": {
+        "1_facts_understood": {
+          "facts_from_request": [
+            "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+            "L'employeur allègue une absence temporaire de visière et de gants spécifiques.",
+            "Le salarié allègue que les sur-lunettes standards généraient de la buée.",
+            "L'indisponibilité du modèle correcteur adapté est annoncée mais non documentée."
+          ],
+          "guardrail": "Aucun fait absent de la demande n'est présenté comme établi."
+        },
+        "3_provisional_qualification": {
+          "act_category": "UNSPECIFIED_FACTS",
+          "source_selection_rules": [
+            "Retenir une source seulement si son contenu répond aux faits ou à une garantie de procédure effectivement en cause.",
+            "Écarter les licenciements collectifs et tout texte retenu sur les seuls mots sanction, disciplinaire ou entretien."
+          ],
+          "sources": [
+            {
+              "layer": "Accords d'entreprise",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Convention collective",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Code du travail",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Jurisprudence",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            },
+            {
+              "layer": "Historique et débats du CSE",
+              "sources": [],
+              "status": "indisponible ou aucune clause précise pertinente retrouvée"
+            }
+          ],
+          "wording": "Faits disciplinaires non précisément qualifiés. Une stratégie définitive est impossible avant description de l'acte, de son attribution et de ses conséquences."
+        },
+        "4_real_disciplinary_risk": {
+          "aggravating_factors": [
+            "aucun élément aggravant établi à ce stade"
+          ],
+          "case_law_comparison": "Aucune jurisprudence factuellement comparable et vérifiée n'a été retenue.",
+          "mitigating_factors": [
+            "aucun élément atténuant établi à ce stade"
+          ],
+          "possible_misconduct": "Un comportement fautif est possible, sans préjuger de sa gravité.",
+          "provisional_conclusion": "Le dossier est défendable principalement sur la preuve, la qualification exacte et la proportionnalité. Il est trop tôt pour apprécier les chances de contestation sans connaître la position complète du salarié, les preuves de la direction, les antécédents et la sanction envisagée.",
+          "sanction_considered": "à préciser",
+          "severity": "Gravité encore indéterminée au vu des informations disponibles."
+        },
+        "5_main_defense_line": {
+          "employee_position": "position du salarié à établir",
+          "strategy": "Ne choisir ni l'aveu ni la contestation avant d'avoir recueilli la position du salarié. Sécuriser les mots exacts, l'attribution, la personne visée, la diffusion, les conséquences, la répétition et les antécédents.",
+          "supporting_points": [
+            "position exacte du salarié",
+            "preuves d'attribution",
+            "qualification factuelle",
+            "conséquences concrètes",
+            "proportionnalité"
+          ]
+        }
+      },
+      "documents_to_request": [
+        "Consigne EPI applicable",
+        "Registre de fourniture et état du stock EPI",
+        "Signalements et DUERP"
+      ],
+      "findings": [
+        "Fait principal : Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
+        "Position du salarié : La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "Position de l'employeur : L'employeur allègue une absence temporaire de visière et de gants spécifiques."
+      ],
+      "questions_to_ask": [
+        "Quels EPI étaient réellement disponibles au moment de l'opération ?",
+        "Aviez-vous signalé la buée ou l'inadaptation avant l'opération ?",
+        "Pouviez-vous arrêter ou reporter l'opération ?",
+        "Quelle consigne EPI précise considérez-vous comme violée ?",
+        "Quelle protection compatible avec les lunettes de vue était disponible ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "cssct_securite",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "search_query": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée."
+      },
+      "short_answer": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+      "source_layers": [
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "accord_entreprise",
+          "label": "Accords d'entreprise",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucune source de ce niveau n'a ete remontee par Nexus.",
+          "id": "convention_collective",
+          "label": "Convention collective",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Code du travail absent: connecteur Legifrance non configure ou aucune source remontee.",
+          "id": "code_travail",
+          "label": "Code du travail",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Jurisprudence absente du socle documentaire local actuel.",
+          "id": "jurisprudence",
+          "label": "Jurisprudence",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Aucun passage vérifié de procès-verbal du CSE n'a été retrouvé.",
+          "id": "historique_cse",
+          "label": "Historique et débats du CSE",
+          "sources": [],
+          "status": "absent"
+        },
+        {
+          "absent_message": "Decisions prud'homales absentes du socle documentaire local actuel.",
+          "id": "prudhommes",
+          "label": "Prud'hommes",
+          "sources": [],
+          "status": "absent"
+        }
+      ],
+      "sources": [],
+      "syndical_position": {
+        "do_not_say": "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "employee_strength": "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "employee_weakness": "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "point_to_challenge": "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "point_to_negotiate": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      },
+      "warnings": [
+        "Bible Accords indisponible ou index vide: Aucun index local. Lancer update ou index.",
+        "Legifrance: Mini-index Code du travail V1: aucun article cible selectionne pour cette question.",
+        "Legifrance: aucun article du Code du travail exploitable remonte par l'API.",
+        "Verifier l'applicabilite, la date et le champ des textes cites.",
+        "Verifier les avenants, usages ou textes plus recents eventuels.",
+        "Articuler les accords locaux avec la convention collective, la loi et la jurisprudence utile."
+      ]
+    },
+    "final_assistant_mode": "DISABLED",
+    "ok": true
+  },
+  "response_projection": "factual_fix_visible_v1"
+}
