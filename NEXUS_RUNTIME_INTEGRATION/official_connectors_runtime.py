@@ -10,6 +10,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 import hashlib
+import re
 import time
 from typing import Any, Callable
 import unicodedata
@@ -103,10 +104,11 @@ _SOURCE_DETAILS = {
 }
 _CONNECTOR_MARKERS = {
     "cnil": (
-        "rgpd", "donnees personnelles", "details personnels", "confidentialite",
+        "rgpd", "donnees personnelles",
         "camera", "videosurveillance", "geolocalisation", "messagerie",
         "boite professionnelle", "appartenance syndicale", "biometrie",
-        "classe automatiquement",
+        "classe automatiquement", "controle d acces", "controle du temps",
+        "donnees du badge",
     ),
     "inrs": (
         "incident dangereux", "risque grave", "presque-accident",
@@ -115,6 +117,7 @@ _CONNECTOR_MARKERS = {
         "surcharge", "entreprise exterieure", "coactivite", "exposition",
         "expose", "symptome", "mesures d ambiance", "travail de nuit",
         "travail poste", "5x8", "penibilite", "inaptitude",
+        "acide sulfurique", "catalyseur", "cristallise",
     ),
     "dreets_grand_est": (
         "incident dangereux", "protocole electoral", "substance",
@@ -125,6 +128,12 @@ _CONNECTOR_MARKERS = {
         "carsat", "assurance retraite", "carriere longue", "depart anticipe",
         "c2p", "compte professionnel de prevention", "risque professionnel",
         "accident du travail", "maladie professionnelle", "releve de carriere",
+        "epi", "equipement de protection", "visiere", "sur-lunettes",
+        "acide sulfurique", "catalyseur", "cristallise",
+        "risque chimique", "souffrance au travail",
+        "risques psychosociaux", "rps", "charge de travail", "surcharge",
+        "fatigue", "travail poste", "postes de nuit",
+        "alcool", "ethylotest", "poste a risque",
     ),
     "france_chimie": (
         "france chimie", "branche chimie", "convention chimie",
@@ -134,6 +143,7 @@ _CONNECTOR_MARKERS = {
     "anact": (
         "anact", "aract", "qvct", "qualite de vie et conditions de travail",
         "transformation du travail", "risques psychosociaux", "charge de travail",
+        "souffrance au travail", "surcharge", "fatigue", "organisation du travail",
     ),
     "alsace_moselle_local_law": (
         "droit local", "alsace moselle", "alsace-moselle",
@@ -143,7 +153,7 @@ _CONNECTOR_MARKERS = {
     "defenseur_droits": (
         "defenseur des droits", "discrimination au travail",
         "harcelement discriminatoire", "harcelement au travail",
-        "egalite de traitement", "egalite professionnelle",
+        "egalite professionnelle",
         "liberte syndicale", "discrimination syndicale",
         "handicap au travail", "amenagement raisonnable", "lanceur d alerte",
     ),
@@ -160,7 +170,6 @@ _CONNECTOR_MARKERS = {
     ),
     "assurance_maladie": (
         "assurance maladie", "cpam", "ijss", "indemnite journaliere",
-        "arret maladie", "accident du travail", "maladie professionnelle",
         "invalidite", "conge maternite", "temps partiel therapeutique",
         "mi temps therapeutique",
     ),
@@ -209,14 +218,46 @@ class RuntimeOfficialConnectorsDiagnostics:
 
 
 @dataclass(frozen=True, slots=True)
+class RuntimeOfficialSourceQualification:
+    connector_id: str
+    organisme: str
+    titre: str
+    nature_document: str
+    statut_disponibilite: str
+    portee_indicative: str
+    lien_avec_faits: str
+    question_dossier: str
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "connector_id": self.connector_id,
+            "organisme": self.organisme,
+            "titre": self.titre,
+            "nature_document": self.nature_document,
+            "statut_disponibilite": self.statut_disponibilite,
+            "portee_indicative": self.portee_indicative,
+            "lien_avec_faits": self.lien_avec_faits,
+            "question_dossier": self.question_dossier,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class RuntimeOfficialConnectorsResult:
     inputs: tuple[ConnectorAdapterInput, ...] = ()
     diagnostics: RuntimeOfficialConnectorsDiagnostics = RuntimeOfficialConnectorsDiagnostics()
+    questions: tuple[str, ...] = ()
+    source_qualifications: tuple[RuntimeOfficialSourceQualification, ...] = ()
+    unavailable_connectors: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
             "diagnostics": self.diagnostics.to_dict(),
             "snapshot_count": sum(len(item.response.documents) for item in self.inputs),
+            "questions": list(self.questions),
+            "source_qualifications": [
+                qualification.to_dict() for qualification in self.source_qualifications
+            ],
+            "unavailable_connectors": list(self.unavailable_connectors),
         }
 
 
@@ -256,6 +297,19 @@ class RuntimeOfficialConnectorsIntegration:
                 for connector_id in sorted(selected)
             )
             connectors_used = tuple(item.descriptor.connector_id for item in inputs)
+            available = tuple(
+                item.descriptor.connector_id for item in inputs if item.response.documents
+            )
+            unavailable = tuple(
+                item.descriptor.connector_id for item in inputs if not item.response.documents
+            )
+            questions = self._guidance_questions(query=str(answer.get("query") or ""), available=available)
+            qualifications = self._source_qualifications(
+                inputs=inputs,
+                available=available,
+                query=str(answer.get("query") or ""),
+                questions=questions,
+            )
             if not any(item.response.documents for item in inputs):
                 return RuntimeOfficialConnectorsResult(
                     inputs,
@@ -265,6 +319,9 @@ class RuntimeOfficialConnectorsIntegration:
                         connectors_used,
                         "OFFICIAL_CONNECTORS_NO_RESULT",
                     ),
+                    (),
+                    (),
+                    unavailable,
                 )
             return RuntimeOfficialConnectorsResult(
                 inputs,
@@ -273,6 +330,9 @@ class RuntimeOfficialConnectorsIntegration:
                     self._duration(started),
                     connectors_used,
                 ),
+                questions,
+                qualifications,
+                unavailable,
             )
         except Exception:
             return self._fallback("OFFICIAL_CONNECTOR_RUNTIME_FAILED", started)
@@ -290,12 +350,10 @@ class RuntimeOfficialConnectorsIntegration:
         selected = {
             connector_id
             for connector_id, markers in _CONNECTOR_MARKERS.items()
-            if any(marker in query for marker in markers)
+            if any(cls._contains_marker(query, marker) for marker in markers)
         }
         if "rgpd_cnil" in domains:
             selected.add("cnil")
-        if "cssct_securite" in domains:
-            selected.add("inrs")
         if "retraite_penibilite" in domains:
             selected.update({"agirc_arrco", "carsat"})
         if "protection_sociale" in domains or "social_protection" in domains:
@@ -303,6 +361,159 @@ class RuntimeOfficialConnectorsIntegration:
         if "droit_local" in domains or "alsace_moselle_local_law" in domains:
             selected.add("alsace_moselle_local_law")
         return selected
+
+    @staticmethod
+    def _contains_marker(query: str, marker: str) -> bool:
+        """Match complete normalized terms, never substrings such as aract/caractere."""
+        return re.search(rf"(?<!\w){re.escape(marker)}(?!\w)", query) is not None
+
+    @classmethod
+    def _guidance_questions(
+        cls, *, query: str, available: tuple[str, ...]
+    ) -> tuple[str, ...]:
+        text = cls._normalize(query)
+        questions: list[str] = []
+        if "cnil" in available and any(
+            cls._contains_marker(text, marker)
+            for marker in ("badgeage", "tourniquet", "controle d acces", "controle du temps")
+        ):
+            questions.extend(
+                (
+                    "Quelle finalité précise a été déclarée pour le dispositif de badgeage ou de contrôle d'accès ?",
+                    "L'utilisation envisagée est-elle compatible avec cette finalité initiale ?",
+                    "Quand et comment les salariés ont-ils été informés de cet usage ?",
+                    "Le CSE a-t-il été informé et consulté avant la mise en œuvre du contrôle ?",
+                    "Quelles sont la durée de conservation, les catégories de destinataires et les habilitations d'accès ?",
+                    "Le salarié peut-il exercer son droit d'accès aux données utilisées à son égard ?",
+                    "Le moyen de contrôle est-il nécessaire et proportionné au but poursuivi ?",
+                )
+            )
+        if "carsat" in available:
+            if any(
+                cls._contains_marker(text, marker)
+                for marker in ("epi", "equipement de protection", "visiere", "sur-lunettes", "gants")
+            ):
+                questions.extend(
+                    (
+                        "Les équipements de protection exigés étaient-ils disponibles et adaptés à l'opération et au salarié ?",
+                        "Quelles mesures de prévention collective et d'organisation précédaient le recours aux EPI ?",
+                        "La formation, l'information et la consigne applicables sont-elles documentées ?",
+                        "Une solution de remplacement, un arrêt ou un report de l'opération étaient-ils possibles ?",
+                        "Comment distinguer la responsabilité de prévention de l'employeur de la conduite concrète du salarié ?",
+                    )
+                )
+            if any(
+                cls._contains_marker(text, marker)
+                for marker in (
+                    "souffrance au travail", "risques psychosociaux", "rps",
+                    "charge de travail", "surcharge", "fatigue", "postes de nuit",
+                )
+            ):
+                questions.extend(
+                    (
+                        "Quels éléments objectifs décrivent la charge, les effectifs, les horaires et la fatigue au moment des faits ?",
+                        "Quels signalements, évaluations des risques et mesures de prévention existaient avant l'événement ?",
+                        "L'organisation du travail ou la succession des postes a-t-elle contribué au risque allégué ?",
+                    )
+                )
+        return tuple(dict.fromkeys(questions))
+
+    @staticmethod
+    def _source_nature(connector_id: str) -> str:
+        return {
+            "cnil": "ressource_cnil_nature_a_qualifier_selon_document",
+            "carsat": "ressource_institutionnelle_de_prevention",
+            "inrs": "ressource_institutionnelle_de_prevention",
+            "anact": "ressource_de_methode_conditions_de_travail",
+            "dreets_grand_est": "ressource_administrative_officielle",
+            "france_chimie": "ressource_officielle_de_branche",
+            "alsace_moselle_local_law": "texte_officiel_portee_selon_document",
+        }.get(connector_id, "ressource_officielle_portee_selon_document")
+
+    @classmethod
+    def _source_qualifications(
+        cls,
+        *,
+        inputs: tuple[ConnectorAdapterInput, ...],
+        available: tuple[str, ...],
+        query: str,
+        questions: tuple[str, ...],
+    ) -> tuple[RuntimeOfficialSourceQualification, ...]:
+        by_connector = {
+            item.descriptor.connector_id: item for item in inputs
+            if item.response.documents
+        }
+        facts = cls._factual_link(query)
+        result: list[RuntimeOfficialSourceQualification] = []
+        for connector_id in available:
+            document = by_connector[connector_id].response.documents[0]
+            result.append(
+                RuntimeOfficialSourceQualification(
+                    connector_id=connector_id,
+                    organisme=cls._source_organism(connector_id),
+                    titre=document.title or "Ressource officielle sans titre",
+                    nature_document=document.document_type
+                    or cls._source_nature(connector_id),
+                    statut_disponibilite="DISPONIBLE",
+                    portee_indicative=cls._source_scope(connector_id),
+                    lien_avec_faits=facts,
+                    question_dossier=questions[0] if questions else (
+                        "Quelle information de cette ressource répond précisément "
+                        "aux faits du dossier ?"
+                    ),
+                )
+            )
+        return tuple(result)
+
+    @staticmethod
+    def _source_organism(connector_id: str) -> str:
+        return {
+            "cnil": "CNIL",
+            "carsat": "CARSAT",
+            "inrs": "INRS",
+            "anact": "ANACT",
+            "dreets_grand_est": "DREETS Grand Est",
+            "france_chimie": "France Chimie",
+            "alsace_moselle_local_law": "État français",
+        }.get(connector_id, connector_id.replace("_", " ").upper())
+
+    @staticmethod
+    def _source_scope(connector_id: str) -> str:
+        return {
+            "cnil": (
+                "La portée dépend de la nature réelle du document : recommandation, "
+                "référentiel, ligne directrice, décision ou sanction."
+            ),
+            "carsat": (
+                "Ressource institutionnelle de prévention ; elle ne constitue pas "
+                "automatiquement une obligation légale."
+            ),
+            "inrs": (
+                "Ressource institutionnelle de prévention ; elle ne constitue pas "
+                "automatiquement une obligation légale."
+            ),
+            "anact": (
+                "Ressource de méthode sur l'organisation et les conditions de travail, "
+                "sans portée normative automatique."
+            ),
+        }.get(
+            connector_id,
+            "La portée doit être déterminée selon la nature et le statut du document.",
+        )
+
+    @classmethod
+    def _factual_link(cls, query: str) -> str:
+        text = cls._normalize(query)
+        if any(cls._contains_marker(text, item) for item in ("badgeage", "tourniquet")):
+            return "Utilisation d'un dispositif de badgeage ou de contrôle d'accès."
+        if any(cls._contains_marker(text, item) for item in ("epi", "sur-lunettes", "gants")):
+            return "Disponibilité et adaptation des équipements de protection."
+        if any(
+            cls._contains_marker(text, item)
+            for item in ("fatigue", "charge de travail", "rps", "souffrance au travail")
+        ):
+            return "Organisation du travail, charge, fatigue ou risques psychosociaux."
+        return "Lien factuel établi par les critères de sélection du connecteur."
 
     @staticmethod
     def _group_sources(answer: Mapping[str, Any]) -> dict[str, tuple[Mapping[str, Any], ...]]:
@@ -438,6 +649,7 @@ class RuntimeOfficialConnectorsIntegration:
                 ("category", str(getattr(category, "value", category))),
                 ("family", str(getattr(family, "value", family))),
                 ("metadata_only", True),
+                ("source_nature", RuntimeOfficialConnectorsIntegration._source_nature(connector_id)),
             ),
         )
 
