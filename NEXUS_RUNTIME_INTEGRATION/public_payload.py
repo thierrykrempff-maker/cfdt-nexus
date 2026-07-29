@@ -12,6 +12,7 @@ import re
 from typing import Any
 
 from .final_response import build_final_response
+from .version import get_nexus_version
 
 _DROP_KEYS = frozenset(
     {
@@ -132,6 +133,7 @@ def sanitize_public_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(payload, Mapping):
         raise TypeError("public Runtime payload must be a mapping")
     public = _sanitize_mapping(payload, top_level=True)
+    public["nexus_version"] = get_nexus_version()
     answer = public.get("answer")
     if isinstance(answer, Mapping) and isinstance(answer.get("case_factual_core"), Mapping):
         return _compact_factual_payload(public)
@@ -233,6 +235,7 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
     }
     report = {
         "version": "3.0",
+        "nexus_version": get_nexus_version(),
         "title": "Synthèse opérationnelle Nexus",
         "generated_from": ["Interface Nexus", "Routeur Nexus", "Juriste Travail"],
         "sections": sections,
@@ -245,6 +248,7 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
     runtime_mode = runtime.get("mode") if isinstance(runtime, Mapping) else "DISABLED"
     return {
         "ok": public.get("ok", True),
+        "nexus_version": get_nexus_version(),
         "answer": compact_answer,
         "public_summary": summary,
         "detailed_analysis": details,

@@ -1,0 +1,709 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "public_response_size_bytes": 39595,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "nexus_version": "1.0.0",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+            "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+            "La direction considère que les pauses constituent un manquement disciplinaire."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — La situation comporte un enjeu de santé ou de sécurité à traiter rapidement."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+            "Point fort : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+            "Point faible : Un élément défavorable est reconnu : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+            "Point faible : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+            "Point faible : Dates, nombre, durée et méthode de calcul des pauses reprochées"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Comment avez-vous calculé chaque pause reprochée ? (Contrôler la méthode et l'intégrité de la preuve.)",
+            "DIRECTION — Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ? (Comparer la finalité sécurité à l'usage de contrôle.)",
+            "SALARIÉ — Quelles pauses reconnaissez-vous exactement ? (Séparer les faits admis du calcul patronal.)",
+            "DIRECTION — Le CSE a-t-il été informé ou consulté sur cet usage ? (Vérifier la garantie collective du dispositif de contrôle.)",
+            "REPRÉSENTANT — La CNIL ou une source officielle encadre-t-elle cet usage précis ? (Vérifier la licéité sans l'inventer.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Aviez-vous été informé que le tourniquet pouvait contrôler les pauses ? (Vérifier la transparence du dispositif.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Notice RGPD et registre du traitement — Direction ou salarié selon détention — Identifier finalité, accès et conservation. [BLOCKING]",
+            "Relevés complets du tourniquet — Direction ou salarié selon détention — Contrôler dates, passages et méthode. [BLOCKING]",
+            "Information ou consultation du CSE — Direction ou salarié selon détention — Contrôler la mise en place du contrôle. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "comparison",
+          "items": [
+            "Règle : INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf — à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels… Salarié : Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses. Direction : La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou… Manquant : Dates, nombre, durée et méthode de calcul des pauses reprochées Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+            "Règle : INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf — ...an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3 RCTP 3 3 24h Temps annuel de travail effectif 1520 h / an… Salarié : Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses. Direction : La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs… Manquant : Dates, nombre, durée et méthode de calcul des pauses reprochées Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+            "Règle : Légifrance — Code du travail — L1332-2 — Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate… Salarié : Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. Direction : La direction peut opposer que l'application de « Code du travail » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction. Manquant : Dates, nombre, durée et méthode de calcul des pauses reprochées Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier L1332-2 dans « Code du travail »."
+          ],
+          "title": "Règles comparées aux faits"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Comment avez-vous calculé chaque pause reprochée ?",
+            "Avant : Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+            "Avant : Quelles pauses reconnaissez-vous exactement ?",
+            "Avant : Obtenir : Notice RGPD et registre du traitement",
+            "Avant : Obtenir : Relevés complets du tourniquet"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "after",
+          "items": [
+            "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+            "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+            "Obtenir ou vérifier L1332-2 dans « Code du travail »."
+          ],
+          "title": "Actions à mener ensuite"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf — COMPANY_AGREEMENT — Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de… — POTENTIALLY_APPLICABLE",
+            "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf — COMPANY_AGREEMENT — Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée… — POTENTIALLY_APPLICABLE",
+            "Légifrance — Code du travail — STATUTE — L1332-2 — Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de… — APPLICABLE"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés",
+            "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "BREAKS_AND_BADGE_CONTROL",
+        "primary_grievance_or_decision": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Notice RGPD et registre du traitement",
+        "Relevés complets du tourniquet",
+        "Information ou consultation du CSE"
+      ],
+      "findings": [
+        "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+        "La direction considère que les pauses constituent un manquement disciplinaire."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Comment avez-vous calculé chaque pause reprochée ?",
+        "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+        "Quelles pauses reconnaissez-vous exactement ?",
+        "Le CSE a-t-il été informé ou consulté sur cet usage ?",
+        "La CNIL ou une source officielle encadre-t-elle cet usage précis ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous été informé que le tourniquet pouvait contrôler les pauses ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "temps_travail",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "rule_to_facts_analysis": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "Légifrance — Code du travail — L1332-2"
+        }
+      ],
+      "short_answer": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "provider": "Légifrance",
+          "reference": "L1332-2",
+          "title": "Code du travail"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Notice RGPD et registre du traitement",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier finalité, accès et conservation."
+        },
+        {
+          "document": "Relevés complets du tourniquet",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler dates, passages et méthode."
+        },
+        {
+          "document": "Information ou consultation du CSE",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Contrôler la mise en place du contrôle."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+        "employer_position": "La direction considère que les pauses constituent un manquement disciplinaire.",
+        "event_category": "BREAKS_AND_BADGE_CONTROL",
+        "evidence_mentioned": [
+          "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+          "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+          "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet.",
+          "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "facts_admitted": [
+          "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+          "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet."
+        ],
+        "facts_alleged": [
+          "La direction considère que les pauses constituent un manquement disciplinaire.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "facts_certain": [
+          "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+          "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+          "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+          "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses."
+        ],
+        "facts_disputed": [
+          "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée."
+        ],
+        "facts_missing": [
+          "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+          "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+          "Finalité déclarée du tourniquet et information remise aux salariés",
+          "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+          "Chronologie des convocations, courriers, sanctions et messages de la direction",
+          "Existence d'un arrêt maladie et contenu exact de toute communication pendant celui-ci",
+          "Objectif du salarié et conditions d'une éventuelle rupture conventionnelle"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas confondre finalité de sécurité du badgeage et licéité de son usage disciplinaire."
+        ],
+        "health_and_safety_context": [
+          "Le tourniquet sert normalement à identifier les personnes présentes, notamment pour les évacuations sur un site Seveso.",
+          "La possibilité d'utiliser le badgeage de sécurité à des fins disciplinaires reste contestable et doit être vérifiée."
+        ],
+        "legal_ambiguities": [
+          "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+          "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+          "Finalité déclarée du tourniquet et information remise aux salariés",
+          "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données",
+          "Chronologie des convocations, courriers, sanctions et messages de la direction"
+        ],
+        "persons_and_roles": [
+          "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+          "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+          "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+          "Le salarié ne conteste pas par principe l'existence des passages enregistrés au tourniquet.",
+          "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "La direction considère que les pauses constituent un manquement disciplinaire.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ],
+        "primary_event": "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+        "primary_grievance_or_decision": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction. Finalité de sécurité Seveso du badgeage, distincte du grief relatif aux pauses.",
+        "secondary_topics": [
+          "Finalité de sécurité Seveso du badgeage, distincte du grief relatif aux pauses."
+        ],
+        "working_time_context": [
+          "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+          "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+          "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "La direction considère que les pauses constituent un manquement disciplinaire.",
+          "Les données du tourniquet permettraient, selon la direction, de mesurer ou reconstituer les pauses."
+        ]
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Comment avez-vous calculé chaque pause reprochée ?",
+          "reason": "Contrôler la méthode et l'intégrité de la preuve.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+          "reason": "Comparer la finalité sécurité à l'usage de contrôle.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelles pauses reconnaissez-vous exactement ?",
+          "reason": "Séparer les faits admis du calcul patronal.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Le CSE a-t-il été informé ou consulté sur cet usage ?",
+          "reason": "Vérifier la garantie collective du dispositif de contrôle.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "La CNIL ou une source officielle encadre-t-elle cet usage précis ?",
+          "reason": "Vérifier la licéité sans l'inventer.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous été informé que le tourniquet pouvait contrôler les pauses ?",
+          "reason": "Vérifier la transparence du dispositif.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou…",
+          "issue": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "matching_facts": [
+            "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction."
+          ],
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés"
+          ],
+          "next_action": "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+          "rule": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs…",
+          "issue": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "matching_facts": [
+            "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses."
+          ],
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés"
+          ],
+          "next_action": "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+          "rule": "...an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3 RCTP 3 3 24h Temps annuel de travail effectif 1520 h / an…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "employer_argument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "issue": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "matching_facts": [
+            "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+            "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+            "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site."
+          ],
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés"
+          ],
+          "next_action": "Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+          "rule": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate…",
+          "source": "Légifrance — Code du travail — L1332-2"
+        }
+      ],
+      "source_requirements": [
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "CNIL : ressource réelle sur finalité, information, conservation et usage secondaire du dispositif de contrôle."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "nexus_version": "1.0.0",
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "temps_travail",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Comment avez-vous calculé chaque pause reprochée ?",
+        "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+        "Quelles pauses reconnaissez-vous exactement ?",
+        "Le CSE a-t-il été informé ou consulté sur cet usage ?",
+        "La CNIL ou une source officielle encadre-t-elle cet usage précis ?"
+      ],
+      "reponse_synthetique_nexus": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Notice RGPD et registre du traitement",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier finalité, accès et conservation."
+        },
+        {
+          "document": "Relevés complets du tourniquet",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Contrôler dates, passages et méthode."
+        },
+        {
+          "document": "Information ou consultation du CSE",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Contrôler la mise en place du contrôle."
+        }
+      ],
+      "limits": [
+        "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+        "Finalité déclarée du tourniquet et information remise aux salariés",
+        "Consultation du CSE, registre des traitements, durée de conservation et personnes ayant accès aux données"
+      ],
+      "next_actions": [
+        "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+        "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+        "Obtenir ou vérifier L1332-2 dans « Code du travail »."
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Comment avez-vous calculé chaque pause reprochée ?",
+          "reason": "Contrôler la méthode et l'intégrité de la preuve.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+          "reason": "Comparer la finalité sécurité à l'usage de contrôle.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelles pauses reconnaissez-vous exactement ?",
+          "reason": "Séparer les faits admis du calcul patronal.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Le CSE a-t-il été informé ou consulté sur cet usage ?",
+          "reason": "Vérifier la garantie collective du dispositif de contrôle.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "La CNIL ou une source officielle encadre-t-elle cet usage précis ?",
+          "reason": "Vérifier la licéité sans l'inventer.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous été informé que le tourniquet pouvait contrôler les pauses ?",
+          "reason": "Vérifier la transparence du dispositif.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou…",
+          "issue": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "matching_facts": [
+            "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+            "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction."
+          ],
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés"
+          ],
+          "next_action": "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+          "rule": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "MEDIUM",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs…",
+          "issue": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "matching_facts": [
+            "Le salarié reconnaît la fréquence ou la durée excessive de certaines pauses."
+          ],
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés"
+          ],
+          "next_action": "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+          "rule": "...an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3 RCTP 3 3 24h Temps annuel de travail effectif 1520 h / an…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "employer_argument": "La direction peut opposer que l'application de « Code du travail » reste limitée par : La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+          "issue": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+          "matching_facts": [
+            "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
+            "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+            "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site."
+          ],
+          "missing_facts": [
+            "Dates, nombre, durée et méthode de calcul des pauses reprochées",
+            "Règles écrites, tolérances et pratiques antérieures relatives aux pauses",
+            "Finalité déclarée du tourniquet et information remise aux salariés"
+          ],
+          "next_action": "Obtenir ou vérifier L1332-2 dans « Code du travail ».",
+          "rule": "Lorsque l'employeur envisage de prendre une sanction, il convoque le salarié en lui précisant l'objet de la convocation, sauf si la sanction envisagée est un avertissement ou une sanction de même nature n'ayant pas d'incidence, immédiate…",
+          "source": "Légifrance — Code du travail — L1332-2"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Un salarié est convoqué pour des pauses cigarettes présentées comme trop fréquentes et trop longues.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues. La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+        "La direction considère que les pauses constituent un manquement disciplinaire."
+      ],
+      "sources": [
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée excessive de…",
+          "nature": "COMPANY_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Le salarié reconnaît la fréquence ou la durée…",
+          "nature": "COMPANY_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « Code du travail » au fait suivant : Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de…",
+          "nature": "STATUTE",
+          "provider": "Légifrance",
+          "reference": "L1332-2",
+          "scope": "APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "Code du travail"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Comment avez-vous calculé chaque pause reprochée ?",
+          "Quelle finalité déclarée autorise l'usage disciplinaire du tourniquet ?",
+          "Quelles pauses reconnaissez-vous exactement ?",
+          "Obtenir : Notice RGPD et registre du traitement",
+          "Obtenir : Relevés complets du tourniquet"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "La direction utilise ou envisage d'utiliser les données du badgeage au tourniquet d'entrée du site.",
+        "Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues."
+      ],
+      "syndical_position": [
+        "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "La situation comporte un enjeu de santé ou de sécurité à traiter rapidement.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "Un élément défavorable est reconnu : Le salarié reconnaît que certaines pauses ont pu être trop fréquentes ou trop longues.",
+        "La reconnaissance de certaines pauses ne vaut pas acceptation de tous les calculs, griefs ou qualifications de la direction.",
+        "Dates, nombre, durée et méthode de calcul des pauses reprochées"
+      ]
+    }
+  }
+}

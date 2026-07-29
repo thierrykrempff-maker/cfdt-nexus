@@ -1,0 +1,537 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+  "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+  "public_response_size_bytes": 20802,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "nexus_version": "1.0.0",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Un catalyseur a été incorporé à une concentration erronée.",
+            "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+            "L'employeur attribue l'erreur de concentration à l'opération réalisée.",
+            "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — Des faits ou pièces importants restent à obtenir avant de stabiliser la position."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : Le produit a cristallisé et une perte d'exploitation est annoncée.",
+            "Point faible : La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+            "Point faible : Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+            "Point faible : Journaux de publication, de consultation et de modification de la recette"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — À quelle date et heure la nouvelle recette a-t-elle été publiée ? (Reconstituer la chronologie informatique.)",
+            "SALARIÉ — Quelle recette était affichée sur votre terminal au moment du dosage ? (Identifier la consigne réellement accessible.)",
+            "DIRECTION — Quel contrôle croisé devait empêcher une erreur de dosage ? (Évaluer l'organisation et les responsabilités.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Aviez-vous reçu une autre consigne écrite ou orale ? (Vérifier la connaissance du nouveau dosage.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Journaux de publication et de consultation — Direction ou salarié selon détention — Dater la diffusion et l'accès. [BLOCKING]",
+            "Version horodatée de la recette — Direction ou salarié selon détention — Établir la consigne accessible. [BLOCKING]",
+            "Fiche de lot et contrôle croisé — Direction ou salarié selon détention — Reconstituer l'opération. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+            "Avant : Quelle recette était affichée sur votre terminal au moment du dosage ?",
+            "Avant : Obtenir : Journaux de publication et de consultation",
+            "Avant : Obtenir : Version horodatée de la recette",
+            "Avant : Obtenir : Fiche de lot et contrôle croisé"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Accords INEOS — Règlement intérieur.pdf — règlement intérieur — À vérifier selon les faits",
+            "Accords INEOS — 2018.11.19_Accord sur la mise en place du CSE.pdf — règlement intérieur — À vérifier selon les faits",
+            "Accords INEOS — 2022.02.14_Accord télétravail.pdf — avenant — À vérifier selon les faits",
+            "Accords INEOS — ccnic_septembre2013.pdf — convention_collective — À vérifier selon les faits",
+            "JUDILIBRE — Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453 — jurisprudence — À vérifier selon les faits"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+            "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+            "Erreurs antérieures, chiffrage et lien causal de la perte annoncée"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE",
+        "primary_grievance_or_decision": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Journaux de publication et de consultation",
+        "Version horodatée de la recette",
+        "Fiche de lot et contrôle croisé"
+      ],
+      "findings": [
+        "Un catalyseur a été incorporé à une concentration erronée.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "L'employeur attribue l'erreur de concentration à l'opération réalisée.",
+        "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+        "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+        "Quel contrôle croisé devait empêcher une erreur de dosage ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous reçu une autre consigne écrite ou orale ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "disciplinaire"
+        ],
+        "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+      },
+      "rule_to_facts_analysis": [],
+      "short_answer": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "ccnic_septembre2013.pdf"
+        },
+        {
+          "provider": "JUDILIBRE",
+          "reference": null,
+          "title": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Journaux de publication et de consultation",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Dater la diffusion et l'accès."
+        },
+        {
+          "document": "Version horodatée de la recette",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir la consigne accessible."
+        },
+        {
+          "document": "Fiche de lot et contrôle croisé",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Reconstituer l'opération."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+        ],
+        "employee_position": "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "employer_position": "L'employeur attribue l'erreur de concentration à l'opération réalisée.",
+        "event_category": "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE",
+        "evidence_mentioned": [
+          "Un historique informatique pourrait dater la diffusion de la nouvelle recette.",
+          "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour."
+        ],
+        "facts_alleged": [
+          "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour.",
+          "L'employeur attribue l'erreur de concentration à l'opération réalisée."
+        ],
+        "facts_certain": [
+          "Un catalyseur a été incorporé à une concentration erronée.",
+          "Le produit a cristallisé et une perte d'exploitation est annoncée.",
+          "Un changement récent de fournisseur avait entraîné une modification du dosage.",
+          "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+        ],
+        "facts_missing": [
+          "Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+          "Journaux de publication, de consultation et de modification de la recette",
+          "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+          "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+          "Erreurs antérieures, chiffrage et lien causal de la perte annoncée"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas transformer une procédure potentiellement obsolète en défaut de compétence."
+        ],
+        "legal_ambiguities": [
+          "Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+          "Journaux de publication, de consultation et de modification de la recette",
+          "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+          "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+          "Erreurs antérieures, chiffrage et lien causal de la perte annoncée"
+        ],
+        "persons_and_roles": [
+          "La procédure accessible sur le terminal du salarié aurait pu ne pas être mise à jour.",
+          "L'employeur attribue l'erreur de concentration à l'opération réalisée."
+        ],
+        "primary_event": "Un catalyseur a été incorporé à une concentration erronée.",
+        "primary_grievance_or_decision": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+        "requested_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète."
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+          "reason": "Reconstituer la chronologie informatique.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+          "reason": "Identifier la consigne réellement accessible.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel contrôle croisé devait empêcher une erreur de dosage ?",
+          "reason": "Évaluer l'organisation et les responsabilités.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous reçu une autre consigne écrite ou orale ?",
+          "reason": "Vérifier la connaissance du nouveau dosage.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "secondary_sources": [
+        {
+          "nature": "jurisprudence",
+          "provider": "JUDILIBRE",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "Cour de cassation, Chambre sociale, 2009-03-18, 07-44.185"
+        }
+      ],
+      "source_requirements": [
+        "Accord INEOS ou règle interne exacte, version et clause applicables.",
+        "CCNIC IDCC 44 : article, avenant ou chapitre pertinent.",
+        "Code du travail : article précis en vigueur.",
+        "Procédure ou instruction chimique réellement accessible à la date des faits, avec son numéro et sa version."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "nexus_version": "1.0.0",
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "disciplinaire"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+        "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+        "Quel contrôle croisé devait empêcher une erreur de dosage ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Aviez-vous reçu une autre consigne écrite ou orale ?"
+      ],
+      "reponse_synthetique_nexus": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Journaux de publication et de consultation",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Dater la diffusion et l'accès."
+        },
+        {
+          "document": "Version horodatée de la recette",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir la consigne accessible."
+        },
+        {
+          "document": "Fiche de lot et contrôle croisé",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Reconstituer l'opération."
+        }
+      ],
+      "limits": [
+        "Formation, information écrite ou consigne orale sur le changement de fournisseur",
+        "Contrôle croisé prévu, autonomie du salarié et validation du dosage",
+        "Erreurs antérieures, chiffrage et lien causal de la perte annoncée"
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+          "reason": "Reconstituer la chronologie informatique.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+          "reason": "Identifier la consigne réellement accessible.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel contrôle croisé devait empêcher une erreur de dosage ?",
+          "reason": "Évaluer l'organisation et les responsabilités.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Aviez-vous reçu une autre consigne écrite ou orale ?",
+          "reason": "Vérifier la connaissance du nouveau dosage.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Un catalyseur a été incorporé à une concentration erronée.",
+        "La position du salarié doit être confirmée ; des éléments sont seulement allégués.",
+        "L'employeur attribue l'erreur de concentration à l'opération réalisée.",
+        "Un historique informatique pourrait dater la diffusion de la nouvelle recette."
+      ],
+      "sources": [
+        {
+          "nature": "règlement intérieur",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "Règlement intérieur.pdf"
+        },
+        {
+          "nature": "règlement intérieur",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2018.11.19_Accord sur la mise en place du CSE.pdf"
+        },
+        {
+          "nature": "avenant",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2022.02.14_Accord télétravail.pdf"
+        },
+        {
+          "nature": "convention_collective",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "ccnic_septembre2013.pdf"
+        },
+        {
+          "nature": "jurisprudence",
+          "provider": "JUDILIBRE",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "Cour de cassation, Chambre sociale, 2009-03-11, 08-40.453"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "À quelle date et heure la nouvelle recette a-t-elle été publiée ?",
+          "Quelle recette était affichée sur votre terminal au moment du dosage ?",
+          "Obtenir : Journaux de publication et de consultation",
+          "Obtenir : Version horodatée de la recette",
+          "Obtenir : Fiche de lot et contrôle croisé"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "Le produit a cristallisé et une perte d'exploitation est annoncée."
+      ],
+      "syndical_position": [
+        "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète. La position reste provisoire : il faut séparer les faits admis, contestés et allégués, contrôler les preuves de la direction puis distinguer contestation et négociation.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "Des faits ou pièces importants restent à obtenir avant de stabiliser la position.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "La position exacte du salarié et les éléments défavorables doivent encore être recueillis.",
+        "Version exacte affichée sur le terminal à la date et à l'heure de l'opération",
+        "Journaux de publication, de consultation et de modification de la recette"
+      ]
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import json
+import importlib.util
 import socket
 import tempfile
 import unittest
@@ -63,6 +64,7 @@ class DocumentImporterTests(unittest.TestCase):
         self.assertIn("Cell A", record.text_content)
         self.assertEqual(record.technical_metadata["table_count"], 1)
 
+    @unittest.skipUnless(importlib.util.find_spec("pptx"), "python-pptx optional dependency")
     def test_pptx_extraction_and_slide_separator(self):
         from pptx import Presentation
 
@@ -76,6 +78,7 @@ class DocumentImporterTests(unittest.TestCase):
         self.assertIn("--- SLIDE 1 ---", record.text_content)
         self.assertIn("Synthetic title", record.text_content)
 
+    @unittest.skipUnless(importlib.util.find_spec("openpyxl"), "openpyxl optional dependency")
     def test_xlsx_extraction_and_sheet_count(self):
         from openpyxl import Workbook
 
@@ -89,6 +92,7 @@ class DocumentImporterTests(unittest.TestCase):
         self.assertEqual(record.sheet_count, 2)
         self.assertIn("Synthetic value", record.text_content)
 
+    @unittest.skipUnless(importlib.util.find_spec("reportlab"), "reportlab optional test dependency")
     def test_pdf_extraction_without_ocr(self):
         from reportlab.pdfgen.canvas import Canvas
 

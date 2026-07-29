@@ -1,0 +1,81 @@
+{
+  "benchmark_set": "v1_release_validation",
+  "blocking_anomalies": 0,
+  "cases": [
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "total_score": 92
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "total_score": 93
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "total_score": 92
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "total_score": 92
+    },
+    {
+      "analysis_suspended": true,
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "total_score": 70
+    },
+    {
+      "analysis_suspended": true,
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "total_score": 70
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "total_score": 92
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "total_score": 92
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "total_score": 74
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "total_score": 90
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "total_score": 82
+    }
+  ],
+  "cases_above_75": 8,
+  "known_limitations": [
+    "REAL-05 et REAL-06 restent suspendus.",
+    "REAL-09 reste limité par une procédure interne absente.",
+    "Les sources externes et formats facultatifs dépendent de la configuration locale."
+  ],
+  "method": "Scores LOT 2 inchangés : le LOT 3 ne réévalue ni les faits, ni les sources, ni la comparaison règle–faits.",
+  "no_business_regression": true,
+  "product_version": "1.0.0",
+  "score_average": 85.36,
+  "separate_measurements": {
+    "absence_of_repetition_percent": 100.0,
+    "completeness_percent": 100.0,
+    "concision_target_met": true,
+    "interview_preparation_percent": 100.0,
+    "legal_quality_percent": 86.36,
+    "practical_usefulness_percent": 79.7,
+    "readability_percent": 100.0
+  },
+  "verdict": "READY_WITH_LIMITATIONS"
+}

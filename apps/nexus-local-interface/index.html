@@ -25,7 +25,7 @@
         >
         <span class="brand-copy">
           <strong>CFDT Nexus</strong>
-          <span>Votre assistant syndical pour analyser, préparer et agir</span>
+          <span>Votre assistant syndical pour analyser, préparer et agir · V<span id="nexusVersionValue">…</span></span>
         </span>
       </a>
       <div class="header-actions">
@@ -47,6 +47,8 @@
           <div><dt>Contrôle paie</dt><dd id="payrollStatusValue">Analyse prudente</dd></div>
           <div><dt>Stockage automatique</dt><dd>Désactivé</dd></div>
           <div><dt>Envoi externe</dt><dd>Aucun</dd></div>
+          <div><dt>Version</dt><dd id="settingsVersionValue">Chargement…</dd></div>
+          <div><dt>Formats facultatifs</dt><dd id="optionalFormatsValue">Vérification…</dd></div>
         </dl>
         <p>Les moteurs avancés ne sont jamais activés depuis cette interface.</p>
       </aside>
@@ -370,6 +372,7 @@
                 <div class="report-actions">
                   <button class="secondary-button" type="button" id="generateReportButton" disabled>Générer un brouillon</button>
                   <button class="secondary-button" type="button" id="copyReportButton" disabled>Copier</button>
+                  <button class="secondary-button" type="button" id="printReportButton" disabled>Imprimer</button>
                   <button class="secondary-button" type="button" id="downloadReportButton" disabled>Télécharger .md</button>
                 </div>
               </div>

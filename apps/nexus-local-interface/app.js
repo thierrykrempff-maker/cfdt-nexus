@@ -22,6 +22,7 @@ const expertContent = document.getElementById("expertContent");
 const expertConfidence = document.getElementById("expertConfidence");
 const generateReportButton = document.getElementById("generateReportButton");
 const copyReportButton = document.getElementById("copyReportButton");
+const printReportButton = document.getElementById("printReportButton");
 const downloadReportButton = document.getElementById("downloadReportButton");
 const reportOutput = document.getElementById("reportOutput");
 const caseScenarioSelect = document.getElementById("caseScenarioSelect");
@@ -79,6 +80,9 @@ const employeeInterview = document.getElementById("employeeInterview");
 const interviewSaveActions = document.getElementById("interviewSaveActions");
 const downloadInterviewButton = document.getElementById("downloadInterviewButton");
 const interviewSaveStatus = document.getElementById("interviewSaveStatus");
+const nexusVersionValue = document.getElementById("nexusVersionValue");
+const settingsVersionValue = document.getElementById("settingsVersionValue");
+const optionalFormatsValue = document.getElementById("optionalFormatsValue");
 
 let currentPayload = null;
 let currentReportMarkdown = "";
@@ -666,6 +670,7 @@ function resetReportState(message = "Lance une analyse Nexus, puis genere la fic
   reportOutput.textContent = message;
   generateReportButton.disabled = !currentPayload?.analysis_report;
   copyReportButton.disabled = true;
+  if (printReportButton) printReportButton.disabled = true;
   downloadReportButton.disabled = true;
 }
 
@@ -701,6 +706,7 @@ function reportBlock(title, values) {
 
 function summaryReportMarkdown(report) {
   const lines = [`# ${report.title || "Synthèse opérationnelle Nexus"}`];
+  if (report.nexus_version) lines.push("", `Version CFDT Nexus : ${report.nexus_version}`);
   for (const section of report.sections || []) {
     if (!section.items?.length) continue;
     lines.push("", `## ${section.title}`);
@@ -784,6 +790,7 @@ function renderReport() {
   }
 
   copyReportButton.disabled = !currentReportMarkdown;
+  if (printReportButton) printReportButton.disabled = !currentReportMarkdown;
   downloadReportButton.disabled = !currentReportMarkdown;
 }
 
@@ -818,6 +825,11 @@ function downloadReport() {
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 500);
   setStatus("Rapport telecharge", currentPayload?.orchestration?.niveau_de_confiance);
+}
+
+function printReport() {
+  if (!currentReportMarkdown) return;
+  window.print();
 }
 
 function renderResult(payload) {
@@ -1554,3 +1566,24 @@ expertViewButton.addEventListener("click", () => {
 });
 
 loadScenarios().then(loadEmployeeCase);
+
+async function loadReleaseStatus() {
+  try {
+    const health = await fetchJson("/health");
+    nexusVersionValue.textContent = health.version;
+    settingsVersionValue.textContent = health.version;
+    const unavailable = Object.values(health.optional_dependencies || {})
+      .filter((item) => !item.available)
+      .map((item) => item.package);
+    optionalFormatsValue.textContent = unavailable.length
+      ? `Indisponibles : ${unavailable.join(", ")}`
+      : "Tous disponibles";
+  } catch (_error) {
+    nexusVersionValue.textContent = "indisponible";
+    settingsVersionValue.textContent = "indisponible";
+    optionalFormatsValue.textContent = "État indisponible";
+  }
+}
+
+printReportButton?.addEventListener("click", printReport);
+loadReleaseStatus();

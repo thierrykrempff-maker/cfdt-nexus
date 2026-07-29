@@ -57,6 +57,7 @@ from .official_connectors_runtime import (
 )
 from .public_payload import sanitize_public_payload
 from .final_response import build_final_response, summary_markdown
+from .version import VERSION_FILE, get_nexus_version
 from .syndical_reasoning_runtime import (
     RuntimeSyndicalReasoningDiagnostics,
     RuntimeSyndicalReasoningIntegration,
@@ -147,6 +148,8 @@ __all__ = (
     "sanitize_public_payload",
     "build_final_response",
     "summary_markdown",
+    "VERSION_FILE",
+    "get_nexus_version",
     "needs_retirement",
     "needs_protection_sociale",
     "needs_syndical_reasoning",

@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0 - préparation de la release locale
+
+- Compréhension factuelle structurée des demandes salarié.
+- Parcours distinct d'assistance à l'entretien disciplinaire.
+- Questions métier et documents à demander directement exploitables.
+- Sélection factuelle des connecteurs officiels, sans déclenchement par simple mot-clé.
+- Comparaison explicite entre sources réellement obtenues et faits du dossier.
+- Synthèse publique courte, analyse détaillée repliée, copie, impression et export.
+- Interface locale et mode dégradé lorsque les sources externes sont indisponibles.
+- Baseline anonymisée de 11 cas métier, score moyen conservé à 85,36/100.
+- Durcissement de la confidentialité des réponses, erreurs et exports publics.
+- Dépendances obligatoires et formats facultatifs documentés séparément.
+- Limites connues : REAL-09 sans procédure interne applicable, absence de calcul paie
+  fiable et disponibilité variable des sources externes.
+
 ## Nexus V2.2 rapport d'analyse connecte au moteur reel
 
 - Ajout de `automation/experts/report_generator.py` pour transformer le payload reel `assistant_ds_router.py` + `orchestrator.py` en rapport structure.

@@ -1,4 +1,4 @@
-# Nexus Local Interface - Cockpit V3
+# Nexus Local Interface — CFDT Nexus 1.0.0
 
 Interface locale privee pour interroger Nexus sans taper de commande PowerShell.
 
@@ -21,6 +21,21 @@ Le serveur ecoute par defaut sur :
 ```text
 http://127.0.0.1:8765/
 ```
+
+Le lanceur démarre en mode dégradé lorsque la configuration locale des connecteurs
+externes est absente. Il est possible de choisir Python avec
+`CFDT_NEXUS_PYTHON`.
+
+Vérifier l'état et la version avec `http://127.0.0.1:8765/health`.
+
+Pour arrêter proprement :
+
+```text
+apps\nexus-local-interface\stop-nexus-local.bat
+```
+
+Les boutons de copie, impression et téléchargement exportent la synthèse publique.
+L'analyse détaillée reste repliée et n'est pas incluse dans ces exports.
 
 ## Securite
 

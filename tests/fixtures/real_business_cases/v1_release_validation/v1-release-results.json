@@ -1,0 +1,159 @@
+{
+  "average_public_response_size_bytes": 29891.55,
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "v1_release_validation",
+  "case_count": 11,
+  "cases": [
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 164791,
+      "passed": true,
+      "public_response_size_bytes": 34222,
+      "section_count": 12,
+      "total_score": 92,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 145250,
+      "passed": true,
+      "public_response_size_bytes": 39595,
+      "section_count": 12,
+      "total_score": 93,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 124349,
+      "passed": true,
+      "public_response_size_bytes": 34582,
+      "section_count": 12,
+      "total_score": 92,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "employee_path": "QUESTION_SALARIE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 149333,
+      "passed": true,
+      "public_response_size_bytes": 36647,
+      "section_count": 12,
+      "total_score": 92,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": true,
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "employee_path": "QUESTION_SALARIE",
+      "limitations": [
+        "Analyse suspendue faute d'informations suffisantes."
+      ],
+      "lot2_public_response_size_bytes": 72536,
+      "passed": false,
+      "public_response_size_bytes": 20379,
+      "section_count": 10,
+      "total_score": 70,
+      "verdict": "SUSPENDED"
+    },
+    {
+      "analysis_suspended": true,
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "employee_path": "QUESTION_SALARIE",
+      "limitations": [
+        "Analyse suspendue faute d'informations suffisantes."
+      ],
+      "lot2_public_response_size_bytes": 67802,
+      "passed": false,
+      "public_response_size_bytes": 18019,
+      "section_count": 10,
+      "total_score": 70,
+      "verdict": "SUSPENDED"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 132953,
+      "passed": true,
+      "public_response_size_bytes": 35587,
+      "section_count": 12,
+      "total_score": 92,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "employee_path": "QUESTION_SALARIE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 140110,
+      "passed": true,
+      "public_response_size_bytes": 35804,
+      "section_count": 12,
+      "total_score": 92,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [
+        "Procédure interne applicable absente des sources obtenues."
+      ],
+      "lot2_public_response_size_bytes": 111219,
+      "passed": false,
+      "public_response_size_bytes": 20802,
+      "section_count": 10,
+      "total_score": 74,
+      "verdict": "READY_WITH_LIMITATION"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 144628,
+      "passed": true,
+      "public_response_size_bytes": 28628,
+      "section_count": 12,
+      "total_score": 90,
+      "verdict": "READY"
+    },
+    {
+      "analysis_suspended": false,
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "limitations": [],
+      "lot2_public_response_size_bytes": 125360,
+      "passed": true,
+      "public_response_size_bytes": 24542,
+      "section_count": 12,
+      "total_score": 82,
+      "verdict": "READY"
+    }
+  ],
+  "cases_above_75": 8,
+  "maximum_public_response_size_bytes": 39595,
+  "product_version": "1.0.0",
+  "release_criteria": {
+    "complete_cases_above_75": 8,
+    "correct_paths": "11/11",
+    "correct_primary_facts": "11/11",
+    "cross_case_contamination": 0,
+    "invented_sources": 0,
+    "score_average": 85.36
+  },
+  "score_average_lot2": 85.36,
+  "score_average_lot3": 85.36
+}

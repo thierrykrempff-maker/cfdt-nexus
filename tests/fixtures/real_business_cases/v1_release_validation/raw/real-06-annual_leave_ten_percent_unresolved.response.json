@@ -1,0 +1,436 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+  "employee_path": "QUESTION_SALARIE",
+  "public_response_size_bytes": 18019,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "nexus_version": "1.0.0",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Une règle appelée « règle des 10 % » était auparavant appliquée lors de la pose des congés annuels.",
+            "Le salarié reconnaît certains éléments mais conteste leur portée : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure. La disparition régulière ou irrégulière de la règle n'est pas établie.",
+            "La position précise de l'employeur reste à demander.",
+            "Depuis ce changement, la règle dite des 10 % ne semble plus appliquée.",
+            "La règle ne serait plus appliquée depuis le changement de période."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "INFORMATION INSUFFISANTE — Une ambiguïté ou un document bloquant empêche une analyse juridique fiable."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "Que désigne exactement pour vous la « règle des 10 % » ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : Le dossier comporte une ambiguïté bloquante qui interdit une conclusion prématurée.",
+            "Point fort : Un accord a modifié la période de référence, auparavant décrite comme allant de mai à mai et désormais annuelle.",
+            "Point fort : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure.",
+            "Point faible : Un élément défavorable est reconnu : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure.",
+            "Point faible : La disparition régulière ou irrégulière de la règle n'est pas établie.",
+            "Point faible : Signification exacte de la « règle des 10 % »"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "SALARIÉ — Que désigne exactement pour vous la « règle des 10 % » ? (Identifier la règle avant toute analyse de fond.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "REPRÉSENTANT — Existe-t-il un précédent interne réellement comparable ? (Contrôler l'égalité de traitement.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Texte ou support de l'ancienne « règle des 10 % » — Direction ou salarié selon détention — Identifier son fondement et son contenu exact. [BLOCKING]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Que désigne exactement pour vous la « règle des 10 % » ?",
+            "Avant : Obtenir : Texte ou support de l'ancienne « règle des 10 % »",
+            "Pendant : Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Position : Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "Accords INEOS — 2025.11.24 - Modification de la période de référence et de prise des congés annuels.pdf — avenant — À vérifier selon les faits",
+            "Accords INEOS — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf — avenant — À vérifier selon les faits",
+            "Accords INEOS — 1999.02.26_Modification du calendrier de la paie.PDF — avenant — À vérifier selon les faits",
+            "Accords INEOS — 2025.11.14 - Accord CET 2026.pdf — accord entreprise — À vérifier selon les faits",
+            "Accords INEOS — ccnic_septembre2013.pdf — convention_collective — À vérifier selon les faits"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Définir ce que désigne exactement l'expression « règle des 10 % ».",
+            "Texte ou pratique qui fondait la règle antérieure",
+            "Accord ayant modifié la période et date d'entrée en vigueur"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "AMBIGUOUS_TEN_PERCENT_RULE",
+        "primary_grievance_or_decision": "Disparition alléguée d'une règle non définie appelée « règle des 10 % ».",
+        "requested_path": "QUESTION_SALARIE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Texte ou support de l'ancienne « règle des 10 % »"
+      ],
+      "findings": [
+        "Une règle appelée « règle des 10 % » était auparavant appliquée lors de la pose des congés annuels.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure. La disparition régulière ou irrégulière de la règle n'est pas établie.",
+        "La position précise de l'employeur reste à demander.",
+        "Depuis ce changement, la règle dite des 10 % ne semble plus appliquée.",
+        "La règle ne serait plus appliquée depuis le changement de période."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Que désigne exactement pour vous la « règle des 10 % » ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "route": {
+        "analysis_suspended": true,
+        "domains": [
+          "Accords INEOS"
+        ],
+        "employee_path": "QUESTION_SALARIE"
+      },
+      "rule_to_facts_analysis": [],
+      "short_answer": "Que désigne exactement pour vous la « règle des 10 % » ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2025.11.24 - Modification de la période de référence et de prise des congés annuels.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "1999.02.26_Modification du calendrier de la paie.PDF"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "2025.11.14 - Accord CET 2026.pdf"
+        },
+        {
+          "provider": "Accords INEOS",
+          "reference": null,
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Texte ou support de l'ancienne « règle des 10 % »",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier son fondement et son contenu exact."
+        }
+      ],
+      "factual_core": {
+        "blocking_ambiguities": [
+          "Définir ce que désigne exactement l'expression « règle des 10 % »."
+        ],
+        "collective_impact_possible": false,
+        "confidence_level": "LOW",
+        "contract_change_considered": "Non identifié",
+        "dates_and_chronology": [
+          "Depuis ce changement, la règle dite des 10 % ne semble plus appliquée.",
+          "La règle ne serait plus appliquée depuis le changement de période."
+        ],
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure. La disparition régulière ou irrégulière de la règle n'est pas établie.",
+        "employer_position": "La position précise de l'employeur reste à demander.",
+        "event_category": "AMBIGUOUS_TEN_PERCENT_RULE",
+        "facts_admitted": [
+          "Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure.",
+          "Une modification de la période de référence est rapportée."
+        ],
+        "facts_alleged": [
+          "La règle ne serait plus appliquée depuis le changement de période.",
+          "Aucun élément ne permet d'affirmer qu'il s'agit de la règle légale du dixième."
+        ],
+        "facts_certain": [
+          "Une règle appelée « règle des 10 % » était auparavant appliquée lors de la pose des congés annuels.",
+          "Un accord a modifié la période de référence, auparavant décrite comme allant de mai à mai et désormais annuelle.",
+          "Depuis ce changement, la règle dite des 10 % ne semble plus appliquée.",
+          "La signification de l'expression « règle des 10 % » n'est pas précisée."
+        ],
+        "facts_disputed": [
+          "La disparition régulière ou irrégulière de la règle n'est pas établie.",
+          "Aucune perte financière n'est reconnue faute de connaître le sens de la règle."
+        ],
+        "facts_missing": [
+          "Signification exacte de la « règle des 10 % »",
+          "Texte ou pratique qui fondait la règle antérieure",
+          "Accord ayant modifié la période et date d'entrée en vigueur",
+          "Nature de la période désormais annuelle et dates exactes",
+          "Exemples avant et après sur des situations comparables",
+          "Existence d'une perte financière, d'un refus de congé, d'un report ou d'un changement de quota",
+          "Information ou consultation du CSE et communications aux salariés"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas supposer qu'il s'agit de la règle légale du dixième."
+        ],
+        "legal_ambiguities": [
+          "Signification exacte de la « règle des 10 % »",
+          "Texte ou pratique qui fondait la règle antérieure",
+          "Accord ayant modifié la période et date d'entrée en vigueur",
+          "Nature de la période désormais annuelle et dates exactes",
+          "Exemples avant et après sur des situations comparables"
+        ],
+        "persons_and_roles": [
+          "Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure."
+        ],
+        "primary_event": "Une règle appelée « règle des 10 % » était auparavant appliquée lors de la pose des congés annuels.",
+        "primary_grievance_or_decision": "Disparition alléguée d'une règle non définie appelée « règle des 10 % ».",
+        "requested_path": "QUESTION_SALARIE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Disparition alléguée d'une règle non définie appelée « règle des 10 % ». Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure. La disparition régulière ou irrégulière de la règle n'est pas établie."
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Que désigne exactement pour vous la « règle des 10 % » ?",
+          "reason": "Identifier la règle avant toute analyse de fond.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "source_requirements": [
+        "Définir ce que désigne exactement l'expression « règle des 10 % ».",
+        "La comparaison juridique commencera après clarification des faits."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "Que désigne exactement pour vous la « règle des 10 % » ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "nexus_version": "1.0.0",
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Que désigne exactement pour vous la « règle des 10 % » ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Existe-t-il un précédent interne réellement comparable ?"
+      ],
+      "reponse_synthetique_nexus": "Que désigne exactement pour vous la « règle des 10 % » ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": true,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Texte ou support de l'ancienne « règle des 10 % »",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Identifier son fondement et son contenu exact."
+        }
+      ],
+      "limits": [
+        "Définir ce que désigne exactement l'expression « règle des 10 % ».",
+        "Texte ou pratique qui fondait la règle antérieure",
+        "Accord ayant modifié la période et date d'entrée en vigueur"
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Que désigne exactement pour vous la « règle des 10 % » ?",
+          "reason": "Identifier la règle avant toute analyse de fond.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Une règle appelée « règle des 10 % » était auparavant appliquée lors de la pose des congés annuels.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure. La disparition régulière ou irrégulière de la règle n'est pas établie.",
+        "La position précise de l'employeur reste à demander.",
+        "Depuis ce changement, la règle dite des 10 % ne semble plus appliquée.",
+        "La règle ne serait plus appliquée depuis le changement de période."
+      ],
+      "sources": [
+        {
+          "nature": "avenant",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2025.11.24 - Modification de la période de référence et de prise des congés annuels.pdf"
+        },
+        {
+          "nature": "avenant",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "nature": "avenant",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "1999.02.26_Modification du calendrier de la paie.PDF"
+        },
+        {
+          "nature": "accord entreprise",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "2025.11.14 - Accord CET 2026.pdf"
+        },
+        {
+          "nature": "convention_collective",
+          "provider": "Accords INEOS",
+          "scope": "À vérifier selon les faits",
+          "status": "DISPONIBLE",
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Que désigne exactement pour vous la « règle des 10 % » ?",
+          "Obtenir : Texte ou support de l'ancienne « règle des 10 % »"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "Le dossier comporte une ambiguïté bloquante qui interdit une conclusion prématurée.",
+        "Un accord a modifié la période de référence, auparavant décrite comme allant de mai à mai et désormais annuelle.",
+        "Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure."
+      ],
+      "syndical_position": [
+        "Que désigne exactement pour vous la « règle des 10 % » ? Nexus suspend l'analyse de fond tant que cette ambiguïté déterminante n'est pas levée.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "INFORMATION INSUFFISANTE",
+      "urgency_reason": "Une ambiguïté ou un document bloquant empêche une analyse juridique fiable.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "Un élément défavorable est reconnu : Les salariés utilisent l'expression « règle des 10 % » pour désigner une pratique antérieure.",
+        "La disparition régulière ou irrégulière de la règle n'est pas établie.",
+        "Signification exacte de la « règle des 10 % »"
+      ]
+    }
+  }
+}

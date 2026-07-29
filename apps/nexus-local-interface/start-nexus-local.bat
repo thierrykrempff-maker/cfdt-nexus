@@ -25,27 +25,18 @@ set "NEXUS_LOCAL_CONFIG=%CD%\local-index\nexus-local-secrets.cmd"
 
 if not exist "%NEXUS_LOCAL_CONFIG%" (
   echo.
-  echo Configuration locale Nexus absente.
-  echo Fichier attendu :
-  echo %NEXUS_LOCAL_CONFIG%
-  echo.
-  echo Legifrance et JUDILIBRE ne pourront pas etre utilises.
-  pause
-  exit /b 1
+  echo Configuration locale des connecteurs externes absente.
+  echo Nexus demarrera en mode degrade, sans Legifrance ni JUDILIBRE.
+) else (
+  call "%NEXUS_LOCAL_CONFIG%"
 )
 
-call "%NEXUS_LOCAL_CONFIG%"
-
 if not defined CFDT_NEXUS_LEGIFRANCE_CLIENT_ID (
-  echo Identifiant Legifrance absent.
-  pause
-  exit /b 1
+  echo Connecteur Legifrance indisponible : identifiant absent.
 )
 
 if not defined CFDT_NEXUS_LEGIFRANCE_CLIENT_SECRET (
-  echo Secret Legifrance absent.
-  pause
-  exit /b 1
+  echo Connecteur Legifrance indisponible : secret absent.
 )
 
 set PYTHONUTF8=1
@@ -53,8 +44,12 @@ set PYTHONIOENCODING=utf-8
 set PYTHONDONTWRITEBYTECODE=1
 
 if defined CFDT_NEXUS_PYTHON (
+  "%CFDT_NEXUS_PYTHON%" --version >nul 2>&1
+  if errorlevel 1 goto PYTHON_MISSING
   start "" /b "%CFDT_NEXUS_PYTHON%" apps\nexus-local-interface\server.py
 ) else (
+  python --version >nul 2>&1
+  if errorlevel 1 goto PYTHON_MISSING
   start "" /b python apps\nexus-local-interface\server.py
 )
 
@@ -79,5 +74,12 @@ exit /b 0
 echo.
 echo L'interface Nexus n'a pas repondu sur le port 8765.
 echo Verifiez Python puis relancez le raccourci.
+pause
+exit /b 1
+
+:PYTHON_MISSING
+echo.
+echo Python est indisponible. Installez Python 3.10 ou superieur,
+echo ou definissez CFDT_NEXUS_PYTHON dans la configuration locale.
 pause
 exit /b 1
