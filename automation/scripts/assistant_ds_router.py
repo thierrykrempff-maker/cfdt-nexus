@@ -26,6 +26,8 @@ from SYNDICAL_REASONING_ENGINE import (
     build_actionable_preparation,
     build_case_factual_core,
     build_provisional_union_position,
+    analyze_source_to_facts,
+    build_source_search_queries,
     extract_disciplinary_facts,
 )
 
@@ -4583,6 +4585,30 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["case_factual_core"] = factual_core.to_dict()
     answer["actionable_preparation"] = preparation
     answer["syndical_position"] = union_position
+    source_to_facts = analyze_source_to_facts(
+        factual_core,
+        tuple(
+            source
+            for source in answer.get("sources", ())
+            if isinstance(source, dict)
+        ),
+    )
+    source_to_facts_payload = source_to_facts.to_dict()
+    answer["source_search_plan"] = source_to_facts_payload["search_queries"]
+    answer["applicable_sources"] = source_to_facts_payload["applicable_sources"]
+    answer["rule_to_facts_analysis"] = source_to_facts_payload[
+        "rule_to_facts_analysis"
+    ]
+    answer["rejected_sources"] = source_to_facts_payload["rejected_sources"]
+    answer["missing_source_requirements"] = source_to_facts_payload[
+        "missing_source_requirements"
+    ]
+    answer["adversarial_source_analysis"] = source_to_facts_payload[
+        "adversarial_analysis"
+    ]
+    answer["control_device_hypotheses"] = source_to_facts_payload[
+        "control_device_hypotheses"
+    ]
     question_rows = [
         *preparation["questions_for_employee"],
         *preparation["questions_for_employer"],
@@ -4683,6 +4709,11 @@ def ask(
     route = route_query(query, employee_path)
     factual_core = build_case_factual_core(query, route["employee_path"])
     retrieval_query = str(route.get("search_query") or query)
+    targeted_queries = {
+        item.axis: item.query
+        for item in build_source_search_queries(factual_core)
+        if item.query
+    }
     retrieval_limit = max(limit, source_limit, 8)
     answer: dict[str, Any] = {
         "query": query,
@@ -4734,7 +4765,23 @@ def ask(
 
     if "bible_accords" in route["engines"]:
         try:
-            merge_bible_result(answer, search_bible(retrieval_query, retrieval_limit))
+            for search_query in dict.fromkeys(
+                (
+                    targeted_queries.get("A_MAIN_ACT", retrieval_query),
+                    targeted_queries.get("B_PROCEDURE", retrieval_query),
+                    targeted_queries.get("C_EVIDENCE_OR_CONTROL", retrieval_query),
+                    targeted_queries.get("D_PROPORTIONALITY", retrieval_query),
+                    targeted_queries.get(
+                        "E_HEALTH_SAFETY_ORGANISATION", retrieval_query
+                    ),
+                    targeted_queries.get(
+                        "F_CONTRACT_OR_DISCIPLINE", retrieval_query
+                    ),
+                )
+            ):
+                merge_bible_result(
+                    answer, search_bible(search_query, retrieval_limit)
+                )
         except SystemExit as exc:
             answer["warnings"].append(f"Bible Accords indisponible ou index vide: {exc}")
 
@@ -4750,9 +4797,18 @@ def ask(
     if "legifrance_code_travail" in route["engines"] and legifrance is not None:
         try:
             client = legifrance.LegifranceClient()
-            merge_legifrance_result(
-                answer, client.search_code_sources(retrieval_query, limit=5)
-            )
+            for search_query in dict.fromkeys(
+                (
+                    targeted_queries.get("A_MAIN_ACT", retrieval_query),
+                    targeted_queries.get("B_PROCEDURE", retrieval_query),
+                    targeted_queries.get(
+                        "F_CONTRACT_OR_DISCIPLINE", retrieval_query
+                    ),
+                )
+            ):
+                merge_legifrance_result(
+                    answer, client.search_code_sources(search_query, limit=5)
+                )
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             error = str(exc)
             answer["legifrance_audit"].append(
@@ -4772,7 +4828,10 @@ def ask(
     if "judilibre_jurisprudence" in route["engines"] and judilibre is not None:
         try:
             client = judilibre.JudilibreClient()
-            search_query, theme = judilibre_query_for_route(retrieval_query, route)
+            search_query, theme = judilibre_query_for_route(
+                targeted_queries.get("D_PROPORTIONALITY", retrieval_query),
+                route,
+            )
             merge_judilibre_result(answer, client.search_sources(search_query, limit=2, theme=theme))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
             answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {exc}")
@@ -4780,8 +4839,19 @@ def ask(
     if "pratique_officielle" in route["engines"] and cdtn is not None:
         try:
             client = cdtn.CdtnClient()
-            search_query, theme = cdtn_query_for_route(retrieval_query, route)
-            merge_cdtn_result(answer, client.search_sources(search_query, limit=2, theme=theme))
+            for factual_query in dict.fromkeys(
+                (
+                    targeted_queries.get("B_PROCEDURE", retrieval_query),
+                    targeted_queries.get(
+                        "E_HEALTH_SAFETY_ORGANISATION", retrieval_query
+                    ),
+                )
+            ):
+                search_query, theme = cdtn_query_for_route(factual_query, route)
+                merge_cdtn_result(
+                    answer,
+                    client.search_sources(search_query, limit=2, theme=theme),
+                )
         except Exception as exc:  # pragma: no cover - public network boundary.
             answer["warnings"].append(f"Pratique officielle indisponible: {exc}")
 
@@ -4894,6 +4964,39 @@ def format_answer_text(answer: dict[str, Any]) -> str:
             lines.extend(list_or_dash(fallback))
         return lines
 
+    def rule_to_facts_lines() -> list[str]:
+        analyses = [
+            item
+            for item in answer.get("rule_to_facts_analysis", [])
+            if isinstance(item, dict)
+        ]
+        lines = ["", "Règles comparées aux faits :"]
+        if not analyses:
+            lines.append(
+                "- Aucune source traçable avec extrait précis ne permet encore "
+                "une comparaison règle–faits."
+            )
+            lines.extend(
+                f"- Source à obtenir : {item}"
+                for item in answer.get("missing_source_requirements", [])[:5]
+            )
+            return lines
+        for item in analyses[:5]:
+            lines.extend(
+                [
+                    f"- Question examinée : {item.get('issue')}",
+                    f"  Source : {item.get('source_reference')}",
+                    f"  Ce que prévoit la règle : {item.get('rule_summary')}",
+                    "  Comparaison avec les faits : "
+                    + "; ".join(item.get("facts_matching") or ["aucun fait établi"]),
+                    "  Éléments manquants : "
+                    + "; ".join(item.get("facts_missing") or ["aucun identifié"]),
+                    f"  Conclusion provisoire : {item.get('provisional_conclusion')}",
+                    f"  Action concrète : {item.get('next_action')}",
+                ]
+            )
+        return lines
+
     lines = [
         "ASSISTANT DS — ANALYSE",
         "",
@@ -4911,6 +5014,7 @@ def format_answer_text(answer: dict[str, Any]) -> str:
     ]
     lines.extend(source_layer_lines())
     lines.extend(pratique_officielle_lines())
+    lines.extend(rule_to_facts_lines())
     lines.extend(grouped_lines("Ce qu'il faut verifier :", "findings", answer["findings"]))
     lines.extend(grouped_lines("Documents a recuperer :", "documents", answer["documents_to_request"]))
     lines.extend(grouped_lines("Questions a poser :", "questions", answer["questions_to_ask"]))

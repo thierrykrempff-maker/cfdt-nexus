@@ -1,0 +1,1023 @@
+{
+  "average_public_response_size_bytes": 125303,
+  "average_reduced_response_size_bytes": 68394,
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "source_to_facts",
+  "case_count": 11,
+  "cases": [
+    {
+      "case_id": "REAL-01-INSULTING_EMAILS_ALCOHOL",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Les courriels insultants restent le grief principal ; l'alcool est isolé comme contexte secondaire reconnu."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucun fait d'un autre cas ni aucune autorité indisponible n'est présenté comme acquis."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Questions, pièces et suivi sont directement utilisables en entretien."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Les questions portent sur les mots exacts, les preuves complètes, la reconnaissance et la sanction."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "4 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "4 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La stratégie distingue reconnaissance, atténuation, preuve, proportionnalité et négociation."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 20,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Courriels insultants reconnus et consommation d'alcool alléguée",
+      "total_score": 92,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Les pauses reconnues et le débat distinct sur la finalité du badgeage Seveso sont conservés."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 19
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune irrégularité RGPD n'est affirmée avant vérification."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Questions et documents préparent immédiatement la défense."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Finalité, information, consultation CSE, données de badgeage et tolérances sont vérifiées."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "3 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "3 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La défense ne nie pas les pauses et contrôle loyauté de la preuve et proportionnalité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 73,
+      "score_variation": 20,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Pauses cigarettes et utilisation d'un badgeage de sécurité Seveso",
+      "total_score": 93,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-03-TAG_INSTALLATION",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Le tag reste central et n'est transformé ni en menace ni en harcèlement répété."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune menace, répétition ou preuve inexistante n'est ajoutée."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "La fiche est utilisable avant et pendant l'entretien."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Attribution, mots, diffusion, preuve, sanction et contexte sont questionnés séparément."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "3 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "3 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "strategy_realism": {
+          "evidence": [
+            "Reconnaissance ou contestation conduisent à des lignes distinctes."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 20,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Tag grossier sur une installation dans un contexte de souffrance au travail",
+      "total_score": 92,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Passage imposé, absence de volontariat et impact collectif possible sont séparés."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune démission, rémunération, repos ou donnée technique absente n'est injectée."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "La fiche prépare le salarié et l'interrogation de la direction."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Cycle, clause, durée, contraintes, volontaires, accord et effectifs sont demandés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "5 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "5 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "strategy_realism": {
+          "evidence": [
+            "Maintien, aménagement et négociation sont distingués sans conseiller un refus non préparé."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "QUESTION_SALARIE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 20,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Passage non volontaire d'horaires de jour à des horaires postés au laboratoire",
+      "total_score": 92,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+      "correction_priority": "Obtenir les sources manquantes.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Canal invoqué et qualification du temps par l'employeur sont anticipés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 8
+        },
+        "factual_understanding": {
+          "evidence": [
+            "La réunion CSSCT reste un dossier de mandat et le caractère incomplet est reconnu."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 19
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune fin, retenue ou entrave n'est inventée."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Les vérifications permettent de reprendre utilement le cas incomplet."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Mandat, présence, conséquence, qualification du temps et canal sont bloquants."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "La comparaison reste ouverte faute d'extrait traçable réellement obtenu."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 3
+        },
+        "source_relevance": {
+          "evidence": [
+            "Aucune source exploitable n'est simulée ; les pièces et connecteurs nécessaires restent explicitement demandés."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 6
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La stratégie fixe les faits avant toute accusation d'entrave."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [
+        "source_relevance",
+        "rule_fact_comparison"
+      ],
+      "employee_path": "QUESTION_SALARIE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": false,
+      "score_before": 70,
+      "score_variation": 0,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Refus d'heures déclarées pour assister à une réunion CSSCT",
+      "total_score": 70,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+      "correction_priority": "Obtenir les sources manquantes.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "La position de la direction n'est pas supposée."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 8
+        },
+        "factual_understanding": {
+          "evidence": [
+            "La règle des 10 % indéfinie est l'ambiguïté centrale."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 20
+        },
+        "no_invention": {
+          "evidence": [
+            "Ni dixième légal, ni perte financière, ni jurisprudence ne sont supposés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "La question bloquante débloque directement le dossier."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "La première question demande exactement ce que signifie la règle."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "La comparaison reste ouverte faute d'extrait traçable réellement obtenu."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 3
+        },
+        "source_relevance": {
+          "evidence": [
+            "Aucune source exploitable n'est simulée ; les pièces et connecteurs nécessaires restent explicitement demandés."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 6
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La stratégie réaliste est d'obtenir définition et document source."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 8
+        }
+      },
+      "dimensions_below_minimum": [
+        "source_relevance",
+        "rule_fact_comparison"
+      ],
+      "employee_path": "QUESTION_SALARIE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": false,
+      "score_before": 68,
+      "score_variation": 2,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Disparition alléguée d'une règle des 10 % après modification de la période de congés",
+      "total_score": 70,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Indisponibilité et inadaptation alléguée des EPI restent centrales."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "L'inadaptation n'est pas transformée en fait prouvé."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Les preuves de stock et fourniture sont actionnables."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Stock, modèle, alerte, remise, risque et instruction sont distingués."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "3 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "3 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "strategy_realism": {
+          "evidence": [
+            "Disponibilité, adaptation, alerte et instruction sont vérifiées ensemble."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 20,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "EPI indisponible ou inadapté lors d'une opération sur acide sulfurique",
+      "total_score": 92,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Caractère temporaire, clause et garde alternée restent distincts."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune rémunération ou réduction d'effectif absente n'est ajoutée."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Les questions préparent une discussion ciblée."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Durée, cycle, délai, clause, contrainte et alternatives sont demandés sans effectif injecté."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "5 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "5 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "strategy_realism": {
+          "evidence": [
+            "Maintien, aménagement et négociation dépendent des réponses."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "QUESTION_SALARIE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 20,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Refus d'un passage temporaire de jour vers un cycle 3x8",
+      "total_score": 92,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE",
+      "correction_priority": "Obtenir les sources manquantes.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "La version obsolète de la procédure reste le fait technique central."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune absence d'habilitation ou faute de compétence n'est inventée."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Horodatage et version sont directement actionnables."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Version affichée, horodatage, alerte, déploiement et mise à jour sont vérifiés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "La comparaison reste ouverte faute d'extrait traçable réellement obtenu."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 5
+        },
+        "source_relevance": {
+          "evidence": [
+            "Aucune source exploitable n'est simulée ; les pièces et connecteurs nécessaires restent explicitement demandés."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 7
+        },
+        "strategy_realism": {
+          "evidence": [
+            "Action du salarié, défaut système et déploiement sont distingués."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [
+        "rule_fact_comparison"
+      ],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [
+        "Aucun extrait traçable n'était disponible pour comparer une règle."
+      ],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": false,
+      "score_before": 72,
+      "score_variation": 2,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Erreur de fabrication et procédure informatique potentiellement obsolète",
+      "total_score": 74,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Contrôle positif et poste à risque sont distingués de la régularité à vérifier."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucune irrégularité du test n'est affirmée sans preuve."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "Les pièces permettent un contrôle concret avant entretien."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Poste, heure, taux, appareil, contre-expertise et règlement sont demandés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "3 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 15
+        },
+        "source_relevance": {
+          "evidence": [
+            "3 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 13
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La défense contrôle fiabilité, garanties et proportionnalité sans nier le résultat."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 18,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Contrôle d'alcoolémie positif sur un poste à risque",
+      "total_score": 90,
+      "unrealistic_strategies": []
+    },
+    {
+      "case_id": "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT",
+      "correction_priority": "Aucune correction bloquante dans le périmètre du LOT.",
+      "dimensions": {
+        "adversarial_analysis": {
+          "evidence": [
+            "Arguments salarié et employeur, preuve, procédure, risque et levier sont explicitement confrontés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 10
+        },
+        "factual_understanding": {
+          "evidence": [
+            "Les injures restent le grief ; fatigue, planning et repos sont à objectiver."
+          ],
+          "max_points": 20,
+          "minimum_to_pass": 14,
+          "score": 18
+        },
+        "no_invention": {
+          "evidence": [
+            "Aucun harcèlement, menace ou repos insuffisant n'est établi sans preuve."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 8,
+          "score": 10
+        },
+        "practical_usefulness": {
+          "evidence": [
+            "La préparation guide contestation ou reconnaissance atténuée."
+          ],
+          "max_points": 5,
+          "minimum_to_pass": 2,
+          "score": 5
+        },
+        "question_relevance": {
+          "evidence": [
+            "Mots, reconnaissance, témoins, planning, repos, excuses et sanction sont séparés."
+          ],
+          "max_points": 10,
+          "minimum_to_pass": 5,
+          "score": 9
+        },
+        "rule_fact_comparison": {
+          "evidence": [
+            "1 comparaison(s) structurée(s) règle–faits reposent sur des extraits réellement obtenus."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        },
+        "source_relevance": {
+          "evidence": [
+            "1 source(s) réelle(s) qualifiée(s), avec hiérarchie, statut d'applicabilité et traçabilité."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        },
+        "strategy_realism": {
+          "evidence": [
+            "La fatigue atténue éventuellement mais ne supprime pas automatiquement la faute."
+          ],
+          "max_points": 15,
+          "minimum_to_pass": 7,
+          "score": 10
+        }
+      },
+      "dimensions_below_minimum": [],
+      "employee_path": "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE",
+      "errors": [],
+      "hard_failures": [],
+      "important_repetitions": [],
+      "invented_facts": [],
+      "irrelevant_sources": [],
+      "known_outcome_used_only_after_core_scoring": true,
+      "maximum_score": 100,
+      "missing_essential_questions": [],
+      "passed": true,
+      "score_before": 72,
+      "score_variation": 10,
+      "successes": [
+        "La sélection est fondée sur les faits et les sources réellement obtenues."
+      ],
+      "title": "Insultes envers un supérieur dans un contexte de fatigue et de surcharge",
+      "total_score": 82,
+      "unrealistic_strategies": []
+    }
+  ],
+  "cases_above_75": 8,
+  "failed_cases": [
+    "REAL-05-DELEGATION_HOURS_CSSCT_INCOMPLETE",
+    "REAL-06-ANNUAL_LEAVE_TEN_PERCENT_UNRESOLVED",
+    "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE"
+  ],
+  "passed_cases": [
+    "REAL-01-INSULTING_EMAILS_ALCOHOL",
+    "REAL-02-SMOKING_BREAKS_SEVESO_BADGE",
+    "REAL-03-TAG_INSTALLATION",
+    "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+    "REAL-07-SAFETY_PPE_UNAVAILABLE_OR_UNSUITABLE",
+    "REAL-08-TEMPORARY_DAY_TO_THREE_SHIFT_REFUSAL",
+    "REAL-10-POSITIVE_ALCOHOL_TEST_HIGH_RISK_POSITION",
+    "REAL-11-INSULTS_SUPERVISOR_FATIGUE_CONTEXT"
+  ],
+  "score_average_after": 85.36,
+  "score_average_before": 71.55,
+  "score_variation": 13.81,
+  "targets": {
+    "at_least_nine_cases_above_75": false,
+    "average_at_least_78": true,
+    "complete_cases_rule_fact_above_minimum": false,
+    "unavailable_source_case": "REAL-09-CHEMICAL_RECIPE_OUTDATED_PROCEDURE"
+  }
+}

@@ -154,6 +154,17 @@ from .factual_core import (
     build_case_factual_core,
     build_provisional_union_position,
 )
+from .source_to_facts import (
+    ApplicableSource,
+    ApplicabilityStatus,
+    DocumentSearchQuery,
+    LegalNature,
+    ProvisionalConclusion,
+    RuleToFactsAnalysis,
+    SourceToFactsReport,
+    analyze_source_to_facts,
+    build_source_search_queries,
+)
 from .discrimination_articulation import articulate_discrimination_domains
 from .discrimination_engine import (
     DiscriminationHarassmentReasoningEngine,
@@ -280,6 +291,15 @@ __all__ = (
     "ActionableDocument",
     "ActionableQuestion",
     "CaseFactualCore",
+    "ApplicableSource",
+    "ApplicabilityStatus",
+    "DocumentSearchQuery",
+    "LegalNature",
+    "ProvisionalConclusion",
+    "RuleToFactsAnalysis",
+    "SourceToFactsReport",
+    "analyze_source_to_facts",
+    "build_source_search_queries",
     "build_actionable_preparation",
     "build_case_factual_core",
     "build_provisional_union_position",
