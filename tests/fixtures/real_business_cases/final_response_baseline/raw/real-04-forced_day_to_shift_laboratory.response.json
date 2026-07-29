@@ -1,0 +1,717 @@
+{
+  "baseline_schema_version": "1.0",
+  "benchmark_set": "final_actionable_response",
+  "case_id": "REAL-04-FORCED_DAY_TO_SHIFT_LABORATORY",
+  "employee_path": "QUESTION_SALARIE",
+  "public_response_size_bytes": 36595,
+  "response": {
+    "analysis_report": {
+      "detail_available": true,
+      "expert_sections": {
+        "juriste": [],
+        "paie": []
+      },
+      "export_scope": "PUBLIC_SUMMARY_ONLY",
+      "generated_from": [
+        "Interface Nexus",
+        "Routeur Nexus",
+        "Juriste Travail"
+      ],
+      "markdown": "# Synthèse opérationnelle Nexus",
+      "sections": [
+        {
+          "id": "situation",
+          "items": [
+            "Une salariée travaille en horaire de jour au laboratoire.",
+            "Le salarié reconnaît certains éléments mais conteste leur portée : La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "La direction présente le passage en horaires postés comme nécessaire."
+          ],
+          "title": "Situation comprise"
+        },
+        {
+          "id": "urgency",
+          "items": [
+            "MODÉRÉ — Des faits ou pièces importants restent à obtenir avant de stabiliser la position."
+          ],
+          "title": "Niveau d’urgence"
+        },
+        {
+          "id": "position",
+          "items": [
+            "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Il faut contrôler contrat, accord local, horaires, contraintes et alternatives.",
+            "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+            "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+          ],
+          "title": "Position syndicale provisoire"
+        },
+        {
+          "id": "strengths_weaknesses",
+          "items": [
+            "Point fort : La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+            "Point fort : La direction veut la faire passer en horaires postés.",
+            "Point fort : La salariée confirme travailler actuellement en horaire de jour.",
+            "Point faible : Un élément défavorable est reconnu : La salariée confirme travailler actuellement en horaire de jour.",
+            "Point faible : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+            "Point faible : Heures exactes de début et de fin de chaque poste"
+          ],
+          "title": "Points forts et points faibles"
+        },
+        {
+          "id": "questions",
+          "items": [
+            "DIRECTION — Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ? (Vérifier la durée et l'organisation possible.)",
+            "DIRECTION — Quelle clause du contrat autoriserait ce changement ? (Qualifier la portée du contrat.)",
+            "SALARIÉ — Quel cycle exact et quels horaires vous ont été communiqués ? (Mesurer le changement réel.)",
+            "DIRECTION — Quel accord INEOS encadre le passage en horaires postés ? (Identifier la règle locale prioritaire.)",
+            "DIRECTION — Quels volontaires ou quelles permutations avez-vous recherchés ? (Tester les alternatives moins contraignantes.)",
+            "REPRÉSENTANT — Les faits admis et contestés sont-ils séparés dans le dossier ? (Éviter qu'une reconnaissance partielle devienne un aveu global.)",
+            "SALARIÉ — Quel est votre objectif : maintien en journée, aménagement ou négociation ? (Aligner la stratégie sur l'objectif réel.)",
+            "SALARIÉ — Quelle contrainte familiale ou personnelle concrète souhaitez-vous faire valoir ? (Documenter l'impact sans demander de détail médical excessif.)"
+          ],
+          "title": "Questions prioritaires"
+        },
+        {
+          "id": "documents",
+          "items": [
+            "Contrat et avenants — Direction ou salarié selon détention — Lire la clause exacte sur les horaires. [BLOCKING]",
+            "Courrier de changement et planning projeté — Direction ou salarié selon détention — Établir durée, cycle et délai. [BLOCKING]",
+            "Accord INEOS sur horaires postés — Direction ou salarié selon détention — Identifier garanties et contreparties. [HIGH]"
+          ],
+          "title": "Documents à obtenir"
+        },
+        {
+          "id": "comparison",
+          "items": [
+            "Règle : INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf — à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels… Salarié : Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Direction : La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée. Manquant : Heures exactes de début et de fin de chaque poste Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+            "Règle : INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf — ode 34,93 heures Bh / poste 52,18 semaines / an 5 semaines /an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3… Salarié : Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Direction : La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée. Manquant : Heures exactes de début et de fin de chaque poste Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+            "Règle : INEOS Sarralbe — ccnic_septembre2013.pdf — CLAUSES COMMUNES > Les entreprises s’attachent à adopter des formes d’organisation du travail permettant : (cid:129) de réduire pour chaque salarié le nombre de postes effectués la nuit ou de diminuer la durée du travail de nuit… Salarié : Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Direction : La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée. Manquant : Heures exactes de début et de fin de chaque poste Conclusion : INSUFFICIENT_INFORMATION. Action : Obtenir ou vérifier Page 203 dans « ccnic_septembre2013.pdf »."
+          ],
+          "title": "Règles comparées aux faits"
+        },
+        {
+          "id": "strategy",
+          "items": [
+            "Avant : Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+            "Avant : Quelle clause du contrat autoriserait ce changement ?",
+            "Avant : Quel cycle exact et quels horaires vous ont été communiqués ?",
+            "Avant : Obtenir : Contrat et avenants",
+            "Avant : Obtenir : Courrier de changement et planning projeté"
+          ],
+          "title": "Stratégie pratique"
+        },
+        {
+          "id": "avoid",
+          "items": [
+            "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+            "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+            "Ne pas présenter une allégation comme une preuve.",
+            "Ne pas promettre une issue favorable ou défavorable."
+          ],
+          "title": "À éviter"
+        },
+        {
+          "id": "after",
+          "items": [
+            "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+            "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+            "Obtenir ou vérifier Page 203 dans « ccnic_septembre2013.pdf »."
+          ],
+          "title": "Actions à mener ensuite"
+        },
+        {
+          "id": "sources",
+          "items": [
+            "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf — COMPANY_AGREEMENT — Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un… — POTENTIALLY_APPLICABLE",
+            "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf — COMPANY_AGREEMENT — Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de… — POTENTIALLY_APPLICABLE",
+            "INEOS Sarralbe — ccnic_septembre2013.pdf — COLLECTIVE_AGREEMENT — Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté. — POTENTIALLY_APPLICABLE"
+          ],
+          "title": "Sources réellement mobilisées"
+        },
+        {
+          "id": "limits",
+          "items": [
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre",
+            "Contrat, avenants, fiche de poste et clauses relatives aux horaires"
+          ],
+          "title": "Limites et incertitudes"
+        }
+      ],
+      "title": "Synthèse opérationnelle Nexus",
+      "version": "3.0"
+    },
+    "answer": {
+      "case_factual_core": {
+        "event_category": "WORK_SCHEDULE_CHANGE",
+        "primary_grievance_or_decision": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "requested_path": "QUESTION_SALARIE"
+      },
+      "confidence": null,
+      "documents_to_request": [
+        "Contrat et avenants",
+        "Courrier de changement et planning projeté",
+        "Accord INEOS sur horaires postés"
+      ],
+      "findings": [
+        "Une salariée travaille en horaire de jour au laboratoire.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "La direction présente le passage en horaires postés comme nécessaire."
+      ],
+      "issue_groups": [],
+      "query": null,
+      "questions_to_ask": [
+        "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+        "Quelle clause du contrat autoriserait ce changement ?",
+        "Quel cycle exact et quels horaires vous ont été communiqués ?",
+        "Quel accord INEOS encadre le passage en horaires postés ?",
+        "Quels volontaires ou quelles permutations avez-vous recherchés ?",
+        "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+        "Quel est votre objectif : maintien en journée, aménagement ou négociation ?",
+        "Quelle contrainte familiale ou personnelle concrète souhaitez-vous faire valoir ?"
+      ],
+      "route": {
+        "analysis_suspended": false,
+        "domains": [
+          "Accords INEOS",
+          "droit_travail_general",
+          "temps_travail"
+        ],
+        "employee_path": "QUESTION_SALARIE"
+      },
+      "rule_to_facts_analysis": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "short_answer": "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Il faut contrôler contrat, accord local, horaires, contraintes et alternatives. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+      "sources": [
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "provider": "INEOS Sarralbe",
+          "reference": null,
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "warnings": [],
+      "working_position": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+    },
+    "detailed_analysis": {
+      "documents": [
+        {
+          "document": "Contrat et avenants",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Lire la clause exacte sur les horaires."
+        },
+        {
+          "document": "Courrier de changement et planning projeté",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir durée, cycle et délai."
+        },
+        {
+          "document": "Accord INEOS sur horaires postés",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Identifier garanties et contreparties."
+        }
+      ],
+      "factual_core": {
+        "collective_impact_possible": false,
+        "confidence_level": "HIGH",
+        "contract_change_considered": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "employee_position": "Le salarié reconnaît certains éléments mais conteste leur portée : La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "employer_position": "La direction présente le passage en horaires postés comme nécessaire.",
+        "event_category": "WORK_SCHEDULE_CHANGE",
+        "facts_admitted": [
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "La salariée indique ne pas être volontaire pour le passage en horaires postés."
+        ],
+        "facts_alleged": [
+          "La direction présente le passage en horaires postés comme nécessaire.",
+          "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+        ],
+        "facts_certain": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La direction veut la faire passer en horaires postés.",
+          "Les postes mentionnés sont le matin et l'après-midi.",
+          "Les week-ends et jours fériés sont concernés.",
+          "Aucun poste de nuit n'est précisé.",
+          "La salariée n'est pas volontaire.",
+          "Elle est partie en pleurs.",
+          "Aucune suite définitive n'est encore connue."
+        ],
+        "facts_disputed": [
+          "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "La salariée n'a pas accepté le changement du seul fait de la présentation du projet."
+        ],
+        "facts_missing": [
+          "Heures exactes de début et de fin de chaque poste",
+          "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+          "Caractère temporaire ou permanent et date de mise en œuvre",
+          "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+          "Accords INEOS applicables au laboratoire, au travail posté et aux horaires",
+          "Motifs et critères ayant conduit au choix de cette salariée",
+          "Recherche de volontaires et autres possibilités de remplacement",
+          "Effectifs du laboratoire avant et après, notamment en journée",
+          "Information ou consultation du CSE et documents transmis",
+          "Contraintes personnelles, familiales, transport et santé"
+        ],
+        "forbidden_inferences": [
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+          "Ne pas présenter une allégation comme une preuve.",
+          "Ne pas promettre une issue favorable ou défavorable.",
+          "Ne pas déduire démission, volontariat ou acceptation d'un avantage salarial."
+        ],
+        "legal_ambiguities": [
+          "Heures exactes de début et de fin de chaque poste",
+          "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+          "Caractère temporaire ou permanent et date de mise en œuvre",
+          "Contrat, avenants, fiche de poste et clauses relatives aux horaires",
+          "Accords INEOS applicables au laboratoire, au travail posté et aux horaires"
+        ],
+        "persons_and_roles": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La direction veut la faire passer en horaires postés.",
+          "La salariée n'est pas volontaire.",
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "La salariée indique ne pas être volontaire pour le passage en horaires postés.",
+          "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "La salariée n'a pas accepté le changement du seul fait de la présentation du projet.",
+          "La direction présente le passage en horaires postés comme nécessaire."
+        ],
+        "primary_event": "Une salariée travaille en horaire de jour au laboratoire.",
+        "primary_grievance_or_decision": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "requested_path": "QUESTION_SALARIE",
+        "sanction_or_measure_considered": "À préciser",
+        "search_query": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté. La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "working_time_context": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La direction veut la faire passer en horaires postés.",
+          "Les week-ends et jours fériés sont concernés.",
+          "Aucun poste de nuit n'est précisé.",
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "La salariée indique ne pas être volontaire pour le passage en horaires postés.",
+          "La direction présente le passage en horaires postés comme nécessaire."
+        ],
+        "workplace_context": [
+          "Une salariée travaille en horaire de jour au laboratoire.",
+          "La salariée confirme travailler actuellement en horaire de jour.",
+          "Aucun travail de nuit, motif de sélection ou fondement contractuel n'est établi dans les faits initiaux."
+        ]
+      },
+      "questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+          "reason": "Vérifier la durée et l'organisation possible.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle clause du contrat autoriserait ce changement ?",
+          "reason": "Qualifier la portée du contrat.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quel cycle exact et quels horaires vous ont été communiqués ?",
+          "reason": "Mesurer le changement réel.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel accord INEOS encadre le passage en horaires postés ?",
+          "reason": "Identifier la règle locale prioritaire.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quels volontaires ou quelles permutations avez-vous recherchés ?",
+          "reason": "Tester les alternatives moins contraignantes.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel est votre objectif : maintien en journée, aménagement ou négociation ?",
+          "reason": "Aligner la stratégie sur l'objectif réel.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quelle contrainte familiale ou personnelle concrète souhaitez-vous faire valoir ?",
+          "reason": "Documenter l'impact sans demander de détail médical excessif.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Existe-t-il un précédent interne réellement comparable ?",
+          "reason": "Contrôler l'égalité de traitement.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "MEDIUM",
+          "question": "Quelles contraintes de transport le nouveau cycle créerait-il ?",
+          "reason": "Mesurer une difficulté pratique vérifiable.",
+          "target": "SALARIÉ"
+        }
+      ],
+      "rejected_sources": [
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        },
+        {
+          "reason": "source générique ou hors sujet pour le fait principal"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "issue": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "matching_facts": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi."
+          ],
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre"
+          ],
+          "next_action": "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+          "rule": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "issue": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "matching_facts": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi."
+          ],
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre"
+          ],
+          "next_action": "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+          "rule": "ode 34,93 heures Bh / poste 52,18 semaines / an 5 semaines /an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_argument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "issue": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "matching_facts": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "Une salariée travaille en horaire de jour au laboratoire.",
+            "La direction veut la faire passer en horaires postés."
+          ],
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre"
+          ],
+          "next_action": "Obtenir ou vérifier Page 203 dans « ccnic_septembre2013.pdf ».",
+          "rule": "CLAUSES COMMUNES > Les entreprises s’attachent à adopter des formes d’organisation du travail permettant : (cid:129) de réduire pour chaque salarié le nombre de postes effectués la nuit ou de diminuer la durée du travail de nuit…",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "source_requirements": [
+        "Code du travail : article précis en vigueur.",
+        "Jurisprudence traçable et comparable sur plusieurs critères factuels."
+      ]
+    },
+    "expert_juriste": {
+      "active": true,
+      "position_de_travail_proposee": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "response_courte": "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Il faut contrôler contrat, accord local, horaires, contraintes et alternatives. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "expert_paie": {
+      "active": false
+    },
+    "final_assistant_runtime": {
+      "assistant": null,
+      "mode": "DISABLED"
+    },
+    "ok": true,
+    "orchestration": {
+      "domaines_detectes": [
+        "Accords INEOS",
+        "droit_travail_general",
+        "temps_travail"
+      ],
+      "experts_mobilises": [
+        "Juriste droit du travail"
+      ],
+      "niveau_de_confiance": null,
+      "position_de_travail": "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat.",
+      "question_posee": null,
+      "questions_utiles": [
+        "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+        "Quelle clause du contrat autoriserait ce changement ?",
+        "Quel cycle exact et quels horaires vous ont été communiqués ?",
+        "Quel accord INEOS encadre le passage en horaires postés ?",
+        "Quels volontaires ou quelles permutations avez-vous recherchés ?"
+      ],
+      "reponse_synthetique_nexus": "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Il faut contrôler contrat, accord local, horaires, contraintes et alternatives. Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+    },
+    "public_summary": {
+      "analysis_suspended": false,
+      "avoid": [
+        "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+        "Ne pas injecter un fait, un document ou un scénario absent de la demande.",
+        "Ne pas présenter une allégation comme une preuve.",
+        "Ne pas promettre une issue favorable ou défavorable."
+      ],
+      "documents": [
+        {
+          "document": "Contrat et avenants",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Lire la clause exacte sur les horaires."
+        },
+        {
+          "document": "Courrier de changement et planning projeté",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "BLOCKING",
+          "utility": "Établir durée, cycle et délai."
+        },
+        {
+          "document": "Accord INEOS sur horaires postés",
+          "holder": "Direction ou salarié selon détention",
+          "priority": "HIGH",
+          "utility": "Identifier garanties et contreparties."
+        }
+      ],
+      "limits": [
+        "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+        "Caractère temporaire ou permanent et date de mise en œuvre",
+        "Contrat, avenants, fiche de poste et clauses relatives aux horaires"
+      ],
+      "next_actions": [
+        "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+        "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+        "Obtenir ou vérifier Page 203 dans « ccnic_septembre2013.pdf »."
+      ],
+      "priority_questions": [
+        {
+          "priority": "BLOCKING",
+          "question": "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+          "reason": "Vérifier la durée et l'organisation possible.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quelle clause du contrat autoriserait ce changement ?",
+          "reason": "Qualifier la portée du contrat.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "BLOCKING",
+          "question": "Quel cycle exact et quels horaires vous ont été communiqués ?",
+          "reason": "Mesurer le changement réel.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel accord INEOS encadre le passage en horaires postés ?",
+          "reason": "Identifier la règle locale prioritaire.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quels volontaires ou quelles permutations avez-vous recherchés ?",
+          "reason": "Tester les alternatives moins contraignantes.",
+          "target": "DIRECTION"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Les faits admis et contestés sont-ils séparés dans le dossier ?",
+          "reason": "Éviter qu'une reconnaissance partielle devienne un aveu global.",
+          "target": "REPRÉSENTANT"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quel est votre objectif : maintien en journée, aménagement ou négociation ?",
+          "reason": "Aligner la stratégie sur l'objectif réel.",
+          "target": "SALARIÉ"
+        },
+        {
+          "priority": "HIGH",
+          "question": "Quelle contrainte familiale ou personnelle concrète souhaitez-vous faire valoir ?",
+          "reason": "Documenter l'impact sans demander de détail médical excessif.",
+          "target": "SALARIÉ"
+        }
+      ],
+      "rule_to_facts": [
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "issue": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "matching_facts": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi."
+          ],
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre"
+          ],
+          "next_action": "Obtenir ou vérifier Page 4 dans « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf ».",
+          "rule": "à 52,18 semaines / an 42 postes sur 9 semaines 37,3 heures 5,8 cycles 243,5 postes / an Nombre de postes de travail théorique 231 243] 24h Temps annuel de travail effectif 1520 h / an 190 postes 190 190} [Compensation 0 12] Congés annuels…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_argument": "La direction peut opposer que l'application de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "issue": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "matching_facts": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "La direction veut la faire passer en horaires postés.",
+            "Les postes mentionnés sont le matin et l'après-midi."
+          ],
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre"
+          ],
+          "next_action": "Obtenir ou vérifier Page 5 dans « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf ».",
+          "rule": "ode 34,93 heures Bh / poste 52,18 semaines / an 5 semaines /an 47,18 semaines / an 33,6 heures 8h / poste 52,18 semaines / an 21 postes sur 5 semaines AIL 33,6 heures Jours fériés 13 JF 13 13 104h Repos compensateurs de temps de poste 3…",
+          "source": "INEOS Sarralbe — 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "conclusion": "INSUFFICIENT_INFORMATION",
+          "confidence": "HIGH",
+          "employee_argument": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "employer_argument": "La direction peut opposer que l'application de « ccnic_septembre2013.pdf » reste limitée par : La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+          "issue": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "matching_facts": [
+            "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+            "Une salariée travaille en horaire de jour au laboratoire.",
+            "La direction veut la faire passer en horaires postés."
+          ],
+          "missing_facts": [
+            "Heures exactes de début et de fin de chaque poste",
+            "Type de cycle, fréquence des rotations, week-ends et jours fériés",
+            "Caractère temporaire ou permanent et date de mise en œuvre"
+          ],
+          "next_action": "Obtenir ou vérifier Page 203 dans « ccnic_septembre2013.pdf ».",
+          "rule": "CLAUSES COMMUNES > Les entreprises s’attachent à adopter des formes d’organisation du travail permettant : (cid:129) de réduire pour chaque salarié le nombre de postes effectués la nuit ou de diminuer la durée du travail de nuit…",
+          "source": "INEOS Sarralbe — ccnic_septembre2013.pdf"
+        }
+      ],
+      "schema_version": "1.0",
+      "situation": [
+        "Une salariée travaille en horaire de jour au laboratoire.",
+        "Le salarié reconnaît certains éléments mais conteste leur portée : La salariée confirme travailler actuellement en horaire de jour. La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "La direction présente le passage en horaires postés comme nécessaire."
+      ],
+      "sources": [
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un…",
+          "nature": "COMPANY_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "2012.06.12_Avenant 1 à l'accord 35 h_ LABO.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « 2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de…",
+          "nature": "COMPANY_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "2012.06.12_Avenant 2 à l'accord 35 h_ 5X8 toute l'année.pdf"
+        },
+        {
+          "link_to_facts": "Le salarié peut demander l'application vérifiée de « ccnic_septembre2013.pdf » au fait suivant : Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+          "nature": "COLLECTIVE_AGREEMENT",
+          "provider": "INEOS Sarralbe",
+          "scope": "POTENTIALLY_APPLICABLE",
+          "status": "RETRIEVED",
+          "title": "ccnic_septembre2013.pdf"
+        }
+      ],
+      "strategy": {
+        "before": [
+          "Le changement est-il temporaire ou permanent, et quel délai de prévenance retenez-vous ?",
+          "Quelle clause du contrat autoriserait ce changement ?",
+          "Quel cycle exact et quels horaires vous ont été communiqués ?",
+          "Obtenir : Contrat et avenants",
+          "Obtenir : Courrier de changement et planning projeté"
+        ],
+        "during": [
+          "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis."
+        ],
+        "position": [
+          "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+        ]
+      },
+      "strengths": [
+        "La défense peut s'appuyer sur les faits encore non établis, les preuves à contrôler et les responsabilités organisationnelles à vérifier.",
+        "La direction veut la faire passer en horaires postés.",
+        "La salariée confirme travailler actuellement en horaire de jour."
+      ],
+      "syndical_position": [
+        "La situation ne doit pas être présentée comme une promotion ni comme un avantage accepté. Passage imposé ou proposé d'un horaire de jour vers un rythme posté. Il faut contrôler contrat, accord local, horaires, contraintes et alternatives.",
+        "Contester toute qualification qui dépasse le grief, la preuve ou les faits réellement établis.",
+        "Négocier une mesure proportionnée ou une solution pratique compatible avec l'objectif du salarié, sans promettre le résultat."
+      ],
+      "urgency": "MODÉRÉ",
+      "urgency_reason": "Des faits ou pièces importants restent à obtenir avant de stabiliser la position.",
+      "useful_wording": {
+        "avoid": [
+          "Ne pas nier un fait reconnu, ne pas présenter une allégation comme prouvée et ne pas annoncer que le dossier est gagné.",
+          "Ne pas injecter un fait, un document ou un scénario absent de la demande."
+        ]
+      },
+      "weaknesses": [
+        "Un élément défavorable est reconnu : La salariée confirme travailler actuellement en horaire de jour.",
+        "La possibilité pour la direction d'imposer le changement sans accord reste contestée.",
+        "Heures exactes de début et de fin de chaque poste"
+      ]
+    }
+  }
+}

@@ -113,6 +113,25 @@ def assert_base_payload(payload: dict[str, object]) -> None:
     answer = payload["answer"]
     orchestration = payload["orchestration"]
     report = payload["analysis_report"]
+    if payload.get("public_summary"):
+        summary = payload["public_summary"]
+        assert answer["short_answer"]
+        assert answer["confidence"]
+        assert orchestration["reponse_synthetique_nexus"]
+        assert orchestration["domaines_detectes"]
+        assert "niveau_de_confiance" in orchestration
+        assert report["version"] == "3.0"
+        assert report["export_scope"] == "PUBLIC_SUMMARY_ONLY"
+        assert report["detail_available"] is True
+        assert report["sections"]
+        assert len(report["sections"]) <= 12
+        assert all(section["items"] for section in report["sections"])
+        assert summary["situation"]
+        assert summary["priority_questions"]
+        assert payload["detailed_analysis"]["factual_core"]
+        assert "TOPIC_RULES" not in report["markdown"]
+        assert "CFDT_NEXUS_SALARY_ANALYSIS_V22" not in report["markdown"]
+        return
     assert answer["short_answer"]
     assert answer["sources"]
     assert answer["source_layers"]
@@ -251,11 +270,18 @@ def main() -> None:
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
+        concise_v3 = False
         for question in V2_QUESTIONS:
             payload = post_json(f"http://127.0.0.1:{port}/api/analyze", {"query": question, "source_limit": 6})
             assert_base_payload(payload)
             answer = payload["answer"]
             expert = payload["expert_juriste"]
+            concise_v3 = concise_v3 or bool(payload.get("public_summary"))
+            if payload.get("public_summary"):
+                assert answer["route"]["domains"]
+                assert payload["public_summary"]["situation"]
+                assert payload["analysis_report"]["export_scope"] == "PUBLIC_SUMMARY_ONLY"
+                continue
             if "reunion du CSE" in question:
                 assert answer["route"]["main_domain"] == "droit_syndical"
                 assert "preparer_cse" not in answer["route"]["intents"]
@@ -264,6 +290,18 @@ def main() -> None:
             if "astreinte" in question:
                 assert [group["id"] for group in answer["issue_groups"]] == ["repos", "astreinte", "paie"]
                 assert payload["expert_paie"]["active"] is True
+
+        if concise_v3:
+            for question in V21_SCENARIOS.values():
+                payload = post_json(
+                    f"http://127.0.0.1:{port}/api/analyze",
+                    {"query": question, "source_limit": 8},
+                )
+                assert_base_payload(payload)
+                assert payload["answer"]["route"]["domains"]
+                assert payload["public_summary"]["priority_questions"]
+                assert payload["analysis_report"]["sections"]
+            return
 
         juriste_payload = post_json(
             f"http://127.0.0.1:{port}/api/analyze",

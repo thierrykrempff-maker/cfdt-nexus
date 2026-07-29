@@ -11,6 +11,7 @@ from collections.abc import Mapping, Sequence
 import re
 from typing import Any
 
+from .final_response import build_final_response
 
 _DROP_KEYS = frozenset(
     {
@@ -153,110 +154,65 @@ def _texts(value: Any, *, key: str, limit: int = 8) -> list[str]:
 
 
 def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
-    """Expose one concise union work sheet instead of every internal engine trace."""
+    """Expose a concise summary while keeping an accessible compact detail."""
 
     answer = public["answer"]
-    core = answer["case_factual_core"]
-    preparation = answer.get("actionable_preparation")
-    if not isinstance(preparation, Mapping):
-        preparation = {}
-    route = answer.get("route")
-    if not isinstance(route, Mapping):
-        route = {}
-
-    employee_questions = _rows(preparation.get("questions_for_employee"), limit=8)
-    employer_questions = _rows(preparation.get("questions_for_employer"), limit=8)
-    representative_checks = _rows(preparation.get("representative_checks"), limit=6)
-    document_rows = _rows(preparation.get("documents_to_request"), limit=8)
-    sources = _rows(answer.get("sources"), limit=8)
-    source_layers = []
-    for layer in _rows(answer.get("source_layers"), limit=6):
-        if not isinstance(layer, Mapping):
-            continue
-        source_layers.append(
-            {
-                key: layer.get(key)
-                for key in ("id", "label", "status", "absent_message")
-                if layer.get(key) not in (None, "")
-            }
-            | {"sources": _rows(layer.get("sources"), limit=4)}
-        )
-    warnings = _texts(answer.get("warnings"), key="message", limit=6)
-    if not warnings:
-        warnings = [str(item) for item in _rows(answer.get("warnings"), limit=6)]
-
-    route_public = {
-        key: route.get(key)
-        for key in (
-            "employee_path",
-            "domains",
-            "intents",
-            "search_query",
-            "analysis_suspended",
-        )
-        if route.get(key) not in (None, [], "")
-    }
+    route = answer.get("route") if isinstance(answer.get("route"), Mapping) else {}
+    final = build_final_response(answer)
+    summary = dict(final["public_summary"])
+    sections = summary.pop("sections", [])
+    details = final["detailed_analysis"]
+    position = summary.get("syndical_position", [])
+    questions = summary.get("priority_questions", [])
+    documents = summary.get("documents", [])
+    warnings = details.get("warnings", [])
     compact_answer = {
         "query": answer.get("query"),
         "confidence": answer.get("confidence"),
-        "route": route_public,
-        "case_factual_core": core,
-        "actionable_preparation": {
-            "questions_for_employee": employee_questions,
-            "questions_for_employer": employer_questions,
-            "documents_to_request": document_rows,
-            "representative_checks": representative_checks,
+        "case_factual_core": {
+            key: answer["case_factual_core"].get(key)
+            for key in (
+                "event_category",
+                "requested_path",
+                "primary_grievance_or_decision",
+            )
+            if answer["case_factual_core"].get(key) not in (None, "")
         },
-        "syndical_position": answer.get("syndical_position", {}),
-        "short_answer": answer.get("short_answer"),
-        "working_position": answer.get("working_position"),
-        "next_action": answer.get("next_action"),
-        "findings": _rows(answer.get("findings"), limit=6),
-        "documents_to_request": _texts(document_rows, key="document", limit=8),
-        "questions_to_ask": [
-            *_texts(employee_questions, key="question", limit=8),
-            *_texts(employer_questions, key="question", limit=8),
-        ][:12],
-        "sources": sources,
-        "source_layers": source_layers,
-        "source_search_plan": _rows(answer.get("source_search_plan"), limit=6),
-        "applicable_sources": _rows(answer.get("applicable_sources"), limit=8),
-        "rule_to_facts_analysis": _rows(
-            answer.get("rule_to_facts_analysis"), limit=6
-        ),
-        "rejected_sources": _rows(answer.get("rejected_sources"), limit=8),
-        "missing_source_requirements": _rows(
-            answer.get("missing_source_requirements"), limit=8
-        ),
-        "adversarial_source_analysis": answer.get(
-            "adversarial_source_analysis", {}
-        ),
-        "control_device_hypotheses": _rows(
-            answer.get("control_device_hypotheses"), limit=3
-        ),
+        "route": {
+            key: route.get(key)
+            for key in (
+                "employee_path",
+                "domains",
+                "intents",
+                "main_domain",
+                "router_version",
+                "analysis_suspended",
+            )
+            if route.get(key) not in (None, [], "")
+        },
+        "short_answer": " ".join(position[:2]),
+        "working_position": " ".join(position[2:4]),
+        "findings": summary.get("situation", []),
+        "documents_to_request": [item.get("document") for item in documents],
+        "questions_to_ask": [item.get("question") for item in questions],
+        "sources": [
+            {
+                "provider": item.get("provider"),
+                "title": item.get("title"),
+                "reference": item.get("reference"),
+            }
+            for item in summary.get("sources", [])
+        ],
+        "rule_to_facts_analysis": [
+            {
+                "source": item.get("source"),
+                "conclusion": item.get("conclusion"),
+            }
+            for item in summary.get("rule_to_facts", [])
+        ],
         "warnings": warnings,
         "issue_groups": [],
     }
-    if answer.get("disciplinary_assistance"):
-        discipline = answer["disciplinary_assistance"]
-        compact_answer["disciplinary_assistance"] = {
-            key: discipline.get(key)
-            for key in (
-                "1_situation_understood",
-                "1_facts_understood",
-                "2_points_to_verify",
-                "3_provisional_qualification",
-                "4_real_disciplinary_risk",
-                "5_main_defense_line",
-                "6_questions_for_employee",
-                "7_questions_for_management",
-                "8_interview_preparation",
-                "9_points_not_to_say",
-                "10_after_interview",
-            )
-            if discipline.get(key) not in (None, [], {})
-        }
-
     domains = _rows(route.get("domains"), limit=6)
     experts = ["Juriste droit du travail"]
     if "paie_remuneration" in domains:
@@ -266,90 +222,32 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
         "domaines_detectes": domains,
         "experts_mobilises": experts,
         "niveau_de_confiance": answer.get("confidence"),
-        "reponse_synthetique_nexus": answer.get("short_answer"),
-        "position_de_travail": answer.get("working_position"),
-        "documents_necessaires": compact_answer["documents_to_request"],
-        "questions_utiles": compact_answer["questions_to_ask"],
-        "limites": warnings,
-        "source_layers": compact_answer["source_layers"],
-        "regles_comparees_aux_faits": compact_answer[
-            "rule_to_facts_analysis"
-        ],
+        "reponse_synthetique_nexus": compact_answer["short_answer"],
+        "position_de_travail": compact_answer["working_position"],
+        "questions_utiles": compact_answer["questions_to_ask"][:5],
     }
     juriste = {
         "active": True,
-        "response_courte": answer.get("short_answer"),
-        "qualification_juridique_situation": [core.get("primary_grievance_or_decision")],
-        "ce_qui_est_etabli_par_sources": [
-            *_rows(core.get("facts_certain"), limit=5),
-            *_rows(core.get("facts_admitted"), limit=4),
-        ][:7],
-        "ce_qui_depend_accord_statut_element_manquant": [
-            *_rows(core.get("facts_missing"), limit=5),
-            *_rows(core.get("blocking_ambiguities"), limit=3),
-        ][:7],
-        "analyse_et_raisonnement": [
-            *compact_answer["findings"],
-            *compact_answer["rule_to_facts_analysis"],
-        ],
-        "risques_points_vigilance": _rows(core.get("forbidden_inferences"), limit=5),
-        "position_de_travail_proposee": answer.get("working_position"),
-        "questions_a_poser_direction": _texts(
-            employer_questions, key="question", limit=8
-        ),
-        "limites": warnings,
+        "response_courte": compact_answer["short_answer"],
+        "position_de_travail_proposee": compact_answer["working_position"],
     }
-    comparison_lines = [
-        (
-            f"{item.get('issue')} — {item.get('source_reference')} — "
-            f"{item.get('provisional_conclusion')} — {item.get('next_action')}"
-        )
-        for item in compact_answer["rule_to_facts_analysis"]
-        if isinstance(item, Mapping)
-    ]
-    if not comparison_lines:
-        comparison_lines = [
-            "Aucune source traçable avec extrait précis ne permet encore une "
-            "comparaison règle–faits.",
-            *[
-                f"Source à obtenir : {item}"
-                for item in compact_answer["missing_source_requirements"]
-            ],
-        ]
-    sections = [
-        {"title": "Règles comparées aux faits", "items": comparison_lines},
-        {"title": "Compréhension factuelle", "items": compact_answer["findings"]},
-        {
-            "title": "Questions prioritaires au salarié",
-            "items": _texts(employee_questions, key="question", limit=8),
-        },
-        {
-            "title": "Questions à la direction",
-            "items": _texts(employer_questions, key="question", limit=8),
-        },
-        {"title": "Documents à obtenir", "items": compact_answer["documents_to_request"]},
-        {"title": "Position de travail", "items": [answer.get("working_position")]},
-        {"title": "Limites", "items": warnings},
-    ]
-    markdown_parts = [f"# {core.get('primary_grievance_or_decision', 'Analyse Nexus')}"]
-    for section in sections:
-        markdown_parts.append(f"\n## {section['title']}")
-        markdown_parts.extend(
-            f"- {item}" for item in section["items"] if item not in (None, "")
-        )
     report = {
-        "version": "2.3",
-        "title": "Fiche de travail syndicale Nexus",
+        "version": "3.0",
+        "title": "Synthèse opérationnelle Nexus",
         "generated_from": ["Interface Nexus", "Routeur Nexus", "Juriste Travail"],
         "sections": sections,
+        "detail_available": bool(details),
         "expert_sections": {"juriste": [], "paie": []},
-        "markdown": "\n".join(markdown_parts),
+        "markdown": "# Synthèse opérationnelle Nexus",
+        "export_scope": "PUBLIC_SUMMARY_ONLY",
     }
     runtime = public.get("final_assistant_runtime")
     runtime_mode = runtime.get("mode") if isinstance(runtime, Mapping) else "DISABLED"
     return {
         "ok": public.get("ok", True),
         "answer": compact_answer,
+        "public_summary": summary,
+        "detailed_analysis": details,
         "orchestration": orchestration,
         "expert_juriste": juriste,
         "expert_paie": {"active": False},
