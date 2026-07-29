@@ -83,6 +83,30 @@ const interviewSaveStatus = document.getElementById("interviewSaveStatus");
 const nexusVersionValue = document.getElementById("nexusVersionValue");
 const settingsVersionValue = document.getElementById("settingsVersionValue");
 const optionalFormatsValue = document.getElementById("optionalFormatsValue");
+const historyView = document.getElementById("historyView");
+const historyHomeButton = document.getElementById("historyHomeButton");
+const historyAverage = document.getElementById("historyAverage");
+const historyVersion = document.getElementById("historyVersion");
+const historyWarning = document.getElementById("historyWarning");
+const historyScoreExplanation = document.getElementById("historyScoreExplanation");
+const historySearch = document.getElementById("historySearch");
+const historyFilters = document.getElementById("historyFilters");
+const historyCases = document.getElementById("historyCases");
+const historyEmpty = document.getElementById("historyEmpty");
+const historyResultCount = document.getElementById("historyResultCount");
+const historyListPanel = document.getElementById("historyListPanel");
+const historyDetail = document.getElementById("historyDetail");
+const historyBackToList = document.getElementById("historyBackToList");
+const historyDetailId = document.getElementById("historyDetailId");
+const historyDetailTitle = document.getElementById("historyDetailTitle");
+const historyDetailMeta = document.getElementById("historyDetailMeta");
+const historyDetailScore = document.getElementById("historyDetailScore");
+const historyDetailBadges = document.getElementById("historyDetailBadges");
+const historySpecialNotes = document.getElementById("historySpecialNotes");
+const historySections = document.getElementById("historySections");
+const historyCopyButton = document.getElementById("historyCopyButton");
+const historyPrintButton = document.getElementById("historyPrintButton");
+const historyCopyStatus = document.getElementById("historyCopyStatus");
 
 let currentPayload = null;
 let currentReportMarkdown = "";
@@ -94,6 +118,9 @@ let currentWizardStep = 1;
 let selectedSituation = "";
 let selectedOutcome = "";
 let sessionHistoryCount = 0;
+let historicalCatalog = null;
+let historicalSelectedFilter = "all";
+let currentHistoricalCase = null;
 
 const ANALYZE_TIMEOUT_MS = 190000;
 const SERVER_UNAVAILABLE_MESSAGE =
@@ -931,11 +958,379 @@ function renderError(message) {
   emptyState.appendChild(text);
 }
 
+function normalizeHistoricalSearch(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function historicalMatches(item, query, category) {
+  if (category !== "all" && !(item.categories || []).includes(category)) {
+    return false;
+  }
+  const normalizedQuery = normalizeHistoricalSearch(query);
+  if (!normalizedQuery) return true;
+  const searchable = [
+    item.id,
+    item.title,
+    item.domain,
+    item.path_label,
+    ...(item.keywords || [])
+  ]
+    .map(normalizeHistoricalSearch)
+    .join(" ");
+  return searchable.includes(normalizedQuery);
+}
+
+function historyBadge(text, variant = "") {
+  const badge = document.createElement("span");
+  badge.className = `history-badge ${variant}`.trim();
+  badge.textContent = text;
+  return badge;
+}
+
+function renderHistoricalFilters() {
+  historyFilters.textContent = "";
+  for (const filter of historicalCatalog?.filters || []) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "history-filter";
+    button.textContent = filter.label;
+    button.dataset.filter = filter.id;
+    button.setAttribute(
+      "aria-pressed",
+      String(historicalSelectedFilter === filter.id)
+    );
+    button.addEventListener("click", () => {
+      historicalSelectedFilter = filter.id;
+      renderHistoricalFilters();
+      renderHistoricalCards();
+    });
+    historyFilters.appendChild(button);
+  }
+}
+
+function historyStateClass(state) {
+  if (state === "SUSPENDU") return "is-suspended";
+  if (state === "LIMITÉ PAR SOURCE ABSENTE") return "is-limited";
+  return "is-analyzed";
+}
+
+function renderHistoricalCards() {
+  historyCases.textContent = "";
+  const query = historySearch.value;
+  const matches = (historicalCatalog?.cases || []).filter((item) =>
+    historicalMatches(item, query, historicalSelectedFilter)
+  );
+  historyResultCount.textContent = `${matches.length} cas affiché${matches.length > 1 ? "s" : ""} sur 11`;
+  historyEmpty.hidden = matches.length !== 0;
+
+  for (const item of matches) {
+    const card = document.createElement("article");
+    card.className = `history-card ${historyStateClass(item.state)}`;
+
+    const headingRow = document.createElement("div");
+    headingRow.className = "history-card-heading";
+    const id = document.createElement("strong");
+    id.textContent = item.id;
+    const score = document.createElement("span");
+    score.className = "history-card-score";
+    score.textContent = `${item.score}/100`;
+    headingRow.append(id, score);
+
+    const title = document.createElement("h3");
+    title.textContent = item.title;
+    const domain = document.createElement("p");
+    domain.className = "history-card-domain";
+    domain.textContent = item.domain;
+    const path = document.createElement("p");
+    path.className = "history-card-path";
+    path.textContent = `Parcours : ${item.path_label}`;
+
+    const badges = document.createElement("div");
+    badges.className = "history-card-badges";
+    badges.append(
+      historyBadge(item.state, historyStateClass(item.state)),
+      historyBadge(item.test_status),
+      historyBadge(`V${item.validated_version}`)
+    );
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "primary-button history-open-button";
+    button.textContent = "Voir l’analyse";
+    button.setAttribute(
+      "aria-label",
+      `Voir l’analyse ${item.id} — ${item.title}`
+    );
+    button.addEventListener("click", () => openHistoricalCase(item.id));
+
+    card.append(headingRow, title, domain, path, badges, button);
+    historyCases.appendChild(card);
+  }
+}
+
+function appendHistoricalSection(title, values, formatter = (item) => String(item)) {
+  const normalized = Array.isArray(values)
+    ? values.filter(Boolean)
+    : values
+      ? [values]
+      : [];
+  if (!normalized.length) return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section";
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+  const list = document.createElement("ul");
+  for (const value of normalized) {
+    const item = document.createElement("li");
+    item.textContent = formatter(value);
+    list.appendChild(item);
+  }
+  section.append(heading, list);
+  historySections.appendChild(section);
+}
+
+function appendHistoricalRules(rules) {
+  if (!Array.isArray(rules) || !rules.length) return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section";
+  const heading = document.createElement("h3");
+  heading.textContent = "Règles principales comparées aux faits";
+  section.appendChild(heading);
+
+  for (const rule of rules) {
+    const card = document.createElement("article");
+    card.className = "history-rule-card";
+    const source = document.createElement("h4");
+    source.textContent = rule.source || "Source à vérifier";
+    const ruleText = document.createElement("p");
+    ruleText.textContent = rule.rule || "Règle non restituée.";
+    card.append(source, ruleText);
+
+    const positions = [
+      ["Position possible du salarié", rule.employee_argument],
+      ["Position possible de la direction", rule.employer_argument],
+      ["Conclusion testée", rule.conclusion],
+      ["Action suivante", rule.next_action]
+    ];
+    for (const [label, value] of positions) {
+      if (!value) continue;
+      const paragraph = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = `${label} : `;
+      paragraph.append(strong, document.createTextNode(String(value)));
+      card.appendChild(paragraph);
+    }
+    section.appendChild(card);
+  }
+  historySections.appendChild(section);
+}
+
+function appendHistoricalStrategy(strategy) {
+  if (!strategy || typeof strategy !== "object") return;
+  const values = [
+    ...(strategy.before || []).map((item) => `Avant : ${item}`),
+    ...(strategy.during || []).map((item) => `Pendant : ${item}`),
+    ...(strategy.position || []).map((item) => `Position : ${item}`)
+  ];
+  appendHistoricalSection("Stratégie syndicale", values);
+}
+
+function historicalCaseText(detail) {
+  const summary = detail.public_summary || {};
+  const lines = [
+    `${detail.id} — ${detail.title}`,
+    `Domaine : ${detail.domain}`,
+    `Parcours : ${detail.path_label}`,
+    `Score V1 : ${detail.score}/100`,
+    `Statut : ${detail.state}`,
+    `Version : ${detail.validated_version}`,
+    "",
+    "Situation étudiée",
+    ...(summary.situation || []).map((item) => `- ${item}`),
+    "",
+    "Questions prioritaires",
+    ...(summary.priority_questions || []).map(
+      (item) => `- ${item.target || "À préciser"} — ${item.question}`
+    ),
+    "",
+    "Documents à obtenir",
+    ...(summary.documents || []).map(
+      (item) => `- ${item.document}${item.utility ? ` — ${item.utility}` : ""}`
+    ),
+    "",
+    "Position syndicale",
+    ...(summary.syndical_position || []).map((item) => `- ${item}`),
+    "",
+    "Limites de l’analyse",
+    ...(summary.limits || []).map((item) => `- ${item}`),
+    ...(detail.special_notes || []).map((item) => `- ${item}`),
+    "",
+    detail.score_explanation,
+    "",
+    "Cas anonymisé de validation V1 — consultation uniquement."
+  ];
+  return lines.join("\n").trim();
+}
+
+function renderHistoricalDetail(detail) {
+  currentHistoricalCase = detail;
+  historyListPanel.hidden = true;
+  historyDetail.hidden = false;
+  historyDetailId.textContent = detail.id;
+  historyDetailTitle.textContent = detail.title;
+  historyDetailMeta.textContent = `${detail.domain} · ${detail.path_label} · Validation V${detail.validated_version}`;
+  historyDetailScore.textContent = detail.score;
+  historyDetailBadges.textContent = "";
+  historyDetailBadges.append(
+    historyBadge(detail.state, historyStateClass(detail.state)),
+    historyBadge(detail.test_status)
+  );
+  historySpecialNotes.textContent = "";
+  const notes = detail.special_notes || [];
+  historySpecialNotes.hidden = notes.length === 0;
+  if (notes.length) {
+    const heading = document.createElement("h3");
+    heading.textContent = "Limite particulière";
+    const list = document.createElement("ul");
+    for (const note of notes) {
+      const item = document.createElement("li");
+      item.textContent = note;
+      list.appendChild(item);
+    }
+    historySpecialNotes.append(heading, list);
+  }
+
+  const summary = detail.public_summary || {};
+  historySections.textContent = "";
+  appendHistoricalSection("Situation étudiée", summary.situation || []);
+  appendHistoricalSection("Faits principaux compris", summary.strengths || []);
+  appendHistoricalSection(
+    "Questions prioritaires",
+    summary.priority_questions || [],
+    (item) =>
+      `${item.target || "À préciser"} — ${item.question}${item.reason ? ` (${item.reason})` : ""}`
+  );
+  appendHistoricalSection(
+    "Documents à obtenir",
+    summary.documents || [],
+    (item) =>
+      `${item.document}${item.utility ? ` — ${item.utility}` : ""}${item.priority ? ` [${item.priority}]` : ""}`
+  );
+  appendHistoricalRules(summary.rule_to_facts || []);
+  appendHistoricalSection(
+    "Position syndicale testée",
+    summary.syndical_position || []
+  );
+  appendHistoricalStrategy(summary.strategy);
+  appendHistoricalSection(
+    "Limites de l’analyse",
+    [...(summary.limits || []), ...notes]
+  );
+  appendHistoricalSection("Actions suivantes", summary.next_actions || []);
+  appendHistoricalSection("À éviter", summary.avoid || []);
+  appendHistoricalSection("Résultat du test V1", [
+    `${detail.test_status} — ${detail.score}/100 — ${detail.state}`,
+    detail.score_explanation
+  ]);
+  historyCopyStatus.textContent = "";
+  historyDetail.focus();
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+async function openHistoricalCase(caseId) {
+  historyCopyStatus.textContent = "Chargement de la synthèse publique…";
+  try {
+    const response = await fetch(`/api/historical-cases/${encodeURIComponent(caseId)}`);
+    const payload = await response.json();
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.error || "Cas historique indisponible.");
+    }
+    renderHistoricalDetail(payload.case);
+  } catch (_error) {
+    historyCopyStatus.textContent =
+      "La synthèse historique ne peut pas être chargée.";
+  }
+}
+
+async function openHistoricalCases() {
+  showOnly("history");
+  historyListPanel.hidden = false;
+  historyDetail.hidden = true;
+  currentHistoricalCase = null;
+  try {
+    if (!historicalCatalog) {
+      const response = await fetch("/api/historical-cases");
+      const payload = await response.json();
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error || "Historique indisponible.");
+      }
+      historicalCatalog = payload;
+    }
+    historyAverage.textContent = Number(historicalCatalog.score_average)
+      .toFixed(2)
+      .replace(".", ",");
+    historyVersion.textContent = `Validation V${historicalCatalog.product_version}`;
+    historyWarning.textContent = historicalCatalog.warning;
+    historyScoreExplanation.textContent = historicalCatalog.score_explanation;
+    renderHistoricalFilters();
+    renderHistoricalCards();
+    historyView.focus();
+  } catch (_error) {
+    historyCases.textContent = "";
+    historyEmpty.hidden = false;
+    historyEmpty.textContent =
+      "Les cas historiques ne peuvent pas être chargés.";
+  }
+}
+
+async function copyHistoricalCase() {
+  if (!currentHistoricalCase) return;
+  const text = historicalCaseText(currentHistoricalCase);
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+  } else {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+  historyCopyStatus.textContent = "Synthèse publique copiée.";
+}
+
+function printHistoricalCase() {
+  if (!currentHistoricalCase) return;
+  document.body.classList.add("print-historical-case");
+  window.print();
+  window.setTimeout(
+    () => document.body.classList.remove("print-historical-case"),
+    500
+  );
+}
+
+function showHistoricalList() {
+  historyDetail.hidden = true;
+  historyListPanel.hidden = false;
+  currentHistoricalCase = null;
+  historyCopyStatus.textContent = "";
+  historySearch.focus();
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
 function showOnly(view) {
   homeView.hidden = view !== "home";
   wizardView.hidden = view !== "wizard";
   resultView.hidden = view !== "result";
   analysisState.hidden = view !== "loading";
+  historyView.hidden = view !== "history";
   if (view === "home") {
     document.getElementById("homeTitle").focus?.();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1331,15 +1726,30 @@ closeSettingsButton.addEventListener("click", () => {
 });
 document.querySelectorAll("[data-secondary-action]").forEach((button) => {
   button.addEventListener("click", () => {
+    if (button.dataset.secondaryAction === "history") {
+      openHistoricalCases();
+      return;
+    }
     const messages = {
       search: "Utilisez l’espace Négociations et accords pour une recherche guidée dans les sources disponibles.",
       cases: "Aucun dossier enregistré dans cette version. Aucune donnée personnelle n’est conservée.",
-      history: sessionHistoryCount ? `${sessionHistoryCount} analyse(s) réalisée(s) pendant cette session.` : "Aucune analyse dans cette session.",
       templates: "Lancez une analyse puis utilisez « Générer un brouillon » dans le plan d’action."
     };
     secondaryMessage.textContent = messages[button.dataset.secondaryAction] || "";
     secondaryMessage.hidden = false;
   });
+});
+
+historyHomeButton.addEventListener("click", () => showOnly("home"));
+historyBackToList.addEventListener("click", showHistoricalList);
+historySearch.addEventListener("input", renderHistoricalCards);
+historyCopyButton.addEventListener("click", copyHistoricalCase);
+historyPrintButton.addEventListener("click", printHistoricalCase);
+historyView.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !historyDetail.hidden) {
+    event.preventDefault();
+    showHistoricalList();
+  }
 });
 
 generateReportButton.addEventListener("click", renderReport);

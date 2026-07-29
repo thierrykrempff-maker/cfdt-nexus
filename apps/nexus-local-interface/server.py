@@ -32,6 +32,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(EXPERTS_DIR))
 from experts import orchestrator, report_generator  # noqa: E402
 from employee_case_demo import build_demo_payload, public_scenarios  # noqa: E402
+from historical_cases import get_historical_case, list_historical_cases  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -329,6 +330,45 @@ class NexusHandler(SimpleHTTPRequestHandler):
             except ValueError as exc:
                 self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})
             except Exception as exc:  # pragma: no cover - defensive local server boundary.
+                self.send_internal_error(exc)
+            return
+        if parsed.path == "/api/historical-cases":
+            try:
+                query = (parse_qs(parsed.query).get("query") or [""])[0]
+                category = (parse_qs(parsed.query).get("category") or ["all"])[0]
+                self.send_json(
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        **list_historical_cases(query=query, category=category),
+                    },
+                )
+            except ValueError as exc:
+                self.send_json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": str(exc)},
+                )
+            except Exception as exc:  # pragma: no cover - defensive local boundary.
+                self.send_internal_error(exc)
+            return
+        if parsed.path.startswith("/api/historical-cases/"):
+            try:
+                case_id = parsed.path.removeprefix("/api/historical-cases/")
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "case": get_historical_case(case_id)},
+                )
+            except KeyError as exc:
+                self.send_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"ok": False, "error": str(exc.args[0])},
+                )
+            except ValueError as exc:
+                self.send_json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": str(exc)},
+                )
+            except Exception as exc:  # pragma: no cover - defensive local boundary.
                 self.send_internal_error(exc)
             return
         super().do_GET()
