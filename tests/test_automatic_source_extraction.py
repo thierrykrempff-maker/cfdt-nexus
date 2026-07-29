@@ -278,3 +278,47 @@ def test_final_response_omits_found_document_and_keeps_traceable_source() -> Non
     assert visible["reference"] == "Article 4"
     assert visible["excerpt"]
     assert response["detailed_analysis"]["source_extraction"]
+
+
+def test_public_response_exposes_each_decisive_source_once() -> None:
+    core = _core("La direction impose un passage de jour vers le 5x8.")
+    extraction = build_source_extraction_report(
+        core,
+        (
+            _source(
+                title="Accord INEOS sur les horaires postés 5x8",
+                excerpt="Le cycle 5x8 est défini dans cette clause.",
+                article="Article 4",
+                publication_date="2014-06-12",
+                date_debut="2014-07-01",
+            ),
+        ),
+        ({"document": "Accord INEOS sur horaires postés"},),
+    )
+    response = build_final_response(
+        {
+            "case_factual_core": core.to_dict(),
+            "source_extraction": extraction.to_dict(),
+        }
+    )
+
+    summary = response["public_summary"]
+    assert summary["sources"] == [
+        {
+            "provider": "INEOS Sarralbe",
+            "title": "Accord INEOS sur les horaires postés 5x8",
+            "reference": "Article 4",
+        }
+    ]
+    assert len(summary["source_extractions"]) == 1
+    assert set(summary["source_extractions"][0]) == {
+        "provider",
+        "title",
+        "reference",
+        "excerpt",
+        "link_to_facts",
+        "availability_status",
+    }
+    assert response["detailed_analysis"]["source_extraction"]["sources"][0][
+        "publication_date"
+    ] == "2014-06-12"

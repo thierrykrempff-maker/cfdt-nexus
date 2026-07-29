@@ -167,7 +167,9 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
     position = summary.get("syndical_position", [])
     questions = summary.get("priority_questions", [])
     documents = summary.get("documents", [])
-    warnings = details.get("warnings", [])
+    visible_sources = _rows(summary.get("source_extractions"), limit=3)
+    if not visible_sources:
+        visible_sources = _rows(summary.get("sources"), limit=3)
     compact_answer = {
         "query": answer.get("query"),
         "confidence": answer.get("confidence"),
@@ -194,7 +196,6 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
         },
         "short_answer": " ".join(position[:2]),
         "working_position": " ".join(position[2:4]),
-        "findings": summary.get("situation", []),
         "documents_to_request": [item.get("document") for item in documents],
         "questions_to_ask": [item.get("question") for item in questions],
         "sources": [
@@ -203,7 +204,8 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
                 "title": item.get("title"),
                 "reference": item.get("reference"),
             }
-            for item in summary.get("sources", [])
+            for item in visible_sources
+            if isinstance(item, Mapping)
         ],
         "rule_to_facts_analysis": [
             {
@@ -212,33 +214,52 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
             }
             for item in summary.get("rule_to_facts", [])
         ],
-        "warnings": warnings,
         "issue_groups": [],
     }
+    suspended = bool(summary.get("analysis_suspended"))
+    if suspended:
+        compact_answer = {
+            key: compact_answer[key]
+            for key in (
+                "confidence",
+                "case_factual_core",
+                "route",
+                "sources",
+                "issue_groups",
+            )
+        }
     domains = _rows(route.get("domains"), limit=6)
     experts = ["Juriste droit du travail"]
     if "paie_remuneration" in domains:
         experts.append("Expert Paie")
     orchestration = {
-        "question_posee": answer.get("query"),
         "domaines_detectes": domains,
         "experts_mobilises": experts,
         "niveau_de_confiance": answer.get("confidence"),
-        "reponse_synthetique_nexus": compact_answer["short_answer"],
-        "position_de_travail": compact_answer["working_position"],
-        "questions_utiles": compact_answer["questions_to_ask"][:5],
+        "questions_utiles": compact_answer.get("questions_to_ask", [])[:5],
     }
     juriste = {
         "active": True,
-        "response_courte": compact_answer["short_answer"],
-        "position_de_travail_proposee": compact_answer["working_position"],
+        "response_courte": compact_answer.get("short_answer"),
+        "position_de_travail_proposee": compact_answer.get("working_position"),
     }
+    report_sections = [
+        {
+            **section,
+            "items": _rows(
+                section.get("items"),
+                limit=1 if suspended else 2,
+            ),
+        }
+        for section in sections
+        if isinstance(section, Mapping)
+    ]
     report = {
         "version": "3.0",
         "nexus_version": get_nexus_version(),
         "title": "Synthèse opérationnelle Nexus",
         "generated_from": ["Interface Nexus", "Routeur Nexus", "Juriste Travail"],
-        "sections": sections,
+        "sections": report_sections,
         "detail_available": bool(details),
         "expert_sections": {"juriste": [], "paie": []},
         "markdown": "# Synthèse opérationnelle Nexus",

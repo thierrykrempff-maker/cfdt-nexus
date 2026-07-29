@@ -145,8 +145,8 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
             limit=5,
             width=340,
         ),
-        "sources": _compact_public_sources(sources[:5]),
-        "source_extractions": sources[:3],
+        "sources": _compact_source_references(sources[:3]),
+        "source_extractions": _compact_public_extractions(sources[:3]),
         "limits": _dedupe_excluding(
             [
                 *_strings(core.get("blocking_ambiguities"), limit=3),
@@ -167,11 +167,14 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
     )
     details = {
         "factual_core": _compact_core(core),
-        "questions": all_questions,
-        "documents": all_documents,
-        "rule_to_facts": comparisons,
-        "secondary_sources": all_sources[5:],
-        "source_extraction": extraction,
+        "questions": _remaining_rows(all_questions, questions, "question"),
+        "documents": _remaining_rows(all_documents, documents, "document"),
+        "rule_to_facts": comparisons[3:],
+        "secondary_sources": all_sources[3:],
+        "source_extraction": _compact_detailed_extraction(
+            extraction,
+            summary.get("source_extractions"),
+        ),
         "source_requirements": _dedupe(
             _strings(answer.get("missing_source_requirements"), limit=8),
             limit=8,
@@ -530,22 +533,96 @@ def _sources(value: Any, *, limit: int = 5) -> list[dict[str, str]]:
     return _dedupe_dicts(output, "provider", secondary="title")[:limit]
 
 
-def _compact_public_sources(
+def _compact_public_extractions(
     sources: Sequence[dict[str, str]],
 ) -> list[dict[str, str]]:
+    """Keep decisive source evidence public; retain full metadata in details."""
+
     keys = (
         "provider",
         "title",
         "reference",
-        "nature",
-        "status",
-        "scope",
+        "excerpt",
         "link_to_facts",
+        "availability_status",
     )
     return [
         {key: item[key] for key in keys if item.get(key)}
         for item in sources
     ]
+
+
+def _compact_source_references(
+    sources: Sequence[dict[str, str]],
+) -> list[dict[str, str]]:
+    """Expose stable source labels without repeating evidence or metadata."""
+
+    keys = ("provider", "title", "reference")
+    return [
+        {key: item[key] for key in keys if item.get(key)}
+        for item in sources
+    ]
+
+
+def _remaining_rows(
+    rows: Sequence[dict[str, Any]],
+    public_rows: Sequence[dict[str, Any]],
+    key: str,
+) -> list[dict[str, Any]]:
+    """Keep in details only rows not already exposed in the public summary."""
+
+    visible = {
+        _text(item.get(key), 360).casefold()
+        for item in public_rows
+        if isinstance(item, Mapping) and item.get(key)
+    }
+    return [
+        item
+        for item in rows
+        if _text(item.get(key), 360).casefold() not in visible
+    ]
+
+
+def _compact_detailed_extraction(
+    extraction: Mapping[str, Any],
+    public_sources: Any,
+) -> dict[str, Any]:
+    """Store public source fields once while retaining detailed metadata."""
+
+    compact = dict(extraction)
+    visible = {
+        (
+            _text(item.get("provider"), 120).casefold(),
+            _text(item.get("title"), 220).casefold(),
+        )
+        for item in _sequence(public_sources)
+        if isinstance(item, Mapping)
+    }
+    public_keys = {
+        "provider",
+        "article_or_clause",
+        "excerpt",
+        "link_to_facts",
+        "availability_status",
+    }
+    sources: list[dict[str, Any]] = []
+    for item in _sequence(extraction.get("sources")):
+        if not isinstance(item, Mapping):
+            continue
+        row = dict(item)
+        identity = (
+            _text(row.get("provider"), 120).casefold(),
+            _text(row.get("title"), 220).casefold(),
+        )
+        if identity in visible:
+            row = {
+                key: value
+                for key, value in row.items()
+                if key not in public_keys
+            }
+        sources.append(row)
+    compact["sources"] = sources
+    return _drop_empty(compact)
 
 
 def _compact_rejections(value: Any) -> list[dict[str, str]]:

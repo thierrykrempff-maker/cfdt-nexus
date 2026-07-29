@@ -123,6 +123,21 @@ def test_suspended_analysis_is_short_and_explicit() -> None:
     assert len(json.dumps(summary, ensure_ascii=False).encode("utf-8")) < 25_000
 
 
+def test_suspended_public_payload_avoids_repeating_the_full_query() -> None:
+    payload = sanitize_public_payload(
+        {"ok": True, "answer": internal_answer(suspended=True)}
+    )
+
+    assert "query" not in payload["answer"]
+    assert payload["public_summary"]["priority_questions"]
+    assert payload["public_summary"]["documents"]
+    assert payload["analysis_report"]["sections"]
+    assert all(
+        len(section["items"]) <= 1
+        for section in payload["analysis_report"]["sections"]
+    )
+
+
 def test_public_boundary_keeps_detail_but_exports_summary_only() -> None:
     payload = sanitize_public_payload({"ok": True, "answer": internal_answer()})
     encoded = json.dumps(payload, ensure_ascii=False).encode("utf-8")
