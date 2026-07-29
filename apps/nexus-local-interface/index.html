@@ -242,6 +242,7 @@
           <div class="history-detail-toolbar">
             <button class="back-button" type="button" id="historyBackToList">← Retour aux cas</button>
             <div class="history-detail-actions">
+              <button class="secondary-button" type="button" id="historyRefreshSourcesButton">Actualiser les sources</button>
               <button class="secondary-button" type="button" id="historyCopyButton">Copier la synthèse</button>
               <button class="secondary-button" type="button" id="historyPrintButton">Imprimer ce cas</button>
             </div>
@@ -256,6 +257,7 @@
           </div>
           <div class="history-detail-badges" id="historyDetailBadges"></div>
           <div class="history-special-notes" id="historySpecialNotes" hidden></div>
+          <section class="history-source-refresh" id="historySourceRefresh" hidden aria-live="polite"></section>
           <div class="history-sections" id="historySections"></div>
           <details class="history-boundary-note">
             <summary>Pourquoi ce cas ne sera pas réutilisé automatiquement</summary>

@@ -32,7 +32,11 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(EXPERTS_DIR))
 from experts import orchestrator, report_generator  # noqa: E402
 from employee_case_demo import build_demo_payload, public_scenarios  # noqa: E402
-from historical_cases import get_historical_case, list_historical_cases  # noqa: E402
+from historical_cases import (  # noqa: E402
+    get_historical_case,
+    list_historical_cases,
+    refresh_historical_case_sources,
+)
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -58,6 +62,7 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeSyndicalReasoningConfig,
     RuntimeSyndicalReasoningIntegration,
     RuntimeSyndicalReasoningReportMapper,
+    merge_metadata_source_qualifications,
     get_nexus_version,
     sanitize_public_payload,
 )
@@ -166,6 +171,10 @@ def analyze_question(
             qualification.to_dict()
             for qualification in official_connectors.source_qualifications
         ]
+        answer["source_extraction"] = merge_metadata_source_qualifications(
+            answer.get("source_extraction"),
+            answer["official_source_qualifications"],
+        )
     expert_payload = orchestrator.orchestrate(answer)
     payload = {
         "ok": True,
@@ -351,6 +360,34 @@ class NexusHandler(SimpleHTTPRequestHandler):
             except Exception as exc:  # pragma: no cover - defensive local boundary.
                 self.send_internal_error(exc)
             return
+        if (
+            parsed.path.startswith("/api/historical-cases/")
+            and parsed.path.endswith("/refresh-sources")
+        ):
+            try:
+                case_id = parsed.path.removeprefix(
+                    "/api/historical-cases/"
+                ).removesuffix("/refresh-sources")
+                self.send_json(
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "refresh": refresh_historical_case_sources(case_id),
+                    },
+                )
+            except KeyError as exc:
+                self.send_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"ok": False, "error": str(exc.args[0])},
+                )
+            except (SystemExit, ValueError) as exc:
+                self.send_json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": str(exc)},
+                )
+            except Exception as exc:  # pragma: no cover - defensive local boundary.
+                self.send_internal_error(exc)
+            return
         if parsed.path.startswith("/api/historical-cases/"):
             try:
                 case_id = parsed.path.removeprefix("/api/historical-cases/")
@@ -374,7 +411,8 @@ class NexusHandler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self) -> None:  # noqa: N802
-        if self.path != "/api/analyze":
+        parsed = urlparse(self.path)
+        if parsed.path != "/api/analyze":
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
         try:

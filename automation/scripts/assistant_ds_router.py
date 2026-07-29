@@ -30,6 +30,9 @@ from SYNDICAL_REASONING_ENGINE import (
     build_source_search_queries,
     extract_disciplinary_facts,
 )
+from NEXUS_RUNTIME_INTEGRATION.source_extraction import (
+    build_source_extraction_report,
+)
 
 try:
     import nexus_bible_bridge as bridge
@@ -4618,6 +4621,18 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["documents_to_request"] = [
         row["document"] for row in preparation["documents_to_request"]
     ]
+    answer["source_extraction"] = build_source_extraction_report(
+        factual_core,
+        tuple(
+            source
+            for source in answer.get("sources", ())
+            if isinstance(source, dict)
+        ),
+        (
+            *tuple(preparation["documents_to_request"]),
+            *tuple(source_to_facts_payload["missing_source_requirements"]),
+        ),
+    ).to_dict()
     answer["findings"] = semantic_dedupe(
         [
             "Fait principal : " + factual_core.primary_grievance_or_decision,

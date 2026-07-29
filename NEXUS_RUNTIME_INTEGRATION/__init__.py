@@ -57,6 +57,14 @@ from .official_connectors_runtime import (
 )
 from .public_payload import sanitize_public_payload
 from .final_response import build_final_response, summary_markdown
+from .source_extraction import (
+    DocumentAvailability,
+    DocumentResolution,
+    ExtractedSource,
+    SourceExtractionReport,
+    build_source_extraction_report,
+    merge_metadata_source_qualifications,
+)
 from .version import VERSION_FILE, get_nexus_version
 from .syndical_reasoning_runtime import (
     RuntimeSyndicalReasoningDiagnostics,
@@ -147,7 +155,13 @@ __all__ = (
     "RuntimeSyndicalReasoningResult",
     "sanitize_public_payload",
     "build_final_response",
+    "build_source_extraction_report",
+    "merge_metadata_source_qualifications",
     "summary_markdown",
+    "DocumentAvailability",
+    "DocumentResolution",
+    "ExtractedSource",
+    "SourceExtractionReport",
     "VERSION_FILE",
     "get_nexus_version",
     "needs_retirement",
