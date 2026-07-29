@@ -146,6 +146,14 @@ from .disciplinary_models import (
     ProtectedEmployeeAnalysis,
 )
 from .disciplinary_scenarios import disciplinary_scenarios
+from .factual_core import (
+    ActionableDocument,
+    ActionableQuestion,
+    CaseFactualCore,
+    build_actionable_preparation,
+    build_case_factual_core,
+    build_provisional_union_position,
+)
 from .discrimination_articulation import articulate_discrimination_domains
 from .discrimination_engine import (
     DiscriminationHarassmentReasoningEngine,
@@ -269,6 +277,12 @@ __all__ = (
     "DisciplinaryQualification",
     "DisciplinaryQualificationCandidate",
     "DisciplinaryReasoningEngine",
+    "ActionableDocument",
+    "ActionableQuestion",
+    "CaseFactualCore",
+    "build_actionable_preparation",
+    "build_case_factual_core",
+    "build_provisional_union_position",
     "extract_disciplinary_facts",
     "DeadlineAssessment",
     "DocumentRequest",
