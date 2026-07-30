@@ -30,6 +30,17 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
     )
     documents = all_documents[:5]
     comparisons = _comparisons(answer.get("rule_to_facts_analysis"))
+    retrieval_evidence = _retrieval_evidence(answer.get("retrieval_public_evidence"))
+    cse_context = [
+        item
+        for item in retrieval_evidence
+        if item.get("source_type") == "CSE_CSSCT_MINUTES"
+    ][:2]
+    retrieved_sources = [
+        item
+        for item in retrieval_evidence
+        if item.get("source_type") != "CSE_CSSCT_MINUTES"
+    ][:3]
     sources = _sources(
         extraction.get("sources")
         or answer.get("applicable_sources")
@@ -147,6 +158,8 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
         ),
         "sources": _compact_source_references(sources[:3]),
         "source_extractions": _compact_public_extractions(sources[:3]),
+        "retrieved_sources": retrieved_sources,
+        "cse_context": cse_context,
         "limits": _dedupe_excluding(
             [
                 *_strings(core.get("blocking_ambiguities"), limit=3),
@@ -181,6 +194,12 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
             width=360,
         ),
         "rejected_sources": _compact_rejections(answer.get("rejected_sources")),
+        "retrieval_evidence": retrieval_evidence[
+            len(cse_context) + len(retrieved_sources):
+        ],
+        "retrieval_summary": _retrieval_summary(
+            answer.get("retrieval_propagation")
+        ),
         "warnings": _dedupe(
             _strings(answer.get("warnings"), key="message", limit=8)
             or _strings(answer.get("warnings"), limit=8),
@@ -270,6 +289,21 @@ def _summary_sections(summary: Mapping[str, Any]) -> list[dict[str, Any]]:
             ],
         ),
         (
+            "cse_context",
+            "Ce que montrent les échanges antérieurs au CSE",
+            [
+                (
+                    f"{item.get('date') or 'Date non établie'} — "
+                    f"{item.get('title', 'PV CSE/CSSCT')} — "
+                    f"{item.get('excerpt', '')} "
+                    f"Apport : {item.get('relevance_justification', '')} "
+                    f"Limite : {'; '.join(item.get('limits', [])[:1]) or item.get('legal_value', '')}"
+                )
+                for item in _sequence(summary.get("cse_context"))
+                if isinstance(item, Mapping)
+            ],
+        ),
+        (
             "strategy",
             "Stratégie pratique",
             [
@@ -333,6 +367,58 @@ def _summary_sections(summary: Mapping[str, Any]) -> list[dict[str, Any]]:
         for identifier, title, items in specs
         if _sequence(items)
     ][:12]
+
+
+def _retrieval_evidence(value: Any) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for item in _sequence(value):
+        if not isinstance(item, Mapping):
+            continue
+        excerpt = _text(item.get("excerpt"), 700)
+        if not excerpt or item.get("usable_in_public_response") is False:
+            continue
+        rows.append(
+            {
+                "source_family": _text(item.get("source_family"), 80),
+                "source_type": _text(item.get("source_type"), 80),
+                "organization": _text(item.get("organization"), 160),
+                "passage_nature": _text(item.get("passage_nature"), 120),
+                "retrieval_status": _text(item.get("retrieval_status"), 80),
+                "title": _text(item.get("title"), 220),
+                "reference": _text(item.get("reference"), 220),
+                "date": _text(item.get("date"), 40),
+                "excerpt": excerpt,
+                "relevance_score": item.get("relevance_score"),
+                "relevance_justification": _text(
+                    item.get("relevance_justification"), 300
+                ),
+                "limits": _dedupe(
+                    _strings(item.get("limits"), limit=3),
+                    limit=3,
+                    width=320,
+                ),
+                "legal_value": _text(item.get("legal_value"), 300),
+                "usable_in_public_response": True,
+            }
+        )
+    return rows
+
+
+def _retrieval_summary(value: Any) -> dict[str, int]:
+    payload = _mapping(value)
+    if not payload:
+        return {}
+    return {
+        key: int(payload.get(key) or 0)
+        for key in (
+            "received_count",
+            "linked_count",
+            "selected_count",
+            "rejected_count",
+            "used_count",
+            "post_mapping_rejected_count",
+        )
+    }
 
 
 def _questions(

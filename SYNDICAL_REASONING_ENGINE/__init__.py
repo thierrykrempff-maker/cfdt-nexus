@@ -231,6 +231,13 @@ from .source_to_facts import (
     build_source_search_queries,
     qualify_sources_for_extraction,
 )
+from .retrieval_evidence import (
+    EvidenceBundle,
+    EvidenceSelection,
+    EvidenceSourceType,
+    build_evidence_bundles,
+    select_evidence,
+)
 from .discrimination_articulation import articulate_discrimination_domains
 from .discrimination_engine import (
     DiscriminationHarassmentReasoningEngine,
@@ -439,6 +446,11 @@ __all__ = (
     "redact_public_value",
     "PLAN_VERSION",
     "build_research_plan",
+    "EvidenceBundle",
+    "EvidenceSelection",
+    "EvidenceSourceType",
+    "build_evidence_bundles",
+    "select_evidence",
     "identify_legal_issues",
     "HealthAbsenceAnalysis",
     "HealthAbsenceReasoningEngine",
