@@ -65,6 +65,12 @@ from .source_extraction import (
     build_source_extraction_report,
     merge_metadata_source_qualifications,
 )
+from .source_execution_runtime import (
+    ENV_ENABLED as SOURCE_EXECUTION_COORDINATOR_ENV_ENABLED,
+    SourceExecutionRuntime,
+    SourceExecutionRuntimeConfig,
+    SourceExecutionRuntimeResult,
+)
 from .version import VERSION_FILE, get_nexus_version
 from .syndical_reasoning_runtime import (
     RuntimeSyndicalReasoningDiagnostics,
@@ -162,6 +168,10 @@ __all__ = (
     "DocumentResolution",
     "ExtractedSource",
     "SourceExtractionReport",
+    "SourceExecutionRuntime",
+    "SourceExecutionRuntimeConfig",
+    "SourceExecutionRuntimeResult",
+    "SOURCE_EXECUTION_COORDINATOR_ENV_ENABLED",
     "VERSION_FILE",
     "get_nexus_version",
     "needs_retirement",
