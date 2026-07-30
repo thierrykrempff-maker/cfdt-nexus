@@ -281,9 +281,17 @@ class PVSearchExecution:
 
     def to_dict(self, *, public: bool = False) -> dict[str, Any]:
         if public:
+            searchable = self.corpus_root_status in {"AVAILABLE", "PARTIAL"}
+            unavailable_messages = {
+                "NOT_CONFIGURED": "Le corpus CSE/CSSCT n’est pas configuré.",
+                "EMPTY": "Le corpus CSE/CSSCT est configuré mais vide.",
+                "CORRUPT": "Le corpus CSE/CSSCT est configuré mais illisible.",
+                "UNAVAILABLE": "La racine configurée du corpus CSE/CSSCT est indisponible.",
+            }
             return {
                 "title": "Recherche dans les PV CSE/CSSCT",
-                "search_executed": self.corpus_root_status == "AVAILABLE",
+                "corpus_status": self.corpus_root_status,
+                "search_executed": searchable,
                 "corpus_available": self.documents_available,
                 "documents_examined": self.documents_scanned,
                 "period": self.date_range,
@@ -293,9 +301,12 @@ class PVSearchExecution:
                 "message": (
                     None
                     if self.results
-                    else "Aucun passage suffisamment pertinent retrouvé dans les PV "
-                    "CSE/CSSCT indexés. Cette absence de résultat ne prouve pas une "
-                    "absence d’information ou de consultation."
+                    else unavailable_messages.get(
+                        self.corpus_root_status,
+                        "Aucun passage suffisamment pertinent retrouvé dans les PV "
+                        "CSE/CSSCT indexés. Cette absence de résultat ne prouve pas une "
+                        "absence d’information ou de consultation.",
+                    )
                 ),
                 "corpus_limits": [
                     redact_public_value(item, max_length=240) for item in self.warnings

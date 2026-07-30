@@ -249,6 +249,8 @@ class PVCorpusInventory:
     documents_with_warnings: int
     cssct_distinguished: bool
     quality: tuple[tuple[str, int], ...]
+    load_error_count: int = 0
+    incomplete_metadata_documents: int = 0
 
     def to_public_dict(self) -> dict[str, Any]:
         return {
@@ -258,6 +260,8 @@ class PVCorpusInventory:
             "period": self.date_range,
             "bodies": dict(self.bodies),
             "quality": dict(self.quality),
+            "load_errors": self.load_error_count,
+            "incomplete_metadata_documents": self.incomplete_metadata_documents,
         }
 
 
@@ -276,8 +280,19 @@ class CSECSSCTSearchEngine:
             if path.is_file() and not path.is_symlink()
         )
 
-    def _rows(self) -> tuple[Mapping[str, Any], ...]:
+    def _configured_root_status(self) -> str | None:
+        if self._root is None:
+            return "NOT_CONFIGURED"
+        if not self._root.is_dir() or self._root.is_symlink():
+            return "UNAVAILABLE"
+        chunks = self._root / "chunks"
+        if not chunks.is_dir() or chunks.is_symlink() or not self._chunk_files():
+            return "EMPTY"
+        return None
+
+    def _load_rows(self) -> tuple[tuple[Mapping[str, Any], ...], int]:
         rows: list[Mapping[str, Any]] = []
+        errors = 0
         for path in self._chunk_files():
             try:
                 with path.open("r", encoding="utf-8") as stream:
@@ -287,15 +302,28 @@ class CSECSSCTSearchEngine:
                         value = json.loads(line)
                         if isinstance(value, Mapping):
                             rows.append(value)
+                        else:
+                            errors += 1
             except (OSError, ValueError, UnicodeError):
-                continue
-        return tuple(rows)
+                errors += 1
+        return tuple(rows), errors
+
+    def _rows(self) -> tuple[Mapping[str, Any], ...]:
+        return self._load_rows()[0]
 
     def inventory(self) -> PVCorpusInventory:
-        rows = self._rows()
-        if not self._chunk_files():
+        configured_status = self._configured_root_status()
+        if configured_status is not None:
             return PVCorpusInventory(
-                "UNAVAILABLE", 0, 0, 0, 0, 0, 0, (), (), (), None, 0, 0, 0, 0, False, ()
+                configured_status, 0, 0, 0, 0, 0, 0, (), (), (), None, 0, 0, 0, 0,
+                False, ()
+            )
+        rows, load_errors = self._load_rows()
+        if not rows:
+            return PVCorpusInventory(
+                "CORRUPT" if load_errors else "EMPTY",
+                len(self._chunk_files()), 0, 0, 0, 0, 0, (), (), (), None, 0, 0, 0,
+                0, False, (), load_errors, 0,
             )
         by_doc: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
         for row in rows:
@@ -308,8 +336,22 @@ class CSECSSCTSearchEngine:
         bodies = Counter(_body(item).value for item in documents)
         types = Counter(_meeting_type(item).value for item in documents)
         quality = Counter(str(item.get("document_quality_level") or "unknown") for item in documents)
+        empty_documents = sum(
+            not any(str(row.get("text") or "").strip() for row in items)
+            for items in by_doc.values()
+        )
+        incomplete_metadata = sum(
+            not _metadata(item, "instance") or not _metadata(item, "document_kind")
+            for item in documents
+        )
+        partially_exploitable = (
+            load_errors > 0
+            or empty_documents > 0
+            or incomplete_metadata > 0
+            or any(not any(bool(row.get("indexable")) for row in items) for items in by_doc.values())
+        )
         return PVCorpusInventory(
-            "AVAILABLE",
+            "PARTIAL" if partially_exploitable else "AVAILABLE",
             len(self._chunk_files()),
             len(documents),
             sum(any(bool(row.get("indexable")) for row in items) for items in by_doc.values()),
@@ -321,11 +363,13 @@ class CSECSSCTSearchEngine:
             tuple(sorted(types.items())),
             f"{valid_dates[0][:4]}–{valid_dates[-1][:4]}" if valid_dates else None,
             sum(date is None for date in dates),
-            sum(not any(str(row.get("text") or "").strip() for row in items) for items in by_doc.values()),
+            empty_documents,
             sum(count - 1 for count in Counter(item for item in hashes if item).values() if count > 1),
             sum(any(row.get("warnings") for row in items) for items in by_doc.values()),
             any(_body(item) is MeetingBody.CSSCT for item in documents),
             tuple(sorted(quality.items())),
+            load_errors,
+            incomplete_metadata,
         )
 
     @staticmethod
@@ -380,10 +424,17 @@ class CSECSSCTSearchEngine:
                 "Recherche suspendue : informations manquantes.",
             ), (), ())
         rows = self._rows()
-        if inventory.root_status != "AVAILABLE":
+        searchable_statuses = {"AVAILABLE", "PARTIAL"}
+        if inventory.root_status not in searchable_statuses:
+            warning = {
+                "NOT_CONFIGURED": "Corpus CSE/CSSCT non configuré.",
+                "EMPTY": "Corpus CSE/CSSCT configuré mais vide.",
+                "CORRUPT": "Corpus CSE/CSSCT configuré mais illisible.",
+                "UNAVAILABLE": "Racine du corpus CSE/CSSCT indisponible.",
+            }.get(inventory.root_status, "Corpus CSE/CSSCT indisponible.")
             return self._execution(query, inventory, started_dt, timer, (), 0, 0, (
-                "Corpus CSE/CSSCT non configuré.",
-            ), ("CORPUS_UNAVAILABLE",), ())
+                warning,
+            ), (f"CORPUS_{inventory.root_status}",), ())
         concepts = tuple(dict.fromkeys(
             _norm(item) for item in (*query.concepts, *query.variants, *query.exact_phrases)
             if _norm(item)
@@ -514,7 +565,15 @@ class CSECSSCTSearchEngine:
             tuple(retained),
             len(candidates),
             len(scanned_docs),
-            (() if retained else ("Aucun résultat suffisamment pertinent.",)),
+            (
+                ("Corpus partiellement exploitable.",)
+                if inventory.root_status == "PARTIAL" and retained
+                else (
+                    ("Corpus partiellement exploitable.", "Aucun résultat suffisamment pertinent.")
+                    if inventory.root_status == "PARTIAL"
+                    else (() if retained else ("Aucun résultat suffisamment pertinent.",))
+                )
+            ),
             (),
             tuple(sorted(rejected.items())),
             tuple(documents.values()),
@@ -652,13 +711,17 @@ class CSECSSCTSearchEngine:
             inventory.root_status,
             inventory.indexable_document_count,
             scanned,
-            inventory.indexable_chunk_count if inventory.root_status == "AVAILABLE" else 0,
+            inventory.indexable_chunk_count
+            if inventory.root_status in {"AVAILABLE", "PARTIAL"}
+            else 0,
             matched,
             len(results),
             started.isoformat(),
             completed.isoformat(),
             max(0, int((monotonic() - timer) * 1000)),
-            SearchMode.HYBRID_LOCAL if inventory.root_status == "AVAILABLE" else SearchMode.DEGRADED_MODE,
+            SearchMode.HYBRID_LOCAL
+            if inventory.root_status in {"AVAILABLE", "PARTIAL"}
+            else SearchMode.DEGRADED_MODE,
             query.concepts,
             warnings,
             errors,
