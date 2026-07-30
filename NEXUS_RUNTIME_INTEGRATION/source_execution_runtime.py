@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import os
+from pathlib import Path
 from typing import Mapping, Sequence
 
 from SYNDICAL_REASONING_ENGINE import (
@@ -16,6 +17,7 @@ from SYNDICAL_REASONING_ENGINE import (
 
 
 ENV_ENABLED = "NEXUS_SOURCE_EXECUTION_COORDINATOR_ENABLED"
+ENV_CSE_PROCESSED_ROOT = "NEXUS_CSE_MEMORY_PROCESSED_ROOT"
 
 
 def _enabled(value: str | None) -> bool:
@@ -26,10 +28,16 @@ def _enabled(value: str | None) -> bool:
 class SourceExecutionRuntimeConfig:
     enabled: bool = False
     allow_network: bool = False
+    cse_processed_root: Path | None = None
 
     @classmethod
     def from_env(cls) -> "SourceExecutionRuntimeConfig":
-        return cls(enabled=_enabled(os.environ.get(ENV_ENABLED)), allow_network=False)
+        configured_root = str(os.environ.get(ENV_CSE_PROCESSED_ROOT) or "").strip()
+        return cls(
+            enabled=_enabled(os.environ.get(ENV_ENABLED)),
+            allow_network=False,
+            cse_processed_root=Path(configured_root) if configured_root else None,
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,7 +59,12 @@ class SourceExecutionRuntime:
     ) -> None:
         self._config = config or SourceExecutionRuntimeConfig.from_env()
         self._coordinator = SourceExecutionCoordinator(
-            tuple(executors) if executors is not None else build_default_executors(catalogs=catalogs)
+            tuple(executors)
+            if executors is not None
+            else build_default_executors(
+                catalogs=catalogs,
+                cse_processed_root=self._config.cse_processed_root,
+            )
         )
 
     def execute(self, plan: ResearchPlan) -> SourceExecutionRuntimeResult:
@@ -70,6 +83,7 @@ class SourceExecutionRuntime:
 
 __all__ = (
     "ENV_ENABLED",
+    "ENV_CSE_PROCESSED_ROOT",
     "SourceExecutionRuntime",
     "SourceExecutionRuntimeConfig",
     "SourceExecutionRuntimeResult",

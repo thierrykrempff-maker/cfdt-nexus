@@ -32,6 +32,8 @@ from .retrieval_models import (
     TRACE_VERSION,
     redact_public_value,
 )
+from .cse_models import MeetingBody
+from .cse_search import CSECSSCTSearchEngine
 
 
 ERROR_MESSAGES = {
@@ -67,9 +69,7 @@ LOCAL_FAMILIES = frozenset(
         SourceFamily.EMPLOYMENT_CONTRACT,
     }
 )
-UNSUPPORTED_IN_THIS_LOT = frozenset(
-    {SourceFamily.CSE_MINUTES, SourceFamily.CSSCT_MINUTES}
-)
+UNSUPPORTED_IN_THIS_LOT: frozenset[SourceFamily] = frozenset()
 
 
 def _stable(prefix: str, *parts: str) -> str:
@@ -709,6 +709,180 @@ class LocalCorpusExecutionAdapter(CallableExecutionAdapter):
         )
 
 
+class CSECSSCTExecutionAdapter(BaseConnectorExecutor):
+    """LOT 3-compatible, network-free adapter for indexed meeting minutes."""
+
+    connector_id = "cse-cssct-local-index"
+    connector_name = "PV CSE/CSSCT"
+    connector_kind = ConnectorKind.LOCAL_INDEX
+    source_families = frozenset(
+        {
+            SourceFamily.CSE_MINUTES,
+            SourceFamily.CSSCT_MINUTES,
+            SourceFamily.INTERNAL_PRACTICE,
+        }
+    )
+
+    def __init__(self, processed_root: Path | str | None) -> None:
+        self._engine = CSECSSCTSearchEngine(processed_root)
+
+    def configuration_status(self) -> ConnectorConfiguration:
+        available = self._engine.inventory().root_status in {"AVAILABLE", "PARTIAL"}
+        return ConnectorConfiguration(
+            configured=available,
+            available=available,
+            reason_code=None if available else "CORPUS_NOT_CONFIGURED",
+        )
+
+    def can_handle(self, query: ResearchQuery, target: ResearchTarget) -> bool:
+        del query
+        return target.source_family in self.source_families
+
+    def execute(self, query, target, context) -> ConnectorExecutionResult:
+        body_scope = {
+            SourceFamily.CSE_MINUTES: (MeetingBody.CSE, MeetingBody.CE),
+            SourceFamily.CSSCT_MINUTES: (MeetingBody.CSSCT, MeetingBody.CHSCT),
+            SourceFamily.INTERNAL_PRACTICE: (
+                MeetingBody.CSE,
+                MeetingBody.CSSCT,
+                MeetingBody.CE,
+                MeetingBody.CHSCT,
+                MeetingBody.COMMISSION,
+                MeetingBody.JOINT_MEETING,
+                MeetingBody.UNKNOWN,
+            ),
+        }[target.source_family]
+        pv_query = self._engine.from_research_query(
+            query,
+            case_session_id=context.case_session_id,
+            body_scope=body_scope,
+            max_results=context.max_results,
+        )
+        execution = self._engine.search(pv_query)
+        event_id = _stable(
+            "event", context.case_session_id, context.plan_version,
+            query.query_id, self.connector_id,
+        )
+        documents = tuple(
+            RetrievedDocument(
+                document_id=_stable("document", passage.passage_id),
+                event_id=event_id,
+                source_family=target.source_family.value,
+                provider=self.connector_name,
+                title=next(
+                    (
+                        document.public_title
+                        for document in execution.documents
+                        if document.document_id == passage.document_id
+                    ),
+                    f"{passage.meeting_body.value} {passage.meeting_date or 'date non établie'}",
+                ),
+                public_reference=(
+                    f"{passage.meeting_body.value} — "
+                    f"{passage.meeting_date or 'date non établie'} — {passage.page}"
+                ),
+                document_type="meeting_minutes",
+                date=passage.meeting_date,
+                page=passage.page,
+                raw_excerpt=passage.raw_text,
+                normalized_excerpt=passage.excerpt,
+                provenance=(
+                    ("passage_nature", passage.passage_nature.value),
+                    ("speaker_role", passage.speaker_role.value),
+                    ("qualification_reason", passage.qualification_reason),
+                    ("legal_value", passage.legal_value),
+                    ("proves", passage.proves),
+                    ("does_not_prove", passage.does_not_prove),
+                    ("final_score", str(passage.final_score)),
+                ),
+                status=RetrievalStatus.LOCAL_DOCUMENT,
+                metadata_complete=bool(passage.meeting_date),
+                sensitive=False,
+                establishment_scope=query.establishment_scope,
+                temporal_scope=query.temporal_scope,
+            )
+            for passage in execution.results
+        )
+        stamp_started = execution.started_at
+        stamp_completed = execution.completed_at
+        if execution.corpus_root_status not in {"AVAILABLE", "PARTIAL"}:
+            status = RetrievalStatus.CONNECTOR_NOT_CONFIGURED
+            error_code = "CORPUS_NOT_CONFIGURED"
+            error_message = "Corpus CSE/CSSCT non configuré."
+        elif documents:
+            status = RetrievalStatus.LOCAL_DOCUMENT
+            error_code = None
+            error_message = None
+        else:
+            status = RetrievalStatus.REJECTED_RESULT
+            error_code = "NO_RELEVANT_RESULT"
+            error_message = (
+                "Aucun passage suffisamment pertinent retrouvé. Cette absence ne "
+                "prouve pas une absence d’information ou de consultation."
+            )
+        event = RetrievalEvent(
+            event_id=event_id,
+            case_session_id=context.case_session_id,
+            plan_id=context.plan_id,
+            issue_id=query.issue_id,
+            target_id=query.target_id,
+            query_id=query.query_id,
+            connector_id=self.connector_id,
+            connector_name=self.connector_name,
+            connector_kind=self.connector_kind,
+            source_family=target.source_family.value,
+            status=status,
+            started_at=stamp_started,
+            completed_at=stamp_completed,
+            duration_ms=execution.duration_ms,
+            live_call_attempted=False,
+            network_call_executed=False,
+            cache_checked=False,
+            cache_hit=False,
+            fixture_used=False,
+            metadata_only=False,
+            query_text=query.query_text,
+            normalized_query=_normalize(query.query_text),
+            endpoint_domain=None,
+            http_status=None,
+            result_count=len(documents),
+            accepted_count=len(documents),
+            rejected_count=0,
+            warning_codes=tuple(execution.warnings),
+            error_code=error_code,
+            error_message_public=error_message,
+            provenance=(
+                ("documents_available", str(execution.documents_available)),
+                ("documents_scanned", str(execution.documents_scanned)),
+                ("chunks_scanned", str(execution.chunks_scanned)),
+                ("passages_matched", str(execution.passages_matched)),
+                ("passages_retained", str(execution.passages_retained)),
+                ("search_mode", execution.search_mode.value),
+                ("rejected_reasons", repr(execution.rejected_reasons)),
+            ),
+        )
+        return ConnectorExecutionResult(
+            event,
+            documents,
+            warnings=execution.warnings,
+            errors=execution.errors,
+            fallback_used=status in {
+                RetrievalStatus.CONNECTOR_NOT_CONFIGURED,
+                RetrievalStatus.REJECTED_RESULT,
+            },
+        )
+
+    def public_capabilities(self) -> Mapping[str, object]:
+        inventory = self._engine.inventory()
+        return {
+            **super().public_capabilities(),
+            "network_required": False,
+            "search_mode": "HYBRID_LOCAL",
+            "corpus": inventory.to_public_dict(),
+            "legal_scope": "Les PV apportent du contexte et ne sont pas des normes juridiques.",
+        }
+
+
 class MetadataOnlyExecutionAdapter(CallableExecutionAdapter):
     def __init__(
         self,
@@ -1075,6 +1249,7 @@ def build_default_executors(
     *,
     catalogs: Mapping[str, Sequence[Mapping[str, object]]] | None = None,
     local_transport: Callable[[ResearchQuery, ExecutionContext], Mapping[str, Any]] | None = None,
+    cse_processed_root: Path | str | None = None,
 ) -> tuple[ConnectorExecutor, ...]:
     """Return wrappers for existing sources without enabling any network call."""
 
@@ -1084,6 +1259,8 @@ def build_default_executors(
         CdtnExecutionAdapter(),
         *default_metadata_executors(catalogs),
     ]
+    if cse_processed_root is not None:
+        executors.insert(0, CSECSSCTExecutionAdapter(cse_processed_root))
     if local_transport is not None:
         executors.insert(0, LocalCorpusExecutionAdapter(local_transport))
     return tuple(executors)
@@ -1093,6 +1270,7 @@ __all__ = (
     "BaseConnectorExecutor",
     "CallableExecutionAdapter",
     "CdtnExecutionAdapter",
+    "CSECSSCTExecutionAdapter",
     "ConnectorConfiguration",
     "ConnectorAuthenticationError",
     "ConnectorCacheCorruptedError",
