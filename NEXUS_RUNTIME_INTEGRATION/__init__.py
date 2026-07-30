@@ -56,6 +56,14 @@ from .official_connectors_runtime import (
     RuntimeOfficialConnectorsResult,
 )
 from .public_payload import sanitize_public_payload
+from .public_evidence_safety import (
+    PublicEvidenceDecision,
+    PublicEvidenceSanitization,
+    detect_public_health_categories,
+    evidence_remains_useful_after_redaction,
+    sanitize_public_evidence_payload,
+    sanitize_public_evidence_text,
+)
 from .final_response import build_final_response, summary_markdown
 from .source_extraction import (
     DocumentAvailability,
@@ -77,6 +85,9 @@ from .retrieval_to_response import (
     RetrievalToResponseConfig,
     RetrievalToResponseIntegration,
     RetrievalToResponseResult,
+    FinalEvidenceSelection,
+    apply_final_evidence_selection,
+    evaluate_applicable_evidence,
     merge_retrieved_sources,
     retain_applicable_evidence,
 )
@@ -169,6 +180,12 @@ __all__ = (
     "RuntimeSyndicalReasoningReportMapper",
     "RuntimeSyndicalReasoningResult",
     "sanitize_public_payload",
+    "PublicEvidenceDecision",
+    "PublicEvidenceSanitization",
+    "detect_public_health_categories",
+    "evidence_remains_useful_after_redaction",
+    "sanitize_public_evidence_payload",
+    "sanitize_public_evidence_text",
     "build_final_response",
     "build_source_extraction_report",
     "merge_metadata_source_qualifications",
@@ -186,6 +203,9 @@ __all__ = (
     "RetrievalToResponseConfig",
     "RetrievalToResponseIntegration",
     "RetrievalToResponseResult",
+    "FinalEvidenceSelection",
+    "apply_final_evidence_selection",
+    "evaluate_applicable_evidence",
     "merge_retrieved_sources",
     "retain_applicable_evidence",
     "VERSION_FILE",
