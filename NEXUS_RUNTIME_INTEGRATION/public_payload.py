@@ -27,9 +27,11 @@ _DROP_KEYS = frozenset(
         "document_id",
         "employee_id",
         "engine_id",
+        "event_id",
         "engines",
         "evidence_id",
         "execution_id",
+        "fact_id",
         "file_path",
         "finding_id",
         "fingerprint",
@@ -39,9 +41,11 @@ _DROP_KEYS = frozenset(
         "metadata_record_id",
         "next_chunk_id",
         "normalized_id",
+        "origin_session_id",
         "path",
         "plan_id",
         "previous_chunk_id",
+        "query_id",
         "ranking_reasons",
         "recommendation_id",
         "report_id",
@@ -54,6 +58,9 @@ _DROP_KEYS = frozenset(
         "source_relative_path",
         "source_sha256",
         "storage_id",
+        "target_id",
+        "issue_id",
+        "case_session_id",
         "technical_id",
         "technical_reference",
     }
@@ -164,12 +171,7 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
     summary = dict(final["public_summary"])
     sections = summary.pop("sections", [])
     details = final["detailed_analysis"]
-    position = summary.get("syndical_position", [])
     questions = summary.get("priority_questions", [])
-    documents = summary.get("documents", [])
-    visible_sources = _rows(summary.get("source_extractions"), limit=3)
-    if not visible_sources:
-        visible_sources = _rows(summary.get("sources"), limit=3)
     compact_answer = {
         "query": answer.get("query"),
         "confidence": answer.get("confidence"),
@@ -194,19 +196,6 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
             )
             if route.get(key) not in (None, [], "")
         },
-        "short_answer": " ".join(position[:2]),
-        "working_position": " ".join(position[2:4]),
-        "documents_to_request": [item.get("document") for item in documents],
-        "questions_to_ask": [item.get("question") for item in questions],
-        "sources": [
-            {
-                "provider": item.get("provider"),
-                "title": item.get("title"),
-                "reference": item.get("reference"),
-            }
-            for item in visible_sources
-            if isinstance(item, Mapping)
-        ],
         "rule_to_facts_analysis": [
             {
                 "source": item.get("source"),
@@ -224,7 +213,6 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
                 "confidence",
                 "case_factual_core",
                 "route",
-                "sources",
                 "issue_groups",
             )
         }
@@ -236,12 +224,16 @@ def _compact_factual_payload(public: Mapping[str, Any]) -> dict[str, Any]:
         "domaines_detectes": domains,
         "experts_mobilises": experts,
         "niveau_de_confiance": answer.get("confidence"),
-        "questions_utiles": compact_answer.get("questions_to_ask", [])[:5],
+        "questions_utiles": (
+            ["Questions disponibles dans la synthèse opérationnelle."]
+            if questions
+            else []
+        ),
     }
     juriste = {
         "active": True,
-        "response_courte": compact_answer.get("short_answer"),
-        "position_de_travail_proposee": compact_answer.get("working_position"),
+        "response_courte": None,
+        "position_de_travail_proposee": None,
     }
     report_sections = [
         {
@@ -288,7 +280,21 @@ def _sanitize_mapping(value: Mapping[str, Any], *, top_level: bool = False) -> d
         normalized = key.lower()
         if normalized in _DROP_KEYS or (top_level and normalized in _DROP_TOP_LEVEL):
             continue
-        if normalized.endswith(("_sha256", "_storage_id", "_internal_id")):
+        if normalized.endswith(
+            (
+                "_sha256",
+                "_storage_id",
+                "_internal_id",
+                "_session_id",
+                "_event_id",
+                "_query_id",
+                "_target_id",
+                "_issue_id",
+                "_fact_id",
+                "_document_id",
+                "_chunk_id",
+            )
+        ):
             continue
         if normalized == "generated_from":
             result[key] = _public_flow(item)

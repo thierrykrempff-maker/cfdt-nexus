@@ -77,6 +77,30 @@ _RULES: dict[str, tuple[_IssueRule, ...]] = {
         _IssueRule("cssct-use", IssueCategory.INTERNAL_PROCEDURE, "Conditions d’utilisation", "Quel canal et quel délai de prévenance étaient effectivement applicables ?", ("canal", "délai", "fichier")),
         _IssueRule("cssct-rules", IssueCategory.CSSCT, "Règles spécifiques CSSCT", "Quels textes et pratiques encadrent cette réunion CSSCT ?", ("accord cse", "règlement intérieur du cse", "pratique")),
     ),
+    "CSE_MEETING_REST_TIME": (
+        _IssueRule("cse-rest-status", IssueCategory.CSE_INFORMATION_CONSULTATION, "Nature de la réunion CSE", "La participation correspond-elle à une réunion CSE et en quelle qualité le salarié y assiste-t-il ?", ("cse", "réunion", "élu", "mandat", "convocation")),
+        _IssueRule("cse-rest-working-time", IssueCategory.WORKING_TIME, "Temps de réunion pendant un repos", "Comment le temps de réunion CSE organisé pendant un repos doit-il être décompté et rémunéré ?", ("réunion", "repos", "payé", "temps")),
+        _IssueRule("cse-rest-protection", IssueCategory.WORKING_TIME, "Protection du repos", "Le repos prévu doit-il être déplacé ou compensé compte tenu des horaires réellement accomplis ?", ("repos", "5x8", "horaire", "planning")),
+        _IssueRule("cse-rest-local-rule", IssueCategory.COLLECTIVE_AGREEMENT, "Règle locale applicable", "Quel accord ou usage encadre le temps de réunion CSE lorsqu'il tombe sur un jour de repos ?", ("accord", "usage", "cse", "repos")),
+    ),
+    "UNPAID_OVERTIME": (
+        _IssueRule("overtime-reality", IssueCategory.WORKING_TIME, "Réalité des heures", "Quelles heures supplémentaires sont établies par les pointages, plannings ou autres éléments concordants ?", ("heures supplémentaires", "pointage", "planning", "heures en plus")),
+        _IssueRule("overtime-employer", IssueCategory.WORKING_TIME, "Connaissance de l'employeur", "Les heures ont-elles été demandées, validées ou rendues nécessaires par les tâches confiées ?", ("employeur", "demande", "validation", "charge", "nécessaires")),
+        _IssueRule("overtime-pay", IssueCategory.PAYROLL, "Paiement et majorations", "Les heures établies ont-elles été payées ou compensées avec les majorations applicables ?", ("paie", "bulletin", "non payé", "majoration", "compensation")),
+        _IssueRule("overtime-local-rule", IssueCategory.COLLECTIVE_AGREEMENT, "Règle locale de temps de travail", "Quel accord local encadre le décompte, la validation et la compensation des heures supplémentaires ?", ("accord", "temps de travail", "pointage")),
+    ),
+    "CLASSIFICATION_ACTUAL_DUTIES": (
+        _IssueRule("classification-real-work", IssueCategory.CLASSIFICATION, "Fonctions réellement exercées", "Quelles tâches, responsabilités, autonomie et technicité sont effectivement exercées ?", ("tâches", "fonctions", "responsabilités", "autonomie", "technicité", "travail réel")),
+        _IssueRule("classification-criteria", IssueCategory.CLASSIFICATION, "Critères conventionnels", "À quel niveau les fonctions réelles correspondent-elles dans la grille conventionnelle applicable ?", ("classification", "coefficient", "niveau", "groupe")),
+        _IssueRule("classification-duration", IssueCategory.CLASSIFICATION, "Période concernée", "Depuis quand les fonctions correspondant à un niveau différent sont-elles exercées de manière vérifiable ?", ("depuis", "durée", "réellement")),
+        _IssueRule("classification-pay", IssueCategory.PAYROLL, "Conséquences salariales", "Une reclassification établie emporterait-elle une régularisation de salaire ou de coefficient ?", ("salaire", "coefficient", "régularisation")),
+    ),
+    "NIGHT_WORK_FATIGUE": (
+        _IssueRule("night-fatigue-schedule", IssueCategory.WORKING_TIME, "Cycles et repos", "Les cycles de nuit et les repos effectivement accordés respectent-ils les règles applicables ?", ("nuit", "cycle", "repos", "travail posté")),
+        _IssueRule("night-fatigue-prevention", IssueCategory.HEALTH_SAFETY, "Prévention de la fatigue", "L'évaluation des risques et les mesures collectives traitent-elles la fatigue liée au travail de nuit ou posté ?", ("fatigue", "sécurité", "danger", "prévention", "duerp")),
+        _IssueRule("night-fatigue-organization", IssueCategory.HEALTH_SAFETY, "Organisation du travail", "Les effectifs, rotations, pauses et charges de travail aggravent-ils un risque professionnel objectivable ?", ("organisation", "effectif", "rotation", "pause", "charge")),
+        _IssueRule("night-fatigue-cse", IssueCategory.CSE_INFORMATION_CONSULTATION, "Alerte collective", "Le CSE ou la CSSCT ont-ils été saisis des risques liés aux nuits et à l'organisation ?", ("cse", "cssct", "alerte", "signalement")),
+    ),
     "AMBIGUOUS_TEN_PERCENT_RULE": (
         _IssueRule("ten-percent-leave", IssueCategory.LEAVE, "Interprétation congés", "L’expression « règle des 10 % » désigne-t-elle une règle relative aux congés payés ?", ("10 %", "congé", "période de référence", "dixième")),
         _IssueRule("ten-percent-pay", IssueCategory.PAYROLL, "Interprétation indemnité", "L’expression désigne-t-elle une méthode de calcul d’une indemnité ou d’un élément de rémunération ?", ("10 %", "perte financière", "indemnité", "dixième")),

@@ -173,6 +173,7 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
             width=340,
         ),
     }
+    summary = _deduplicate_summary_structure(summary)
     summary = sanitize_public_evidence_payload(
         {"public_summary": summary}
     )["public_summary"]
@@ -216,6 +217,125 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
         "public_summary": _drop_empty(summary),
         "detailed_analysis": _drop_empty(details),
     })
+
+
+def _deduplicate_summary_structure(summary: dict[str, Any]) -> dict[str, Any]:
+    """Keep each operational message in its most useful public section.
+
+    The detailed analysis remains untouched.  This only removes repetitions
+    created by the presentation layer (for example a priority question copied
+    verbatim into the strategy and again into the next actions).
+    """
+
+    def identities(values: Sequence[Any], key: str | None = None) -> set[str]:
+        output: set[str] = set()
+        for value in values:
+            if key and isinstance(value, Mapping):
+                value = value.get(key)
+            normalized = _SPACE.sub(" ", _text(value, 500)).strip(" .;:").casefold()
+            if normalized:
+                output.add(normalized)
+        return output
+
+    questions = identities(_sequence(summary.get("priority_questions")), "question")
+    positions = identities(_sequence(summary.get("syndical_position")))
+    comparisons = {
+        *identities(_sequence(summary.get("rule_to_facts")), "next_action"),
+        *identities(_sequence(summary.get("rule_to_facts")), "conclusion"),
+    }
+    strategy = dict(_mapping(summary.get("strategy")))
+    for key in ("before", "during", "position"):
+        retained: list[Any] = []
+        for value in _sequence(strategy.get(key)):
+            normalized = _SPACE.sub(" ", _text(value, 500)).strip(" .;:").casefold()
+            without_prefix = re.sub(r"^(?:obtenir|avant|pendant|position)\s*:\s*", "", normalized)
+            if normalized in questions or without_prefix in questions:
+                continue
+            if normalized in positions or without_prefix in positions:
+                continue
+            retained.append(value)
+        strategy[key] = retained
+    summary["strategy"] = strategy
+    summary["next_actions"] = [
+        value
+        for value in _sequence(summary.get("next_actions"))
+        if (
+            (normalized := _SPACE.sub(" ", _text(value, 500)).strip(" .;:").casefold())
+            not in questions
+            and normalized not in comparisons
+        )
+    ]
+    wording = dict(_mapping(summary.get("useful_wording")))
+    wording.pop("avoid", None)
+    summary["useful_wording"] = wording
+    situation_messages = identities(_sequence(summary.get("situation")))
+    seen_facts: set[str] = set()
+    seen_missing: set[str] = set()
+    compact_comparisons: list[dict[str, Any]] = []
+    for raw in _sequence(summary.get("rule_to_facts")):
+        if not isinstance(raw, Mapping):
+            continue
+        row = dict(raw)
+        issue_identity = _SPACE.sub(
+            " ", _text(row.get("issue"), 500)
+        ).strip(" .;:").casefold()
+        facts: list[str] = []
+        for fact in _sequence(row.get("matching_facts")):
+            normalized = _SPACE.sub(" ", _text(fact, 500)).strip(" .;:").casefold()
+            if (
+                not normalized
+                or normalized == issue_identity
+                or normalized in situation_messages
+                or normalized in seen_facts
+            ):
+                continue
+            seen_facts.add(normalized)
+            facts.append(str(fact))
+        missing: list[str] = []
+        for item in _sequence(row.get("missing_facts")):
+            normalized = _SPACE.sub(" ", _text(item, 500)).strip(" .;:").casefold()
+            if not normalized or normalized in seen_missing:
+                continue
+            seen_missing.add(normalized)
+            missing.append(str(item))
+        if facts:
+            row["matching_facts"] = facts
+        else:
+            row.pop("matching_facts", None)
+        if missing:
+            row["missing_facts"] = missing
+        else:
+            row.pop("missing_facts", None)
+        compact_comparisons.append(row)
+    summary["rule_to_facts"] = compact_comparisons
+    seen_cse_limits: set[str] = set()
+    seen_cse_values: set[str] = set()
+    compact_cse: list[dict[str, Any]] = []
+    for raw in _sequence(summary.get("cse_context")):
+        if not isinstance(raw, Mapping):
+            continue
+        row = dict(raw)
+        limits: list[str] = []
+        for item in _sequence(row.get("limits")):
+            normalized = _SPACE.sub(" ", _text(item, 500)).strip(" .;:").casefold()
+            if not normalized or normalized in seen_cse_limits:
+                continue
+            seen_cse_limits.add(normalized)
+            limits.append(str(item))
+        if limits:
+            row["limits"] = limits
+        else:
+            row.pop("limits", None)
+        legal_value = _SPACE.sub(
+            " ", _text(row.get("legal_value"), 500)
+        ).strip(" .;:").casefold()
+        if legal_value and legal_value in seen_cse_values:
+            row.pop("legal_value", None)
+        elif legal_value:
+            seen_cse_values.add(legal_value)
+        compact_cse.append(row)
+    summary["cse_context"] = compact_cse
+    return summary
 
 
 def summary_markdown(summary: Mapping[str, Any]) -> str:
@@ -784,11 +904,27 @@ def _urgency_reason(core: Mapping[str, Any], suspended: bool) -> str:
 
 def _compact_core(core: Mapping[str, Any]) -> dict[str, Any]:
     output: dict[str, Any] = {}
+    seen_messages: set[str] = set()
     for key, value in core.items():
         if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
             cleaned = _dedupe(_strings(value, limit=12), limit=12, width=420)
+            unique: list[str] = []
+            for item in cleaned:
+                normalized = _SPACE.sub(" ", item).strip(" .;:").casefold()
+                if len(normalized) > 24 and normalized in seen_messages:
+                    continue
+                if len(normalized) > 24:
+                    seen_messages.add(normalized)
+                unique.append(item)
+            cleaned = unique
         elif isinstance(value, (str, bool, int, float)) or value is None:
             cleaned = _text(value, 500) if isinstance(value, str) else value
+            if isinstance(cleaned, str):
+                normalized = _SPACE.sub(" ", cleaned).strip(" .;:").casefold()
+                if len(normalized) > 24 and normalized in seen_messages:
+                    continue
+                if len(normalized) > 24:
+                    seen_messages.add(normalized)
         else:
             continue
         if cleaned not in (None, "", [], {}):
