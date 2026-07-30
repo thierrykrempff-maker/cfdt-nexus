@@ -66,6 +66,7 @@ from .source_extraction import (
     merge_metadata_source_qualifications,
 )
 from .source_execution_runtime import (
+    ENV_CSE_PROCESSED_ROOT as SOURCE_EXECUTION_CSE_PROCESSED_ROOT_ENV,
     ENV_ENABLED as SOURCE_EXECUTION_COORDINATOR_ENV_ENABLED,
     SourceExecutionRuntime,
     SourceExecutionRuntimeConfig,
@@ -172,6 +173,7 @@ __all__ = (
     "SourceExecutionRuntimeConfig",
     "SourceExecutionRuntimeResult",
     "SOURCE_EXECUTION_COORDINATOR_ENV_ENABLED",
+    "SOURCE_EXECUTION_CSE_PROCESSED_ROOT_ENV",
     "VERSION_FILE",
     "get_nexus_version",
     "needs_retirement",
