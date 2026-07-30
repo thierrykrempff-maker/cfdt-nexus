@@ -154,6 +154,13 @@ from .factual_core import (
     build_case_factual_core,
     build_provisional_union_position,
 )
+from .factual_models import (
+    CanonicalFact,
+    FactCategory,
+    FactConfidence,
+    FactFormulation,
+    FactualSource,
+)
 from .source_to_facts import (
     ApplicableSource,
     ApplicabilityStatus,
@@ -291,6 +298,7 @@ __all__ = (
     "DisciplinaryReasoningEngine",
     "ActionableDocument",
     "ActionableQuestion",
+    "CanonicalFact",
     "CaseFactualCore",
     "ApplicableSource",
     "ApplicabilityStatus",
@@ -320,7 +328,11 @@ __all__ = (
     "EvidenceCategory",
     "EvidencePriority",
     "EvidenceRequirement",
+    "FactCategory",
+    "FactConfidence",
+    "FactFormulation",
     "FactStatus",
+    "FactualSource",
     "HealthAbsenceAnalysis",
     "HealthAbsenceReasoningEngine",
     "HealthDocumentComparison",

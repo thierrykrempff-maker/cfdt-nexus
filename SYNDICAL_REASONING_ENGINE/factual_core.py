@@ -8,9 +8,18 @@ question generation.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+import hashlib
 import re
 import unicodedata
 from typing import Iterable
+
+from .factual_models import (
+    CanonicalFact,
+    FactCategory,
+    FactConfidence,
+    FactFormulation,
+    FactualSource,
+)
 
 
 QUESTION_SALARIE = "QUESTION_SALARIE"
@@ -94,6 +103,10 @@ class CaseFactualCore:
     forbidden_inferences: list[str] = field(default_factory=list)
     confidence_level: str = "LOW"
     search_query: str = ""
+    origin_session_id: str = ""
+    canonical_facts: list[CanonicalFact] = field(default_factory=list)
+    fact_formulation_count: int = 0
+    fact_duplicate_count: int = 0
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)
@@ -104,7 +117,11 @@ SECTION_KEYS = {
     "faits reconnus": "facts_admitted",
     "faits contestes": "facts_disputed",
     "faits allegues": "facts_alleged",
+    "faits non etablis": "facts_not_established",
+    "contexte": "facts_context",
+    "consequences": "facts_consequence",
     "informations manquantes deja identifiees": "facts_missing",
+    "informations manquantes": "facts_missing",
 }
 
 
@@ -117,6 +134,9 @@ def _structured_sections(query: str) -> dict[str, list[str]]:
         if heading in SECTION_KEYS:
             current = SECTION_KEYS[heading]
             continue
+        if line.endswith(":"):
+            current = None
+            continue
         if not line.startswith("- ") or current is None:
             continue
         value = line[2:].strip()
@@ -125,6 +145,259 @@ def _structured_sections(query: str) -> dict[str, list[str]]:
         if value and not normalize(value).startswith("aucun element fourni"):
             sections[current].append(value)
     return {key: _dedupe(values) for key, values in sections.items()}
+
+
+_SECTION_CATEGORY = {
+    "facts_certain": FactCategory.CERTAIN,
+    "facts_admitted": FactCategory.ADMITTED,
+    "facts_alleged": FactCategory.ALLEGED,
+    "facts_disputed": FactCategory.DISPUTED,
+    "facts_not_established": FactCategory.NOT_ESTABLISHED,
+    "facts_context": FactCategory.CONTEXT,
+    "facts_consequence": FactCategory.CONSEQUENCE,
+    "facts_missing": FactCategory.MISSING_INFORMATION,
+}
+_CATEGORY_SOURCE = {
+    FactCategory.CERTAIN: FactualSource.USER_PROVIDED,
+    FactCategory.ADMITTED: FactualSource.USER_ADMITTED,
+    FactCategory.ALLEGED: FactualSource.USER_ALLEGED,
+    FactCategory.DISPUTED: FactualSource.USER_DISPUTED,
+    FactCategory.NOT_ESTABLISHED: FactualSource.USER_NOT_ESTABLISHED,
+    FactCategory.CONTEXT: FactualSource.USER_CONTEXT,
+    FactCategory.CONSEQUENCE: FactualSource.USER_CONSEQUENCE,
+    FactCategory.MISSING_INFORMATION: FactualSource.USER_MISSING_INFORMATION,
+}
+_CATEGORY_CONFIDENCE = {
+    FactCategory.CERTAIN: FactConfidence.HIGH,
+    FactCategory.ADMITTED: FactConfidence.HIGH,
+    FactCategory.ALLEGED: FactConfidence.LOW,
+    FactCategory.DISPUTED: FactConfidence.MEDIUM,
+    FactCategory.NOT_ESTABLISHED: FactConfidence.LOW,
+    FactCategory.CONTEXT: FactConfidence.MEDIUM,
+    FactCategory.CONSEQUENCE: FactConfidence.MEDIUM,
+    FactCategory.MISSING_INFORMATION: FactConfidence.LOW,
+}
+_META_WRAPPERS = (
+    r"^(?:un\s+)?element\s+defavorable\s+(?:est\s+)?reconnu\s*:\s*",
+    r"^fait\s+reconnu\s*:\s*",
+    r"^le\s+salarie\s+reconnait\s+au\s+moins\s+cet\s+element\s*:\s*",
+    r"^le\s+salarie\s+reconnait\s+certains\s+elements\s*:\s*",
+)
+_NOT_ESTABLISHED_MARKERS = (
+    "aurait",
+    "serait",
+    "pourrait",
+    "semble",
+    "n est pas etabli",
+    "non etabli",
+    "reste a verifier",
+    "reste a confirmer",
+)
+
+
+@dataclass(frozen=True)
+class _FactCandidate:
+    text: str
+    category: FactCategory
+    factual_source: FactualSource
+    ordinal: int
+
+
+def _stable_id(prefix: str, *parts: str) -> str:
+    digest = hashlib.sha256("\x1f".join(parts).encode("utf-8")).hexdigest()[:20]
+    return f"{prefix}-{digest}"
+
+
+def _strip_meta_wrapper(value: str) -> str:
+    cleaned = " ".join(str(value).split()).strip(" -")
+    normalized = normalize(cleaned)
+    for pattern in _META_WRAPPERS:
+        match = re.match(pattern, normalized)
+        if match:
+            words_to_remove = len(normalized[: match.end()].split())
+            words = cleaned.split()
+            cleaned = " ".join(words[words_to_remove:]).lstrip(": ").strip()
+            break
+    return cleaned
+
+
+def _category_for_text(category: FactCategory, text: str) -> FactCategory:
+    normalized = normalize(text)
+    if category is FactCategory.CERTAIN:
+        if "reconnait" in normalized or "admet" in normalized:
+            return FactCategory.ADMITTED
+        if any(marker in normalized for marker in _NOT_ESTABLISHED_MARKERS):
+            return FactCategory.NOT_ESTABLISHED
+    return category
+
+
+def _communication_admission_key(text: str) -> str | None:
+    """Unify only equivalent admissions of authorship for a communication.
+
+    Nearby facts such as admitting particular words, recipients or diffusion
+    deliberately do not match this signature.
+    """
+
+    normalized = normalize(text)
+    if not re.search(r"\b(?:courriels?|emails?|messages?)\b", normalized):
+        return None
+    if re.search(
+        r"\breconnait\s+(?:avoir\s+)?(?:envoye|ecrit)\b",
+        normalized,
+    ) or re.search(r"\breconnait\s+etre\s+l\s+auteur\b", normalized):
+        return "admission:communication-authorship"
+    return None
+
+
+def _semantic_key(category: FactCategory, text: str) -> str:
+    normalized = normalize(_strip_meta_wrapper(text)).strip(" .,:;")
+    if category is FactCategory.ADMITTED:
+        communication = _communication_admission_key(normalized)
+        if communication:
+            return communication
+    return normalized
+
+
+def _canonical_text(category: FactCategory, candidates: list[_FactCandidate]) -> str:
+    if (
+        category is FactCategory.ADMITTED
+        and any(_communication_admission_key(item.text) for item in candidates)
+    ):
+        return "Le salarié reconnaît être l’auteur des courriels."
+    return _strip_meta_wrapper(candidates[0].text).rstrip(".") + "."
+
+
+def _subject(text: str) -> str:
+    normalized = normalize(text)
+    if "salarie" in normalized or "elu" in normalized:
+        return "EMPLOYEE"
+    if any(marker in normalized for marker in ("employeur", "direction")):
+        return "EMPLOYER"
+    if any(marker in normalized for marker in ("collegue", "superviseur", "responsable")):
+        return "THIRD_PARTY"
+    if any(marker in normalized for marker in ("document", "procedure", "reglement", "preuve")):
+        return "DOCUMENT_OR_EVIDENCE"
+    return "CASE"
+
+
+def _allegation_author(category: FactCategory, text: str) -> str | None:
+    normalized = normalize(text)
+    if category is FactCategory.ADMITTED:
+        return "EMPLOYEE"
+    if category not in {FactCategory.ALLEGED, FactCategory.DISPUTED}:
+        return None
+    if re.search(r"\b(?:employeur|direction|responsable|superviseur)\b", normalized):
+        return "EMPLOYER"
+    if re.search(r"\b(?:salarie|elu)\b", normalized):
+        return "EMPLOYEE"
+    return "UNSPECIFIED"
+
+
+def _fact_candidates(
+    sections: dict[str, list[str]],
+    query: str,
+) -> list[_FactCandidate]:
+    candidates: list[_FactCandidate] = []
+    ordinal = 0
+    if any(sections.values()):
+        section_rows = sections.items()
+    else:
+        section_rows = (("facts_certain", _sentences(query)),)
+    for section, values in section_rows:
+        category = _SECTION_CATEGORY[section]
+        for value in values:
+            resolved = _category_for_text(category, value)
+            candidates.append(
+                _FactCandidate(
+                    text=" ".join(value.split()).strip(" -"),
+                    category=resolved,
+                    factual_source=_CATEGORY_SOURCE[category],
+                    ordinal=ordinal,
+                )
+            )
+            ordinal += 1
+    return candidates
+
+
+def _session_id(
+    candidates: list[_FactCandidate],
+    requested_path: str | None,
+    explicit_session_id: str | None,
+) -> str:
+    if explicit_session_id is not None:
+        cleaned = " ".join(explicit_session_id.split())
+        if not cleaned:
+            raise ValueError("origin_session_id must be non-empty")
+        return cleaned
+    identities = sorted(
+        {
+            f"{item.category.value}:{_semantic_key(item.category, item.text)}"
+            for item in candidates
+        }
+    )
+    return _stable_id("session", requested_path or "AUTO", *identities)
+
+
+def _canonicalize_facts(
+    sections: dict[str, list[str]],
+    query: str,
+    requested_path: str | None,
+    explicit_session_id: str | None,
+) -> tuple[str, list[CanonicalFact], int]:
+    candidates = _fact_candidates(sections, query)
+    session_id = _session_id(candidates, requested_path, explicit_session_id)
+    groups: dict[tuple[FactCategory, str], list[_FactCandidate]] = {}
+    for candidate in candidates:
+        key = (candidate.category, _semantic_key(candidate.category, candidate.text))
+        groups.setdefault(key, []).append(candidate)
+
+    facts: list[CanonicalFact] = []
+    for (category, semantic_key), group in groups.items():
+        canonical_text = _canonical_text(category, group)
+        fact_id = _stable_id(
+            "fact",
+            session_id,
+            category.value,
+            semantic_key,
+        )
+        formulations = tuple(
+            FactFormulation(
+                formulation_id=_stable_id(
+                    "formulation",
+                    session_id,
+                    candidate.factual_source.value,
+                    normalize(candidate.text),
+                    str(candidate.ordinal),
+                ),
+                text=candidate.text,
+                factual_source=candidate.factual_source,
+                semantic_duplicate_of=fact_id if index else None,
+            )
+            for index, candidate in enumerate(group)
+        )
+        facts.append(
+            CanonicalFact(
+                fact_id=fact_id,
+                canonical_text=canonical_text,
+                category=category,
+                subject=_subject(canonical_text),
+                allegation_author=_allegation_author(category, canonical_text),
+                factual_source=group[0].factual_source,
+                confidence=_CATEGORY_CONFIDENCE[category],
+                original_formulations=formulations,
+                origin_session_id=session_id,
+            )
+        )
+    duplicate_count = len(candidates) - len(facts)
+    return session_id, facts, duplicate_count
+
+
+def _fact_texts(
+    facts: Iterable[CanonicalFact],
+    *categories: FactCategory,
+) -> list[str]:
+    accepted = set(categories)
+    return [fact.canonical_text for fact in facts if fact.category in accepted]
 
 
 def _sentences(query: str) -> list[str]:
@@ -280,15 +553,43 @@ def _matching(facts: list[str], markers: tuple[str, ...]) -> list[str]:
 def build_case_factual_core(
     query: str,
     requested_path: str | None = None,
+    origin_session_id: str | None = None,
 ) -> CaseFactualCore:
     sections = _structured_sections(query)
     structured = any(sections.values())
-    provided = sections["facts_certain"] if structured else _sentences(query)
-    admitted = sections["facts_admitted"]
-    disputed = sections["facts_disputed"]
-    alleged = sections["facts_alleged"]
-    missing = sections["facts_missing"]
-    all_facts = _dedupe([*provided, *admitted, *disputed, *alleged])
+    session_id, canonical_facts, duplicate_count = _canonicalize_facts(
+        sections,
+        query,
+        requested_path,
+        origin_session_id,
+    )
+    provided = (
+        _fact_texts(
+            canonical_facts,
+            FactCategory.CERTAIN,
+            FactCategory.CONTEXT,
+            FactCategory.CONSEQUENCE,
+        )
+        if structured
+        else [
+            fact.canonical_text
+            for fact in canonical_facts
+            if fact.category is not FactCategory.MISSING_INFORMATION
+        ]
+    )
+    admitted = _fact_texts(canonical_facts, FactCategory.ADMITTED)
+    disputed = _fact_texts(canonical_facts, FactCategory.DISPUTED)
+    alleged = _fact_texts(
+        canonical_facts,
+        FactCategory.ALLEGED,
+        FactCategory.NOT_ESTABLISHED,
+    )
+    missing = _fact_texts(canonical_facts, FactCategory.MISSING_INFORMATION)
+    all_facts = [
+        fact.canonical_text
+        for fact in canonical_facts
+        if fact.category is not FactCategory.MISSING_INFORMATION
+    ]
     text = normalize(" ".join(all_facts or [query]))
     category = _category(text)
     primary = _primary_fact(category, provided + admitted + alleged, query)
@@ -487,6 +788,12 @@ def build_case_factual_core(
             "LOW" if blocking else "HIGH" if category != "GENERAL_EMPLOYEE_QUESTION" else "MEDIUM"
         ),
         search_query=" ".join(_dedupe(search_parts)),
+        origin_session_id=session_id,
+        canonical_facts=canonical_facts,
+        fact_formulation_count=sum(
+            len(fact.original_formulations) for fact in canonical_facts
+        ),
+        fact_duplicate_count=duplicate_count,
     )
 
 
