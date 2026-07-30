@@ -33,6 +33,12 @@ from SYNDICAL_REASONING_ENGINE import (
 from NEXUS_RUNTIME_INTEGRATION.source_extraction import (
     build_source_extraction_report,
 )
+from NEXUS_RUNTIME_INTEGRATION.retrieval_to_response import (
+    RetrievalToResponseConfig,
+    RetrievalToResponseIntegration,
+    merge_retrieved_sources,
+    retain_applicable_evidence,
+)
 
 try:
     import nexus_bible_bridge as bridge
@@ -4588,15 +4594,48 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["case_factual_core"] = factual_core.to_dict()
     answer["actionable_preparation"] = preparation
     answer["syndical_position"] = union_position
+    retrieval_result = None
+    analysis_sources = tuple(
+        source
+        for source in answer.get("sources", ())
+        if isinstance(source, dict)
+    )
+    retrieval_config = RetrievalToResponseConfig.from_env()
+    if retrieval_config.enabled:
+        retrieval_result = RetrievalToResponseIntegration(
+            retrieval_config
+        ).integrate(factual_core)
+        answer["retrieval_propagation"] = retrieval_result.to_dict()
+        answer["retrieval_public_evidence"] = list(
+            retrieval_result.public_evidence
+        )
+        answer["retrieval_cse_context"] = list(
+            retrieval_result.public_minutes
+        )
+        analysis_sources = merge_retrieved_sources(
+            analysis_sources,
+            retrieval_result,
+        )
     source_to_facts = analyze_source_to_facts(
         factual_core,
-        tuple(
-            source
-            for source in answer.get("sources", ())
-            if isinstance(source, dict)
-        ),
+        analysis_sources,
     )
     source_to_facts_payload = source_to_facts.to_dict()
+    if retrieval_result is not None:
+        used_evidence = retain_applicable_evidence(
+            retrieval_result,
+            source_to_facts_payload["applicable_sources"],
+        )
+        answer["retrieval_public_evidence"] = list(used_evidence)
+        answer["retrieval_cse_context"] = [
+            item
+            for item in used_evidence
+            if item.get("source_type") == "CSE_CSSCT_MINUTES"
+        ]
+        answer["retrieval_propagation"]["used_count"] = len(used_evidence)
+        answer["retrieval_propagation"]["post_mapping_rejected_count"] = (
+            answer["retrieval_propagation"]["selected_count"] - len(used_evidence)
+        )
     answer["source_search_plan"] = source_to_facts_payload["search_queries"]
     answer["applicable_sources"] = source_to_facts_payload["applicable_sources"]
     answer["rule_to_facts_analysis"] = source_to_facts_payload[
@@ -4623,11 +4662,7 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     ]
     answer["source_extraction"] = build_source_extraction_report(
         factual_core,
-        tuple(
-            source
-            for source in answer.get("sources", ())
-            if isinstance(source, dict)
-        ),
+        analysis_sources,
         (
             *tuple(preparation["documents_to_request"]),
             *tuple(source_to_facts_payload["missing_source_requirements"]),
