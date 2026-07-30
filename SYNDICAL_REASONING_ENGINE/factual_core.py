@@ -422,7 +422,31 @@ def _category(text: str) -> str:
         return "BREAKS_AND_BADGE_CONTROL"
     if _contains(text, "epi", "visiere", "sur lunettes", "gants specifiques"):
         return "PPE_AVAILABILITY_OR_SUITABILITY"
-    if _contains(text, "catalyseur", "recette", "procedure accessible sur le terminal"):
+    if (
+        _contains(text, "procedure", "consigne", "instruction")
+        and _contains(
+            text,
+            "obsolete",
+            "plus a jour",
+            "ancienne version",
+            "version",
+            "diffuse",
+            "diffusion",
+            "accessible",
+            "connaissance",
+            "formation",
+        )
+        and _contains(
+            text,
+            "travail",
+            "poste",
+            "salarie",
+            "employeur",
+            "chimique",
+            "operation",
+            "sanction",
+        )
+    ) or _contains(text, "catalyseur", "recette", "procedure accessible sur le terminal"):
         return "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE"
     if _contains(text, "ethylotest", "alcoolemie") or (
         "cariste" in text and "alcool" in text
@@ -438,16 +462,102 @@ def _category(text: str) -> str:
         return "INSULTING_TAG"
     if _contains(text, "insult", "injur", "propos grossier"):
         return "INSULTING_BEHAVIOR"
-    if _contains(
-        text,
-        "3x8",
-        "rythme poste",
-        "horaires postes",
-        "cycle poste",
-        "equipes alternantes",
-    ) or (
-        _contains(text, "passage", "passer", "changement")
-        and _contains(text, "horaire de jour", "travail de jour", "jour vers")
+    if (
+        _contains(
+            text,
+            "fatigue",
+            "epuisement",
+            "sommeil",
+            "repos insuffisant",
+            "manque de repos",
+            "risque d accident",
+            "danger",
+            "securite",
+        )
+        and _contains(
+            text,
+            "travail poste",
+            "poste de nuit",
+            "postes de nuit",
+            "travail de nuit",
+            "nuits",
+            "cycle",
+            "3x8",
+            "5x8",
+        )
+    ):
+        return "NIGHT_WORK_FATIGUE"
+    if (
+        _contains(text, "cse", "elu", "representant du personnel", "mandat")
+        and _contains(text, "reunion", "convocation", "convoque")
+        and _contains(
+            text,
+            "jour de repos",
+            "repos",
+            "hors horaire",
+            "hors temps de travail",
+            "5x8",
+            "temps de reunion",
+        )
+    ):
+        return "CSE_MEETING_REST_TIME"
+    if (
+        _contains(
+            text,
+            "heures supplementaires",
+            "heures en plus",
+            "temps supplementaire",
+        )
+        and _contains(
+            text,
+            "non paye",
+            "pas paye",
+            "impaye",
+            "bulletin",
+            "fiche de paie",
+            "paie",
+            "pointage",
+        )
+    ):
+        return "UNPAID_OVERTIME"
+    if (
+        _contains(text, "classification", "coefficient", "niveau", "groupe")
+        and _contains(
+            text,
+            "taches reellement",
+            "taches reelles",
+            "fonctions reellement",
+            "missions exercees",
+            "travail reel",
+            "responsabilites",
+            "autonomie",
+            "technicite",
+            "ne correspond",
+        )
+    ):
+        return "CLASSIFICATION_ACTUAL_DUTIES"
+    if (
+        _contains(
+            text,
+            "passage",
+            "passer",
+            "passe en",
+            "changement",
+            "oblige",
+            "impose",
+        )
+        and _contains(
+            text,
+            "horaire de jour",
+            "travail de jour",
+            "equipe de jour",
+            "jour vers",
+            "equipe postee",
+            "travail poste",
+            "3x8",
+            "cycle poste",
+            "equipes alternantes",
+        )
     ):
         return "WORK_SCHEDULE_CHANGE"
     if "cssct" in text and _contains(
@@ -474,6 +584,15 @@ PRIMARY_MARKERS = {
     "INSULTING_TAG": ("tag", "inscription", "graffiti"),
     "INSULTING_BEHAVIOR": ("insult", "injur", "propos"),
     "WORK_SCHEDULE_CHANGE": ("3x8", "rythme poste", "horaire", "cycle"),
+    "CSE_MEETING_REST_TIME": ("cse", "reunion", "repos"),
+    "UNPAID_OVERTIME": ("heures", "pointage", "paie", "bulletin"),
+    "CLASSIFICATION_ACTUAL_DUTIES": (
+        "classification",
+        "coefficient",
+        "taches",
+        "fonctions",
+    ),
+    "NIGHT_WORK_FATIGUE": ("fatigue", "nuit", "travail poste", "securite"),
     "CSSCT_MEETING_TIME": ("cssct", "reunion"),
     "DISCIPLINARY_CASE_UNSPECIFIED": ("convocation", "sanction", "reproch"),
     "GENERAL_EMPLOYEE_QUESTION": (),
@@ -498,13 +617,17 @@ def _grievance(category: str, primary: str, text: str) -> str:
     labels = {
         "AMBIGUOUS_TEN_PERCENT_RULE": "Disparition alléguée d'une règle non définie appelée « règle des 10 % ».",
         "BREAKS_AND_BADGE_CONTROL": "Pauses jugées trop fréquentes ou trop longues, avec utilisation envisagée de données de badgeage.",
-        "PPE_AVAILABILITY_OR_SUITABILITY": "Manquement EPI allégué pendant une opération à risque, alors que la disponibilité ou l'adaptation du matériel est discutée.",
-        "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE": "Erreur de dosage ou de fabrication, avec procédure informatique potentiellement obsolète.",
+        "PPE_AVAILABILITY_OR_SUITABILITY": "Adéquation, disponibilité ou utilisation des EPI à vérifier au regard du risque réel, sans préjuger la conduite du salarié.",
+        "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE": "Applicabilité, mise à jour et diffusion effective d'une procédure interne potentiellement obsolète à vérifier.",
         "POSITIVE_ALCOHOL_TEST": "Contrôle d'alcoolémie annoncé positif sur un poste présenté comme à risque.",
         "INSULTING_EMAILS": "Envoi de courriels insultants.",
         "INSULTING_TAG": "Inscription ou tag grossier sur une installation.",
         "INSULTING_BEHAVIOR": "Propos insultants ou injurieux.",
         "WORK_SCHEDULE_CHANGE": "Passage imposé ou proposé d'un horaire de jour vers un rythme posté.",
+        "CSE_MEETING_REST_TIME": "Traitement du temps consacré à une réunion CSE organisée pendant un repos.",
+        "UNPAID_OVERTIME": "Écart allégué entre les heures supplémentaires tracées et leur paiement.",
+        "CLASSIFICATION_ACTUAL_DUTIES": "Adéquation de la classification aux fonctions réellement exercées.",
+        "NIGHT_WORK_FATIGUE": "Fatigue liée au travail de nuit ou posté et prévention des risques associés.",
         "CSSCT_MEETING_TIME": "Refus ou traitement contesté du temps destiné à une réunion CSSCT.",
         "DISCIPLINARY_CASE_UNSPECIFIED": "Grief disciplinaire à préciser.",
         "GENERAL_EMPLOYEE_QUESTION": primary,
@@ -512,6 +635,13 @@ def _grievance(category: str, primary: str, text: str) -> str:
     value = labels[category]
     if category == "WORK_SCHEDULE_CHANGE" and "temporaire" in text:
         value = "Passage temporaire annoncé d'un horaire de jour vers un cycle posté."
+    if category == "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE" and _contains(
+        text, "sanction", "faute", "reproch", "disciplinaire", "mise a pied"
+    ):
+        value = (
+            "Applicabilité et diffusion d'une procédure interne à vérifier avant "
+            "de qualifier le grief disciplinaire allégué."
+        )
     return value
 
 
@@ -540,6 +670,44 @@ def _employer_position(facts: list[str]) -> str:
         if _contains(text, "employeur", "direction", "responsable", "superviseur"):
             return fact
     return "La position précise de l'employeur reste à demander."
+
+
+def _conditional_missing_information(category: str) -> list[str]:
+    """List decisive information to obtain without turning it into a fact."""
+
+    return {
+        "WORK_SCHEDULE_CHANGE": [
+            "Contrat, avenants et clause relative aux horaires.",
+            "Cycle projeté, durée et délai de prévenance.",
+            "Accord collectif applicable et éventuelle consultation du CSE.",
+            "Conséquences personnelles concrètes et alternatives étudiées.",
+        ],
+        "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE": [
+            "Version applicable de la procédure à la date des faits.",
+            "Preuve de diffusion, d'accès et de formation du salarié.",
+            "Consignes contradictoires ou alertes préalables éventuelles.",
+        ],
+        "CSE_MEETING_REST_TIME": [
+            "Qualité du participant et nature exacte de la réunion CSE.",
+            "Convocation, horaires, trajet et planning de repos.",
+            "Accord ou usage applicable au traitement du temps de réunion.",
+        ],
+        "UNPAID_OVERTIME": [
+            "Période, pointages et bulletins concernés.",
+            "Validation hiérarchique ou nécessité des heures.",
+            "Règle locale de décompte et de majoration.",
+        ],
+        "CLASSIFICATION_ACTUAL_DUTIES": [
+            "Fiche de poste, tâches réelles et période d'exercice.",
+            "Autonomie, responsabilités et technicité démontrables.",
+            "Coefficient actuel et grille conventionnelle applicable.",
+        ],
+        "NIGHT_WORK_FATIGUE": [
+            "Cycles, nuits, pauses et repos réellement accomplis.",
+            "Charge, effectifs, incidents et alertes collectives tracés.",
+            "DUERP et mesures de prévention du travail de nuit.",
+        ],
+    }.get(category, [])
 
 
 def _matching(facts: list[str], markers: tuple[str, ...]) -> list[str]:
@@ -726,6 +894,10 @@ def build_case_factual_core(
         "PPE_AVAILABILITY_OR_SUITABILITY": "Ne pas conclure que l'indisponibilité alléguée supprime automatiquement toute faute.",
         "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE": "Ne pas transformer une procédure potentiellement obsolète en défaut de compétence.",
         "WORK_SCHEDULE_CHANGE": "Ne pas déduire démission, volontariat ou acceptation d'un avantage salarial.",
+        "CSE_MEETING_REST_TIME": "Ne pas transformer une convocation à une réunion CSE en convocation disciplinaire.",
+        "UNPAID_OVERTIME": "Ne pas conclure à un impayé avant rapprochement du pointage et du bulletin.",
+        "CLASSIFICATION_ACTUAL_DUTIES": "Ne pas déduire une classification des seuls intitulés de poste.",
+        "NIGHT_WORK_FATIGUE": "Ne pas transformer une fatigue alléguée en diagnostic médical individuel.",
         "AMBIGUOUS_TEN_PERCENT_RULE": "Ne pas supposer qu'il s'agit de la règle légale du dixième.",
     }
     if category in category_forbidden:
@@ -747,6 +919,8 @@ def build_case_factual_core(
         *disputed[:1],
         *secondary[:2],
     ]
+    if category == "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE":
+        search_parts.append(primary)
     return CaseFactualCore(
         requested_path=path,
         primary_event=primary,
@@ -780,7 +954,9 @@ def build_case_factual_core(
             "cssct",
             "collectif",
         ),
-        legal_ambiguities=_dedupe(missing[:5]),
+        legal_ambiguities=_dedupe(
+            [*missing[:5], *_conditional_missing_information(category)]
+        ),
         blocking_ambiguities=_dedupe(blocking),
         secondary_topics=_dedupe(secondary),
         forbidden_inferences=_dedupe(forbidden),
@@ -872,7 +1048,7 @@ def _event_questions(core: CaseFactualCore) -> tuple[list[ActionableQuestion], l
             _q("Pouviez-vous arrêter ou reporter l'opération ?", "EMPLOYEE", "Apprécier le choix laissé au salarié.", "HIGH", "YES_NO", "La poursuite malgré une alternative peut fragiliser sa position.", "Préciser l'urgence et la consigne reçue."),
         ])
         employer.extend([
-            _q("Quelle consigne EPI précise considérez-vous comme violée ?", "EMPLOYER", "Délimiter le grief.", "BLOCKING", "DOCUMENT", "Sans consigne précise, le grief reste incomplet.", "Demander sa version applicable."),
+            _q("Quelle consigne EPI précise s'appliquait à cette opération ?", "EMPLOYER", "Identifier la protection attendue sans présumer un grief.", "BLOCKING", "DOCUMENT", "Sans consigne précise, l'analyse de prévention reste incomplète.", "Demander sa version applicable."),
             _q("Quelle protection compatible avec les lunettes de vue était disponible ?", "EMPLOYER", "Contrôler l'adaptation des EPI.", "BLOCKING", "DOCUMENT", "Une protection inadaptée peut engager l'organisation.", "Demander registre de fourniture et stock."),
         ])
         documents.extend([
@@ -954,6 +1130,56 @@ def _event_questions(core: CaseFactualCore) -> tuple[list[ActionableQuestion], l
             documents.append(
                 _d("Effectifs avant/après du laboratoire", "Mesurer la réduction éventuelle de l'équipe de jour.", "Confirmer l'impact collectif et la charge restante.", "HIGH")
             )
+    elif category == "CSE_MEETING_REST_TIME":
+        employee.extend([
+            _q("Quelle était votre qualité pour cette réunion CSE ?", "EMPLOYEE", "Identifier le régime du temps de réunion.", "BLOCKING", "CHOICE", "Le traitement dépend du mandat et de la nature de la réunion.", "Faire préciser mandat, convocation et horaires."),
+            _q("Le repos a-t-il été déplacé, réduit ou maintenu ?", "EMPLOYEE", "Mesurer la conséquence concrète sur le repos.", "HIGH", "FREE_TEXT", "Le traitement dépend de l'atteinte effective au repos.", "Comparer planning prévu et réalisé."),
+        ])
+        employer.extend([
+            _q("Quel texte ou accord fonde le traitement de ce temps de réunion ?", "EMPLOYER", "Identifier la règle applicable.", "BLOCKING", "DOCUMENT", "Paiement, récupération et imputation dépendent du texte applicable.", "Demander la clause précise."),
+            _q("Comment le temps et le repos ont-ils été enregistrés ?", "EMPLOYER", "Contrôler le traitement en paie et planning.", "HIGH", "DOCUMENT", "Un écart de compteur peut nécessiter une régularisation.", "Rapprocher convocation, planning et bulletin."),
+        ])
+        documents.extend([
+            _d("Convocation à la réunion CSE", "Établir nature, date et horaires de la réunion.", "Distinguer réunion d'instance et autre activité.", "BLOCKING"),
+            _d("Planning, compteur de temps et bulletin", "Contrôler temps et repos.", "Confirmer paiement, récupération ou écart.", "HIGH"),
+            _d("Accord CSE ou règle applicable au temps de réunion", "Identifier le régime local.", "Déterminer les garanties applicables.", "HIGH"),
+        ])
+    elif category == "UNPAID_OVERTIME":
+        employee.extend([
+            _q("Quelles heures supplémentaires figurent au pointage mais pas sur le bulletin ?", "EMPLOYEE", "Chiffrer l'écart sans le présumer.", "BLOCKING", "DOCUMENT", "Le volume et les dates déterminent la vérification.", "Établir un tableau date par date."),
+            _q("Ces heures étaient-elles demandées, validées ou rendues nécessaires par la charge ?", "EMPLOYEE", "Établir les conditions de réalisation.", "HIGH", "FREE_TEXT", "La connaissance de l'employeur influence l'analyse.", "Identifier consignes et témoins."),
+        ])
+        employer.append(_q("Comment les pointages ont-ils été rapprochés de la paie ?", "EMPLOYER", "Contrôler le traitement des heures.", "BLOCKING", "DOCUMENT", "Un écart inexpliqué appelle une vérification.", "Demander le détail du calcul."))
+        documents.extend([
+            _d("Pointages détaillés", "Reconstituer les heures réalisées.", "Établir les dates et durées.", "BLOCKING"),
+            _d("Bulletins de paie correspondants", "Comparer paiement et majorations.", "Confirmer ou écarter l'écart.", "BLOCKING"),
+            _d("Planning et validation des heures", "Établir la connaissance de l'employeur.", "Qualifier les conditions de réalisation.", "HIGH"),
+        ])
+    elif category == "CLASSIFICATION_ACTUAL_DUTIES":
+        employee.extend([
+            _q("Quelles tâches, responsabilités et autonomie exercez-vous réellement ?", "EMPLOYEE", "Comparer le travail réel aux critères de classification.", "BLOCKING", "FREE_TEXT", "La classification dépend des fonctions démontrables.", "Donner des exemples datés."),
+            _q("Depuis quand ces fonctions sont-elles exercées ?", "EMPLOYEE", "Délimiter la période concernée.", "HIGH", "DATE", "La durée influence la portée de la demande.", "Rassembler les traces correspondantes."),
+        ])
+        employer.append(_q("Quels critères conventionnels justifient le coefficient actuel ?", "EMPLOYER", "Obtenir la méthode de classement.", "BLOCKING", "DOCUMENT", "La comparaison exige les critères réellement appliqués.", "Demander fiche de poste et grille."))
+        documents.extend([
+            _d("Fiche de poste et avenants", "Identifier les fonctions contractuelles.", "Comparer fonctions prévues et réelles.", "BLOCKING"),
+            _d("Grille de classification applicable", "Identifier les critères conventionnels.", "Comparer niveau, autonomie et technicité.", "BLOCKING"),
+            _d("Preuves des tâches réellement exercées", "Documenter le travail réel.", "Établir responsabilités et autonomie.", "HIGH"),
+        ])
+    elif category == "NIGHT_WORK_FATIGUE":
+        employee.extend([
+            _q("Quels cycles, nuits et repos ont précédé la fatigue signalée ?", "EMPLOYEE", "Objectiver l'organisation du travail.", "BLOCKING", "DOCUMENT", "L'analyse dépend des horaires et repos réels.", "Rassembler planning et pointage."),
+            _q("Quels incidents, erreurs ou alertes de sécurité ont été signalés ?", "EMPLOYEE", "Relier l'organisation à un risque professionnel vérifiable.", "HIGH", "FREE_TEXT", "Des alertes tracées renforcent le besoin de prévention.", "Éviter tout détail médical individuel inutile."),
+        ])
+        employer.extend([
+            _q("Quelle évaluation des risques couvre le travail de nuit et la fatigue ?", "EMPLOYER", "Contrôler la prévention collective.", "BLOCKING", "DOCUMENT", "L'absence d'évaluation peut révéler une lacune de prévention.", "Demander DUERP et plan d'action."),
+            _q("Quels ajustements de cycle, pauses ou effectifs ont été étudiés ?", "EMPLOYER", "Identifier les mesures de prévention.", "HIGH", "FREE_TEXT", "Les mesures concrètes permettent d'évaluer l'organisation.", "Demander les décisions et leur suivi."),
+        ])
+        documents.extend([
+            _d("Plannings et relevés de repos", "Objectiver cycles et repos.", "Vérifier l'exposition organisationnelle.", "BLOCKING"),
+            _d("DUERP et plan de prévention du travail de nuit", "Identifier les risques et mesures collectives.", "Évaluer la prévention sans donnée médicale individuelle.", "BLOCKING"),
+            _d("Signalements et comptes rendus CSE/CSSCT pertinents", "Rechercher les alertes collectives.", "Documenter les mesures déjà discutées.", "HIGH"),
+        ])
     elif category == "CSSCT_MEETING_TIME":
         employee.extend([
             _q("Quel mandat exerciez-vous pour cette réunion CSSCT ?", "EMPLOYEE", "Identifier le droit applicable.", "BLOCKING", "CHOICE", "La qualification du temps dépend du rôle.", "Demander la preuve du mandat."),

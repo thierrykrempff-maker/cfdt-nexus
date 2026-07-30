@@ -2283,6 +2283,15 @@ def detect_domains(query: str) -> tuple[list[str], list[str], dict[str, int]]:
         scores["droit_syndical"] = max(scores.get("droit_syndical", 0), 4)
         scores["cse"] = max(scores.get("cse", 0), 2)
         reasons.append("La demande articule reunion CSE, mandat et temps de travail individuel.")
+        if not re.search(
+            r"\b(?:sanction|avertissement|blame|mise a pied|licenciement|faute|"
+            r"faits reproches|entretien disciplinaire|procedure disciplinaire)\b",
+            text,
+        ):
+            scores.pop("disciplinaire", None)
+            reasons.append(
+                "Une convocation a une reunion CSE ne constitue pas, a elle seule, un signal disciplinaire."
+            )
 
     if explicit_astreinte_exclusion(query):
         scores.pop("astreinte", None)
