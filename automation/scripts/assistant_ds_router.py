@@ -37,7 +37,8 @@ from NEXUS_RUNTIME_INTEGRATION.retrieval_to_response import (
     RetrievalToResponseConfig,
     RetrievalToResponseIntegration,
     merge_retrieved_sources,
-    retain_applicable_evidence,
+    apply_final_evidence_selection,
+    evaluate_applicable_evidence,
 )
 
 try:
@@ -4622,10 +4623,15 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     )
     source_to_facts_payload = source_to_facts.to_dict()
     if retrieval_result is not None:
-        used_evidence = retain_applicable_evidence(
+        final_evidence = evaluate_applicable_evidence(
             retrieval_result,
             source_to_facts_payload["applicable_sources"],
         )
+        source_to_facts_payload = apply_final_evidence_selection(
+            source_to_facts_payload,
+            final_evidence,
+        )
+        used_evidence = final_evidence.evidence
         answer["retrieval_public_evidence"] = list(used_evidence)
         answer["retrieval_cse_context"] = [
             item
@@ -4635,6 +4641,9 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
         answer["retrieval_propagation"]["used_count"] = len(used_evidence)
         answer["retrieval_propagation"]["post_mapping_rejected_count"] = (
             answer["retrieval_propagation"]["selected_count"] - len(used_evidence)
+        )
+        answer["retrieval_propagation"]["final_rejections"] = list(
+            final_evidence.rejected
         )
     answer["source_search_plan"] = source_to_facts_payload["search_queries"]
     answer["applicable_sources"] = source_to_facts_payload["applicable_sources"]

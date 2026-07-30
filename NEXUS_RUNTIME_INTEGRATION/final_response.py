@@ -6,6 +6,8 @@ from collections.abc import Mapping, Sequence
 import re
 from typing import Any
 
+from .public_evidence_safety import sanitize_public_evidence_payload
+
 
 _SPACE = re.compile(r"\s+")
 _PRIORITY = {"BLOCKING": 0, "URGENT": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
@@ -171,6 +173,9 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
             width=340,
         ),
     }
+    summary = sanitize_public_evidence_payload(
+        {"public_summary": summary}
+    )["public_summary"]
     summary["sections"] = _summary_sections(summary)
     all_sources = _sources(
         extraction.get("sources")
@@ -207,10 +212,10 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
             width=360,
         ),
     }
-    return {
+    return sanitize_public_evidence_payload({
         "public_summary": _drop_empty(summary),
         "detailed_analysis": _drop_empty(details),
-    }
+    })
 
 
 def summary_markdown(summary: Mapping[str, Any]) -> str:
@@ -295,8 +300,8 @@ def _summary_sections(summary: Mapping[str, Any]) -> list[dict[str, Any]]:
                 (
                     f"{item.get('date') or 'Date non établie'} — "
                     f"{item.get('title', 'PV CSE/CSSCT')} — "
-                    f"{item.get('excerpt', '')} "
-                    f"Apport : {item.get('relevance_justification', '')} "
+                    "Extrait court disponible dans la rubrique structurÃ©e. "
+                    f"Apport : {item.get('contribution') or item.get('relevance_justification', '')} "
                     f"Limite : {'; '.join(item.get('limits', [])[:1]) or item.get('legal_value', '')}"
                 )
                 for item in _sequence(summary.get("cse_context"))
