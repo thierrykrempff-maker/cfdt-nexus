@@ -1,7 +1,12 @@
 import json
 
-from SYNDICAL_REASONING_ENGINE import CSECSSCTSearchEngine
-from tests.cse_cssct_test_support import pv_query, row
+from SYNDICAL_REASONING_ENGINE import (
+    CSECSSCTExecutionAdapter,
+    CSECSSCTSearchEngine,
+    RetrievalStatus,
+    SourceExecutionCoordinator,
+)
+from tests.cse_cssct_test_support import plan, pv_query, row
 
 
 def _write(root, name, values):
@@ -96,3 +101,28 @@ def test_partial_corpus_remains_searchable_and_truthfully_labelled(tmp_path):
     assert public["search_executed"] is True
     assert public["results_retained"] == 1
     assert "partiellement exploitable" in " ".join(public["corpus_limits"]).lower()
+
+
+def test_partial_corpus_remains_available_to_execution_coordinator(tmp_path):
+    root = _write(
+        tmp_path / "partial",
+        "corpus.jsonl",
+        [
+            row(
+                document_id="partial",
+                chunk_index=0,
+                text=(
+                    "Les Ã©lus demandent comment sont dÃ©comptÃ©es les pauses. "
+                    "La direction rÃ©pond que le badgeage doit Ãªtre vÃ©rifiÃ©."
+                ),
+            ),
+            row(document_id="empty", chunk_index=0, text="", indexable=False),
+        ],
+    )
+    adapter = CSECSSCTExecutionAdapter(root)
+
+    assert adapter.configuration_status().available is True
+    summary = SourceExecutionCoordinator((adapter,)).execute(plan())
+
+    assert summary.events[0].status is RetrievalStatus.LOCAL_DOCUMENT
+    assert summary.local_results == 1

@@ -727,7 +727,7 @@ class CSECSSCTExecutionAdapter(BaseConnectorExecutor):
         self._engine = CSECSSCTSearchEngine(processed_root)
 
     def configuration_status(self) -> ConnectorConfiguration:
-        available = self._engine.inventory().root_status == "AVAILABLE"
+        available = self._engine.inventory().root_status in {"AVAILABLE", "PARTIAL"}
         return ConnectorConfiguration(
             configured=available,
             available=available,
@@ -805,7 +805,7 @@ class CSECSSCTExecutionAdapter(BaseConnectorExecutor):
         )
         stamp_started = execution.started_at
         stamp_completed = execution.completed_at
-        if execution.corpus_root_status != "AVAILABLE":
+        if execution.corpus_root_status not in {"AVAILABLE", "PARTIAL"}:
             status = RetrievalStatus.CONNECTOR_NOT_CONFIGURED
             error_code = "CORPUS_NOT_CONFIGURED"
             error_message = "Corpus CSE/CSSCT non configuré."
