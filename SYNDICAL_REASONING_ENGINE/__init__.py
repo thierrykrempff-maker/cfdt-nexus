@@ -161,6 +161,21 @@ from .factual_models import (
     FactFormulation,
     FactualSource,
 )
+from .legal_issue_models import (
+    IssueCategory,
+    LegalIssue,
+    PlanningStatus,
+    ResearchExclusion,
+    ResearchPlan,
+    ResearchQuery,
+    ResearchTarget,
+    SourceFamily,
+)
+from .research_plan import (
+    PLAN_VERSION,
+    build_research_plan,
+    identify_legal_issues,
+)
 from .source_to_facts import (
     ApplicableSource,
     ApplicabilityStatus,
@@ -333,6 +348,17 @@ __all__ = (
     "FactFormulation",
     "FactStatus",
     "FactualSource",
+    "IssueCategory",
+    "LegalIssue",
+    "PlanningStatus",
+    "ResearchExclusion",
+    "ResearchPlan",
+    "ResearchQuery",
+    "ResearchTarget",
+    "SourceFamily",
+    "PLAN_VERSION",
+    "build_research_plan",
+    "identify_legal_issues",
     "HealthAbsenceAnalysis",
     "HealthAbsenceReasoningEngine",
     "HealthDocumentComparison",
