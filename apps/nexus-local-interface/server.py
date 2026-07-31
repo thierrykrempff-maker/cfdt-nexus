@@ -66,6 +66,9 @@ from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     get_nexus_version,
     sanitize_public_payload,
 )
+from NEXUS_RUNTIME_INTEGRATION.public_payload import (  # noqa: E402
+    sanitize_http_public_payload,
+)
 
 
 OPTIONAL_DEPENDENCIES = {
@@ -73,6 +76,28 @@ OPTIONAL_DEPENDENCIES = {
     "pptx_import": ("python-pptx", "pptx"),
     "xlsx_import": ("openpyxl", "openpyxl"),
 }
+CONTROLLED_PILOT_ENV = "NEXUS_CONTROLLED_PILOT_MODE"
+CONTROLLED_PILOT_TITLE = "PILOTE LOCAL — VALIDATION HUMAINE OBLIGATOIRE"
+CONTROLLED_PILOT_NOTICE = (
+    "Cette analyse est une aide à la préparation syndicale. "
+    "Elle doit être vérifiée avant toute utilisation auprès d’un salarié, "
+    "de l’employeur ou d’une instance."
+)
+
+
+def _env_enabled(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def controlled_pilot_payload() -> dict[str, object]:
+    """Return the public, non-sensitive local pilot notice."""
+
+    enabled = _env_enabled(CONTROLLED_PILOT_ENV)
+    return {
+        "enabled": enabled,
+        "title": CONTROLLED_PILOT_TITLE if enabled else "",
+        "notice": CONTROLLED_PILOT_NOTICE if enabled else "",
+    }
 
 
 def optional_dependency_status() -> dict[str, dict[str, object]]:
@@ -294,7 +319,12 @@ class NexusHandler(SimpleHTTPRequestHandler):
         sys.stderr.write("[nexus-local] " + format % args + "\n")
 
     def send_json(self, status: HTTPStatus, payload: dict[str, Any]) -> None:
-        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        outgoing = dict(payload)
+        pilot = controlled_pilot_payload()
+        if pilot["enabled"]:
+            outgoing["controlled_pilot"] = pilot
+        safe_payload = sanitize_http_public_payload(outgoing)
+        data = json.dumps(safe_payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store")
@@ -319,6 +349,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     "version": get_nexus_version(),
                     "mode": "local",
                     "persistent_case_storage": False,
+                    "controlled_pilot": controlled_pilot_payload(),
                     "optional_dependencies": optional_dependency_status(),
                 },
             )

@@ -109,6 +109,9 @@ const historySections = document.getElementById("historySections");
 const historyCopyButton = document.getElementById("historyCopyButton");
 const historyPrintButton = document.getElementById("historyPrintButton");
 const historyCopyStatus = document.getElementById("historyCopyStatus");
+const pilotBannerInput = document.getElementById("pilotBannerInput");
+const pilotBannerResult = document.getElementById("pilotBannerResult");
+const pilotBannerReport = document.getElementById("pilotBannerReport");
 
 let currentPayload = null;
 let currentReportMarkdown = "";
@@ -118,6 +121,7 @@ let currentWorkspace = null;
 let currentEmployeePath = null;
 let currentWizardStep = 1;
 let selectedSituation = "";
+let controlledPilot = { enabled: false, title: "", notice: "" };
 let selectedOutcome = "";
 let sessionHistoryCount = 0;
 let historicalCatalog = null;
@@ -138,6 +142,26 @@ class NexusRequestError extends Error {
     this.name = "NexusRequestError";
     this.kind = kind;
     this.status = status;
+  }
+}
+
+function applyControlledPilotMode(pilot) {
+  controlledPilot = {
+    enabled: Boolean(pilot?.enabled),
+    title: pilot?.title || "PILOTE LOCAL — VALIDATION HUMAINE OBLIGATOIRE",
+    notice:
+      pilot?.notice ||
+      "Cette analyse est une aide à la préparation syndicale. Elle doit être vérifiée avant toute utilisation auprès d’un salarié, de l’employeur ou d’une instance."
+  };
+  for (const banner of [pilotBannerInput, pilotBannerResult, pilotBannerReport]) {
+    if (!banner) continue;
+    banner.hidden = !controlledPilot.enabled;
+    if (controlledPilot.enabled) {
+      const title = banner.querySelector("strong");
+      const notice = banner.querySelector("span");
+      if (title) title.textContent = controlledPilot.title;
+      if (notice) notice.textContent = controlledPilot.notice;
+    }
   }
 }
 
@@ -734,7 +758,11 @@ function reportBlock(title, values) {
 }
 
 function summaryReportMarkdown(report) {
+  const pilotLines = controlledPilot.enabled
+    ? [`# ${controlledPilot.title}`, "", controlledPilot.notice, ""]
+    : [];
   const lines = [`# ${report.title || "Synthèse opérationnelle Nexus"}`];
+  lines.unshift(...pilotLines);
   if (report.nexus_version) lines.push("", `Version CFDT Nexus : ${report.nexus_version}`);
   for (const section of report.sections || []) {
     if (!section.items?.length) continue;
@@ -862,6 +890,7 @@ function printReport() {
 }
 
 function renderResult(payload) {
+  applyControlledPilotMode(payload.controlled_pilot || controlledPilot);
   currentPayload = payload;
   const answer = payload.answer;
   const orchestration = payload.orchestration || {};
@@ -2058,6 +2087,7 @@ loadScenarios().then(loadEmployeeCase);
 async function loadReleaseStatus() {
   try {
     const health = await fetchJson("/health");
+    applyControlledPilotMode(health.controlled_pilot);
     nexusVersionValue.textContent = health.version;
     settingsVersionValue.textContent = health.version;
     const unavailable = Object.values(health.optional_dependencies || {})

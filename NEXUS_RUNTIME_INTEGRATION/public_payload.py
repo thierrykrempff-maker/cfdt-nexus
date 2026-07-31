@@ -63,6 +63,10 @@ _DROP_KEYS = frozenset(
         "case_session_id",
         "technical_id",
         "technical_reference",
+        "technical_trace",
+        "internal_trace",
+        "private_health_note",
+        "trace_id",
     }
 )
 _DROP_TOP_LEVEL = frozenset(
@@ -293,6 +297,9 @@ def _sanitize_mapping(value: Mapping[str, Any], *, top_level: bool = False) -> d
                 "_fact_id",
                 "_document_id",
                 "_chunk_id",
+                "_trace_id",
+                "_technical_trace",
+                "_internal_trace",
             )
         ):
             continue
@@ -307,6 +314,19 @@ def _sanitize_mapping(value: Mapping[str, Any], *, top_level: bool = False) -> d
             continue
         result[key] = _sanitize_value(item)
     return result
+
+
+def sanitize_http_public_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Return a final recursively sanitized copy for HTTP serialization.
+
+    Unlike :func:`sanitize_public_payload`, this boundary does not compact or
+    rebuild the response. Internal diagnostics keep their original payload,
+    while any late enrichment is filtered immediately before JSON emission.
+    """
+
+    if not isinstance(payload, Mapping):
+        raise TypeError("HTTP public payload must be a mapping")
+    return _sanitize_mapping(payload, top_level=True)
 
 
 def _sanitize_value(value: Any) -> Any:
