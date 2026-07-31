@@ -233,6 +233,21 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .text-button { text-decoration: underline; }
 .confidentiality-label { color: var(--muted); font-size: 13px; }
 .wizard-shell { display: grid; grid-template-columns: 330px minmax(0, 720px); justify-content: center; gap: 34px; }
+.pilot-banner {
+  display: grid;
+  gap: 5px;
+  max-width: 1084px;
+  margin: 0 auto 20px;
+  padding: 15px 18px;
+  border: 2px solid #b34500;
+  border-radius: 12px;
+  background: #fff2e7;
+  color: #642700;
+}
+.pilot-banner[hidden] { display: none; }
+.pilot-banner strong { font-size: 14px; letter-spacing: .02em; }
+.pilot-banner span { line-height: 1.45; }
+.pilot-banner-report { margin-bottom: 18px; }
 .wizard-sidebar, .question-form, .result-shell { border: 1px solid var(--line); border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
 .wizard-sidebar { align-self: start; position: sticky; top: 105px; padding: 28px; }
 .wizard-sidebar h1 { margin: 0; font-size: 30px; line-height: 1.1; }
