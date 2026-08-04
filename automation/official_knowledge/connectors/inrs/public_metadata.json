@@ -1,0 +1,33 @@
+{
+  "connector_name": "inrs",
+  "last_synchronized_at": "2026-08-02",
+  "documents": [
+    {
+      "url": "https://www.inrs.fr/demarche/protection-individuelle/ce-qu-il-faut-retenir",
+      "title": "Protection individuelle : ce qu'il faut retenir",
+      "publication_date": null,
+      "category": "equipements_protection",
+      "family": "equipements_protection",
+      "document_type": "dossier_web",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.inrs.fr/risques/chimiques/protection-individuelle.html",
+      "title": "Protection individuelle contre les risques chimiques",
+      "publication_date": "2023-01-05",
+      "category": "risques_chimiques",
+      "family": "risques_chimiques",
+      "document_type": "dossier_web",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.inrs.fr/risques/psychosociaux/ce-qu-il-faut-retenir.html",
+      "title": "Risques psychosociaux : ce qu'il faut retenir",
+      "publication_date": null,
+      "category": "risques_psychosociaux",
+      "family": "risques_psychosociaux",
+      "document_type": "dossier_web",
+      "language": "fr"
+    }
+  ]
+}

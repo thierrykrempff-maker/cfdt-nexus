@@ -22,6 +22,7 @@ from automation.official_knowledge.connectors.dreets_grand_est.dreets_connector 
 from automation.official_knowledge.connectors.dreets_grand_est import DreetsDiscoveryItem
 from automation.official_knowledge.connectors.inrs import InrsConnector
 from automation.official_knowledge.additional_metadata_feed import (
+    SUPPORTED_ADDITIONAL_FEEDS,
     load_additional_metadata_sources,
     validate_additional_runtime_sources,
 )
@@ -108,7 +109,7 @@ _CONNECTOR_MARKERS = {
         "camera", "videosurveillance", "geolocalisation", "messagerie",
         "boite professionnelle", "appartenance syndicale", "biometrie",
         "classe automatiquement", "controle d acces", "controle du temps",
-        "donnees du badge",
+        "donnees du badge", "badgeuse",
     ),
     "inrs": (
         "incident dangereux", "risque grave", "presque-accident",
@@ -128,7 +129,8 @@ _CONNECTOR_MARKERS = {
         "carsat", "assurance retraite", "carriere longue", "depart anticipe",
         "c2p", "compte professionnel de prevention", "risque professionnel",
         "accident du travail", "maladie professionnelle", "releve de carriere",
-        "epi", "equipement de protection", "visiere", "sur-lunettes",
+        "epi", "equipement de protection", "equipements de protection",
+        "visiere", "sur-lunettes",
         "acide sulfurique", "catalyseur", "cristallise",
         "risque chimique", "souffrance au travail",
         "risques psychosociaux", "rps", "charge de travail", "surcharge",
@@ -286,7 +288,7 @@ class RuntimeOfficialConnectorsIntegration:
             connector_id: grouped.get(connector_id)
             or (
                 load_additional_metadata_sources(connector_id)
-                if connector_id in _ADDITIONAL else ()
+                if connector_id in SUPPORTED_ADDITIONAL_FEEDS else ()
             )
             for connector_id in selected
         }

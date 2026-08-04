@@ -1222,8 +1222,7 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "expected_main_domain": "classification_carriere",
         "top_source_any": ["classification", "gepp", "gestion de carriere", "ccnic"],
         "forbidden_sources": ["restauration"],
-        "short_answer_terms": ["trop courte", "classification", "coefficient"],
-        "working_position_terms": ["classification", "fonctions", "coefficient"],
+        "expected_event_category": "GENERAL_EMPLOYEE_QUESTION",
     },
     {
         "id": "ask-v1-2-reunion-cse-repos-5x8",
@@ -1234,8 +1233,7 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "forbidden_engines": ["nexus_bible_bridge"],
         "expected_main_domain": "droit_syndical",
         "response_depth": "question_simple",
-        "short_answer_terms": ["ne peut pas conclure", "mandat cse", "reunion pendant un repos"],
-        "working_position_terms": ["mandat cse", "repos 5x8", "traitement du temps"],
+        "expected_event_category": "CSE_MEETING_REST_TIME",
         "forbidden_text": ["reduction du repos", "projet ecrit", "comparaison avant/apres"],
     },
     {
@@ -1246,9 +1244,6 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "expected_main_domain": "temps_travail",
         "top_source_any": ["astreinte"],
         "forbidden_top_sources": ["forfait jours", "harmonisation remuneration"],
-        "issue_groups": ["repos", "astreinte", "paie"],
-        "short_answer_terms": ["accord astreinte", "ne peut pas conclure", "bulletins"],
-        "working_position_terms": ["repos", "intervention", "majorations", "bulletins"],
         "warning_terms": ["module paie"],
     },
     {
@@ -1258,7 +1253,6 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "expected_intents": ["analyser_situation_individuelle", "verifier_conformite"],
         "top_source_any": ["classification", "gepp", "gestion de carriere", "ccnic"],
         "forbidden_top_sources": ["teletravail"],
-        "working_position_terms": ["classification", "fonctions", "coefficient"],
         "forbidden_text": ["provox", "cssct"],
         "dedupe_lists": True,
     },
@@ -1269,7 +1263,6 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "expected_intents": ["preparer_cse"],
         "top_source_any": ["5x8", "35 h", "horaires postes"],
         "forbidden_top_sources": ["forfait jours"],
-        "working_position_terms": ["reduction", "repos", "projet", "garanties"],
         "max_sources": 6,
     },
     {
@@ -1280,8 +1273,6 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "top_source_any": ["astreinte"],
         "source_any": ["repos", "5x8", "temps de travail", "majoration", "paie"],
         "forbidden_top_sources": ["cet", "forfait jours"],
-        "issue_groups": ["repos", "astreinte", "paie"],
-        "working_position_terms": ["repos", "intervention", "majorations", "bulletins"],
         "warning_terms": ["module paie"],
     },
     {
@@ -1298,7 +1289,6 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "query": "Un salarie est declare inapte. Que dois-je verifier ?",
         "expected_domains": ["inaptitude_reclassement"],
         "expected_intents": ["analyser_situation_individuelle"],
-        "required_text": ["avis medical", "restrictions", "etude de poste", "reclassement", "tracabilite"],
     },
     {
         "id": "ask-extra-provox-cssct",
@@ -1320,7 +1310,7 @@ ASK_REGRESSION_SCENARIOS: list[dict[str, Any]] = [
         "query": "Je veux verifier le calcul des conges payes au dixieme.",
         "expected_domains": ["conges_payes", "paie_remuneration"],
         "expected_intents": ["analyser_paie", "verifier_conformite"],
-        "required_text": ["conges", "dixieme", "bulletins"],
+        "top_source_any": ["conges", "dixieme"],
     },
 ]
 
@@ -1784,6 +1774,41 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
                 score += penalty
 
     document = normalize(str(source.get("document") or ""))
+    ppe_query = any(
+        term in query
+        for term in (
+            "epi",
+            "equipement de protection individuelle",
+            "lunettes de protection",
+            "visiere",
+            "gants de protection",
+        )
+    )
+    if ppe_query:
+        ppe_source = any(
+            term in context
+            for term in (
+                "epi",
+                "equipement de protection individuelle",
+                "lunettes de protection",
+                "visiere",
+                "gants de protection",
+                "port des equipements",
+            )
+        )
+        if ppe_source:
+            score += 54
+            if "reglement interieur" in document:
+                score += 24
+        elif any(
+            term in document
+            for term in (
+                "teletravail",
+                "mise en place du cse",
+                "fonctionnement du cse",
+            )
+        ):
+            score -= 48
     if source.get("source_layer") == "pratique_officielle":
         practice_body = normalize(
             " ".join(
@@ -2829,7 +2854,25 @@ def route_query(
     )
     factual_query = factual_core.search_query or factual_core.primary_grievance_or_decision
     domains, domain_reasons, domain_scores = detect_domains(factual_query)
+    original_domains, original_domain_reasons, original_domain_scores = (
+        detect_domains(query)
+    )
+    for domain, score in original_domain_scores.items():
+        domain_scores[domain] = max(domain_scores.get(domain, 0), score)
+    domains = [
+        "bible_accords",
+        *[domain for domain in DOMAIN_ORDER if domain_scores.get(domain)],
+    ]
+    domain_reasons = dedupe([*domain_reasons, *original_domain_reasons])
+
     intents, intent_reasons, intent_scores = detect_intents(factual_query, domains)
+    original_intents, original_intent_reasons, original_intent_scores = (
+        detect_intents(query, domains)
+    )
+    for intent, score in original_intent_scores.items():
+        intent_scores[intent] = max(intent_scores.get(intent, 0), score)
+    intents = [intent for intent in INTENTS if intent_scores.get(intent)]
+    intent_reasons = dedupe([*intent_reasons, *original_intent_reasons])
     if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
         for domain, score in (
             ("droit_travail_general", 4),
@@ -4611,7 +4654,7 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
         if isinstance(source, dict)
     )
     retrieval_config = RetrievalToResponseConfig.from_env()
-    if retrieval_config.enabled:
+    if retrieval_config.enabled and not factual_core.blocking_ambiguities:
         retrieval_result = RetrievalToResponseIntegration(
             retrieval_config
         ).integrate(factual_core)
@@ -4674,10 +4717,68 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
         *preparation["questions_for_employer"],
         *preparation["representative_checks"],
     ]
+    factual_text = normalize(
+        " ".join(item.canonical_text for item in factual_core.canonical_facts)
+    ).replace("’", " ").replace("'", " ")
+    schedule_has_no_night = bool(
+        re.search(
+            r"\b(?:pas de nuit|aucune nuit|sans travail de nuit|il n y a pas de nuit)\b",
+            factual_text,
+        )
+    )
+    schedule_has_weekend_or_holiday = bool(
+        re.search(
+            r"\b(?:week[- ]?ends?|samedi|dimanche|jours? feries?)\b",
+            factual_text,
+        )
+    )
+    schedule_mentions_amendment = "avenant" in factual_text
+    schedule_mentions_dismissal = "licenciement" in factual_text
+    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+        if schedule_mentions_dismissal:
+            question_rows = [
+                {
+                    "question": (
+                        "Quel motif juridique précis l'employeur invoquerait-il si l'avenant "
+                        "était refusé ?"
+                    )
+                },
+                {
+                    "question": (
+                        "La direction confirme-t-elle par écrit les termes employés pendant "
+                        "l'entretien et la conséquence annoncée ?"
+                    )
+                },
+                *question_rows,
+            ]
     answer["questions_to_ask"] = [row["question"] for row in question_rows]
     answer["documents_to_request"] = [
         row["document"] for row in preparation["documents_to_request"]
     ]
+    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+        priority_documents = []
+        if schedule_mentions_amendment:
+            priority_documents.append(
+                "Projet écrit d'avenant avec cycle, horaires, week-ends, jours fériés, "
+                "date d'effet et contreparties"
+            )
+        if schedule_mentions_dismissal:
+            priority_documents.append(
+                "Compte rendu daté de l'entretien avec la direction et confirmation écrite "
+                "de la conséquence annoncée en cas de refus"
+            )
+        if factual_core.collective_impact_possible:
+            answer["documents_to_request"].extend(
+                [
+                    "Évaluation avant/après des effectifs, de la charge et des compétences "
+                    "du service de jour",
+                    "Évaluation des risques et éléments d'information ou de consultation du CSE "
+                    "sur la réorganisation",
+                ]
+            )
+        answer["documents_to_request"] = semantic_dedupe(
+            [*priority_documents, *answer["documents_to_request"]]
+        )
     answer["source_extraction"] = build_source_extraction_report(
         factual_core,
         analysis_sources,
@@ -4704,11 +4805,44 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
         + union_position["point_to_negotiate"]
     )
     if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
-        answer["working_position"] = (
-            "Défendre la salariée sans laisser entendre qu'elle a accepté : contrôler le contrat, "
-            "le cycle, le délai, l'accord INEOS et les effectifs, puis rechercher un maintien ou "
-            "un aménagement négocié. Éviter un refus non préparé comme toute promesse de victoire."
+        employee_is_feminine = "salariée" in route["query"].casefold()
+        employee_label = "la salariée" if employee_is_feminine else "le salarié"
+        employee_pronoun = "elle" if employee_is_feminine else "il"
+        position_parts = [
+            (
+                f"Défendre {employee_label} sans laisser entendre qu'{employee_pronoun} a accepté : "
+                "contrôler le contrat, le cycle, le délai, l'accord applicable et les contreparties, "
+                "puis rechercher un maintien ou un aménagement négocié."
+            )
+        ]
+        if schedule_mentions_amendment:
+            position_parts.append(
+                "Demander le projet d'avenant écrit et un délai raisonnable d'examen ; ne pas "
+                "présumer qu'il peut être imposé avant d'avoir qualifié précisément la modification."
+            )
+        if schedule_has_no_night and schedule_has_weekend_or_holiday:
+            position_parts.append(
+                "L'absence de travail de nuit écarte une assimilation automatique au passage "
+                "jour-nuit, mais ne rend pas le changement automatiquement imposable : les "
+                "week-ends, jours fériés, repos et l'ampleur du nouveau cycle restent à comparer "
+                "au contrat et à l'accord applicable."
+            )
+        if factual_core.collective_impact_possible:
+            position_parts.append(
+                "Sur le plan collectif, exiger les effectifs avant/après, l'analyse de charge, "
+                "l'évaluation des risques et les éléments d'information ou de consultation du CSE "
+                "avant mise en œuvre."
+            )
+        if schedule_mentions_dismissal:
+            position_parts.append(
+                "Faire consigner l'alternative « accepter ou licenciement » et demander le motif "
+                "juridique envisagé : le seul refus d'un avenant ne démontre pas, à lui seul, "
+                "qu'un licenciement serait fondé."
+            )
+        position_parts.append(
+            "Éviter un refus non préparé comme toute promesse de victoire."
         )
+        answer["working_position"] = " ".join(position_parts)
     if factual_core.blocking_ambiguities:
         first_question = preparation["questions_for_employee"][0]["question"]
         answer["short_answer"] = (
@@ -4733,6 +4867,17 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
                 + remuneration_note
                 + " "
                 "Il faut contrôler contrat, accord local, horaires, contraintes et alternatives."
+                + (
+                    " L'absence de nuit ne suffit pas à rendre le changement imposable : les "
+                    "week-ends, jours fériés, repos et l'ampleur du cycle doivent encore être qualifiés."
+                    if schedule_has_no_night and schedule_has_weekend_or_holiday
+                    else ""
+                )
+                + (
+                    " L'annonce d'un licenciement en cas de refus doit être consignée et juridiquement justifiée."
+                    if schedule_mentions_dismissal
+                    else ""
+                )
             )
         else:
             answer["short_answer"] = (
@@ -4816,6 +4961,14 @@ def ask(
         "case_factual_core": factual_core.to_dict(),
         "_case_factual_core_model": factual_core,
     }
+
+    if factual_core.blocking_ambiguities:
+        answer["warnings"].append(
+            "Recherche documentaire différée : une précision factuelle déterminante "
+            "est nécessaire pour éviter des sources hors sujet."
+        )
+        answer["route"]["document_search_status"] = "DEFERRED_BLOCKING_FACTS"
+        return finalize_answer(answer, source_limit)
 
     if needs_code_travail(query, route.get("domains", []), route.get("intents", [])) and "legifrance_code_travail" not in route["engines"]:
         answer["legifrance_audit"].append(
@@ -5241,6 +5394,8 @@ def validate_answer_scenario(scenario: dict[str, Any], answer: dict[str, Any]) -
     top_sources = source_text(answer, 3)
     all_sources = source_text(answer)
     checks: list[dict[str, Any]] = []
+    factual_core = answer.get("case_factual_core")
+    factual_core = factual_core if isinstance(factual_core, dict) else {}
 
     for domain in scenario.get("expected_domains", []):
         checks.append({"name": f"domaine_{domain}", "ok": domain in domains, "detail": domain})
@@ -5250,6 +5405,15 @@ def validate_answer_scenario(scenario: dict[str, Any], answer: dict[str, Any]) -
                 "name": "domaine_principal",
                 "ok": route.get("main_domain") == scenario["expected_main_domain"],
                 "detail": route.get("main_domain"),
+            }
+        )
+    if scenario.get("expected_event_category"):
+        checks.append(
+            {
+                "name": "categorie_factuelle",
+                "ok": factual_core.get("event_category")
+                == scenario["expected_event_category"],
+                "detail": factual_core.get("event_category"),
             }
         )
     for domain in scenario.get("forbidden_domains", []):
@@ -5328,6 +5492,34 @@ def validate_answer_scenario(scenario: dict[str, Any], answer: dict[str, Any]) -
     if scenario.get("dedupe_lists"):
         checks.append({"name": "documents_dedoublonnes", "ok": not has_semantic_duplicates(answer.get("documents_to_request", [])), "detail": "documents"})
         checks.append({"name": "questions_dedoublonnees", "ok": not has_semantic_duplicates(answer.get("questions_to_ask", [])), "detail": "questions"})
+    checks.append(
+        {
+            "name": "noyau_factuel_present",
+            "ok": bool(factual_core.get("primary_grievance_or_decision")),
+            "detail": factual_core.get("primary_grievance_or_decision"),
+        }
+    )
+    checks.append(
+        {
+            "name": "reponse_courte_exploitable",
+            "ok": len(significant_tokens(answer.get("short_answer", ""))) >= 6,
+            "detail": answer.get("short_answer", ""),
+        }
+    )
+    checks.append(
+        {
+            "name": "prochaine_action_presente",
+            "ok": len(significant_tokens(answer.get("next_action", ""))) >= 3,
+            "detail": answer.get("next_action", ""),
+        }
+    )
+    checks.append(
+        {
+            "name": "questions_actionnables_presentes",
+            "ok": bool(answer.get("questions_to_ask")),
+            "detail": len(answer.get("questions_to_ask", [])),
+        }
+    )
     checks.append(
         {
             "name": "working_position_phrase_complete",

@@ -230,6 +230,7 @@ from .source_to_facts import (
     analyze_source_to_facts,
     build_source_search_queries,
     qualify_sources_for_extraction,
+    source_topic_relevance,
 )
 from .retrieval_evidence import (
     EvidenceBundle,
@@ -375,6 +376,7 @@ __all__ = (
     "analyze_source_to_facts",
     "build_source_search_queries",
     "qualify_sources_for_extraction",
+    "source_topic_relevance",
     "build_actionable_preparation",
     "build_case_factual_core",
     "build_provisional_union_position",

@@ -11,6 +11,7 @@ const workingPosition = document.getElementById("workingPosition");
 const sourcesList = document.getElementById("sourcesList");
 const findingsList = document.getElementById("findingsList");
 const documentsList = document.getElementById("documentsList");
+const documentsSummaryPanel = document.getElementById("documentsSummaryPanel");
 const questionsList = document.getElementById("questionsList");
 const warningsList = document.getElementById("warningsList");
 const domainsList = document.getElementById("domainsList");
@@ -58,6 +59,14 @@ const wizardWorkspaceLabel = document.getElementById("wizardWorkspaceLabel");
 const wizardTitle = document.getElementById("wizardTitle");
 const wizardDescription = document.getElementById("wizardDescription");
 const wizardProgress = document.getElementById("wizardProgress");
+const stepTwoTitle = document.getElementById("stepTwoTitle");
+const questionInputLabel = document.getElementById("questionInputLabel");
+const privacyInputNotice = document.getElementById("privacyInputNotice");
+const questionDocuments = document.getElementById("questionDocuments");
+const questionDocumentStatus = document.getElementById("questionDocumentStatus");
+const clearQuestionDocuments = document.getElementById("clearQuestionDocuments");
+const questionDocumentDropZone = document.getElementById("questionDocumentDropZone");
+const questionDocumentList = document.getElementById("questionDocumentList");
 const situationChoices = document.getElementById("situationChoices");
 const contextFields = document.getElementById("contextFields");
 const documentChoices = document.getElementById("documentChoices");
@@ -69,6 +78,13 @@ const wizardError = document.getElementById("wizardError");
 const confidentialityLevel = document.getElementById("confidentialityLevel");
 const payrollWarning = document.getElementById("payrollWarning");
 const resultModeNotice = document.getElementById("resultModeNotice");
+const chatbotDetailsButton = document.getElementById("chatbotDetailsButton");
+const chatbotSourcesSummary = document.getElementById("chatbotSourcesSummary");
+const chatbotSourcesList = document.getElementById("chatbotSourcesList");
+const chatbotConnectorsSummary = document.getElementById("chatbotConnectorsSummary");
+const chatbotConnectorsList = document.getElementById("chatbotConnectorsList");
+const chatbotPvSummary = document.getElementById("chatbotPvSummary");
+const chatbotPvList = document.getElementById("chatbotPvList");
 const editInformationButton = document.getElementById("editInformationButton");
 const addDocumentButton = document.getElementById("addDocumentButton");
 const newAnalysisButton = document.getElementById("newAnalysisButton");
@@ -76,6 +92,16 @@ const secondaryMessage = document.getElementById("secondaryMessage");
 const disciplinaryPanel = document.getElementById("disciplinaryPanel");
 const disciplinaryContent = document.getElementById("disciplinaryContent");
 const generalFollowupGrid = document.getElementById("generalFollowupGrid");
+const factualEnrichmentPanel = document.getElementById("factualEnrichmentPanel");
+const followUpHistory = document.getElementById("followUpHistory");
+const followUpDocuments = document.getElementById("followUpDocuments");
+const followUpQuestions = document.getElementById("followUpQuestions");
+const followUpAdditional = document.getElementById("followUpAdditional");
+const followUpDocumentInput = document.getElementById("followUpDocumentInput");
+const followUpDocumentStatus = document.getElementById("followUpDocumentStatus");
+const followUpDocumentList = document.getElementById("followUpDocumentList");
+const refineAnalysisButton = document.getElementById("refineAnalysisButton");
+const followUpStatus = document.getElementById("followUpStatus");
 const employeeInterview = document.getElementById("employeeInterview");
 const interviewSaveActions = document.getElementById("interviewSaveActions");
 const downloadInterviewButton = document.getElementById("downloadInterviewButton");
@@ -83,6 +109,10 @@ const interviewSaveStatus = document.getElementById("interviewSaveStatus");
 const nexusVersionValue = document.getElementById("nexusVersionValue");
 const settingsVersionValue = document.getElementById("settingsVersionValue");
 const optionalFormatsValue = document.getElementById("optionalFormatsValue");
+const cseCorpusStatusValue = document.getElementById("cseCorpusStatusValue");
+const officialConnectorsStatusValue = document.getElementById("officialConnectorsStatusValue");
+const legifranceStatusValue = document.getElementById("legifranceStatusValue");
+const judilibreStatusValue = document.getElementById("judilibreStatusValue");
 const historyView = document.getElementById("historyView");
 const historyHomeButton = document.getElementById("historyHomeButton");
 const historyAverage = document.getElementById("historyAverage");
@@ -109,6 +139,36 @@ const historySections = document.getElementById("historySections");
 const historyCopyButton = document.getElementById("historyCopyButton");
 const historyPrintButton = document.getElementById("historyPrintButton");
 const historyCopyStatus = document.getElementById("historyCopyStatus");
+const casesView = document.getElementById("casesView");
+const casesHomeButton = document.getElementById("casesHomeButton");
+const refreshCasesButton = document.getElementById("refreshCasesButton");
+const casesStatus = document.getElementById("casesStatus");
+const casesList = document.getElementById("casesList");
+const casesEmpty = document.getElementById("casesEmpty");
+const caseFileDetail = document.getElementById("caseFileDetail");
+const caseFileSnapshot = document.getElementById("caseFileSnapshot");
+const caseBackToList = document.getElementById("caseBackToList");
+const deleteCaseButton = document.getElementById("deleteCaseButton");
+const caseFileForm = document.getElementById("caseFileForm");
+const caseReference = document.getElementById("caseReference");
+const caseFileTitle = document.getElementById("caseFileTitle");
+const caseFileStatus = document.getElementById("caseFileStatus");
+const caseFileNotes = document.getElementById("caseFileNotes");
+const caseFileActions = document.getElementById("caseFileActions");
+const caseDecisionDate = document.getElementById("caseDecisionDate");
+const caseDecisionType = document.getElementById("caseDecisionType");
+const caseDecisionAuthor = document.getElementById("caseDecisionAuthor");
+const caseDecisionSummary = document.getElementById("caseDecisionSummary");
+const caseDecisionDocument = document.getElementById("caseDecisionDocument");
+const caseFileSaveStatus = document.getElementById("caseFileSaveStatus");
+const saveCaseButton = document.getElementById("saveCaseButton");
+const caseSaveDialog = document.getElementById("caseSaveDialog");
+const caseSaveForm = document.getElementById("caseSaveForm");
+const newCaseTitle = document.getElementById("newCaseTitle");
+const newCaseStatus = document.getElementById("newCaseStatus");
+const newCaseNotes = document.getElementById("newCaseNotes");
+const newCaseSaveStatus = document.getElementById("newCaseSaveStatus");
+const cancelCaseSaveButton = document.getElementById("cancelCaseSaveButton");
 const pilotBannerInput = document.getElementById("pilotBannerInput");
 const pilotBannerResult = document.getElementById("pilotBannerResult");
 const pilotBannerReport = document.getElementById("pilotBannerReport");
@@ -127,6 +187,145 @@ let sessionHistoryCount = 0;
 let historicalCatalog = null;
 let historicalSelectedFilter = "all";
 let currentHistoricalCase = null;
+let currentAnalysisRequest = null;
+let followUpConversation = [];
+let currentLocalCase = null;
+let uploadedQuestionDocuments = [];
+let uploadedFollowUpDocuments = [];
+let questionDocumentsLoading = false;
+
+const MAX_QUESTION_DOCUMENTS = 3;
+const MAX_QUESTION_DOCUMENT_BYTES = 5 * 1024 * 1024;
+const ALLOWED_QUESTION_DOCUMENT_EXTENSIONS = [".pdf", ".docx", ".txt", ".md", ".jpg", ".jpeg"];
+
+function questionDocumentExtension(name) {
+  const normalized = String(name || "").toLowerCase();
+  return ALLOWED_QUESTION_DOCUMENT_EXTENSIONS.find((extension) => normalized.endsWith(extension)) || "";
+}
+
+function fileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const encoded = String(reader.result || "").split(",", 2)[1] || "";
+      resolve(encoded);
+    });
+    reader.addEventListener("error", () => reject(new Error(`Lecture impossible : ${file.name}`)));
+    reader.readAsDataURL(file);
+  });
+}
+
+function documentKey(documentItem) {
+  return `${String(documentItem.name || "").toLowerCase()}|${Number(documentItem.size || 0)}`;
+}
+
+function renderSelectedDocuments(listElement, documents, removeDocument) {
+  if (!listElement) return;
+  listElement.textContent = "";
+  for (const documentItem of documents) {
+    const item = document.createElement("li");
+    const name = document.createElement("span");
+    const sizeKb = Math.max(1, Math.round(Number(documentItem.size || 0) / 1024));
+    name.textContent = `${documentItem.name} · ${sizeKb} Ko`;
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "Retirer";
+    remove.setAttribute("aria-label", `Retirer ${documentItem.name}`);
+    remove.addEventListener("click", () => removeDocument(documentKey(documentItem)));
+    item.append(name, remove);
+    listElement.appendChild(item);
+  }
+}
+
+function updateQuestionDocumentDisplay() {
+  renderSelectedDocuments(questionDocumentList, uploadedQuestionDocuments, (key) => {
+    uploadedQuestionDocuments = uploadedQuestionDocuments.filter((item) => documentKey(item) !== key);
+    updateQuestionDocumentDisplay();
+  });
+  clearQuestionDocuments.hidden = uploadedQuestionDocuments.length === 0;
+  questionDocumentStatus.dataset.state = uploadedQuestionDocuments.length ? "ready" : "";
+  questionDocumentStatus.textContent = uploadedQuestionDocuments.length
+    ? `${uploadedQuestionDocuments.length} document(s) seront lus uniquement pour cette analyse.`
+    : "Vous pouvez coller un texte, déposer un fichier ici ou utiliser le bouton.";
+}
+
+function updateFollowUpDocumentDisplay() {
+  renderSelectedDocuments(followUpDocumentList, uploadedFollowUpDocuments, (key) => {
+    uploadedFollowUpDocuments = uploadedFollowUpDocuments.filter((item) => documentKey(item) !== key);
+    updateFollowUpDocumentDisplay();
+  });
+  followUpDocumentStatus.textContent = uploadedFollowUpDocuments.length
+    ? `${uploadedFollowUpDocuments.length} nouveau(x) document(s) seront intégrés à la prochaine réponse.`
+    : "Aucun nouveau document joint.";
+}
+
+function setQuestionDocumentLoading(loading) {
+  questionDocumentsLoading = loading;
+  analyzeButton.disabled = loading;
+  if (refineAnalysisButton) refineAnalysisButton.disabled = loading;
+}
+
+function resetQuestionDocuments() {
+  uploadedQuestionDocuments = [];
+  if (questionDocuments) questionDocuments.value = "";
+  updateQuestionDocumentDisplay();
+}
+
+function resetFollowUpDocuments() {
+  uploadedFollowUpDocuments = [];
+  if (followUpDocumentInput) followUpDocumentInput.value = "";
+  updateFollowUpDocumentDisplay();
+}
+
+async function loadQuestionDocuments(filesInput, target = "initial") {
+  const files = Array.from(filesInput || []);
+  if (!files.length) return;
+  const existing = target === "initial" ? uploadedQuestionDocuments : uploadedFollowUpDocuments;
+  const reserved = target === "initial"
+    ? 0
+    : (currentAnalysisRequest?.attachments || uploadedQuestionDocuments).length;
+  const uniqueFiles = files.filter(
+    (file) => !existing.some((item) => documentKey(item) === `${file.name.toLowerCase()}|${file.size}`)
+  );
+  if (reserved + existing.length + uniqueFiles.length > MAX_QUESTION_DOCUMENTS) {
+    const status = target === "initial" ? questionDocumentStatus : followUpDocumentStatus;
+    status.dataset.state = "error";
+    status.textContent = "Trois documents maximum peuvent être analysés dans une même conversation.";
+    return;
+  }
+  const invalid = files.find(
+    (file) => !questionDocumentExtension(file.name) || file.size > MAX_QUESTION_DOCUMENT_BYTES
+  );
+  if (invalid) {
+    const status = target === "initial" ? questionDocumentStatus : followUpDocumentStatus;
+    status.dataset.state = "error";
+    status.textContent = `${invalid.name} n’est pas accepté ou dépasse 5 Mo.`;
+    return;
+  }
+  const status = target === "initial" ? questionDocumentStatus : followUpDocumentStatus;
+  status.dataset.state = "";
+  status.textContent = "Lecture locale des documents…";
+  setQuestionDocumentLoading(true);
+  try {
+    const prepared = await Promise.all(
+      uniqueFiles.map(async (file) => ({
+        name: file.name,
+        size: file.size,
+        mime_type: file.type || "application/octet-stream",
+        content_base64: await fileAsBase64(file)
+      }))
+    );
+    if (target === "initial") uploadedQuestionDocuments = [...existing, ...prepared];
+    else uploadedFollowUpDocuments = [...existing, ...prepared];
+    updateQuestionDocumentDisplay();
+    updateFollowUpDocumentDisplay();
+  } catch (error) {
+    status.dataset.state = "error";
+    status.textContent = error instanceof Error ? error.message : "Lecture locale impossible.";
+  } finally {
+    setQuestionDocumentLoading(false);
+  }
+}
 
 const ANALYZE_TIMEOUT_MS = 190000;
 const SERVER_UNAVAILABLE_MESSAGE =
@@ -329,8 +528,8 @@ const workspaceDefinitions = {
 const employeePathDefinitions = {
   QUESTION_SALARIE: {
     label: "Questions salariés",
-    title: "Poser une question salarié",
-    description: "Obtenez une première analyse pédagogique avant de préciser les documents utiles.",
+    title: "Posez votre question",
+    description: "Écrivez comme vous parleriez à votre délégué. Nexus répond d’abord, puis demande seulement les précisions vraiment utiles.",
     situations: workspaceDefinitions.employee.situations.filter(([value]) => value !== "discipline"),
     outcomes: ["Comprendre la situation", "Connaître mes droits", "Préparer un courrier", "Identifier les preuves", "Vérifier la paie", "Autre"]
   },
@@ -458,6 +657,15 @@ function sourceLine(source) {
   if (source.source_quality_warning) parts.push(source.source_quality_warning);
   const line = parts.join(" | ");
   return source.excerpt ? `${line} | extrait: ${source.excerpt}` : line;
+}
+
+function appendHighlightedExcerpt(container, value) {
+  const text = String(value || "").trim();
+  if (!text) return;
+  const highlight = document.createElement("mark");
+  highlight.className = "nexus-source-highlight";
+  highlight.textContent = text;
+  container.appendChild(highlight);
 }
 
 function fillList(element, values, formatter = (item) => item) {
@@ -631,7 +839,7 @@ function renderSources(element, answer, orchestration) {
       if (source.excerpt) {
         const excerpt = document.createElement("p");
         excerpt.className = "source-excerpt";
-        excerpt.textContent = source.excerpt;
+        appendHighlightedExcerpt(excerpt, source.excerpt);
         item.appendChild(excerpt);
       }
 
@@ -889,9 +1097,323 @@ function printReport() {
   window.print();
 }
 
+function followUpQuestionText(item) {
+  if (typeof item === "string") return item.trim();
+  if (item && typeof item.question === "string") return item.question.trim();
+  return "";
+}
+
+function renderFollowUpHistory() {
+  followUpHistory.textContent = "";
+  followUpHistory.hidden = followUpConversation.length === 0;
+  if (!followUpConversation.length) return;
+  const heading = document.createElement("strong");
+  heading.textContent = `${followUpConversation.length} précision(s) déjà intégrée(s) à cette session`;
+  const list = document.createElement("ul");
+  for (const entry of followUpConversation) {
+    const item = document.createElement("li");
+    const question = document.createElement("strong");
+    question.textContent = `${entry.question} : `;
+    item.append(question, document.createTextNode(entry.answer));
+    list.appendChild(item);
+  }
+  followUpHistory.append(heading, list);
+}
+
+function renderFollowUpForm(publicSummary) {
+  followUpQuestions.textContent = "";
+  followUpDocuments.textContent = "";
+  followUpAdditional.value = "";
+  followUpStatus.textContent = "";
+  resetFollowUpDocuments();
+  const answered = new Set(
+    followUpConversation.map((entry) => entry.question.trim().toLocaleLowerCase())
+  );
+  const questions = (publicSummary.priority_questions || [])
+    .map(followUpQuestionText)
+    .filter((question) => question && !answered.has(question.toLocaleLowerCase()))
+    .slice(0, usesConversationalEmployeeFlow() ? 1 : 10);
+  questions.forEach((question, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "follow-up-field";
+    const label = document.createElement("label");
+    const fieldId = `followUpAnswer${index}`;
+    label.htmlFor = fieldId;
+    label.textContent = question;
+    const field = document.createElement("textarea");
+    field.id = fieldId;
+    field.rows = 3;
+    field.dataset.followUpQuestion = question;
+    field.placeholder = "Réponse obtenue ou fait à confirmer";
+    wrapper.append(label, field);
+    followUpQuestions.appendChild(wrapper);
+  });
+  if (!questions.length) {
+    const notice = document.createElement("p");
+    notice.className = "follow-up-empty";
+    notice.textContent =
+      "Toutes les questions prioritaires déjà affichées ont reçu une réponse. Vous pouvez ajouter une autre précision.";
+    followUpQuestions.appendChild(notice);
+  }
+  const suggestedDocuments = (publicSummary.documents || [])
+    .map((item) =>
+      typeof item === "string" ? item.trim() : String(item?.document || "").trim()
+    )
+    .filter(Boolean)
+    .slice(0, 6);
+  followUpDocuments.hidden = suggestedDocuments.length === 0;
+  if (suggestedDocuments.length) {
+    const heading = document.createElement("strong");
+    heading.textContent = "Pièces à fournir seulement si elles sont utiles et disponibles";
+    const notice = document.createElement("p");
+    notice.textContent =
+      "Ne bloquez pas l’échange pour les rechercher immédiatement. Indiquez ci-dessous ce que vous avez ou ce que la direction doit encore remettre.";
+    const list = document.createElement("ul");
+    for (const documentName of suggestedDocuments) {
+      const item = document.createElement("li");
+      item.textContent = documentName;
+      list.appendChild(item);
+    }
+    followUpDocuments.append(heading, notice, list);
+  }
+  renderFollowUpHistory();
+  factualEnrichmentPanel.hidden = false;
+}
+
+function collectFollowUpAnswers() {
+  const rows = [];
+  followUpQuestions.querySelectorAll("textarea[data-follow-up-question]").forEach((field) => {
+    const answer = field.value.trim();
+    const question = field.dataset.followUpQuestion?.trim();
+    if (question && answer) rows.push({ question, answer });
+  });
+  const additional = followUpAdditional.value.trim();
+  if (additional) {
+    rows.push({
+      question: "Quelle autre précision utile doit être intégrée au dossier ?",
+      answer: additional
+    });
+  }
+  return rows;
+}
+
+function conversationalDirectAnswer(answer, publicSummary, orchestration) {
+  if (publicSummary.analysis_suspended) {
+    const reason = String(publicSummary.urgency_reason || "").trim();
+    return reason || "L’analyse est suspendue tant qu’une information indispensable manque.";
+  }
+  const candidates = [
+    ...(publicSummary.syndical_position || []),
+    ...(publicSummary.rule_to_facts || []).flatMap((item) => [
+      item?.employee_argument,
+      item?.conclusion
+    ]),
+    orchestration.reponse_synthetique_nexus
+  ]
+    .map((item) => String(item || "").trim())
+    .filter(Boolean);
+  const unique = candidates.filter(
+    (item, index, rows) =>
+      rows.findIndex((candidate) => candidate.toLocaleLowerCase() === item.toLocaleLowerCase()) === index
+  );
+  return unique[0] ||
+    "Nexus a besoin d’une précision supplémentaire pour vous répondre utilement.";
+}
+
+function conversationalNextSteps(answer, publicSummary) {
+  const actions = [
+    ...(publicSummary.next_actions || []),
+    ...(publicSummary.strategy?.position || []),
+    ...(publicSummary.strategy?.before || []),
+  ]
+    .map((item) => String(item || "").trim())
+    .filter(Boolean)
+    .filter(
+      (item, index, rows) =>
+        rows.findIndex((candidate) => candidate.toLocaleLowerCase() === item.toLocaleLowerCase()) === index
+    )
+    .slice(0, 2);
+  return actions.join(" ") || (publicSummary.syndical_position || []).slice(0, 2).join(" ");
+}
+
+function renderConversationalSources(publicSummary) {
+  chatbotSourcesList.textContent = "";
+  const sources = (publicSummary.source_extractions || publicSummary.sources || [])
+    .map((item) => ({
+      provider: String(item?.provider || "").trim(),
+      title: String(item?.title || "").trim(),
+      reference: String(item?.reference || "").trim(),
+      excerpt: String(item?.excerpt || "").trim(),
+      linkToFacts: String(item?.link_to_facts || "").trim(),
+      practicalScope: String(item?.practical_scope || item?.scope || "").trim(),
+      reserve: String(item?.reserve || "").trim(),
+      status: String(item?.availability_status || "").trim(),
+    }))
+    .filter((item) => item.title)
+    .filter(
+      (item, index, rows) =>
+        rows.findIndex(
+          (candidate) =>
+            `${candidate.provider}|${candidate.title}`.toLocaleLowerCase() ===
+            `${item.provider}|${item.title}`.toLocaleLowerCase()
+        ) === index
+    )
+    .slice(0, 3);
+  for (const source of sources) {
+    const item = document.createElement("li");
+    item.className = "chatbot-source-card";
+    const title = document.createElement("strong");
+    const label = source.provider
+      ? `${source.provider} — ${source.title}`
+      : source.title;
+    title.textContent =
+      source.status === "FOUND_VERSION_UNCERTAIN"
+        ? `${label} (version applicable à confirmer)`
+        : label;
+    item.appendChild(title);
+    if (source.reference) {
+      const reference = document.createElement("p");
+      reference.textContent = `Référence : ${source.reference}`;
+      item.appendChild(reference);
+    }
+    if (source.excerpt) {
+      const excerpt = document.createElement("blockquote");
+      appendHighlightedExcerpt(excerpt, source.excerpt);
+      item.appendChild(excerpt);
+    }
+    if (source.linkToFacts) {
+      const use = document.createElement("p");
+      use.textContent = `Lien avec votre situation : ${source.linkToFacts}`;
+      item.appendChild(use);
+    }
+    if (source.practicalScope) {
+      const scope = document.createElement("p");
+      scope.className = "source-context-notice";
+      scope.textContent = source.practicalScope;
+      item.appendChild(scope);
+    }
+    if (source.reserve) {
+      const reserve = document.createElement("p");
+      reserve.className = "source-context-notice";
+      reserve.textContent = `Réserve : ${source.reserve}`;
+      item.appendChild(reserve);
+    }
+    chatbotSourcesList.appendChild(item);
+  }
+  chatbotConnectorsList.textContent = "";
+  const connectors = (publicSummary.connector_activity || []).slice(0, 8);
+  for (const connector of connectors) {
+    const item = document.createElement("li");
+    const label = String(connector.connector || "Connecteur officiel");
+    const status = String(connector.status || "");
+    const statusLabel = {
+      RESULTAT_UTILISE: "résultat utilisé",
+      CATALOGUE_SEULEMENT: "catalogue seulement, aucune preuve utilisée",
+      INDISPONIBLE: "indisponible"
+    }[status] || status;
+    item.textContent = `${label} — ${statusLabel}. ${connector.explanation || ""}`.trim();
+    chatbotConnectorsList.appendChild(item);
+  }
+  chatbotConnectorsSummary.hidden = connectors.length === 0;
+  chatbotPvList.textContent = "";
+  const pvContexts = (publicSummary.cse_context || [])
+    .filter((item) => String(item?.excerpt || "").trim())
+    .slice(0, 3);
+  for (const context of pvContexts) {
+    const item = document.createElement("li");
+    item.className = "chatbot-source-card pv-context-card";
+    const title = document.createElement("strong");
+    title.textContent = [context.title, context.date].filter(Boolean).join(" — ") || "Ancien PV";
+    const excerpt = document.createElement("blockquote");
+    appendHighlightedExcerpt(excerpt, context.excerpt);
+    const limit = document.createElement("p");
+    limit.className = "source-context-notice";
+    limit.textContent = (context.limits || []).join(" ") ||
+      "Ce passage apporte un contexte factuel et ne constitue pas une norme juridique.";
+    item.append(title, excerpt, limit);
+    chatbotPvList.appendChild(item);
+  }
+  chatbotPvSummary.hidden = pvContexts.length === 0;
+  chatbotSourcesSummary.hidden =
+    !usesConversationalEmployeeFlow() ||
+    (sources.length === 0 && connectors.length === 0 && pvContexts.length === 0);
+}
+
+async function refineAnalysisWithFollowUp() {
+  if (!currentAnalysisRequest) return;
+  const newRows = collectFollowUpAnswers();
+  const newDocuments = [...uploadedFollowUpDocuments];
+  if (!newRows.length && !newDocuments.length) {
+    followUpStatus.textContent = "Répondez à une question, ajoutez une précision ou joignez un document.";
+    return;
+  }
+  if (newDocuments.length) {
+    newRows.push({
+      question: "Quels documents ont été ajoutés à cette étape ?",
+      answer: newDocuments.map((documentItem) => documentItem.name).join(", ")
+    });
+  }
+  followUpConversation.push(...newRows);
+  const requestPayload = {
+    ...currentAnalysisRequest,
+    attachments: [
+      ...(currentAnalysisRequest.attachments || []),
+      ...newDocuments
+    ],
+    portal_context: {
+      ...(currentAnalysisRequest.portal_context || {}),
+      follow_up_answers: followUpConversation.map(({ question, answer }) => ({
+        question,
+        answer
+      })),
+      conversation_round: followUpConversation.length
+    }
+  };
+  refineAnalysisButton.disabled = true;
+  followUpStatus.textContent = "Votre précision est intégrée aux faits. Nexus adapte la recherche et la réponse.";
+  setStatus("Analyse enrichie...", null);
+  showOnly("loading");
+  try {
+    const payload = await requestNexusAnalysis(requestPayload);
+    currentAnalysisRequest = requestPayload;
+    renderResult(payload);
+    setStatus(
+      "Réponse améliorée",
+      payload.orchestration?.niveau_de_confiance || payload.answer.confidence
+    );
+  } catch (error) {
+    const userMessage =
+      error instanceof NexusRequestError
+        ? error.message
+        : "Une erreur interne Nexus est survenue.";
+    renderError(userMessage);
+    setStatus("Erreur", "faible");
+    showOnly("result");
+  } finally {
+    refineAnalysisButton.disabled = false;
+  }
+}
+
 function renderResult(payload) {
   applyControlledPilotMode(payload.controlled_pilot || controlledPilot);
   currentPayload = payload;
+  const conversationalFlow = usesConversationalEmployeeFlow();
+  statusPill.classList.toggle("chatbot-status-hidden", conversationalFlow);
+  resultView.classList.toggle("chatbot-result", conversationalFlow);
+  resultView.classList.remove("chatbot-details-open");
+  chatbotDetailsButton.hidden = !conversationalFlow;
+  chatbotDetailsButton.textContent = "Voir les sources et le détail";
+  factualEnrichmentPanel.querySelector("h2").textContent = conversationalFlow
+    ? "Poursuivre la discussion"
+    : "Répondre aux questions et mettre à jour l’analyse";
+  documentsSummaryPanel.hidden = usesConversationalEmployeeFlow();
+  generalFollowupGrid.classList.toggle(
+    "single-panel",
+    usesConversationalEmployeeFlow()
+  );
+  addDocumentButton.textContent = usesConversationalEmployeeFlow()
+    ? "Signaler une pièce dans la discussion"
+    : "Ajouter un document";
   const answer = payload.answer;
   const orchestration = payload.orchestration || {};
   const finalAssistant = payload.final_assistant_runtime?.assistant || null;
@@ -909,16 +1431,19 @@ function renderResult(payload) {
     : null;
   fillInlineList(domainsList, finalDomains || orchestration.domaines_detectes || answer.route.domains || []);
   fillInlineList(expertsList, finalTrace.engines_called || orchestration.experts_mobilises || []);
-  shortAnswer.textContent =
-    (publicSummary.situation || []).join(" ") ||
-    orchestration.reponse_synthetique_nexus ||
-    answer.short_answer ||
-    "A completer.";
-  workingPosition.textContent =
-    (publicSummary.syndical_position || []).join(" ") ||
-    orchestration.position_de_travail ||
-    answer.working_position ||
-    "A completer.";
+  shortAnswer.textContent = conversationalFlow
+    ? conversationalDirectAnswer(answer, publicSummary, orchestration)
+    : (publicSummary.situation || []).join(" ") ||
+      orchestration.reponse_synthetique_nexus ||
+      answer.short_answer ||
+      "A completer.";
+  workingPosition.textContent = conversationalFlow
+    ? conversationalNextSteps(answer, publicSummary)
+    : (publicSummary.syndical_position || []).join(" ") ||
+      orchestration.position_de_travail ||
+      answer.working_position ||
+      "A completer.";
+  renderConversationalSources(publicSummary);
   renderSources(sourcesList, answer, orchestration);
   fillList(findingsList, publicSummary.strengths || answer.findings || []);
   fillList(
@@ -949,6 +1474,8 @@ function renderResult(payload) {
         ]
       : orchestration.limites || answer.warnings || []
   );
+  renderFollowUpForm(publicSummary);
+  factualEnrichmentPanel.hidden = false;
   renderIssueGroups(answer.issue_groups || []);
   renderDisciplinaryAssistance(answer.disciplinary_assistance || null);
   renderExperts(payload);
@@ -962,13 +1489,20 @@ function renderResult(payload) {
     payload.final_assistant_runtime?.diagnostics?.engines_used?.includes("expert_paie_v2")
   );
   payrollStatusValue.textContent = paieV2Used ? "Contrôle avancé mobilisé" : "Analyse prudente";
-  resultModeNotice.textContent = finalEnabled
-    ? "L’Assistant avancé a enrichi cette analyse."
-    : "Analyse avancée non activée : Nexus utilise le moteur historique.";
+  resultModeNotice.textContent = conversationalFlow
+    ? publicSummary.analysis_suspended === true
+      ? "Nexus attend une précision déterminante avant de lancer une recherche documentaire ciblée."
+      : "Nexus a recherché les documents pertinents à partir des faits actuellement connus."
+    : finalEnabled
+      ? "L’Assistant avancé a enrichi cette analyse."
+      : "Analyse avancée non activée : Nexus utilise le moteur historique.";
   analysisState.hidden = true;
   wizardView.hidden = true;
   homeView.hidden = true;
   resultView.hidden = false;
+  editInformationButton.textContent = conversationalFlow
+    ? "← Modifier la question"
+    : "← Modifier les informations";
   sessionHistoryCount += 1;
   resetReportState();
   resultView.focus?.();
@@ -1055,7 +1589,7 @@ function renderHistoricalCards() {
   const matches = (historicalCatalog?.cases || []).filter((item) =>
     historicalMatches(item, query, historicalSelectedFilter)
   );
-  historyResultCount.textContent = `${matches.length} cas affiché${matches.length > 1 ? "s" : ""} sur 11`;
+  historyResultCount.textContent = `${matches.length} dossier${matches.length > 1 ? "s" : ""} affiché${matches.length > 1 ? "s" : ""} sur 11`;
   historyEmpty.hidden = matches.length !== 0;
 
   for (const item of matches) {
@@ -1065,10 +1599,10 @@ function renderHistoricalCards() {
     const headingRow = document.createElement("div");
     headingRow.className = "history-card-heading";
     const id = document.createElement("strong");
-    id.textContent = item.id;
+    id.textContent = `Dossier ${String(item.id || "").slice(-2)}`;
     const score = document.createElement("span");
     score.className = "history-card-score";
-    score.textContent = `${item.score}/100`;
+    score.textContent = `Score historique ${item.score}/100`;
     headingRow.append(id, score);
 
     const title = document.createElement("h3");
@@ -1076,6 +1610,9 @@ function renderHistoricalCards() {
     const domain = document.createElement("p");
     domain.className = "history-card-domain";
     domain.textContent = item.domain;
+    const capacity = document.createElement("p");
+    capacity.className = "history-card-capacity";
+    capacity.textContent = item.capacity;
     const path = document.createElement("p");
     path.className = "history-card-path";
     path.textContent = `Parcours : ${item.path_label}`;
@@ -1091,19 +1628,24 @@ function renderHistoricalCards() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "primary-button history-open-button";
-    button.textContent = "Voir l’analyse";
+    button.textContent = "Voir le dossier traité";
     button.setAttribute(
       "aria-label",
-      `Voir l’analyse ${item.id} — ${item.title}`
+      `Voir le dossier traité — ${item.title}`
     );
     button.addEventListener("click", () => openHistoricalCase(item.id));
 
-    card.append(headingRow, title, domain, path, badges, button);
+    card.append(headingRow, title, capacity, domain, path, badges, button);
     historyCases.appendChild(card);
   }
 }
 
-function appendHistoricalSection(title, values, formatter = (item) => String(item)) {
+function appendHistoricalSection(
+  title,
+  values,
+  formatter = (item) => String(item),
+  container = historySections
+) {
   const normalized = Array.isArray(values)
     ? values.filter(Boolean)
     : values
@@ -1121,10 +1663,10 @@ function appendHistoricalSection(title, values, formatter = (item) => String(ite
     list.appendChild(item);
   }
   section.append(heading, list);
-  historySections.appendChild(section);
+  container.appendChild(section);
 }
 
-function appendHistoricalRules(rules) {
+function appendHistoricalRules(rules, container = historySections) {
   if (!Array.isArray(rules) || !rules.length) return;
   const section = document.createElement("section");
   section.className = "history-detail-section";
@@ -1138,7 +1680,9 @@ function appendHistoricalRules(rules) {
     const source = document.createElement("h4");
     source.textContent = rule.source || "Source à vérifier";
     const ruleText = document.createElement("p");
-    ruleText.textContent = rule.rule || "Règle non restituée.";
+    ruleText.className = "history-rule-excerpt";
+    if (rule.rule) appendHighlightedExcerpt(ruleText, rule.rule);
+    else ruleText.textContent = "Règle non restituée.";
     card.append(source, ruleText);
 
     const positions = [
@@ -1157,52 +1701,272 @@ function appendHistoricalRules(rules) {
     }
     section.appendChild(card);
   }
-  historySections.appendChild(section);
+  container.appendChild(section);
 }
 
-function appendHistoricalStrategy(strategy) {
+function appendHistoricalStrategy(strategy, container = historySections) {
   if (!strategy || typeof strategy !== "object") return;
   const values = [
     ...(strategy.before || []).map((item) => `Avant : ${item}`),
     ...(strategy.during || []).map((item) => `Pendant : ${item}`),
     ...(strategy.position || []).map((item) => `Position : ${item}`)
   ];
-  appendHistoricalSection("Stratégie syndicale", values);
+  appendHistoricalSection("Stratégie syndicale", values, (item) => String(item), container);
+}
+
+function appendUnionCaseQuestionAnswers(rows) {
+  if (!Array.isArray(rows) || !rows.length) return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section union-case-section union-case-exchange";
+  const heading = document.createElement("h3");
+  heading.textContent = "Questions et réponses du dossier";
+  const intro = document.createElement("p");
+  intro.className = "union-case-intro";
+  intro.textContent =
+    "Les réponses ci-dessous reprennent uniquement les faits et constats présents dans le cas validé.";
+  section.append(heading, intro);
+  for (const row of rows) {
+    const card = document.createElement("article");
+    card.className = "union-case-qa";
+    const question = document.createElement("h4");
+    question.textContent = row.question;
+    const status = document.createElement("p");
+    status.className = "union-case-answer-status";
+    status.textContent = row.answer_status;
+    const answers = document.createElement("ul");
+    for (const answer of row.answers || []) {
+      const item = document.createElement("li");
+      item.textContent = answer;
+      answers.appendChild(item);
+    }
+    card.append(question, status, answers);
+    section.appendChild(card);
+  }
+  historySections.appendChild(section);
+}
+
+function appendUnionCaseOpenQuestions(rows) {
+  if (!Array.isArray(rows) || !rows.length) return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section union-case-section";
+  const heading = document.createElement("h3");
+  heading.textContent = "Questions encore ouvertes";
+  section.appendChild(heading);
+  for (const row of rows) {
+    const card = document.createElement("article");
+    card.className = "union-case-open-question";
+    const question = document.createElement("h4");
+    question.textContent = row.question;
+    const meta = document.createElement("p");
+    meta.className = "union-case-answer-status";
+    meta.textContent = `À poser à : ${row.asked_to}`;
+    const answer = document.createElement("p");
+    answer.textContent = row.answer;
+    card.append(question, meta);
+    if (row.reason) {
+      const reason = document.createElement("p");
+      reason.textContent = `Pourquoi : ${row.reason}`;
+      card.appendChild(reason);
+    }
+    card.appendChild(answer);
+    section.appendChild(card);
+  }
+  historySections.appendChild(section);
+}
+
+function appendUnionCaseSources(sources) {
+  if (!Array.isArray(sources) || !sources.length) return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section union-case-section union-case-sources";
+  const heading = document.createElement("h3");
+  heading.textContent = "Sources déterminantes";
+  const intro = document.createElement("p");
+  intro.className = "union-case-intro";
+  intro.textContent = "Cinq sources au maximum, classées pour leur utilité concrète dans le dossier.";
+  section.append(heading, intro);
+  for (const source of sources) {
+    const card = document.createElement("article");
+    card.className = "union-case-source";
+    const title = document.createElement("h4");
+    title.textContent = source.title;
+    card.appendChild(title);
+    if (source.reference) {
+      const reference = document.createElement("p");
+      reference.className = "union-case-source-reference";
+      reference.textContent = `Référence : ${source.reference}`;
+      card.appendChild(reference);
+    }
+    if (source.excerpt) {
+      const excerpt = document.createElement("blockquote");
+      excerpt.className = "union-case-source-excerpt";
+      appendHighlightedExcerpt(excerpt, source.excerpt);
+      card.appendChild(excerpt);
+    }
+    const practicalUse = document.createElement("p");
+    practicalUse.textContent = `Lien avec les faits : ${
+      source.practical_use || "utilité pratique à confirmer avec les faits et la version applicable."
+    }`;
+    card.appendChild(practicalUse);
+    if (source.reserve) {
+      const reserve = document.createElement("p");
+      reserve.className = "union-case-source-reserve";
+      reserve.textContent = `Réserve : ${source.reserve}`;
+      card.appendChild(reserve);
+    }
+    const meta = document.createElement("p");
+    meta.className = "union-case-source-meta";
+    meta.textContent = `${source.nature} · ${source.status}`;
+    card.appendChild(meta);
+    section.appendChild(card);
+  }
+  historySections.appendChild(section);
+}
+
+function appendHistoricalPvContext(contexts) {
+  if (!Array.isArray(contexts) || !contexts.length) return;
+  const usable = contexts.filter((item) => String(item?.excerpt || "").trim()).slice(0, 3);
+  if (!usable.length) return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section union-case-section historical-pv-context";
+  const heading = document.createElement("h3");
+  heading.textContent = "Extraits pertinents des anciens PV";
+  const notice = document.createElement("p");
+  notice.className = "source-context-notice";
+  notice.textContent = "Ces passages documentent le contexte collectif. Ils ne constituent pas une norme juridique.";
+  section.append(heading, notice);
+  for (const context of usable) {
+    const card = document.createElement("article");
+    card.className = "union-case-source pv-context-card";
+    const title = document.createElement("h4");
+    title.textContent = [context.title, context.date].filter(Boolean).join(" — ") || "Ancien PV";
+    const excerpt = document.createElement("blockquote");
+    excerpt.className = "union-case-source-excerpt";
+    appendHighlightedExcerpt(excerpt, context.excerpt);
+    const limit = document.createElement("p");
+    limit.className = "source-context-notice";
+    limit.textContent = (context.limits || []).join(" ") ||
+      "Passage contextuel uniquement ; il ne prouve pas à lui seul une obligation juridique.";
+    card.append(title, excerpt, limit);
+    section.appendChild(card);
+  }
+  historySections.appendChild(section);
+}
+
+function appendUnionCaseDocuments(rows) {
+  appendHistoricalSection(
+    "Pièces encore utiles si elles deviennent nécessaires",
+    rows || [],
+    (item) =>
+      `${item.document}${item.reason ? ` — ${item.reason}` : ""}${item.priority ? ` [${item.priority}]` : ""}`
+  );
+}
+
+function appendUnionCaseConclusion(conclusion) {
+  if (!conclusion || typeof conclusion !== "object") return;
+  const section = document.createElement("section");
+  section.className = "history-detail-section union-case-conclusion";
+  const heading = document.createElement("h3");
+  heading.textContent = "Conclusion et conseils syndicaux";
+  const headline = document.createElement("p");
+  headline.className = "union-case-conclusion-headline";
+  headline.textContent = conclusion.headline;
+  section.append(heading, headline);
+
+  const groups = [
+    ["Position retenue", conclusion.position || []],
+    ["Conseils syndicaux", conclusion.advice || []],
+    ["Limites à garder en tête", conclusion.limits || []]
+  ];
+  for (const [label, values] of groups) {
+    if (!values.length) continue;
+    const title = document.createElement("h4");
+    title.textContent = label;
+    const list = document.createElement("ul");
+    for (const value of values) {
+      const item = document.createElement("li");
+      item.textContent = value;
+      list.appendChild(item);
+    }
+    section.append(title, list);
+  }
+  const warning = document.createElement("p");
+  warning.className = "union-case-warning";
+  warning.textContent = conclusion.warning;
+  section.appendChild(warning);
+  historySections.appendChild(section);
+}
+
+function appendHistoricalTechnicalAnalysis(detail, summary, notes) {
+  const details = document.createElement("details");
+  details.className = "history-technical-analysis";
+  const toggle = document.createElement("summary");
+  toggle.textContent = "Voir l’analyse technique validée";
+  const content = document.createElement("div");
+  content.className = "history-technical-content";
+  details.append(toggle, content);
+
+  const sourceStatusAtTest = detail.source_status_at_test || {};
+  appendHistoricalSection(
+    "Sources disponibles lors du test V1",
+    sourceStatusAtTest.retrieved_sources || [],
+    (item) =>
+      `${item.provider || "Source"} — ${item.title || "Titre non restitué"}${item.nature ? ` — ${item.nature}` : ""} [${item.status || "DISPONIBLE"}]`,
+    content
+  );
+  appendHistoricalSection(
+    "Sources encore à obtenir lors du test V1",
+    sourceStatusAtTest.sources_to_obtain || [],
+    (item) => String(item),
+    content
+  );
+  appendHistoricalRules(summary.rule_to_facts || [], content);
+  appendHistoricalStrategy(summary.strategy, content);
+  appendHistoricalSection(
+    "Résultat du test V1",
+    [
+      `${detail.test_status} — ${detail.score}/100 — ${detail.state}`,
+      detail.score_explanation
+    ],
+    (item) => String(item),
+    content
+  );
+  if (notes.length) {
+    appendHistoricalSection(
+      "Limites particulières validées",
+      notes,
+      (item) => String(item),
+      content
+    );
+  }
+  historySections.appendChild(details);
 }
 
 function historicalCaseText(detail) {
-  const summary = detail.public_summary || {};
+  const dossier = detail.union_case_file || {};
+  const conclusion = dossier.conclusion || {};
   const lines = [
-    `${detail.id} — ${detail.title}`,
+    `${dossier.public_reference || "Dossier"} — ${detail.title}`,
     `Domaine : ${detail.domain}`,
-    `Parcours : ${detail.path_label}`,
-    `Score V1 : ${detail.score}/100`,
+    `Capacité démontrée : ${dossier.capacity || detail.capacity || ""}`,
     `Statut : ${detail.state}`,
-    `Version : ${detail.validated_version}`,
     "",
-    "Situation étudiée",
-    ...(summary.situation || []).map((item) => `- ${item}`),
+    "QUESTIONS ET RÉPONSES",
+    ...(dossier.question_answer_exchange || []).flatMap((row) => [
+      `Question : ${row.question}`,
+      ...(row.answers || []).map((answer) => `Réponse : ${answer}`)
+    ]),
     "",
-    "Questions prioritaires",
-    ...(summary.priority_questions || []).map(
-      (item) => `- ${item.target || "À préciser"} — ${item.question}`
+    "QUESTIONS ENCORE OUVERTES",
+    ...(dossier.open_questions || []).map(
+      (row) => `- ${row.question} — ${row.answer}`
     ),
     "",
-    "Documents à obtenir",
-    ...(summary.documents || []).map(
-      (item) => `- ${item.document}${item.utility ? ` — ${item.utility}` : ""}`
-    ),
+    "CONCLUSION ET CONSEILS SYNDICAUX",
+    conclusion.headline || "",
+    ...(conclusion.position || []).map((item) => `- ${item}`),
+    ...(conclusion.advice || []).map((item) => `- ${item}`),
     "",
-    "Position syndicale",
-    ...(summary.syndical_position || []).map((item) => `- ${item}`),
-    "",
-    "Limites de l’analyse",
-    ...(summary.limits || []).map((item) => `- ${item}`),
-    ...(detail.special_notes || []).map((item) => `- ${item}`),
-    "",
-    detail.score_explanation,
-    "",
-    "Cas anonymisé de validation V1 — consultation uniquement."
+    conclusion.warning || ""
   ];
   return lines.join("\n").trim();
 }
@@ -1211,9 +1975,11 @@ function renderHistoricalDetail(detail) {
   currentHistoricalCase = detail;
   historyListPanel.hidden = true;
   historyDetail.hidden = false;
-  historyDetailId.textContent = detail.id;
+  historyDetailId.textContent =
+    detail.union_case_file?.public_reference ||
+    `Dossier ${String(detail.id || "").slice(-2)}`;
   historyDetailTitle.textContent = detail.title;
-  historyDetailMeta.textContent = `${detail.domain} · ${detail.path_label} · Validation V${detail.validated_version}`;
+  historyDetailMeta.textContent = `${detail.domain} · ${detail.path_label} · Dossier anonymisé`;
   historyDetailScore.textContent = detail.score;
   historyDetailBadges.textContent = "";
   historyDetailBadges.append(
@@ -1236,48 +2002,28 @@ function renderHistoricalDetail(detail) {
   }
 
   const summary = detail.public_summary || {};
+  const dossier = detail.union_case_file || {};
   historySections.textContent = "";
-  const sourceStatusAtTest = detail.source_status_at_test || {};
-  appendHistoricalSection(
-    "Sources disponibles lors du test V1",
-    sourceStatusAtTest.retrieved_sources || [],
-    (item) =>
-      `${item.provider || "Source"} — ${item.title || "Titre non restitué"}${item.nature ? ` — ${item.nature}` : ""} [${item.status || "DISPONIBLE"}]`
-  );
-  appendHistoricalSection(
-    "Sources encore à obtenir lors du test V1",
-    sourceStatusAtTest.sources_to_obtain || []
-  );
-  appendHistoricalSection("Situation étudiée", summary.situation || []);
-  appendHistoricalSection("Faits principaux compris", summary.strengths || []);
-  appendHistoricalSection(
-    "Questions prioritaires",
-    summary.priority_questions || [],
-    (item) =>
-      `${item.target || "À préciser"} — ${item.question}${item.reason ? ` (${item.reason})` : ""}`
-  );
-  appendHistoricalSection(
-    "Documents à obtenir",
-    summary.documents || [],
-    (item) =>
-      `${item.document}${item.utility ? ` — ${item.utility}` : ""}${item.priority ? ` [${item.priority}]` : ""}`
-  );
-  appendHistoricalRules(summary.rule_to_facts || []);
-  appendHistoricalSection(
-    "Position syndicale testée",
-    summary.syndical_position || []
-  );
-  appendHistoricalStrategy(summary.strategy);
-  appendHistoricalSection(
-    "Limites de l’analyse",
-    [...(summary.limits || []), ...notes]
-  );
-  appendHistoricalSection("Actions suivantes", summary.next_actions || []);
-  appendHistoricalSection("À éviter", summary.avoid || []);
-  appendHistoricalSection("Résultat du test V1", [
-    `${detail.test_status} — ${detail.score}/100 — ${detail.state}`,
-    detail.score_explanation
-  ]);
+  const dossierIntro = document.createElement("section");
+  dossierIntro.className = "history-detail-section union-case-overview";
+  const dossierLabel = document.createElement("p");
+  dossierLabel.className = "eyebrow";
+  dossierLabel.textContent = dossier.public_reference || "Dossier syndical";
+  const capacityTitle = document.createElement("h3");
+  capacityTitle.textContent = "Ce que ce dossier démontre";
+  const capacity = document.createElement("p");
+  capacity.className = "union-case-capacity";
+  capacity.textContent = dossier.capacity || detail.capacity;
+  dossierIntro.append(dossierLabel, capacityTitle, capacity);
+  historySections.appendChild(dossierIntro);
+
+  appendUnionCaseQuestionAnswers(dossier.question_answer_exchange || []);
+  appendUnionCaseOpenQuestions(dossier.open_questions || []);
+  appendUnionCaseSources(dossier.determinant_sources || []);
+  appendHistoricalPvContext(summary.cse_context || []);
+  appendUnionCaseDocuments(dossier.documents_still_needed || []);
+  appendUnionCaseConclusion(dossier.conclusion || {});
+  appendHistoricalTechnicalAnalysis(detail, summary, notes);
   historyCopyStatus.textContent = "";
   historySourceRefresh.hidden = true;
   historySourceRefresh.textContent = "";
@@ -1379,7 +2125,7 @@ async function openHistoricalCases() {
     historyAverage.textContent = Number(historicalCatalog.score_average)
       .toFixed(2)
       .replace(".", ",");
-    historyVersion.textContent = `Validation V${historicalCatalog.product_version}`;
+    historyVersion.textContent = `Dossiers anonymisés issus de la validation V${historicalCatalog.product_version}`;
     historyWarning.textContent = historicalCatalog.warning;
     historyScoreExplanation.textContent = historicalCatalog.score_explanation;
     renderHistoricalFilters();
@@ -1431,12 +2177,276 @@ function showHistoricalList() {
   window.scrollTo({top: 0, behavior: "smooth"});
 }
 
+const localCaseStatusLabels = {
+  OPEN: "Ouvert",
+  IN_PROGRESS: "En cours",
+  WAITING: "En attente",
+  CLOSED: "Clôturé",
+  CANCELLED: "Annulé"
+};
+
+function caseText(value) {
+  if (typeof value === "string") return value.trim();
+  if (value && typeof value.text === "string") return value.text.trim();
+  if (value && typeof value.document === "string") return value.document.trim();
+  if (value && typeof value.action === "string") return value.action.trim();
+  if (value && typeof value.question === "string") return value.question.trim();
+  return "";
+}
+
+function currentCaseDraft() {
+  const publicSummary = currentPayload?.report?.public_summary || {};
+  const answer = currentPayload?.answer || {};
+  const storedSummary = Object.keys(publicSummary).length
+    ? publicSummary
+    : {
+        situation_summary: shortAnswer.textContent.trim(),
+        working_position: workingPosition.textContent.trim(),
+        domains: answer.route?.domains || [],
+        documents: answer.documents_to_request || [],
+        priority_questions: answer.questions_to_ask || [],
+        limits: answer.warnings || []
+      };
+  return {
+    title: newCaseTitle.value.trim(),
+    status: newCaseStatus.value,
+    question:
+      currentAnalysisRequest?.portal_context?.user_question ||
+      resultQuestion.textContent.trim(),
+    public_summary: storedSummary,
+    follow_up_answers: followUpConversation.map(({ question, answer: value }) => ({
+      question,
+      answer: value
+    })),
+    documents:
+      storedSummary.documents ||
+      answer.documents_to_request ||
+      [],
+    uploaded_documents: (storedSummary.uploaded_documents || []).map((item) => ({
+      title: String(item?.title || "").trim(),
+      format: String(item?.format || "").trim(),
+      page_count: item?.page_count || null,
+      paragraph_count: item?.paragraph_count || null,
+      truncated: Boolean(item?.truncated),
+      status: String(item?.status || "").trim()
+    })),
+    actions:
+      storedSummary.priority_actions ||
+      storedSummary.actions ||
+      (answer.next_action ? [answer.next_action] : []),
+    notes: newCaseNotes.value.trim(),
+    final_decision: {}
+  };
+}
+
+async function localCaseRequest(url, options = {}) {
+  const response = await fetch(url, options);
+  const payload = await response.json();
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.error || "Dossier local indisponible.");
+  }
+  return payload;
+}
+
+function openCaseSaveDialog() {
+  if (!currentPayload) return;
+  newCaseTitle.value = "";
+  newCaseStatus.value = "OPEN";
+  newCaseNotes.value = "";
+  newCaseSaveStatus.textContent = "";
+  caseSaveDialog.showModal();
+  newCaseTitle.focus();
+}
+
+async function createLocalCase(event) {
+  event.preventDefault();
+  newCaseSaveStatus.textContent = "Enregistrement local…";
+  try {
+    const payload = await localCaseRequest("/api/local-cases", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(currentCaseDraft())
+    });
+    caseSaveDialog.close();
+    setStatus(`Dossier ${payload.case.case_ref} enregistré`, "local");
+  } catch (error) {
+    newCaseSaveStatus.textContent =
+      error instanceof Error ? error.message : "Enregistrement impossible.";
+  }
+}
+
+function renderCaseSnapshot(item) {
+  caseFileSnapshot.textContent = "";
+  const heading = document.createElement("h2");
+  heading.textContent = "Analyse enregistrée";
+  const question = document.createElement("p");
+  question.textContent = item.question || "Question non renseignée.";
+  const summary = document.createElement("p");
+  const publicSummary = item.public_summary || {};
+  summary.textContent =
+    caseText(publicSummary.situation_summary) ||
+    caseText(publicSummary.short_answer) ||
+    caseText(publicSummary.summary) ||
+    "Synthèse publique non disponible.";
+  const position = document.createElement("p");
+  position.textContent = caseText(publicSummary.working_position);
+  caseFileSnapshot.append(heading, question, summary);
+  if (position.textContent) caseFileSnapshot.appendChild(position);
+  const uploadedDocuments = item.uploaded_documents || publicSummary.uploaded_documents || [];
+  if (uploadedDocuments.length) {
+    const documentsHeading = document.createElement("h3");
+    documentsHeading.textContent = "Pièces conservées dans le dossier";
+    const documentsList = document.createElement("ul");
+    for (const document of uploadedDocuments) {
+      const row = document.createElement("li");
+      const details = [document.format, document.page_count ? `${document.page_count} page(s)` : ""]
+        .filter(Boolean)
+        .join(" · ");
+      row.textContent = `${document.title || "Document fourni"}${details ? ` — ${details}` : ""}${document.truncated ? " — lecture partielle" : ""}`;
+      documentsList.appendChild(row);
+    }
+    caseFileSnapshot.append(documentsHeading, documentsList);
+  }
+}
+
+function showCaseList() {
+  caseFileDetail.hidden = true;
+  casesList.hidden = false;
+  currentLocalCase = null;
+  casesStatus.textContent = "";
+}
+
+function renderCaseCards(items) {
+  casesList.textContent = "";
+  casesEmpty.hidden = items.length !== 0;
+  for (const item of items) {
+    const card = document.createElement("article");
+    card.className = "case-file-card";
+    const heading = document.createElement("h2");
+    heading.textContent = item.title;
+    const meta = document.createElement("p");
+    meta.textContent = `${localCaseStatusLabels[item.status] || item.status} · mis à jour ${item.updated_at || "date inconnue"}`;
+    const decision = document.createElement("p");
+    decision.textContent = item.decision_recorded
+      ? "Décision finale renseignée"
+      : "Décision finale à renseigner";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "secondary-button";
+    button.textContent = "Ouvrir le dossier";
+    button.addEventListener("click", () => loadLocalCase(item.case_ref));
+    card.append(heading, meta, decision, button);
+    casesList.appendChild(card);
+  }
+}
+
+async function openLocalCases() {
+  showOnly("cases");
+  showCaseList();
+  casesStatus.textContent = "Chargement des dossiers locaux…";
+  try {
+    const payload = await localCaseRequest("/api/local-cases");
+    renderCaseCards(payload.cases || []);
+    casesStatus.textContent = `${(payload.cases || []).length} dossier(s) local(aux).`;
+    casesView.focus();
+  } catch (error) {
+    casesStatus.textContent =
+      error instanceof Error ? error.message : "Dossiers locaux indisponibles.";
+  }
+}
+
+async function loadLocalCase(caseRef) {
+  casesStatus.textContent = "Chargement du dossier…";
+  try {
+    const payload = await localCaseRequest(
+      `/api/local-cases/${encodeURIComponent(caseRef)}`
+    );
+    const item = payload.case;
+    currentLocalCase = item;
+    caseReference.value = item.case_ref || "";
+    caseFileTitle.value = item.title || "";
+    caseFileStatus.value = item.status || "OPEN";
+    caseFileNotes.value = item.notes || "";
+    caseFileActions.value = (item.actions || []).map(caseText).filter(Boolean).join("\n");
+    caseDecisionDate.value = item.final_decision?.date || "";
+    caseDecisionType.value = item.final_decision?.type || "";
+    caseDecisionAuthor.value = item.final_decision?.author_role || "";
+    caseDecisionSummary.value = item.final_decision?.summary || "";
+    caseDecisionDocument.value = item.final_decision?.supporting_document || "";
+    caseFileSaveStatus.textContent = "";
+    renderCaseSnapshot(item);
+    casesList.hidden = true;
+    caseFileDetail.hidden = false;
+    casesStatus.textContent = "";
+    caseFileDetail.focus?.();
+  } catch (error) {
+    casesStatus.textContent =
+      error instanceof Error ? error.message : "Dossier local indisponible.";
+  }
+}
+
+async function updateLocalCase(event) {
+  event.preventDefault();
+  if (!currentLocalCase) return;
+  caseFileSaveStatus.textContent = "Enregistrement local…";
+  const payload = {
+    ...currentLocalCase,
+    case_ref: caseReference.value,
+    title: caseFileTitle.value.trim(),
+    status: caseFileStatus.value,
+    notes: caseFileNotes.value.trim(),
+    actions: caseFileActions.value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean),
+    final_decision: {
+      date: caseDecisionDate.value,
+      type: caseDecisionType.value,
+      author_role: caseDecisionAuthor.value.trim(),
+      summary: caseDecisionSummary.value.trim(),
+      supporting_document: caseDecisionDocument.value.trim()
+    }
+  };
+  try {
+    const response = await localCaseRequest("/api/local-cases", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    currentLocalCase = response.case;
+    caseFileSaveStatus.textContent = "Dossier mis à jour sur ce poste.";
+    renderCaseSnapshot(currentLocalCase);
+  } catch (error) {
+    caseFileSaveStatus.textContent =
+      error instanceof Error ? error.message : "Mise à jour impossible.";
+  }
+}
+
+async function deleteCurrentLocalCase() {
+  if (!currentLocalCase) return;
+  const confirmed = window.confirm(
+    `Supprimer définitivement le dossier « ${currentLocalCase.title} » de ce poste ?`
+  );
+  if (!confirmed) return;
+  try {
+    await localCaseRequest(
+      `/api/local-cases/${encodeURIComponent(currentLocalCase.case_ref)}`,
+      { method: "DELETE" }
+    );
+    await openLocalCases();
+  } catch (error) {
+    caseFileSaveStatus.textContent =
+      error instanceof Error ? error.message : "Suppression impossible.";
+  }
+}
+
 function showOnly(view) {
   homeView.hidden = view !== "home";
   wizardView.hidden = view !== "wizard";
   resultView.hidden = view !== "result";
   analysisState.hidden = view !== "loading";
   historyView.hidden = view !== "history";
+  casesView.hidden = view !== "cases";
   if (view === "home") {
     document.getElementById("homeTitle").focus?.();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1564,6 +2574,12 @@ function renderContextFields(definition) {
   contextFields.textContent = "";
   renderEmployeeInterview();
   if (definition.context === "employee") {
+    if (
+      currentWorkspace === "employee" &&
+      currentEmployeePath === "QUESTION_SALARIE"
+    ) {
+      return;
+    }
     addField(contextFields, "startDate", "Date de début", "date");
     addField(contextFields, "eventFrequency", "Événement", "select", [["", "Non précisé"], ["ponctuel", "Ponctuel"], ["recurrent", "Récurrent"]]);
     addField(contextFields, "stillEmployed", "Salarié encore en poste", "checkbox");
@@ -1654,28 +2670,52 @@ function renderDocumentChoices(definition) {
   });
 }
 
+function usesConversationalEmployeeFlow() {
+  return currentWorkspace === "employee" && currentEmployeePath === "QUESTION_SALARIE";
+}
+
+function wizardStepSequence() {
+  return usesConversationalEmployeeFlow() ? [2] : [1, 2, 3, 4, 5];
+}
+
 function renderWizardProgress() {
-  const labels = ["Besoin", "Description", "Repères", "Éléments", "Résultat"];
+  const labelsByStep = {
+    1: "Besoin",
+    2: usesConversationalEmployeeFlow() ? "Question" : "Description",
+    3: "Échange",
+    4: "Éléments",
+    5: "Résultat"
+  };
+  const steps = wizardStepSequence();
   wizardProgress.textContent = "";
-  labels.forEach((label, index) => {
+  steps.forEach((step, index) => {
     const item = document.createElement("li");
-    const step = index + 1;
-    item.dataset.number = String(step);
+    item.dataset.number = String(index + 1);
     item.dataset.active = String(step === currentWizardStep);
-    item.dataset.complete = String(step < currentWizardStep);
-    item.textContent = label;
+    item.dataset.complete = String(steps.indexOf(currentWizardStep) > index);
+    item.textContent = labelsByStep[step];
     wizardProgress.appendChild(item);
   });
   document.querySelectorAll(".wizard-step").forEach((section) => {
-    section.hidden = Number(section.dataset.step) !== currentWizardStep;
+    const step = Number(section.dataset.step);
+    section.hidden = step !== currentWizardStep;
+    const count = section.querySelector(".step-count");
+    if (count) {
+      count.textContent = `Étape ${steps.indexOf(step) + 1} sur ${steps.length}`;
+    }
   });
-  previousStepButton.hidden = currentWizardStep === 1;
-  nextStepButton.hidden = currentWizardStep === 5;
-  analyzeButton.hidden = currentWizardStep !== 5;
+  const lastStep = steps[steps.length - 1];
+  previousStepButton.hidden = steps.indexOf(currentWizardStep) === 0;
+  nextStepButton.hidden = currentWizardStep === lastStep;
+  analyzeButton.hidden = currentWizardStep !== lastStep;
+  analyzeButton.textContent = usesConversationalEmployeeFlow()
+    ? "Envoyer la question à Nexus"
+    : "Analyser avec Nexus";
 }
 
 function validateCurrentStep() {
   let message = "";
+  if (questionDocumentsLoading) message = "Attendez la fin de la lecture locale des documents.";
   if (currentWizardStep === 1 && !selectedSituation) message = "Choisissez le type de situation à traiter.";
   if (currentWizardStep === 2 && queryInput.value.trim().length < 12) message = "Décrivez la situation en quelques mots avant de continuer.";
   if (currentWizardStep === 5 && !selectedOutcome) message = "Choisissez le résultat souhaité.";
@@ -1693,17 +2733,40 @@ function openWorkspace(workspace, preset = "", employeePath = "") {
   const definition = workspaceDefinition(workspace);
   if (!definition) return;
   currentWorkspace = workspace;
-  currentWizardStep = 1;
+  const conversationalFlow = usesConversationalEmployeeFlow();
+  currentWizardStep = conversationalFlow ? 2 : 1;
   selectedSituation = preset || (
     currentEmployeePath === "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
       ? "entretien-prealable"
-      : ""
+      : conversationalFlow
+        ? "question-salarie"
+        : ""
   );
   selectedOutcome = "";
+  currentAnalysisRequest = null;
+  followUpConversation = [];
   queryInput.value = "";
+  resetQuestionDocuments();
   wizardWorkspaceLabel.textContent = definition.label;
   wizardTitle.textContent = definition.title;
   wizardDescription.textContent = definition.description;
+  wizardView.classList.toggle("chatbot-mode", conversationalFlow);
+  statusPill.classList.toggle("chatbot-status-hidden", conversationalFlow);
+  const wizardHomeButton = wizardView.querySelector("[data-return-home]");
+  if (wizardHomeButton) {
+    wizardHomeButton.textContent = conversationalFlow
+      ? "← Autres outils Nexus"
+      : "← Revenir à l’accueil";
+  }
+  stepTwoTitle.textContent = conversationalFlow
+    ? "Quelle est votre question ?"
+    : "Décrivez la situation";
+  questionInputLabel.textContent = conversationalFlow
+    ? "Votre question"
+    : "Décrivez la situation avec vos propres mots";
+  privacyInputNotice.textContent = conversationalFlow
+    ? "N’indiquez aucun nom ni donnée personnelle inutile. Après la première réponse, vous pourrez préciser les faits dans la conversation."
+    : "N’indiquez aucune donnée personnelle inutile. Le texte n’est pas enregistré automatiquement.";
   payrollWarning.hidden = workspace !== "payroll";
   renderSituationChoices(definition);
   renderContextFields(definition);
@@ -1727,7 +2790,15 @@ function getContextValues() {
 function buildStructuredRequest() {
   const definition = workspaceDefinition(currentWorkspace);
   const documents = Array.from(document.querySelectorAll('input[name="availableDocument"]:checked')).map((item) => item.value);
-  const responseMode = document.querySelector('input[name="responseMode"]:checked')?.value || "CASE";
+  const conversationalFlow = usesConversationalEmployeeFlow();
+  const responseMode = conversationalFlow
+    ? "QUICK"
+    : document.querySelector('input[name="responseMode"]:checked')?.value || "CASE";
+  const desiredOutcome = selectedOutcome || (
+    conversationalFlow
+      ? "Obtenir une réponse claire et savoir quoi faire ensuite"
+      : ""
+  );
   const context = getContextValues();
   const interviewAnswers = getInterviewAnswers();
   const facts = Object.entries(context)
@@ -1741,14 +2812,19 @@ function buildStructuredRequest() {
     ...Object.entries(interviewAnswers).map(
       ([id, answer]) => `Question salarié — ${interviewQuestionLabel(id)} Réponse : ${answer}`
     ),
-    documents.length ? `Documents disponibles: ${documents.join(", ")}.` : "Documents disponibles: non précisés.",
-    `Résultat souhaité: ${selectedOutcome}.`,
+    documents.length
+      ? `Documents disponibles: ${documents.join(", ")}.`
+      : usesConversationalEmployeeFlow()
+        ? ""
+        : "Documents disponibles: non précisés.",
+    desiredOutcome ? `Résultat souhaité: ${desiredOutcome}.` : "",
     `Mode de réponse: ${responseMode}.`
   ].filter(Boolean).join("\n");
   return {
     query,
     source_limit: Number(sourceLimitInput.value || 6),
     employee_path: currentEmployeePath,
+    attachments: uploadedQuestionDocuments,
     portal_context: {
       workspace: currentWorkspace,
       employee_path: currentEmployeePath,
@@ -1756,10 +2832,14 @@ function buildStructuredRequest() {
       user_question: queryInput.value.trim(),
       facts: context,
       employee_interview_answers: interviewAnswers,
+      employee_interview: Object.entries(interviewAnswers).map(([id, answer]) => ({
+        question: interviewQuestionLabel(id),
+        answer
+      })),
       available_documents: documents,
       period: context.payrollMonth || context.startDate || context.meetingDate || null,
       urgency: Boolean(context.urgentSituation),
-      desired_outcome: selectedOutcome,
+      desired_outcome: desiredOutcome,
       response_mode: responseMode,
       allowed_engines: currentWorkspace === "payroll" ? ["historical_payroll_if_enabled"] : ["assistant_router"],
       confidentiality: confidentialityLevel.value
@@ -1771,6 +2851,8 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!validateCurrentStep()) return;
   const requestPayload = buildStructuredRequest();
+  currentAnalysisRequest = requestPayload;
+  followUpConversation = [];
 
   setStatus("Analyse...", null);
   const button = analyzeButton;
@@ -1794,6 +2876,52 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
+questionDocuments?.addEventListener("change", () => loadQuestionDocuments(questionDocuments.files));
+followUpDocumentInput?.addEventListener("change", () =>
+  loadQuestionDocuments(followUpDocumentInput.files, "follow-up")
+);
+clearQuestionDocuments?.addEventListener("click", resetQuestionDocuments);
+queryInput?.addEventListener("paste", (event) => {
+  const pastedFiles = Array.from(event.clipboardData?.files || []);
+  if (pastedFiles.length) {
+    event.preventDefault();
+    loadQuestionDocuments(pastedFiles);
+    return;
+  }
+  if (!uploadedQuestionDocuments.length) {
+    questionDocumentStatus.dataset.state = "ready";
+    questionDocumentStatus.textContent = "Texte collé dans la question. Il sera inclus dans l’analyse.";
+  }
+});
+questionDocumentDropZone?.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  questionDocumentDropZone.classList.add("is-dragging");
+});
+questionDocumentDropZone?.addEventListener("dragleave", () => {
+  questionDocumentDropZone.classList.remove("is-dragging");
+});
+questionDocumentDropZone?.addEventListener("drop", (event) => {
+  event.preventDefault();
+  questionDocumentDropZone.classList.remove("is-dragging");
+  loadQuestionDocuments(event.dataTransfer?.files || []);
+});
+
+refineAnalysisButton.addEventListener("click", refineAnalysisWithFollowUp);
+chatbotDetailsButton.addEventListener("click", () => {
+  const opened = resultView.classList.toggle("chatbot-details-open");
+  chatbotDetailsButton.textContent = opened
+    ? "Masquer les sources et le détail"
+    : "Voir les sources et le détail";
+});
+saveCaseButton.addEventListener("click", openCaseSaveDialog);
+caseSaveForm.addEventListener("submit", createLocalCase);
+cancelCaseSaveButton.addEventListener("click", () => caseSaveDialog.close());
+caseFileForm.addEventListener("submit", updateLocalCase);
+deleteCaseButton.addEventListener("click", deleteCurrentLocalCase);
+caseBackToList.addEventListener("click", openLocalCases);
+casesHomeButton.addEventListener("click", () => showOnly("home"));
+refreshCasesButton.addEventListener("click", openLocalCases);
+
 document.querySelectorAll("[data-open-workspace]").forEach((button) => {
   button.addEventListener("click", () => openWorkspace(button.dataset.openWorkspace, button.dataset.preset || "", button.dataset.employeePath || ""));
 });
@@ -1802,16 +2930,27 @@ document.querySelectorAll("[data-return-home]").forEach((button) => {
 });
 nextStepButton.addEventListener("click", () => {
   if (!validateCurrentStep()) return;
-  currentWizardStep = Math.min(5, currentWizardStep + 1);
+  const steps = wizardStepSequence();
+  const currentIndex = steps.indexOf(currentWizardStep);
+  currentWizardStep = steps[Math.min(steps.length - 1, currentIndex + 1)];
   renderWizardProgress();
   document.querySelector(`.wizard-step[data-step="${currentWizardStep}"]`)?.focus?.();
 });
 previousStepButton.addEventListener("click", () => {
-  currentWizardStep = Math.max(1, currentWizardStep - 1);
+  const steps = wizardStepSequence();
+  const currentIndex = steps.indexOf(currentWizardStep);
+  currentWizardStep = steps[Math.max(0, currentIndex - 1)];
   renderWizardProgress();
 });
 editInformationButton.addEventListener("click", () => showOnly("wizard"));
 addDocumentButton.addEventListener("click", () => {
+  if (usesConversationalEmployeeFlow()) {
+    factualEnrichmentPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    followUpDocumentInput.click();
+    followUpStatus.textContent =
+      "Choisissez le document utile : il sera lu localement puis intégré à la prochaine réponse.";
+    return;
+  }
   currentWizardStep = 4;
   renderWizardProgress();
   showOnly("wizard");
@@ -1836,9 +2975,12 @@ document.querySelectorAll("[data-secondary-action]").forEach((button) => {
       openHistoricalCases();
       return;
     }
+    if (button.dataset.secondaryAction === "cases") {
+      openLocalCases();
+      return;
+    }
     const messages = {
       search: "Utilisez l’espace Négociations et accords pour une recherche guidée dans les sources disponibles.",
-      cases: "Aucun dossier enregistré dans cette version. Aucune donnée personnelle n’est conservée.",
       templates: "Lancez une analyse puis utilisez « Générer un brouillon » dans le plan d’action."
     };
     secondaryMessage.textContent = messages[button.dataset.secondaryAction] || "";
@@ -2096,12 +3238,27 @@ async function loadReleaseStatus() {
     optionalFormatsValue.textContent = unavailable.length
       ? `Indisponibles : ${unavailable.join(", ")}`
       : "Tous disponibles";
+    const capabilities = health.runtime_capabilities || {};
+    const runtime = capabilities.runtime || {};
+    const credentials = capabilities.credentials || {};
+    const corpora = capabilities.local_corpora || {};
+    cseCorpusStatusValue.textContent = corpora.cse_memory ? "Disponible localement" : "Non configuré";
+    officialConnectorsStatusValue.textContent = runtime.official_connectors
+      ? "Moteur activé"
+      : "Moteur désactivé";
+    legifranceStatusValue.textContent = credentials.legifrance ? "Configuré" : "Identifiants absents";
+    judilibreStatusValue.textContent = credentials.judilibre ? "Configuré" : "Identifiants absents";
   } catch (_error) {
     nexusVersionValue.textContent = "indisponible";
     settingsVersionValue.textContent = "indisponible";
     optionalFormatsValue.textContent = "État indisponible";
+    cseCorpusStatusValue.textContent = "État indisponible";
+    officialConnectorsStatusValue.textContent = "État indisponible";
+    legifranceStatusValue.textContent = "État indisponible";
+    judilibreStatusValue.textContent = "État indisponible";
   }
 }
 
 printReportButton?.addEventListener("click", printReport);
 loadReleaseStatus();
+openWorkspace("employee", "", "QUESTION_SALARIE");

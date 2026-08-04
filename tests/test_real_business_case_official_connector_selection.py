@@ -47,7 +47,7 @@ def selected(query: str, domains: tuple[str, ...] = ()) -> set[str]:
     )
 
 
-def test_seveso_turnstile_case_selects_cnil_without_simulating_a_result() -> None:
+def test_seveso_turnstile_case_selects_the_real_local_cnil_catalogue() -> None:
     result = RuntimeOfficialConnectorsIntegration(
         RuntimeOfficialConnectorsConfig(enabled=True),
         clock=lambda: NOW,
@@ -60,9 +60,10 @@ def test_seveso_turnstile_case_selects_cnil_without_simulating_a_result() -> Non
     )
 
     assert result.diagnostics.connectors_used == ("cnil",)
-    assert result.unavailable_connectors == ("cnil",)
-    assert result.questions == ()
-    assert result.diagnostics.connector_runtime_fallback == "OFFICIAL_CONNECTORS_NO_RESULT"
+    assert result.unavailable_connectors == ()
+    assert result.questions
+    assert result.source_qualifications[0].organisme == "CNIL"
+    assert result.diagnostics.connector_runtime_fallback is None
 
 
 def test_carsat_is_selected_for_ppe_rps_and_night_shift_fatigue() -> None:
@@ -219,19 +220,19 @@ def test_unrelated_terms_do_not_select_official_connectors_by_substring() -> Non
 
 
 def test_source_guidance_is_only_emitted_for_real_connector_documents() -> None:
-    unavailable = RuntimeOfficialConnectorsIntegration(
+    irrelevant = RuntimeOfficialConnectorsIntegration(
         RuntimeOfficialConnectorsConfig(enabled=True),
         clock=lambda: NOW,
-    ).integrate(answer("Le tourniquet sert au badgeage.", ("rgpd_cnil",)))
+    ).integrate(answer("Question générale sans source spécialisée."))
     available = RuntimeOfficialConnectorsIntegration(
         RuntimeOfficialConnectorsConfig(enabled=True),
         clock=lambda: NOW,
     ).integrate(answer("Fatigue, surcharge et cinq postes de nuit."))
 
-    assert unavailable.questions == ()
-    assert unavailable.unavailable_connectors == ("cnil",)
+    assert irrelevant.questions == ()
+    assert irrelevant.inputs == ()
     assert available.questions
-    assert available.unavailable_connectors == ("inrs",)
+    assert available.unavailable_connectors == ()
     assert all(
         connector_id in available.diagnostics.connectors_used
         for connector_id in (

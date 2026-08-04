@@ -15,11 +15,17 @@ from automation.official_knowledge.connectors.anact import (
     GeographicScope,
 )
 from automation.official_knowledge.connectors.carsat import CarsatMetadata
+from automation.official_knowledge.connectors.cnil import CnilConnector, CnilDiscoveryEntry
 from automation.official_knowledge.connectors.complementary_official import (
     COMPLEMENTARY_CONNECTOR_SPECS,
     ComplementaryOfficialConnector,
 )
 from automation.official_knowledge.connectors.france_chimie import FranceChimieConnector
+from automation.official_knowledge.connectors.dreets_grand_est import DreetsDiscoveryItem
+from automation.official_knowledge.connectors.dreets_grand_est.dreets_connector import (
+    DreetsGrandEstConnector,
+)
+from automation.official_knowledge.connectors.inrs import InrsConnector
 from automation.official_knowledge.document_registry import (
     DocumentRecord,
     DocumentRegistry,
@@ -36,8 +42,11 @@ SUPPORTED_ADDITIONAL_FEEDS = (
     "alsace_moselle_local_law",
     "assurance_maladie",
     "carsat",
+    "cnil",
     "defenseur_droits",
+    "dreets_grand_est",
     "france_chimie",
+    "inrs",
     "ministere_travail",
     "service_public",
     "urssaf",
@@ -49,8 +58,11 @@ _CATALOGUES = {
     "alsace_moselle_local_law": _ROOT / "automation/local_law/public_metadata.json",
     "assurance_maladie": _ROOT / "automation/official_knowledge/connectors/complementary_official/assurance_maladie_metadata.json",
     "carsat": _ROOT / "automation/official_knowledge/connectors/carsat/public_metadata.json",
+    "cnil": _ROOT / "automation/official_knowledge/connectors/cnil/public_metadata.json",
     "defenseur_droits": _ROOT / "automation/official_knowledge/connectors/complementary_official/defenseur_droits_metadata.json",
+    "dreets_grand_est": _ROOT / "automation/official_knowledge/connectors/dreets_grand_est/public_metadata.json",
     "france_chimie": _ROOT / "automation/official_knowledge/connectors/france_chimie/public_metadata.json",
+    "inrs": _ROOT / "automation/official_knowledge/connectors/inrs/public_metadata.json",
     "ministere_travail": _ROOT / "automation/official_knowledge/connectors/complementary_official/ministere_travail_metadata.json",
     "service_public": _ROOT / "automation/official_knowledge/connectors/complementary_official/service_public_metadata.json",
     "urssaf": _ROOT / "automation/official_knowledge/connectors/complementary_official/urssaf_metadata.json",
@@ -61,8 +73,11 @@ _DOMAINS = {
     "alsace_moselle_local_law": frozenset({"www.legifrance.gouv.fr"}),
     "assurance_maladie": COMPLEMENTARY_CONNECTOR_SPECS["assurance_maladie"].official_domains,
     "carsat": frozenset({"www.carsat-alsacemoselle.fr"}),
+    "cnil": frozenset({"cnil.fr"}),
     "defenseur_droits": COMPLEMENTARY_CONNECTOR_SPECS["defenseur_droits"].official_domains,
+    "dreets_grand_est": frozenset({"grand-est.dreets.gouv.fr"}),
     "france_chimie": frozenset({"www.francechimie.fr"}),
+    "inrs": frozenset({"www.inrs.fr"}),
     "ministere_travail": COMPLEMENTARY_CONNECTOR_SPECS["ministere_travail"].official_domains,
     "service_public": COMPLEMENTARY_CONNECTOR_SPECS["service_public"].official_domains,
     "urssaf": COMPLEMENTARY_CONNECTOR_SPECS["urssaf"].official_domains,
@@ -178,6 +193,55 @@ def _validate_documents(
             reference=item.get("reference"),
         ) for item in documents)
         records = tuple(_record_from_metadata(connector_name, item, synchronized_at) for item in metadata)
+    elif connector_name == "cnil":
+        metadata = CnilConnector(enabled=True, limit=100).discover_metadata(tuple(
+            CnilDiscoveryEntry(
+                url=str(item["url"]), title=str(item["title"]),
+                publication_date=item.get("publication_date"),
+                category=str(item["category"]), family=str(item["family"]),
+                document_type=str(item["document_type"]),
+                mime_type=str(item.get("mime_type", "text/html")),
+                discovered_at=synchronized_at,
+            )
+            for item in documents
+        ))
+        records = tuple(_plain_record(
+            connector_name,
+            {
+                "url": item.canonical_url, "title": item.title,
+                "publication_date": item.publication_date,
+                "category": item.category.value, "family": item.family.value,
+                "document_type": item.document_type.value, "language": item.language,
+            },
+            synchronized_at,
+        ) for item in metadata)
+    elif connector_name == "dreets_grand_est":
+        metadata = DreetsGrandEstConnector(
+            metadata_discovery_enabled=True, discovery_quota=100,
+        ).discover_metadata(tuple(
+            DreetsDiscoveryItem(
+                url=str(item["url"]), title=str(item["title"]),
+                date=item.get("publication_date"), category=str(item["category"]),
+                family=str(item["family"]), document_type=str(item["document_type"]),
+                mime_type=str(item.get("mime_type", "text/html")),
+            )
+            for item in documents
+        ), discovered_on=synchronized_at)
+        records = tuple(_plain_record(
+            connector_name,
+            {
+                "url": item.canonical_url, "title": item.title,
+                "publication_date": item.date, "category": item.category,
+                "family": item.family, "document_type": item.document_type,
+                "language": item.language,
+            },
+            synchronized_at,
+        ) for item in metadata)
+    elif connector_name == "inrs":
+        metadata = InrsConnector(enabled=True, limit=100).discover_metadata(tuple(
+            dict(item, discovered_at=synchronized_at) for item in documents
+        ))
+        records = tuple(_record_from_metadata(connector_name, item, synchronized_at) for item in metadata)
     elif connector_name == "france_chimie":
         metadata = FranceChimieConnector().validate_injected_metadata(
             tuple(dict(item, discovered_at=synchronized_at) for item in documents),
@@ -277,6 +341,7 @@ def _runtime_source(record: DocumentRecord, synchronized_at: str) -> dict[str, A
         "document_type": record.document_type,
         "language": record.language,
         "provenance": record.provenance,
+        "mime_type": "text/html",
         "discovered_at": synchronized_at,
     }
 

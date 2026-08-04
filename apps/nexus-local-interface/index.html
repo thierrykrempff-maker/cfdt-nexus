@@ -10,8 +10,8 @@
       content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
     >
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css">
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=nexus-effective-2">
+    <script src="app.js?v=nexus-effective-2" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#mainContent">Aller au contenu principal</a>
@@ -49,8 +49,12 @@
           <div><dt>Envoi externe</dt><dd>Aucun</dd></div>
           <div><dt>Version</dt><dd id="settingsVersionValue">Chargement…</dd></div>
           <div><dt>Formats facultatifs</dt><dd id="optionalFormatsValue">Vérification…</dd></div>
+          <div><dt>Corpus CSE</dt><dd id="cseCorpusStatusValue">Vérification…</dd></div>
+          <div><dt>Connecteurs officiels</dt><dd id="officialConnectorsStatusValue">Vérification…</dd></div>
+          <div><dt>Légifrance</dt><dd id="legifranceStatusValue">Vérification…</dd></div>
+          <div><dt>JUDILIBRE</dt><dd id="judilibreStatusValue">Vérification…</dd></div>
         </dl>
-        <p>Les moteurs avancés ne sont jamais activés depuis cette interface.</p>
+        <p>« Configuré » indique seulement que les identifiants sont présents. Un résultat n’est affiché que si une recherche a réellement abouti. Les moteurs avancés ne sont jamais activés depuis cette interface.</p>
       </aside>
     </header>
 
@@ -96,8 +100,8 @@
               </ul>
               <div class="employee-paths" aria-label="Choisir un parcours salarié">
                 <button class="employee-path-button" type="button" data-open-workspace="employee" data-employee-path="QUESTION_SALARIE">
-                  <strong>Poser une question salarié</strong>
-                  <span>Obtenez une première analyse sur vos droits, votre contrat, vos horaires, votre paie, vos congés ou vos conditions de travail.</span>
+                  <strong>Poser une question</strong>
+                  <span>Écrivez votre question. Nexus répond directement et vous demande seulement les précisions utiles.</span>
                 </button>
                 <button class="employee-path-button deep-path" type="button" data-open-workspace="employee" data-employee-path="ASSISTANCE_ENTRETIEN_DISCIPLINAIRE">
                   <strong>Préparer un entretien disciplinaire</strong>
@@ -174,11 +178,11 @@
             </button>
             <button class="tool-card" type="button" data-secondary-action="cases">
               <span aria-hidden="true">▣</span><strong>Dossiers en cours</strong>
-              <small>Aucun dossier enregistré dans cette version</small>
+              <small>Suivi local volontaire des situations et décisions finales</small>
             </button>
             <button class="tool-card" type="button" data-secondary-action="history">
-              <span aria-hidden="true">↺</span><strong>Historique</strong>
-              <small>11 cas métier anonymisés et testés pour la validation V1</small>
+              <span aria-hidden="true">↺</span><strong>Historique et démonstrations</strong>
+              <small>11 dossiers syndicaux anonymisés, avec questions, réponses et conseils</small>
             </button>
             <button class="tool-card" type="button" data-secondary-action="templates">
               <span aria-hidden="true">✎</span><strong>Outils et modèles</strong>
@@ -194,6 +198,105 @@
         </div>
       </section>
 
+      <section class="cases-view" id="casesView" hidden aria-labelledby="casesTitle" tabindex="-1">
+        <div class="view-toolbar">
+          <button class="back-button" type="button" id="casesHomeButton">← Revenir à l’accueil</button>
+          <span class="confidentiality-label">Stockage local volontaire · dossier pseudonymisé</span>
+        </div>
+        <div class="cases-heading">
+          <div>
+            <p class="eyebrow">Mémoire syndicale locale</p>
+            <h1 id="casesTitle">Dossiers en cours et décisions finales</h1>
+            <p>
+              Ces dossiers restent sur ce poste, hors Git. N’y inscrivez aucune donnée
+              personnelle ou médicale inutile.
+            </p>
+          </div>
+          <button class="secondary-button" type="button" id="refreshCasesButton">Actualiser</button>
+        </div>
+        <div class="history-warning" role="note">
+          L’enregistrement n’est jamais automatique. La décision finale est renseignée
+          par le délégué et n’est jamais déduite par Nexus.
+        </div>
+        <p id="casesStatus" role="status" aria-live="polite"></p>
+        <div class="cases-grid" id="casesList"></div>
+        <div class="history-empty" id="casesEmpty" hidden>
+          Aucun dossier local enregistré.
+        </div>
+
+        <article class="case-file-detail" id="caseFileDetail" hidden aria-labelledby="caseFileTitle">
+          <div class="history-detail-toolbar">
+            <button class="back-button" type="button" id="caseBackToList">← Retour aux dossiers</button>
+            <button class="danger-button" type="button" id="deleteCaseButton">Supprimer ce dossier</button>
+          </div>
+          <section class="case-file-snapshot" id="caseFileSnapshot"></section>
+          <form id="caseFileForm" class="case-file-form">
+            <input type="hidden" id="caseReference">
+            <div class="field-grid">
+              <label>
+                Titre pseudonymisé
+                <input id="caseFileTitle" maxlength="240" required>
+              </label>
+              <label>
+                Statut
+                <select id="caseFileStatus">
+                  <option value="OPEN">Ouvert</option>
+                  <option value="IN_PROGRESS">En cours</option>
+                  <option value="WAITING">En attente</option>
+                  <option value="CLOSED">Clôturé</option>
+                  <option value="CANCELLED">Annulé</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Notes de suivi
+              <textarea id="caseFileNotes" rows="5" maxlength="6000"></textarea>
+            </label>
+            <label>
+              Actions réalisées ou à mener — une par ligne
+              <textarea id="caseFileActions" rows="5" maxlength="6000"></textarea>
+            </label>
+            <fieldset class="decision-fieldset">
+              <legend>Décision finale</legend>
+              <p class="field-help">
+                À compléter uniquement lorsqu’une décision réelle et vérifiable est connue.
+              </p>
+              <div class="field-grid">
+                <label>Date <input id="caseDecisionDate" type="date"></label>
+                <label>
+                  Nature
+                  <select id="caseDecisionType">
+                    <option value="">Non renseignée</option>
+                    <option value="EMPLOYER_DECISION">Décision de l’employeur</option>
+                    <option value="NEGOTIATED_SOLUTION">Solution négociée</option>
+                    <option value="CSE_FOLLOW_UP">Suite CSE</option>
+                    <option value="EMPLOYEE_CHOICE">Choix du salarié</option>
+                    <option value="JUDICIAL_OR_ADMINISTRATIVE">Décision judiciaire ou administrative</option>
+                    <option value="OTHER">Autre</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                Auteur ou instance
+                <input id="caseDecisionAuthor" maxlength="180" placeholder="Exemple : direction, CSE, inspection du travail">
+              </label>
+              <label>
+                Décision constatée
+                <textarea id="caseDecisionSummary" rows="5" maxlength="6000"></textarea>
+              </label>
+              <label>
+                Pièce qui confirme la décision
+                <input id="caseDecisionDocument" maxlength="500" placeholder="Nom métier du courrier, PV ou accord">
+              </label>
+            </fieldset>
+            <div class="case-file-actions">
+              <button class="primary-button" type="submit">Enregistrer les modifications</button>
+              <span id="caseFileSaveStatus" role="status"></span>
+            </div>
+          </form>
+        </article>
+      </section>
+
       <section class="history-view" id="historyView" hidden aria-labelledby="historyTitle" tabindex="-1">
         <div class="view-toolbar">
           <button class="back-button" type="button" id="historyHomeButton">← Revenir à l’accueil</button>
@@ -202,11 +305,11 @@
 
         <div class="history-heading">
           <div>
-            <p class="eyebrow">Analyse historique</p>
-            <h1 id="historyTitle">Cas métier anonymisés et testés dans le cadre de la validation V1</h1>
-            <p id="historyVersion">Validation V1.0.0</p>
+            <p class="eyebrow">Dossiers syndicaux de démonstration</p>
+            <h1 id="historyTitle">Onze situations concrètes pour comprendre ce que CFDT Nexus apporte au délégué syndical.</h1>
+            <p id="historyVersion">Dossiers anonymisés issus de la validation V1.0.0</p>
           </div>
-          <div class="history-average" aria-label="Score moyen de la validation V1">
+          <div class="history-average" aria-label="Indicateur historique secondaire">
             <strong id="historyAverage">85,36</strong>
             <span>/100 de moyenne</span>
           </div>
@@ -222,7 +325,7 @@
         <section id="historyListPanel" aria-labelledby="historyListTitle">
           <div class="history-controls">
             <div>
-              <label for="historySearch">Rechercher dans les cas testés</label>
+              <label for="historySearch">Rechercher dans les dossiers traités</label>
               <input
                 id="historySearch"
                 type="search"
@@ -233,7 +336,7 @@
             <p id="historyResultCount" role="status" aria-live="polite"></p>
           </div>
           <div class="history-filters" id="historyFilters" role="group" aria-label="Filtrer les cas historiques"></div>
-          <h2 class="sr-only" id="historyListTitle">Liste des cas métier testés</h2>
+          <h2 class="sr-only" id="historyListTitle">Liste des dossiers syndicaux de démonstration</h2>
           <div class="history-grid" id="historyCases"></div>
           <div class="history-empty" id="historyEmpty" hidden>Aucun cas ne correspond à cette recherche.</div>
         </section>
@@ -249,7 +352,7 @@
           </div>
           <div class="history-detail-heading">
             <div>
-              <p class="eyebrow" id="historyDetailId">REAL-00</p>
+              <p class="eyebrow" id="historyDetailId">Dossier 00</p>
               <h2 id="historyDetailTitle">Cas historique</h2>
               <p id="historyDetailMeta"></p>
             </div>
@@ -301,8 +404,19 @@
             <section class="wizard-step" data-step="2" hidden aria-labelledby="stepTwoTitle">
               <p class="step-count">Étape 2 sur 5</p>
               <h2 id="stepTwoTitle">Décrivez la situation</h2>
-              <label for="questionInput">Décrivez la situation avec vos propres mots</label>
+              <label for="questionInput" id="questionInputLabel">Décrivez la situation avec vos propres mots</label>
               <textarea id="questionInput" name="query" rows="8" maxlength="6000" required aria-describedby="privacyInputNotice"></textarea>
+              <div class="question-document-input" id="questionDocumentDropZone" aria-labelledby="questionDocumentTitle">
+                <div>
+                  <strong id="questionDocumentTitle">Ajouter des documents utiles</strong>
+                  <p>PDF, Word, texte, Markdown ou photo JPEG. Trois fichiers maximum, 5 Mo par fichier.</p>
+                </div>
+                <label class="secondary-button document-picker" for="questionDocuments">Choisir un ou plusieurs fichiers</label>
+                <input id="questionDocuments" name="questionDocuments" type="file" accept=".pdf,.docx,.txt,.md,.jpg,.jpeg,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg" multiple>
+                <button class="text-button" type="button" id="clearQuestionDocuments" hidden>Retirer les documents</button>
+                <p class="document-input-status" id="questionDocumentStatus" role="status">Vous pouvez coller un texte, déposer un fichier ici ou utiliser le bouton.</p>
+                <ul class="selected-document-list" id="questionDocumentList" aria-label="Documents joints"></ul>
+              </div>
               <p class="field-help" id="privacyInputNotice">N’indiquez aucune donnée personnelle inutile. Le texte n’est pas enregistré automatiquement.</p>
             </section>
             <section class="wizard-step" data-step="3" hidden aria-labelledby="stepThreeTitle">
@@ -387,8 +501,8 @@
           <div class="result-content" id="resultContent" hidden>
             <div class="result-summary-grid">
               <section class="response-band result-hero">
-                <p class="eyebrow">Ce qui peut être retenu</p>
-                <h2>Résumé de la situation</h2>
+                <p class="eyebrow">Réponse directe</p>
+                <h2>Réponse Nexus</h2>
                 <p id="shortAnswer"></p>
               </section>
               <section class="panel domain-panel">
@@ -400,9 +514,27 @@
             </div>
 
             <section class="response-band">
-              <h2>Position de travail</h2>
+              <h2>Ce que vous pouvez faire</h2>
               <p id="workingPosition"></p>
             </section>
+
+            <section class="response-band chatbot-sources-summary" id="chatbotSourcesSummary" hidden>
+              <h2>Documents consultés par Nexus</h2>
+              <ul id="chatbotSourcesList"></ul>
+              <div id="chatbotConnectorsSummary" hidden>
+                <h3>Connecteurs officiels et disponibilité</h3>
+                <ul id="chatbotConnectorsList"></ul>
+              </div>
+              <div id="chatbotPvSummary" hidden>
+                <h3>Extraits pertinents des anciens PV</h3>
+                <p class="source-context-notice">Ces passages apportent un contexte factuel. Ils ne constituent pas une règle juridique.</p>
+                <ul id="chatbotPvList"></ul>
+              </div>
+            </section>
+
+            <button class="secondary-button chatbot-details-button" type="button" id="chatbotDetailsButton" hidden>
+              Voir les sources et le détail
+            </button>
 
             <section class="panel disciplinary-panel" id="disciplinaryPanel" hidden>
               <p class="eyebrow">Préparation syndicale approfondie</p>
@@ -411,7 +543,7 @@
             </section>
 
             <div class="grid-two" id="generalFollowupGrid">
-              <section class="panel">
+              <section class="panel" id="documentsSummaryPanel">
                 <h2>Ce qui manque</h2>
                 <ul id="documentsList"></ul>
               </section>
@@ -421,17 +553,48 @@
               </section>
             </div>
 
-            <section class="panel">
+            <section class="panel factual-enrichment-panel" id="factualEnrichmentPanel">
+              <p class="eyebrow">Dialogue d’enrichissement</p>
+              <h2>Préciser un point pour améliorer la réponse</h2>
+              <p>
+                Nexus pose une seule question décisive à la fois. Votre réponse est
+                ajoutée aux faits de cette session, puis la recherche documentaire et
+                l’analyse sont ajustées sans effacer les précisions précédentes.
+              </p>
+              <div class="follow-up-history" id="followUpHistory" hidden></div>
+              <div class="follow-up-questions" id="followUpQuestions"></div>
+              <div class="follow-up-documents" id="followUpDocuments" hidden></div>
+              <label for="followUpAdditional">Autre précision utile</label>
+              <textarea
+                id="followUpAdditional"
+                rows="4"
+                placeholder="Exemple : il n’y a pas de travail de nuit, mais le cycle inclut des week-ends et des jours fériés."
+              ></textarea>
+              <div class="follow-up-upload">
+                <label class="secondary-button document-picker" for="followUpDocumentInput">Joindre un document à cette précision</label>
+                <input id="followUpDocumentInput" type="file" accept=".pdf,.docx,.txt,.md,.jpg,.jpeg,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg" multiple>
+                <span id="followUpDocumentStatus" role="status">Aucun nouveau document joint.</span>
+                <ul class="selected-document-list" id="followUpDocumentList" aria-label="Nouveaux documents joints"></ul>
+              </div>
+              <div class="follow-up-actions">
+                <button class="primary-button" type="button" id="refineAnalysisButton">
+                  Préciser et améliorer la réponse
+                </button>
+                <span id="followUpStatus" role="status"></span>
+              </div>
+            </section>
+
+            <section class="panel sources-panel">
               <h2>Sources à vérifier</h2>
               <div id="sourcesList" class="source-layers"></div>
             </section>
 
-            <div class="grid-two">
-              <section class="panel">
+            <div class="grid-two analysis-detail-grid">
+              <section class="panel findings-panel">
                 <h2>Arguments et constats</h2>
                 <ul id="findingsList"></ul>
               </section>
-              <section class="panel">
+              <section class="panel warnings-panel">
                 <h2>Risques, urgences et limites</h2>
                 <ul id="warningsList"></ul>
               </section>
@@ -468,6 +631,7 @@
             </section>
 
             <div class="result-actions">
+              <button class="secondary-button" type="button" id="saveCaseButton">Enregistrer comme dossier</button>
               <button class="secondary-button" type="button" id="addDocumentButton">Ajouter un document</button>
               <button class="secondary-button" type="button" id="newAnalysisButton">Nouvelle analyse</button>
               <button class="primary-button" type="button" data-return-home>Revenir à l’accueil</button>
@@ -499,6 +663,41 @@
         </div>
       </section>
     </main>
+
+    <dialog class="case-save-dialog" id="caseSaveDialog" aria-labelledby="caseSaveDialogTitle">
+      <form id="caseSaveForm">
+        <p class="eyebrow">Enregistrement volontaire</p>
+        <h2 id="caseSaveDialogTitle">Créer un dossier syndical local</h2>
+        <p>
+          Utilisez un titre pseudonymisé. Seules la synthèse publique, les précisions
+          de cette session et les pièces métier seront conservées.
+        </p>
+        <label>
+          Titre du dossier
+          <input id="newCaseTitle" maxlength="240" required placeholder="Exemple : Changement d’horaires — laboratoire">
+        </label>
+        <label>
+          Statut initial
+          <select id="newCaseStatus">
+            <option value="OPEN">Ouvert</option>
+            <option value="IN_PROGRESS">En cours</option>
+            <option value="WAITING">En attente</option>
+          </select>
+        </label>
+        <label>
+          Première note de suivi
+          <textarea id="newCaseNotes" rows="4" maxlength="6000"></textarea>
+        </label>
+        <p class="field-help">
+          Aucun diagnostic médical, NIR, mot de passe, secret ou chemin local.
+        </p>
+        <div class="dialog-actions">
+          <button class="secondary-button" type="button" id="cancelCaseSaveButton">Annuler</button>
+          <button class="primary-button" type="submit">Créer le dossier</button>
+        </div>
+        <p id="newCaseSaveStatus" role="status"></p>
+      </form>
+    </dialog>
 
     <div class="status-pill" id="statusPill" aria-live="polite">Prêt</div>
   </body>

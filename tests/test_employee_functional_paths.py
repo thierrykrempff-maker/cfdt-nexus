@@ -92,6 +92,64 @@ def test_unknown_explicit_path_is_rejected() -> None:
         router.route_query("Question", "UNKNOWN")
 
 
+def test_blocking_missing_grievance_defers_document_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[str] = []
+    monkeypatch.setattr(
+        router,
+        "search_bible",
+        lambda query, *_args, **_kwargs: calls.append(query),
+    )
+
+    answer = router.ask(
+        "Un salarié a reçu une mise à pied à titre conservatoire.",
+        6,
+        6,
+        router.QUESTION_SALARIE,
+    )
+
+    assert calls == []
+    assert answer["route"]["document_search_status"] == "DEFERRED_BLOCKING_FACTS"
+    assert answer["case_factual_core"]["blocking_ambiguities"]
+    assert answer["sources"] == []
+
+
+def test_ppe_excerpt_outranks_unrelated_agreement_after_follow_up() -> None:
+    route = router.route_query(
+        "Mise à pied pour non-port de lunettes de protection inadaptées.",
+        router.QUESTION_SALARIE,
+    )
+    telework = router.normalize_source(
+        {
+            "document": "2022 Accord télétravail.pdf",
+            "excerpt": "Organisation du travail à distance.",
+            "score": 99,
+        },
+        "bible_accords",
+    )
+    internal_rules = router.normalize_source(
+        {
+            "document": "Règlement intérieur.pdf",
+            "article": "Art. 4",
+            "excerpt": (
+                "Les équipements de protection individuelle doivent être portés "
+                "et adaptés à l'opération."
+            ),
+            "score": 20,
+        },
+        "bible_accords",
+    )
+
+    selected = router.select_final_sources(
+        [telework, internal_rules],
+        route,
+        1,
+    )
+
+    assert selected[0]["document"] == "Règlement intérieur.pdf"
+
+
 def test_full_disciplinary_scenario_produces_ordered_fact_driven_dossier(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -169,10 +227,10 @@ def test_local_interface_exposes_two_distinct_employee_choices() -> None:
         encoding="utf-8"
     )
 
-    assert "Poser une question salarié" in html
+    assert "Poser une question" in html
     assert (
-        "Obtenez une première analyse sur vos droits, votre contrat, vos horaires, "
-        "votre paie, vos congés ou vos conditions de travail."
+        "Écrivez votre question. Nexus répond directement et vous demande seulement "
+        "les précisions utiles."
     ) in html
     assert "Préparer un entretien disciplinaire" in html
     assert (

@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 
+import pytest
+
 import NEXUS_RUNTIME_INTEGRATION.official_connectors_runtime as runtime_module
 from NEXUS_RUNTIME_INTEGRATION import RuntimeOfficialConnectorsConfig
 from NEXUS_RUNTIME_INTEGRATION.official_connectors_runtime import (
@@ -96,6 +98,53 @@ def test_existing_public_connector_apis_are_really_called(monkeypatch):
         assert snapshot.content is None
         assert snapshot.excerpt is None
         assert ("metadata_only", True) in snapshot.metadata
+
+
+def test_selected_core_official_connectors_load_their_local_public_catalogues():
+    result = integration().integrate({
+        "query": (
+            "Le badgeage sert au contrôle du temps et les EPI chimiques posent "
+            "un risque grave avec intervention de la DREETS."
+        ),
+        "generated_at": NOW.isoformat(),
+        "sources": [],
+    })
+    by_connector = {
+        item.descriptor.connector_id: item.response.documents
+        for item in result.inputs
+    }
+    assert set(by_connector) >= {"cnil", "dreets_grand_est", "inrs"}
+    assert all(by_connector[name] for name in ("cnil", "dreets_grand_est", "inrs"))
+    assert set(result.unavailable_connectors).isdisjoint({"cnil", "dreets_grand_est", "inrs"})
+
+
+@pytest.mark.parametrize(("connector_id", "query"), (
+    ("cnil", "Le badgeage sert au contrôle du temps de travail."),
+    ("dreets_grand_est", "La coactivité crée un risque grave."),
+    ("inrs", "Les équipements de protection sont-ils adaptés au risque chimique ?"),
+    ("carsat", "Quelle ressource CARSAT traite du risque professionnel ?"),
+    ("france_chimie", "Quelle convention collective Chimie s'applique ?"),
+    ("anact", "Comment analyser la charge de travail avec l'ANACT ?"),
+    ("alsace_moselle_local_law", "Quel droit local Alsace-Moselle s'applique ?"),
+    ("defenseur_droits", "Existe-t-il une discrimination syndicale ?"),
+    ("ministere_travail", "Quelle procédure de licenciement indique le ministère du Travail ?"),
+    ("service_public", "Quelle démarche salarié indique Service-Public ?"),
+    ("assurance_maladie", "Comment demander des IJSS à l'Assurance Maladie ?"),
+    ("urssaf", "Quelle assiette de cotisations indique l'URSSAF ?"),
+    ("agirc_arrco", "Comment vérifier mes points de retraite Agirc-Arrco ?"),
+))
+def test_each_local_official_catalogue_is_routable(connector_id, query):
+    result = integration().integrate({
+        "query": query,
+        "generated_at": NOW.isoformat(),
+        "sources": [],
+    })
+    documents = {
+        item.descriptor.connector_id: item.response.documents
+        for item in result.inputs
+    }
+    assert connector_id in documents
+    assert documents[connector_id]
 
 
 def test_irrelevant_sources_do_not_call_connectors():

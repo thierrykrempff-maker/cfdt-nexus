@@ -255,6 +255,90 @@ def _planning_event_category(core: CaseFactualCore) -> str:
     return core.event_category
 
 
+def _explicit_minutes_rules(
+    core: CaseFactualCore,
+    event_rules: tuple[_IssueRule, ...],
+) -> tuple[_IssueRule, ...]:
+    """Plan a local-minutes search when the user explicitly asks for history.
+
+    This intent is documentary rather than a legal qualification.  It therefore
+    requires both an explicit minutes source and an explicit retrieval/history
+    request, and never fires from the isolated words ``CSE`` or ``CSSCT``.
+    """
+
+    text = _normalize(" ".join(fact.canonical_text for fact in core.canonical_facts))
+    asks_history = any(
+        marker in text
+        for marker in (
+            "que dit",
+            "que disent",
+            "recherche",
+            "rechercher",
+            "retrouve",
+            "retrouver",
+            "deja traite",
+            "deja aborde",
+            "deja evoque",
+            "historique",
+            "ancien pv",
+            "anciens pv",
+        )
+    )
+    if not asks_history:
+        return ()
+
+    planned_families = {
+        family
+        for rule in event_rules
+        for family in _TARGETS[rule.category]
+    }
+    primary = core.primary_event.rstrip(". ")
+    rules: list[_IssueRule] = []
+    asks_cse = any(
+        marker in text
+        for marker in (
+            "pv cse",
+            "proces verbal cse",
+            "proces verbaux cse",
+            "anciens pv cse",
+            "historique cse",
+            "cse memory",
+        )
+    )
+    asks_cssct = any(
+        marker in text
+        for marker in (
+            "pv cssct",
+            "pv chsct",
+            "proces verbal cssct",
+            "proces verbal chsct",
+            "historique cssct",
+            "historique chsct",
+        )
+    )
+    if asks_cse and SourceFamily.CSE_MINUTES not in planned_families:
+        rules.append(
+            _IssueRule(
+                "cse-documentary-history",
+                IssueCategory.CSE_INFORMATION_CONSULTATION,
+                "Historique documenté dans les PV CSE",
+                f"Que documentent les anciens PV CSE au sujet de : {primary} ?",
+                ("pv cse", "ancien pv", "historique cse", "cse memory"),
+            )
+        )
+    if asks_cssct and SourceFamily.CSSCT_MINUTES not in planned_families:
+        rules.append(
+            _IssueRule(
+                "cssct-documentary-history",
+                IssueCategory.CSSCT,
+                "Historique documenté dans les PV CSSCT ou CHSCT",
+                f"Que documentent les anciens PV CSSCT ou CHSCT au sujet de : {primary} ?",
+                ("pv cssct", "pv chsct", "historique cssct", "historique chsct"),
+            )
+        )
+    return tuple(rules)
+
+
 def _scope(core: CaseFactualCore) -> tuple[str, str]:
     text = _normalize(" ".join(fact.canonical_text for fact in core.canonical_facts))
     if "laboratoire" in text:
@@ -344,7 +428,11 @@ def identify_legal_issues(core: CaseFactualCore) -> tuple[LegalIssue, ...]:
     """Create distinct, non-conclusive legal questions from canonical facts."""
 
     event_rules = _RULES.get(_planning_event_category(core), ())
-    rules = (*event_rules, *_generic_issue_rules(core, event_rules))
+    rules = (
+        *event_rules,
+        *_explicit_minutes_rules(core, event_rules),
+        *_generic_issue_rules(core, event_rules),
+    )
     blocked = bool(core.blocking_ambiguities)
     missing = tuple(
         fact
@@ -434,6 +522,10 @@ def _purpose(issue: LegalIssue, family: SourceFamily) -> str:
 
 
 def _families_for_issue(issue: LegalIssue) -> tuple[SourceFamily, ...]:
+    if "cse-documentary-history" in issue.created_from_rules:
+        return (SourceFamily.CSE_MINUTES,)
+    if "cssct-documentary-history" in issue.created_from_rules:
+        return (SourceFamily.CSSCT_MINUTES,)
     families = list(_TARGETS[issue.issue_category])
     if "email-company-link" in issue.created_from_rules:
         families.append(SourceFamily.CSE_MINUTES)
@@ -449,6 +541,45 @@ def _families_for_issue(issue: LegalIssue) -> tuple[SourceFamily, ...]:
 
 
 def _concepts(issue: LegalIssue, family: SourceFamily) -> tuple[str, ...]:
+    if (
+        family in {SourceFamily.CSE_MINUTES, SourceFamily.CSSCT_MINUTES}
+        and issue.created_from_rules
+        and issue.created_from_rules[0]
+        in {"cse-documentary-history", "cssct-documentary-history"}
+    ):
+        documentary_stop_words = {
+            "ancien",
+            "anciens",
+            "ancienne",
+            "anciennes",
+            "aborde",
+            "documentent",
+            "historique",
+            "minutes",
+            "proces",
+            "verbal",
+            "verbaux",
+            "retrouve",
+            "retrouver",
+            "recherche",
+            "rechercher",
+            "disent",
+            "quelle",
+            "quelles",
+            "sujet",
+            "cse",
+            "cssct",
+            "chsct",
+        }
+        subject_words = [
+            word
+            for formulation in issue.original_formulations
+            for word in _normalize(formulation).split()
+            if len(word) > 3 and word not in documentary_stop_words
+        ]
+        concepts = tuple(dict.fromkeys(subject_words))[:8]
+        if concepts:
+            return concepts
     words = [
         word
         for word in _normalize(f"{issue.title} {issue.legal_question}").split()

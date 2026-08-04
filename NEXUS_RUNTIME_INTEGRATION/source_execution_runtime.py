@@ -17,6 +17,7 @@ from SYNDICAL_REASONING_ENGINE import (
 
 
 ENV_ENABLED = "NEXUS_SOURCE_EXECUTION_COORDINATOR_ENABLED"
+ENV_NETWORK_ENABLED = "NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED"
 ENV_CSE_PROCESSED_ROOT = "NEXUS_CSE_MEMORY_PROCESSED_ROOT"
 
 
@@ -35,7 +36,7 @@ class SourceExecutionRuntimeConfig:
         configured_root = str(os.environ.get(ENV_CSE_PROCESSED_ROOT) or "").strip()
         return cls(
             enabled=_enabled(os.environ.get(ENV_ENABLED)),
-            allow_network=False,
+            allow_network=_enabled(os.environ.get(ENV_NETWORK_ENABLED)),
             cse_processed_root=Path(configured_root) if configured_root else None,
         )
 
@@ -83,6 +84,7 @@ class SourceExecutionRuntime:
 
 __all__ = (
     "ENV_ENABLED",
+    "ENV_NETWORK_ENABLED",
     "ENV_CSE_PROCESSED_ROOT",
     "SourceExecutionRuntime",
     "SourceExecutionRuntimeConfig",

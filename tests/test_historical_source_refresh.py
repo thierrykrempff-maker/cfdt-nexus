@@ -124,11 +124,14 @@ def test_real05_keeps_suspension_while_exposing_existing_cse_agreement() -> None
     refreshed = refresh_historical_case_sources(
         "REAL-05",
         source_fetcher=lambda _queries: [
-            _source(
-                "Accord sur la mise en place du CSE",
-                "La périodicité des réunions du CSE est définie par cet article.",
-                "Article 5 — Périodicité des réunions",
-            )
+                _source(
+                    "Accord sur la mise en place du CSE",
+                    (
+                        "Les heures de délégation des membres de la CSSCT et le temps "
+                        "passé en réunion sont définis par cet article."
+                    ),
+                    "Article 6 — Moyens et délégation de la CSSCT",
+                )
         ],
     )
 

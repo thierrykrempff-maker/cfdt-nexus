@@ -466,7 +466,13 @@ class CSECSSCTSearchEngine:
                     continue
             relative = _norm(row.get("source_relative_path"))
             establishment = _norm(query.establishment_scope)
-            if establishment not in {"", "all", "unknown", "tous"}:
+            if establishment not in {
+                "",
+                "all",
+                "unknown",
+                "tous",
+                "establishment not established",
+            }:
                 declared_establishment = _norm(_metadata(row, "establishment"))
                 inferred_establishment = next(
                     (

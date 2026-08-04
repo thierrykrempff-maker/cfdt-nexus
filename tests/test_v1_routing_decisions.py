@@ -105,7 +105,12 @@ def test_rgpd_and_safety_domains_select_only_relevant_official_connectors() -> N
     )
     assert cnil.diagnostics.connectors_used == ("cnil",)
     assert safety.diagnostics.connectors_used == ("dreets_grand_est", "inrs")
-    assert all(not item.response.documents for item in cnil.inputs + safety.inputs)
+    assert all(item.response.documents for item in cnil.inputs + safety.inputs)
+    assert all(
+        ("metadata_only", True) in document.metadata
+        for item in cnil.inputs + safety.inputs
+        for document in item.response.documents
+    )
 
 
 def test_official_connector_selection_is_not_forced_for_unrelated_question() -> None:
@@ -123,7 +128,8 @@ def test_official_connector_selection_uses_clock_when_router_has_no_timestamp() 
         RuntimeOfficialConnectorsConfig(True), clock=lambda: NOW
     ).integrate(answer)
     assert result.diagnostics.connectors_used == ("cnil",)
-    assert result.diagnostics.connector_runtime_fallback == "OFFICIAL_CONNECTORS_NO_RESULT"
+    assert result.diagnostics.connector_runtime_fallback is None
+    assert result.inputs[0].response.documents
 
 
 def test_cse_documentary_need_is_explicitly_routed() -> None:
@@ -132,6 +138,25 @@ def test_cse_documentary_need_is_explicitly_routed() -> None:
     )
     assert "cse" in decision["domains"]
     assert "rechercher_cse_memory" in decision["intents"]
+
+
+def test_router_keeps_explicit_signals_from_the_complete_question() -> None:
+    pay = route(
+        "Un salarie d'astreinte intervient de nuit et reprend a 8 h. "
+        "Il pense aussi que ses heures ont ete mal payees et veut les verifier."
+    )
+    collective = route(
+        "La direction veut modifier le cycle 5x8. Les salaries craignent "
+        "davantage de fatigue et une perte de prime."
+    )
+
+    assert "paie_remuneration" in pay["domains"]
+    assert "analyser_paie" in pay["intents"]
+    assert "verifier_conformite" in pay["intents"]
+    assert "paie_remuneration" in collective["domains"]
+    assert "cse" in collective["domains"]
+    assert "analyser_paie" in collective["intents"]
+    assert "preparer_cse" in collective["intents"]
 
 
 def test_retirement_domain_alias_activates_existing_runtime_bridge() -> None:

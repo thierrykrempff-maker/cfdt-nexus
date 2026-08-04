@@ -420,7 +420,15 @@ def _category(text: str) -> str:
         text, "pause cigarette", "pauses cigarettes", "pauses"
     ):
         return "BREAKS_AND_BADGE_CONTROL"
-    if _contains(text, "epi", "visiere", "sur lunettes", "gants specifiques"):
+    if _contains(
+        text,
+        "epi",
+        "visiere",
+        "sur lunettes",
+        "lunettes de protection",
+        "equipement de protection individuelle",
+        "gants specifiques",
+    ):
         return "PPE_AVAILABILITY_OR_SUITABILITY"
     if (
         _contains(text, "procedure", "consigne", "instruction")
@@ -556,7 +564,35 @@ def _category(text: str) -> str:
             "travail poste",
             "3x8",
             "cycle poste",
+            "cycle en poste",
+            "horaire poste",
+            "horaires postes",
+            "passer en poste",
+            "passage en poste",
             "equipes alternantes",
+        )
+    ):
+        return "WORK_SCHEDULE_CHANGE"
+    if (
+        _contains(
+            text,
+            "employeur veut changer",
+            "employeur veut modifier",
+            "employeur impose",
+            "employeur m impose",
+            "changer mes horaires",
+            "modifier mes horaires",
+        )
+        and _contains(text, "horaire", "planning", "cycle")
+        and _contains(
+            text,
+            "travail",
+            "week-end",
+            "samedi",
+            "dimanche",
+            "jour ferie",
+            "refus",
+            "refuser",
         )
     ):
         return "WORK_SCHEDULE_CHANGE"
@@ -572,7 +608,14 @@ def _category(text: str) -> str:
 PRIMARY_MARKERS = {
     "AMBIGUOUS_TEN_PERCENT_RULE": ("regle", "10 %", "10%"),
     "BREAKS_AND_BADGE_CONTROL": ("pause", "badgeage", "tourniquet"),
-    "PPE_AVAILABILITY_OR_SUITABILITY": ("epi", "visiere", "gants", "sur-lunettes"),
+    "PPE_AVAILABILITY_OR_SUITABILITY": (
+        "epi",
+        "visiere",
+        "gants",
+        "sur-lunettes",
+        "lunettes de protection",
+        "equipement de protection individuelle",
+    ),
     "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE": (
         "catalyseur",
         "concentration",
@@ -781,6 +824,13 @@ def build_case_factual_core(
     blocking = []
     if category == "AMBIGUOUS_TEN_PERCENT_RULE":
         blocking.append("Définir ce que désigne exactement l'expression « règle des 10 % ».")
+    if (
+        category == "DISCIPLINARY_CASE_UNSPECIFIED"
+        and re.search(r"mise a pied(?: a titre)? conservatoire", text)
+    ):
+        blocking.append(
+            "Préciser le manquement exact reproché au salarié avant toute analyse de fond."
+        )
     if "incomplet" in text:
         blocking.append("Obtenir la partie manquante du récit avant toute conclusion.")
     if category == "CSSCT_MEETING_TIME" and _contains(
@@ -1194,6 +1244,16 @@ def _event_questions(core: CaseFactualCore) -> tuple[list[ActionableQuestion], l
             _d("Accord CSE et règle interne de déclaration", "Identifier le régime et le canal applicable.", "Confirmer ou écarter le motif du refus.", "BLOCKING"),
             _d("Compteur et bulletin concernés", "Mesurer la conséquence.", "Établir imputation ou retenue éventuelle.", "HIGH"),
         ])
+    elif category == "DISCIPLINARY_CASE_UNSPECIFIED":
+        employee.extend([
+            _q("Quel manquement précis est reproché au salarié dans la lettre ou oralement ?", "EMPLOYEE", "Identifier le grief sans lui substituer une autre qualification.", "BLOCKING", "FREE_TEXT", "La défense et les sources dépendent du fait exactement reproché.", "Reprendre les mots exacts de l'employeur ; si le grief concerne la sécurité, préciser la consigne, l'opération et les circonstances."),
+            _q("La lettre annonce-t-elle une convocation, une date d'entretien ou seulement la mise à pied conservatoire ?", "EMPLOYEE", "Situer l'étape de la procédure.", "BLOCKING", "FREE_TEXT", "Une mise à pied conservatoire n'indique pas à elle seule la sanction finale.", "Relever les dates et formulations exactes."),
+        ])
+        employer.extend([
+            _q("Quel grief exact retenez-vous et sur quels faits datés ?", "EMPLOYER", "Empêcher qu'un motif non annoncé soit ajouté au dossier.", "BLOCKING", "FREE_TEXT", "Le salarié doit pouvoir préparer une réponse sur les faits réellement reprochés.", "Demander une formulation factuelle et les preuves correspondantes."),
+            _q("Quelle suite disciplinaire envisagez-vous et selon quel calendrier ?", "EMPLOYER", "Distinguer la mesure conservatoire de la décision à venir.", "HIGH", "FREE_TEXT", "La mise à pied conservatoire est une mesure d'attente, pas la preuve d'une faute.", "Faire confirmer la convocation et les prochaines étapes."),
+        ])
+        documents.append(_d("Lettre de mise à pied et convocation éventuelle", "Fixer les termes et les dates de la mesure.", "Contrôler la procédure sans préjuger du grief.", "BLOCKING"))
     else:
         employee.extend([
             _q("Quel fait ou quelle décision voulez-vous contester en priorité ?", "EMPLOYEE", "Identifier l'objet réel du dossier.", "BLOCKING", "FREE_TEXT", "Le domaine et les sources dépendent de la réponse.", "Demander la chronologie et les documents."),

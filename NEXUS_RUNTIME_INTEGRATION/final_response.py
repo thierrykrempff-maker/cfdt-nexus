@@ -43,10 +43,27 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
         for item in retrieval_evidence
         if item.get("source_type") != "CSE_CSSCT_MINUTES"
     ][:3]
-    sources = _sources(
+    all_sources = _sources(
         extraction.get("sources")
         or answer.get("applicable_sources")
-        or answer.get("sources")
+        or answer.get("sources"),
+        limit=10,
+    )
+    requires_procedural_link = (
+        _text(core.get("event_category"), 100)
+        == "DISCIPLINARY_CASE_UNSPECIFIED"
+    )
+    sources = _enrich_source_references(
+        [
+            item
+            for item in all_sources
+            if _usable_public_source(item)
+            and (
+                not requires_procedural_link
+                or _source_supports_comparison(item, comparisons)
+            )
+        ],
+        comparisons,
     )
 
     avoid = _dedupe(
@@ -160,6 +177,7 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
         ),
         "sources": _compact_source_references(sources[:3]),
         "source_extractions": _compact_public_extractions(sources[:3]),
+        "connector_activity": _connector_activity(all_sources, sources),
         "retrieved_sources": retrieved_sources,
         "cse_context": cse_context,
         "limits": _dedupe_excluding(
@@ -742,6 +760,170 @@ def _sources(value: Any, *, limit: int = 5) -> list[dict[str, str]]:
             }
         )
     return _dedupe_dicts(output, "provider", secondary="title")[:limit]
+
+
+def _usable_public_source(source: Mapping[str, Any]) -> bool:
+    """Keep only extracted, relevant material in the main public source list."""
+
+    unavailable = {
+        "TITLE_ONLY",
+        "METADATA_ONLY",
+        "METADATA_ONLY_CATALOG",
+        "ABSENT",
+        "CONNECTOR_UNAVAILABLE",
+        "NEEDS_CLARIFICATION",
+        "NOT_CONFIGURED",
+        "UNAVAILABLE",
+        "EMPTY",
+        "CORRUPT",
+    }
+    status = _text(
+        source.get("availability_status") or source.get("status"), 100
+    ).upper()
+    provider = _text(source.get("provider"), 120).casefold()
+    if status in unavailable or provider == "pv cse/cssct":
+        return False
+    return bool(_text(source.get("excerpt"), 480))
+
+
+def _source_supports_comparison(
+    source: Mapping[str, Any],
+    comparisons: Sequence[dict[str, Any]],
+) -> bool:
+    """Expose an excerpt only when the legal comparison actually relies on it."""
+
+    provider = _text(source.get("provider"), 120).casefold()
+    title = _text(source.get("title"), 220).casefold()
+    if not title:
+        return False
+    return any(
+        title in _text(item.get("source"), 360).casefold()
+        and (
+            not provider
+            or provider in _text(item.get("source"), 360).casefold()
+        )
+        for item in comparisons
+    )
+
+
+def _enrich_source_references(
+    sources: Sequence[dict[str, str]],
+    comparisons: Sequence[dict[str, Any]],
+) -> list[dict[str, str]]:
+    """Recover a public page/article reference from its verified comparison."""
+
+    output: list[dict[str, str]] = []
+    for source in sources:
+        row = dict(source)
+        if not row.get("reference"):
+            title = _text(row.get("title"), 220).casefold()
+            provider = _text(row.get("provider"), 120).casefold()
+            comparison = next(
+                (
+                    item
+                    for item in comparisons
+                    if title
+                    and title in _text(item.get("source"), 360).casefold()
+                    and (not provider or provider in _text(item.get("source"), 360).casefold())
+                ),
+                {},
+            )
+            rule = _text(comparison.get("rule"), 520)
+            next_action = _text(comparison.get("next_action"), 360)
+            references: list[str] = []
+            page_match = re.search(r"\b(Page\s+\d+)\b", next_action, re.IGNORECASE)
+            article_match = re.search(
+                r"\b(Art(?:icle)?\.?\s*[A-Z]?\d+[\w.-]*)\b",
+                rule,
+                re.IGNORECASE,
+            )
+            for match in (page_match, article_match):
+                if match and match.group(1) not in references:
+                    references.append(match.group(1))
+            row["reference"] = " · ".join(references)
+        output.append(row)
+    return output
+
+
+def _connector_activity(
+    all_sources: Sequence[dict[str, str]],
+    usable_sources: Sequence[dict[str, str]],
+) -> list[dict[str, str]]:
+    """Report official connector availability without promoting metadata to evidence."""
+
+    connector_names = {
+        "legifrance": "Légifrance",
+        "légifrance": "Légifrance",
+        "judilibre": "JUDILIBRE",
+        "cdtn": "Code du travail numérique",
+        "code du travail numerique": "Code du travail numérique",
+        "code du travail numérique": "Code du travail numérique",
+        "cnil": "CNIL",
+        "dreets": "DREETS",
+        "inrs": "INRS",
+        "anact": "ANACT",
+        "carsat": "CARSAT",
+        "france chimie": "France Chimie",
+        "droit local": "Droit local",
+        "defenseur des droits": "Défenseur des droits",
+        "défenseur des droits": "Défenseur des droits",
+        "ministere du travail": "Ministère du Travail",
+        "ministère du travail": "Ministère du Travail",
+        "service-public": "Service-Public",
+        "service public": "Service-Public",
+        "assurance maladie": "Assurance Maladie",
+        "cpam": "Assurance Maladie",
+        "urssaf": "URSSAF",
+        "agirc-arrco": "Agirc-Arrco",
+    }
+    usable = {
+        (
+            _text(item.get("provider"), 120).casefold(),
+            _text(item.get("title"), 220).casefold(),
+        )
+        for item in usable_sources
+    }
+    unavailable = {
+        "ABSENT",
+        "CONNECTOR_UNAVAILABLE",
+        "NOT_CONFIGURED",
+        "UNAVAILABLE",
+        "EMPTY",
+        "CORRUPT",
+    }
+    rows: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for source in all_sources:
+        provider = _text(source.get("provider"), 120)
+        folded = provider.casefold()
+        connector = next(
+            (label for token, label in connector_names.items() if token in folded),
+            "",
+        )
+        if not connector or connector in seen:
+            continue
+        seen.add(connector)
+        identity = (folded, _text(source.get("title"), 220).casefold())
+        raw_status = _text(
+            source.get("availability_status") or source.get("status"), 100
+        ).upper()
+        if identity in usable:
+            status = "RESULTAT_UTILISE"
+            explanation = "Un extrait exploitable contribue à la réponse."
+        elif raw_status in unavailable:
+            status = "INDISPONIBLE"
+            explanation = "Le connecteur n'a fourni aucun contenu exploitable."
+        else:
+            status = "CATALOGUE_SEULEMENT"
+            explanation = "Référence repérée sans extrait utilisé comme preuve."
+        rows.append(
+            {
+                "connector": connector,
+                "status": status,
+                "explanation": explanation,
+            }
+        )
+    return rows[:8]
 
 
 def _compact_public_extractions(

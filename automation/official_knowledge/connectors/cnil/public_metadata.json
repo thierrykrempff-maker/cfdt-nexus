@@ -1,0 +1,36 @@
+{
+  "connector_name": "cnil",
+  "last_synchronized_at": "2026-08-02",
+  "documents": [
+    {
+      "url": "https://www.cnil.fr/fr/acces-locaux-controle-des-horaires-au-travail",
+      "title": "L'accès aux locaux et le contrôle des horaires sur le lieu de travail",
+      "publication_date": null,
+      "category": "fiche_pratique",
+      "family": "fiche_pratique",
+      "document_type": "fiche_pratique",
+      "mime_type": "text/html",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.cnil.fr/fr/controle-de-lactivite-des-personnes-employees",
+      "title": "Travail, ressources humaines : le contrôle de l'activité des personnes employées",
+      "publication_date": "2026-07-09",
+      "category": "guide",
+      "family": "guide",
+      "document_type": "guide",
+      "mime_type": "text/html",
+      "language": "fr"
+    },
+    {
+      "url": "https://www.cnil.fr/fr/badgeuses-photo-mise-en-demeure-de-plusieurs-employeurs-pour-collecte-excessive-de-donnees",
+      "title": "Badgeuses photo : mise en demeure de plusieurs employeurs pour collecte excessive de données",
+      "publication_date": "2020-08-27",
+      "category": "sanction",
+      "family": "sanction",
+      "document_type": "sanction",
+      "mime_type": "text/html",
+      "language": "fr"
+    }
+  ]
+}

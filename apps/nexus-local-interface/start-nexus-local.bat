@@ -22,6 +22,7 @@ if "%NEXUS_PORT_STATE%"=="2" (
 )
 
 set "NEXUS_LOCAL_CONFIG=%CD%\local-index\nexus-local-secrets.cmd"
+set "NEXUS_LOCAL_CORPUS_CONFIG=%CD%\local-index\nexus-local-corpus.cmd"
 
 if not exist "%NEXUS_LOCAL_CONFIG%" (
   echo.
@@ -29,6 +30,10 @@ if not exist "%NEXUS_LOCAL_CONFIG%" (
   echo Nexus demarrera en mode degrade, sans Legifrance ni JUDILIBRE.
 ) else (
   call "%NEXUS_LOCAL_CONFIG%"
+)
+
+if exist "%NEXUS_LOCAL_CORPUS_CONFIG%" (
+  call "%NEXUS_LOCAL_CORPUS_CONFIG%"
 )
 
 if not defined CFDT_NEXUS_LEGIFRANCE_CLIENT_ID (
@@ -42,6 +47,15 @@ if not defined CFDT_NEXUS_LEGIFRANCE_CLIENT_SECRET (
 set PYTHONUTF8=1
 set PYTHONIOENCODING=utf-8
 set PYTHONDONTWRITEBYTECODE=1
+
+rem Activation locale explicite : les valeurs par defaut du code restent desactivees.
+set NEXUS_CORE_RUNTIME_ENABLED=true
+set NEXUS_CONNECTOR_RUNTIME_ENABLED=true
+set NEXUS_SYNDICAL_REASONING_RUNTIME_ENABLED=true
+set NEXUS_OFFICIAL_CONNECTORS_RUNTIME_ENABLED=true
+set NEXUS_SOURCE_EXECUTION_COORDINATOR_ENABLED=true
+set NEXUS_RETRIEVAL_TO_FINAL_RESPONSE_ENABLED=true
+set NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED=true
 
 if defined CFDT_NEXUS_PYTHON (
   "%CFDT_NEXUS_PYTHON%" --version >nul 2>&1

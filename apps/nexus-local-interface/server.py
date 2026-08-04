@@ -9,11 +9,15 @@ automation/scripts/assistant_ds_router.py ask --query ... --format json
 from __future__ import annotations
 
 import argparse
+import base64
 import importlib.util
+import io
 import json
 import os
+import re
 import subprocess
 import sys
+import unicodedata
 import webbrowser
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -37,6 +41,8 @@ from historical_cases import (  # noqa: E402
     list_historical_cases,
     refresh_historical_case_sources,
 )
+from local_cases import LocalCaseStore  # noqa: E402
+from local_ocr import LocalOCRUnavailable, extract_text_from_jpeg  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -83,6 +89,41 @@ CONTROLLED_PILOT_NOTICE = (
     "Elle doit être vérifiée avant toute utilisation auprès d’un salarié, "
     "de l’employeur ou d’une instance."
 )
+MAX_FOLLOW_UP_ANSWERS = 12
+MAX_FOLLOW_UP_QUESTION_LENGTH = 500
+MAX_FOLLOW_UP_ANSWER_LENGTH = 3000
+MAX_QUESTION_DOCUMENTS = 3
+MAX_QUESTION_DOCUMENT_BYTES = 5 * 1024 * 1024
+MAX_QUESTION_DOCUMENT_BASE64_CHARS = 7 * 1024 * 1024
+MAX_QUESTION_DOCUMENT_CHARS = 20000
+MAX_ALL_QUESTION_DOCUMENT_CHARS = 40000
+QUESTION_DOCUMENT_EXTENSIONS = {".pdf", ".docx", ".txt", ".md", ".jpg", ".jpeg"}
+LOCAL_CASES_ROOT = Path(
+    os.getenv(
+        "NEXUS_LOCAL_CASES_ROOT",
+        str(ROOT / "local-index" / "nexus-local-cases"),
+    )
+)
+LOCAL_CASE_STORE = LocalCaseStore(LOCAL_CASES_ROOT)
+
+PORTAL_CONTEXT_LABELS = {
+    "startDate": "Date de début",
+    "eventFrequency": "Fréquence de la situation",
+    "stillEmployed": "Le salarié est encore en poste",
+    "procedureOngoing": "Une procédure est en cours",
+    "urgentSituation": "La situation est signalée comme urgente",
+    "knownDeadline": "Échéance connue",
+    "employeeCount": "Nombre approximatif de salariés",
+    "services": "Services concernés",
+    "decisionAnnounced": "La décision a déjà été annoncée",
+    "implementationStarted": "La mise en œuvre a commencé",
+    "meetingPlanned": "Une réunion est prévue",
+    "meetingDate": "Date de réunion",
+    "payrollMonth": "Mois de paie concerné",
+    "periodDetails": "Période précisée",
+    "recurringGap": "L’écart est récurrent",
+    "alreadyReported": "L’anomalie a déjà été signalée",
+}
 
 
 def _env_enabled(name: str) -> bool:
@@ -98,6 +139,424 @@ def controlled_pilot_payload() -> dict[str, object]:
         "title": CONTROLLED_PILOT_TITLE if enabled else "",
         "notice": CONTROLLED_PILOT_NOTICE if enabled else "",
     }
+
+
+def _bounded_text(value: object, limit: int) -> str:
+    return " ".join(str(value or "").split())[:limit].strip()
+
+
+def _safe_upload_name(value: object) -> str:
+    name = Path(str(value or "document").replace("\\", "/")).name
+    return re.sub(r"[^0-9A-Za-zÀ-ÖØ-öø-ÿ._() -]", "_", name)[:160] or "document"
+
+
+def _clean_document_text(value: object) -> str:
+    return "\n".join(
+        line.strip() for line in str(value or "").splitlines() if line.strip()
+    )
+
+
+def _extract_uploaded_document(raw_document: object) -> dict[str, Any]:
+    if not isinstance(raw_document, dict):
+        raise ValueError("Pièce jointe invalide.")
+    name = _safe_upload_name(raw_document.get("name"))
+    extension = Path(name).suffix.casefold()
+    if extension not in QUESTION_DOCUMENT_EXTENSIONS:
+        raise ValueError(
+            f"Format non accepté pour {name}. Utilisez PDF, DOCX, TXT, MD, JPG ou JPEG."
+        )
+    encoded = str(raw_document.get("content_base64") or "")
+    if len(encoded) > MAX_QUESTION_DOCUMENT_BASE64_CHARS:
+        raise ValueError(f"Le document {name} dépasse 5 Mo.")
+    try:
+        content = base64.b64decode(encoded, validate=True)
+    except (ValueError, TypeError) as exc:
+        raise ValueError(f"Le document {name} est illisible.") from exc
+    if not content or len(content) > MAX_QUESTION_DOCUMENT_BYTES:
+        raise ValueError(f"Le document {name} est vide ou dépasse 5 Mo.")
+    passages: list[dict[str, str]] = []
+    page_count: int | None = None
+    paragraph_count: int | None = None
+    if extension in {".txt", ".md"}:
+        text = content.decode("utf-8", errors="replace")
+        raw_passages = [part for part in re.split(r"\n\s*\n", text) if part.strip()]
+        passages = [
+            {"reference": f"Paragraphe {index}", "text": _clean_document_text(part)}
+            for index, part in enumerate(raw_passages, start=1)
+            if _clean_document_text(part)
+        ]
+        paragraph_count = len(passages)
+    elif extension in {".jpg", ".jpeg"}:
+        try:
+            passages = extract_text_from_jpeg(content)
+        except LocalOCRUnavailable as exc:
+            raise ValueError(f"Le document {name} ne peut pas être lu : {exc}") from exc
+        except ValueError as exc:
+            raise ValueError(f"Le document {name} ne peut pas être lu : {exc}") from exc
+        page_count = 1
+        paragraph_count = len(passages)
+    elif extension == ".pdf":
+        try:
+            from pypdf import PdfReader
+
+            reader = PdfReader(io.BytesIO(content))
+            page_count = len(reader.pages)
+            for index, page in enumerate(reader.pages, start=1):
+                page_text = _clean_document_text(page.extract_text())
+                if page_text:
+                    passages.append({"reference": f"Page {index}", "text": page_text})
+        except Exception as exc:
+            raise ValueError(f"Le texte du PDF {name} ne peut pas être lu.") from exc
+    else:
+        try:
+            from docx import Document
+
+            document = Document(io.BytesIO(content))
+            passages = [
+                {"reference": f"Paragraphe {index}", "text": _clean_document_text(paragraph.text)}
+                for index, paragraph in enumerate(document.paragraphs, start=1)
+                if _clean_document_text(paragraph.text)
+            ]
+            paragraph_count = len(passages)
+            for table_index, table in enumerate(document.tables, start=1):
+                table_text = _clean_document_text(
+                    "\n".join(cell.text for row in table.rows for cell in row.cells)
+                )
+                if table_text:
+                    passages.append(
+                        {"reference": f"Tableau {table_index}", "text": table_text}
+                    )
+        except Exception as exc:
+            raise ValueError(f"Le texte du document Word {name} ne peut pas être lu.") from exc
+    normalized = "\n\n".join(item["text"] for item in passages if item["text"])
+    if not normalized:
+        raise ValueError(
+            f"Aucun texte exploitable n’a été trouvé dans {name}. "
+            "S’il s’agit d’un document scanné, collez le passage utile dans la question."
+        )
+    bounded_text = normalized[:MAX_QUESTION_DOCUMENT_CHARS]
+    return {
+        "name": name,
+        "text": bounded_text,
+        "extension": extension,
+        "size_bytes": len(content),
+        "page_count": page_count,
+        "paragraph_count": paragraph_count,
+        "truncated": len(normalized) > len(bounded_text),
+        "passages": passages,
+    }
+
+
+def extract_uploaded_documents(raw_documents: object) -> list[dict[str, Any]]:
+    if raw_documents in (None, []):
+        return []
+    if not isinstance(raw_documents, list) or len(raw_documents) > MAX_QUESTION_DOCUMENTS:
+        raise ValueError("Trois pièces jointes maximum sont acceptées.")
+    documents = [_extract_uploaded_document(item) for item in raw_documents]
+    remaining = MAX_ALL_QUESTION_DOCUMENT_CHARS
+    bounded: list[dict[str, Any]] = []
+    for document in documents:
+        text = document["text"][:remaining]
+        if text:
+            bounded.append(
+                {
+                    **document,
+                    "text": text,
+                    "truncated": bool(document["truncated"] or len(document["text"]) > len(text)),
+                }
+            )
+            remaining -= len(text)
+        if remaining <= 0:
+            break
+    return bounded
+
+
+UPLOAD_STOPWORDS = {
+    "avec", "dans", "document", "fichier", "pour", "mais", "plus", "peut",
+    "cette", "comme", "elle", "entre", "sera", "sont", "avoir", "faire",
+    "salarié", "salariée", "employeur", "question", "joint", "jointe",
+}
+
+
+def _search_tokens(value: object) -> set[str]:
+    folded = unicodedata.normalize("NFKD", str(value or ""))
+    folded = "".join(char for char in folded if not unicodedata.combining(char))
+    return {
+        token
+        for token in re.findall(r"[a-z0-9]{4,}", folded.casefold())
+        if token not in UPLOAD_STOPWORDS
+    }
+
+
+def _best_uploaded_passage(
+    document: dict[str, Any],
+    relevance_text: str,
+) -> tuple[str, str]:
+    wanted = _search_tokens(relevance_text)
+    ranked: list[tuple[int, int, str, str]] = []
+    for index, passage in enumerate(document.get("passages") or []):
+        if not isinstance(passage, dict):
+            continue
+        text = _clean_document_text(passage.get("text"))
+        if not text:
+            continue
+        score = len(wanted & _search_tokens(text))
+        ranked.append((score, -index, str(passage.get("reference") or ""), text))
+    if not ranked:
+        return "", ""
+    _, _, reference, text = max(ranked, key=lambda item: (item[0], item[1]))
+    if len(text) <= 900:
+        return reference, text
+    sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+", text) if part.strip()]
+    if not sentences:
+        return reference, text[:900].rstrip() + "…"
+    best_index = max(
+        range(len(sentences)),
+        key=lambda index: len(wanted & _search_tokens(sentences[index])),
+    )
+    selected = sentences[best_index]
+    for distance in range(1, len(sentences)):
+        for candidate_index in (best_index - distance, best_index + distance):
+            if candidate_index < 0 or candidate_index >= len(sentences):
+                continue
+            candidate = (
+                f"{sentences[candidate_index]} {selected}"
+                if candidate_index < best_index
+                else f"{selected} {sentences[candidate_index]}"
+            )
+            if len(candidate) <= 900:
+                selected = candidate
+        if len(selected) >= 650:
+            break
+    return reference, selected[:900].rstrip()
+
+
+def add_uploaded_documents_to_public_result(
+    result: dict[str, Any],
+    documents: list[dict[str, Any]],
+    user_question: str,
+) -> dict[str, Any]:
+    """Expose exact, bounded user-document excerpts as factual evidence.
+
+    A user document is never labelled as a legal norm. Full extracted text and
+    binary content remain request-local and are not returned to the browser.
+    """
+
+    if not documents:
+        return result
+    answer = result.get("answer") if isinstance(result.get("answer"), dict) else {}
+    core = answer.get("case_factual_core") if isinstance(answer.get("case_factual_core"), dict) else {}
+    relevance_text = " ".join(
+        str(value or "")
+        for value in (
+            user_question,
+            core.get("event_category"),
+            core.get("primary_grievance_or_decision"),
+            *(core.get("facts_certain") or []),
+        )
+    )
+    projections: list[dict[str, Any]] = []
+    summaries: list[dict[str, Any]] = []
+    for document in documents:
+        reference, excerpt = _best_uploaded_passage(document, relevance_text)
+        if not excerpt:
+            continue
+        title = _safe_upload_name(document.get("name"))
+        truncated = bool(document.get("truncated"))
+        projections.append(
+            {
+                "provider": "Document fourni par l’utilisateur",
+                "title": title,
+                "nature": "USER_DOCUMENT",
+                "availability_status": "PROVIDED_AND_READ",
+                "reference": reference or "Passage extrait",
+                "excerpt": excerpt,
+                "link_to_facts": "Ce passage a été utilisé comme élément factuel du dossier.",
+                "practical_scope": (
+                    "Pièce factuelle fournie pour cette analyse ; elle ne constitue pas, "
+                    "à elle seule, une règle juridique."
+                ),
+                "reserve": (
+                    "Le document a été partiellement lu en raison de sa longueur."
+                    if truncated
+                    else "Vérifier l’authenticité, la date et la version du document."
+                ),
+            }
+        )
+        summaries.append(
+            {
+                "title": title,
+                "format": str(document.get("extension") or "").removeprefix(".").upper(),
+                "page_count": document.get("page_count"),
+                "paragraph_count": document.get("paragraph_count"),
+                "truncated": truncated,
+                "status": "LU_POUR_CETTE_ANALYSE",
+            }
+        )
+    if not projections:
+        return result
+    public_summary = result.get("public_summary")
+    if not isinstance(public_summary, dict):
+        public_summary = {}
+        result["public_summary"] = public_summary
+    existing_extractions = public_summary.get("source_extractions")
+    public_summary["source_extractions"] = [
+        *projections,
+        *(existing_extractions if isinstance(existing_extractions, list) else []),
+    ]
+    public_summary["uploaded_documents"] = summaries
+    detailed = result.get("detailed_analysis")
+    if isinstance(detailed, dict):
+        detailed["uploaded_documents"] = summaries
+    return result
+
+
+def _credential_pair_configured(*pairs: tuple[str, str]) -> bool:
+    return any(bool(os.getenv(client_id) and os.getenv(client_secret)) for client_id, client_secret in pairs)
+
+
+def runtime_capability_status() -> dict[str, Any]:
+    """Return only non-sensitive configuration availability for the local UI."""
+
+    cse_root = str(os.getenv("NEXUS_CSE_MEMORY_PROCESSED_ROOT") or "").strip()
+    protection_root = str(os.getenv("NEXUS_PROTECTION_SOCIALE_PROCESSED_ROOT") or "").strip()
+    return {
+        "runtime": {
+            "core": _env_enabled("NEXUS_CORE_RUNTIME_ENABLED"),
+            "connectors": _env_enabled("NEXUS_CONNECTOR_RUNTIME_ENABLED"),
+            "cse_memory": _env_enabled("NEXUS_CSE_MEMORY_RUNTIME_ENABLED"),
+            "official_connectors": _env_enabled("NEXUS_OFFICIAL_CONNECTORS_RUNTIME_ENABLED"),
+            "syndical_reasoning": _env_enabled("NEXUS_SYNDICAL_REASONING_RUNTIME_ENABLED"),
+            "source_execution": _env_enabled("NEXUS_SOURCE_EXECUTION_COORDINATOR_ENABLED"),
+            "source_execution_network": _env_enabled("NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED"),
+            "retrieval_to_response": _env_enabled("NEXUS_RETRIEVAL_TO_FINAL_RESPONSE_ENABLED"),
+        },
+        "network": {
+            "official_knowledge": _env_enabled("OFFICIAL_KNOWLEDGE_NETWORK_ENABLED"),
+        },
+        "credentials": {
+            "legifrance": _credential_pair_configured(
+                ("CFDT_NEXUS_LEGIFRANCE_CLIENT_ID", "CFDT_NEXUS_LEGIFRANCE_CLIENT_SECRET"),
+                ("LEGIFRANCE_CLIENT_ID", "LEGIFRANCE_CLIENT_SECRET"),
+                ("PISTE_CLIENT_ID", "PISTE_CLIENT_SECRET"),
+            ),
+            "judilibre": _credential_pair_configured(
+                ("CFDT_NEXUS_JUDILIBRE_CLIENT_ID", "CFDT_NEXUS_JUDILIBRE_CLIENT_SECRET"),
+                ("JUDILIBRE_CLIENT_ID", "JUDILIBRE_CLIENT_SECRET"),
+                ("CFDT_NEXUS_LEGIFRANCE_CLIENT_ID", "CFDT_NEXUS_LEGIFRANCE_CLIENT_SECRET"),
+                ("PISTE_CLIENT_ID", "PISTE_CLIENT_SECRET"),
+            ),
+        },
+        "local_corpora": {
+            "cse_memory": bool(cse_root and Path(cse_root).is_dir()),
+            "protection_sociale": bool(protection_root and Path(protection_root).is_dir()),
+        },
+    }
+
+
+def _follow_up_rows(portal_context: dict[str, Any]) -> list[tuple[str, str]]:
+    raw_rows = portal_context.get("follow_up_answers")
+    if not isinstance(raw_rows, list):
+        return []
+    rows: list[tuple[str, str]] = []
+    for raw_row in raw_rows[:MAX_FOLLOW_UP_ANSWERS]:
+        if not isinstance(raw_row, dict):
+            continue
+        question = _bounded_text(
+            raw_row.get("question"), MAX_FOLLOW_UP_QUESTION_LENGTH
+        )
+        answer = _bounded_text(raw_row.get("answer"), MAX_FOLLOW_UP_ANSWER_LENGTH)
+        if question and answer:
+            rows.append((question, answer))
+    return rows
+
+
+def build_enriched_analysis_query(
+    raw_query: str,
+    portal_context: dict[str, Any],
+) -> str:
+    """Project portal answers into the factual-core structured input contract.
+
+    The projection is request-local: no answer is persisted or shared with another
+    analysis. Employee statements remain allegations until corroborated.
+    """
+
+    user_question = _bounded_text(
+        portal_context.get("user_question"), MAX_FOLLOW_UP_ANSWER_LENGTH
+    )
+    interview_rows = portal_context.get("employee_interview")
+    follow_up_rows = _follow_up_rows(portal_context)
+    uploaded_documents = portal_context.get("uploaded_documents")
+    if (
+        not user_question
+        and not isinstance(interview_rows, list)
+        and not follow_up_rows
+        and not isinstance(uploaded_documents, list)
+    ):
+        return raw_query
+
+    facts = [user_question] if user_question else [_bounded_text(raw_query, 6000)]
+    if isinstance(uploaded_documents, list):
+        for document in uploaded_documents[:MAX_QUESTION_DOCUMENTS]:
+            if not isinstance(document, dict):
+                continue
+            name = _safe_upload_name(document.get("name"))
+            text = str(document.get("text") or "").strip()
+            if text:
+                factual_text = re.sub(r"\s*:\s*", " — ", text)
+                facts.append(
+                    f"Contenu factuel du document {name} — {factual_text}"
+                )
+    context_rows: list[str] = []
+    raw_context = portal_context.get("facts")
+    if isinstance(raw_context, dict):
+        for key, value in raw_context.items():
+            if value in (None, "", False):
+                continue
+            label = PORTAL_CONTEXT_LABELS.get(str(key))
+            if not label:
+                continue
+            rendered = "oui" if value is True else _bounded_text(value, 500)
+            context_rows.append(f"{label} : {rendered}")
+
+    allegations: list[str] = []
+    if isinstance(interview_rows, list):
+        for raw_row in interview_rows[:MAX_FOLLOW_UP_ANSWERS]:
+            if not isinstance(raw_row, dict):
+                continue
+            question = _bounded_text(
+                raw_row.get("question"), MAX_FOLLOW_UP_QUESTION_LENGTH
+            )
+            answer = _bounded_text(
+                raw_row.get("answer"), MAX_FOLLOW_UP_ANSWER_LENGTH
+            )
+            if question and answer:
+                allegations.append(
+                    f"En réponse à « {question} », le salarié indique : {answer}"
+                )
+    allegations.extend(
+        f"En réponse à « {question} », le salarié indique : {answer}"
+        for question, answer in follow_up_rows
+    )
+
+    documents = portal_context.get("available_documents")
+    if isinstance(documents, list):
+        names = [
+            _bounded_text(name, 180)
+            for name in documents[:20]
+            if _bounded_text(name, 180)
+        ]
+        if names:
+            context_rows.append("Documents déclarés disponibles : " + ", ".join(names))
+
+    sections = ["Faits fournis:", *(f"- {item}" for item in facts if item)]
+    if allegations:
+        sections.extend(
+            ["Faits allégués:", *(f"- {item}" for item in allegations)]
+        )
+    if context_rows:
+        sections.extend(["Contexte:", *(f"- {item}" for item in context_rows)])
+    return "\n".join(sections)
 
 
 def optional_dependency_status() -> dict[str, dict[str, object]]:
@@ -318,6 +777,11 @@ class NexusHandler(SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args: Any) -> None:  # noqa: A003
         sys.stderr.write("[nexus-local] " + format % args + "\n")
 
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store, max-age=0")
+        self.send_header("Pragma", "no-cache")
+        super().end_headers()
+
     def send_json(self, status: HTTPStatus, payload: dict[str, Any]) -> None:
         outgoing = dict(payload)
         pilot = controlled_pilot_payload()
@@ -327,7 +791,6 @@ class NexusHandler(SimpleHTTPRequestHandler):
         data = json.dumps(safe_payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(data)))
         self.end_headers()
         self.wfile.write(data)
@@ -349,8 +812,10 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     "version": get_nexus_version(),
                     "mode": "local",
                     "persistent_case_storage": False,
+                    "voluntary_local_case_storage": True,
                     "controlled_pilot": controlled_pilot_payload(),
                     "optional_dependencies": optional_dependency_status(),
+                    "runtime_capabilities": runtime_capability_status(),
                 },
             )
             return
@@ -382,6 +847,35 @@ class NexusHandler(SimpleHTTPRequestHandler):
                         "ok": True,
                         **list_historical_cases(query=query, category=category),
                     },
+                )
+            except ValueError as exc:
+                self.send_json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"ok": False, "error": str(exc)},
+                )
+            except Exception as exc:  # pragma: no cover - defensive local boundary.
+                self.send_internal_error(exc)
+            return
+        if parsed.path == "/api/local-cases":
+            try:
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "cases": LOCAL_CASE_STORE.list_cases()},
+                )
+            except Exception as exc:  # pragma: no cover - defensive local boundary.
+                self.send_internal_error(exc)
+            return
+        if parsed.path.startswith("/api/local-cases/"):
+            try:
+                case_ref = parsed.path.removeprefix("/api/local-cases/")
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "case": LOCAL_CASE_STORE.get_case(case_ref)},
+                )
+            except KeyError as exc:
+                self.send_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"ok": False, "error": str(exc.args[0])},
                 )
             except ValueError as exc:
                 self.send_json(
@@ -443,31 +937,75 @@ class NexusHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
-        if parsed.path != "/api/analyze":
+        if parsed.path not in {"/api/analyze", "/api/local-cases"}:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
         try:
             length = int(self.headers.get("Content-Length", "0"))
             body = self.rfile.read(length).decode("utf-8")
             payload = json.loads(body or "{}")
+            if parsed.path == "/api/local-cases":
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
+                )
+                return
             source_limit = int(payload.get("source_limit") or 6)
             portal_context = (
                 payload.get("portal_context")
                 if isinstance(payload.get("portal_context"), dict)
                 else {}
             )
+            uploaded_documents = extract_uploaded_documents(payload.get("attachments"))
+            if uploaded_documents:
+                portal_context = dict(portal_context)
+                portal_context["uploaded_documents"] = uploaded_documents
             employee_path = payload.get("employee_path") or portal_context.get(
                 "employee_path"
             )
-            result = analyze_public_question(
+            analysis_query = build_enriched_analysis_query(
                 str(payload.get("query") or ""),
+                portal_context,
+            )
+            result = analyze_public_question(
+                analysis_query,
                 source_limit,
                 str(employee_path) if employee_path else None,
+            )
+            result = add_uploaded_documents_to_public_result(
+                result,
+                uploaded_documents,
+                str(portal_context.get("user_question") or payload.get("query") or ""),
             )
             self.send_json(HTTPStatus.OK, result)
         except ValueError as exc:
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})
         except Exception as exc:  # pragma: no cover - defensive local server boundary.
+            self.send_internal_error(exc)
+
+    def do_DELETE(self) -> None:  # noqa: N802
+        parsed = urlparse(self.path)
+        if not parsed.path.startswith("/api/local-cases/"):
+            self.send_json(
+                HTTPStatus.NOT_FOUND,
+                {"ok": False, "error": "Endpoint inconnu."},
+            )
+            return
+        try:
+            case_ref = parsed.path.removeprefix("/api/local-cases/")
+            LOCAL_CASE_STORE.delete_case(case_ref)
+            self.send_json(HTTPStatus.OK, {"ok": True})
+        except KeyError as exc:
+            self.send_json(
+                HTTPStatus.NOT_FOUND,
+                {"ok": False, "error": str(exc.args[0])},
+            )
+        except ValueError as exc:
+            self.send_json(
+                HTTPStatus.BAD_REQUEST,
+                {"ok": False, "error": str(exc)},
+            )
+        except Exception as exc:  # pragma: no cover - defensive local boundary.
             self.send_internal_error(exc)
 
 

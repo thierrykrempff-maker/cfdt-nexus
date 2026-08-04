@@ -195,6 +195,82 @@ _EVENT_SOURCE_TERMS: dict[str, tuple[str, ...]] = {
         "superieur", "hierarchique", "discipline", "sanction",
     ),
 }
+
+# A source may share generic words such as ``risque``, ``securite`` or
+# ``salarie`` with a case without answering the legal issue.  These stronger
+# markers are deliberately narrower: at least one must appear in the actual
+# title, clause/reference or excerpt before the source can support a public
+# rule-to-facts comparison.
+_EVENT_DETERMINANT_TERMS: dict[str, tuple[str, ...]] = {
+    "AMBIGUOUS_TEN_PERCENT_RULE": (
+        "conges payes", "indemnite de conges", "regle du dixieme", "10 pour cent",
+        "10 %",
+    ),
+    "BREAKS_AND_BADGE_CONTROL": (
+        "pause", "badge", "badgeage", "tourniquet", "controle d acces",
+        "controle du temps", "finalite du traitement", "duree de conservation",
+        "utilisation secondaire", "dispositif de controle", "sanction convocation",
+    ),
+    "PPE_AVAILABILITY_OR_SUITABILITY": (
+        "epi", "equipement de protection individuelle", "protection individuelle",
+        "visiere", "gants", "lunettes de protection", "protection respiratoire",
+        "sanction convocation",
+    ),
+    "TECHNICAL_ERROR_AND_OUTDATED_PROCEDURE": (
+        "procedure", "instruction", "recette", "version obsolete", "mise a jour",
+    ),
+    "POSITIVE_ALCOHOL_TEST": (
+        "alcool", "alcoolemie", "ethylotest", "ebriete", "contre expertise",
+    ),
+    "INSULTING_EMAILS": (
+        "courriel", "email", "injure", "insulte", "propos insultants",
+        "propos injurieux", "procedure disciplinaire", "sanction convocation",
+    ),
+    "INSULTING_TAG": (
+        "tag", "inscription", "degradation", "injure", "propos insultants",
+        "procedure disciplinaire", "sanction convocation",
+    ),
+    "INSULTING_BEHAVIOR": (
+        "injure", "insulte", "propos insultants", "propos injurieux",
+        "procedure disciplinaire", "sanction convocation",
+    ),
+    "NIGHT_WORK_FATIGUE": (
+        "travail de nuit", "repos", "fatigue", "duree du travail", "poste de nuit",
+    ),
+    "CSE_MEETING_REST_TIME": (
+        "cse", "reunion", "temps de reunion", "temps de travail", "repos",
+    ),
+    "CSSCT_MEETING_TIME": (
+        "cssct", "delegation", "heures de delegation", "temps de reunion", "mandat",
+    ),
+    "UNPAID_OVERTIME": (
+        "heures supplementaires", "decompte du temps", "majoration", "rappel de salaire",
+    ),
+    "CLASSIFICATION_ACTUAL_DUTIES": (
+        "classification", "coefficient", "emploi", "fonction", "missions exercees",
+    ),
+    "WORK_SCHEDULE_CHANGE": (
+        "horaire", "planning", "cycle", "3x8", "5x8", "travail poste",
+        "week end", "jour ferie", "delai de prevenance", "laboratoire",
+    ),
+    "DISCIPLINARY_CASE_UNSPECIFIED": (
+        "mise a pied conservatoire", "convocation", "entretien prealable",
+        "procedure disciplinaire", "delai disciplinaire",
+        "notification de la sanction", "assistance du salarie",
+    ),
+}
+
+_REPRESENTATIVE_BODY_GOVERNANCE_MARKERS = (
+    "mise en place du cse",
+    "periodicite des reunions",
+    "composition du cse",
+    "fonctionnement du cse",
+    "nombre de representants",
+    "mandats des representants",
+)
+_REPRESENTATIVE_BODY_EVENTS = frozenset(
+    {"CSE_MEETING_REST_TIME", "CSSCT_MEETING_TIME"}
+)
 _EVENT_SEARCH_TERMS: dict[str, tuple[str, str, str, str, str, str]] = {
     "INSULTING_EMAILS": (
         "courriels propos insultants",
@@ -321,12 +397,71 @@ def _concept_tokens(value: object) -> set[str]:
     return concepts
 
 
+def source_topic_relevance(
+    event_category: str,
+    *,
+    source_title: object = "",
+    source_reference: object = "",
+    source_excerpt: object = "",
+    source_context: object = "",
+) -> tuple[bool, str | None]:
+    """Decide whether a source can support the event's legal analysis.
+
+    This is intentionally stricter than document discovery.  A document can be
+    useful background material while still being unsuitable as a determining
+    source.  Generic prevention vocabulary is therefore insufficient when the
+    question concerns a specific subject such as PPE, badging or working-time
+    changes.
+    """
+
+    category = str(event_category or "").strip().upper()
+    title = _normalize(source_title)
+    reference = _normalize(source_reference)
+    excerpt = _normalize(source_excerpt)
+    context = _normalize(source_context)
+    heading = " ".join((title, reference))
+    if (
+        category not in _REPRESENTATIVE_BODY_EVENTS
+        and any(marker in heading for marker in _REPRESENTATIVE_BODY_GOVERNANCE_MARKERS)
+    ):
+        return False, "document de gouvernance CSE sans lien direct avec la question juridique"
+
+    required = _EVENT_DETERMINANT_TERMS.get(category)
+    if not required:
+        return True, None
+    scope = " ".join((title, reference, excerpt, context))
+    if category == "DISCIPLINARY_CASE_UNSPECIFIED":
+        if any(_normalize(term) in scope for term in required):
+            return True, None
+        return False, "aucune garantie procédurale explicite liée à la mesure annoncée"
+    scope_concepts = _concept_tokens(scope)
+    if any(
+        _normalize(term) in scope
+        or (bool(term_concepts) and term_concepts <= scope_concepts)
+        for term in required
+        for term_concepts in (_concept_tokens(term),)
+    ):
+        return True, None
+    return False, "aucun concept distinctif de la question juridique dans la clause ou l'extrait"
+
+
 def _topic_relevant(
     core: CaseFactualCore,
     source_text: str,
     source_title: str,
     nature: LegalNature,
+    source_reference: str = "",
+    source_excerpt: str = "",
 ) -> bool:
+    determinant, _reason = source_topic_relevance(
+        core.event_category,
+        source_title=source_title,
+        source_reference=source_reference,
+        source_excerpt=source_excerpt,
+        source_context=source_text,
+    )
+    if not determinant:
+        return False
     terms = _EVENT_SOURCE_TERMS.get(core.event_category)
     if not terms:
         return True
@@ -771,7 +906,14 @@ def _source(
     excerpt = _excerpt(source)
     nature = _legal_nature(source)
     context = " ".join((title, excerpt, _clean(source.get("_context"))))
-    topic_relevant = _topic_relevant(core, context, title, nature)
+    topic_relevant = _topic_relevant(
+        core,
+        context,
+        title,
+        nature,
+        source_reference=_location(source) or "",
+        source_excerpt=excerpt,
+    )
     matches = _fact_matches(core, context)
     limiting = _dedupe(
         (

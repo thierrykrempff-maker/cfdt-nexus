@@ -150,17 +150,21 @@ def test_unknown_filter_is_rejected():
         list_historical_cases(category="technical")
 
 
-def test_detail_uses_only_the_validated_public_summary():
+def test_detail_uses_only_relevance_filtered_validated_public_summary():
     for short_id, presentation in CASE_PRESENTATION.items():
         raw = json.loads((RAW_ROOT / presentation["fixture"]).read_text(encoding="utf-8"))
         source = raw["response"]["public_summary"]
         detail = get_historical_case(short_id)
-        expected = {
-            key: source[key]
-            for key in PUBLIC_SUMMARY_FIELDS
-            if key in source
-        }
-        assert detail["public_summary"] == expected
+        projected = detail["public_summary"]
+        assert set(projected) <= set(PUBLIC_SUMMARY_FIELDS)
+        assert all(item in source.get("sources", ()) for item in projected.get("sources", ()))
+        assert all(
+            item in source.get("rule_to_facts", ())
+            for item in projected.get("rule_to_facts", ())
+        )
+        for key in ("situation", "strengths", "weaknesses", "priority_questions"):
+            if key in source:
+                assert projected[key] == source[key]
 
 
 def test_public_projection_excludes_evaluation_and_technical_fields():

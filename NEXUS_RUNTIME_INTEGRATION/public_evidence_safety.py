@@ -225,6 +225,25 @@ def _deduplicate_summary_evidence(summary: dict[str, Any]) -> dict[str, Any]:
                 "Passage de PV utilisé comme contexte factuel ; voir l’extrait "
                 "CSE/CSSCT présenté une seule fois."
             )
+    if "rule_to_facts" in summary:
+        summary["rule_to_facts"] = [
+            dict(item)
+            for item in summary.get("rule_to_facts", ())
+            if isinstance(item, Mapping)
+            and not any(
+                title and title in _clean(item.get("source")).casefold()
+                for title, _reference in minute_by_identity
+            )
+        ]
+    if "next_actions" in summary:
+        summary["next_actions"] = [
+            item
+            for item in summary.get("next_actions", ())
+            if not any(
+                title and title in _clean(item).casefold()
+                for title, _reference in minute_by_identity
+            )
+        ]
     if "cse_context" in summary:
         summary["cse_context"] = minutes
     if "source_extractions" in summary:

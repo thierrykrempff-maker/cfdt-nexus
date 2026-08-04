@@ -1,0 +1,36 @@
+{
+  "connector_name": "dreets_grand_est",
+  "last_synchronized_at": "2026-08-02",
+  "documents": [
+    {
+      "url": "https://grand-est.dreets.gouv.fr/Sante-et-securite-au-travail-5051",
+      "title": "Santé et sécurité au travail",
+      "publication_date": null,
+      "category": "dossier",
+      "family": "sante_au_travail",
+      "document_type": "dossier",
+      "mime_type": "text/html",
+      "language": "fr"
+    },
+    {
+      "url": "https://grand-est.dreets.gouv.fr/Travail-et-relations-sociales-232",
+      "title": "Travail et relations sociales",
+      "publication_date": null,
+      "category": "dossier",
+      "family": "relations_collectives",
+      "document_type": "dossier",
+      "mime_type": "text/html",
+      "language": "fr"
+    },
+    {
+      "url": "https://grand-est.dreets.gouv.fr/Les-IPRP-en-Grand-Est",
+      "title": "Les intervenants en prévention des risques professionnels en Grand Est",
+      "publication_date": "2026-06-08",
+      "category": "fiche",
+      "family": "sante_au_travail",
+      "document_type": "fiche",
+      "mime_type": "text/html",
+      "language": "fr"
+    }
+  ]
+}

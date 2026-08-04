@@ -2,3 +2,6 @@
 reportlab>=4,<5
 python-pptx>=1,<2
 openpyxl>=3.1,<4
+# OCR local des photos de documents JPEG. Le modèle latin est conservé localement.
+rapidocr>=3.9,<4
+onnxruntime>=1.18,<2

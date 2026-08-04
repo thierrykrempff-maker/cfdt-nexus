@@ -23,3 +23,11 @@ def test_runtime_bridge_is_disabled_by_default_and_preserves_historical_path() -
     result = SourceExecutionRuntime(SourceExecutionRuntimeConfig()).execute(plan_for())
     assert result.called is False
     assert result.summary is None
+
+
+def test_network_execution_requires_an_explicit_environment_opt_in(monkeypatch) -> None:
+    monkeypatch.delenv("NEXUS_SOURCE_EXECUTION_COORDINATOR_ENABLED", raising=False)
+    monkeypatch.delenv("NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED", raising=False)
+    assert SourceExecutionRuntimeConfig.from_env().allow_network is False
+    monkeypatch.setenv("NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED", "true")
+    assert SourceExecutionRuntimeConfig.from_env().allow_network is True

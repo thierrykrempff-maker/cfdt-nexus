@@ -45,8 +45,11 @@ def test_catalogues_are_non_empty_unique_https_and_content_free():
         "alsace_moselle_local_law": 2,
         "assurance_maladie": 4,
         "carsat": 3,
+        "cnil": 3,
         "defenseur_droits": 4,
+        "dreets_grand_est": 3,
         "france_chimie": 2,
+        "inrs": 3,
         "ministere_travail": 4,
         "service_public": 4,
         "urssaf": 4,
@@ -73,19 +76,22 @@ def test_registry_sync_is_persistent_deterministic_and_idempotent(tmp_path):
         ("alsace_moselle_local_law", 2),
         ("assurance_maladie", 4),
         ("carsat", 3),
+        ("cnil", 3),
         ("defenseur_droits", 4),
+        ("dreets_grand_est", 3),
         ("france_chimie", 2),
+        ("inrs", 3),
         ("ministere_travail", 4),
         ("service_public", 4),
         ("urssaf", 4),
     ]
-    assert all(item.last_synchronized_at == "2026-07-24" for item in first)
+    assert all(item.last_synchronized_at in {"2026-07-24", "2026-08-02"} for item in first)
     assert all(set(item.changes) == {"NEW"} for item in first)
     assert all(set(item.changes) == {"UNCHANGED"} for item in second)
     assert initial_bytes == path.read_bytes()
     records = JsonDocumentStorage(path).load()
-    assert len(records) == 34
-    assert len({item.document_id for item in records}) == 34
+    assert len(records) == 43
+    assert len({item.document_id for item in records}) == 43
     assert all(item.status is DocumentStatus.ACTIVE for item in records)
 
 

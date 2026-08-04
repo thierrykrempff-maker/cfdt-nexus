@@ -71,6 +71,11 @@ def internal_answer(*, suspended: bool = False) -> dict:
                 "legal_nature": "STATUTE",
                 "retrieval_status": "RETRIEVED",
                 "applicability_status": "APPLICABLE",
+                "article_or_clause": "L1332-2",
+                "precise_excerpt": (
+                    "Lorsque l'employeur envisage une sanction, il convoque le "
+                    "salarié en précisant l'objet de la convocation."
+                ),
             }
         ],
         "rule_to_facts_analysis": [
@@ -113,6 +118,86 @@ def test_summary_deduplicates_questions_and_keeps_operational_context() -> None:
     assert all({"target", "question", "reason", "priority"} <= set(item) for item in questions)
     assert summary["documents"][0]["utility"]
     assert summary["sources"][0]["provider"] == "Légifrance"
+    assert summary["source_extractions"][0]["reference"] == "L1332-2"
+    assert "convoque le salarié" in summary["source_extractions"][0]["excerpt"]
+    assert summary["connector_activity"] == [
+        {
+            "connector": "Légifrance",
+            "status": "RESULTAT_UTILISE",
+            "explanation": "Un extrait exploitable contribue à la réponse.",
+        }
+    ]
+
+
+def test_metadata_only_connector_is_visible_but_never_used_as_evidence() -> None:
+    answer = internal_answer()
+    answer["applicable_sources"].append(
+        {
+            "source_provider": "CARSAT Alsace-Moselle",
+            "source_title": "Catalogue prévention EPI",
+            "availability_status": "TITLE_ONLY",
+        }
+    )
+
+    summary = build_final_response(answer)["public_summary"]
+
+    assert all(
+        item["provider"] != "CARSAT Alsace-Moselle"
+        for item in summary["sources"]
+    )
+    assert summary["connector_activity"][1] == {
+        "connector": "CARSAT",
+        "status": "CATALOGUE_SEULEMENT",
+        "explanation": "Référence repérée sans extrait utilisé comme preuve.",
+    }
+
+
+def test_public_source_recovers_page_and_article_from_verified_comparison() -> None:
+    answer = internal_answer()
+    answer["applicable_sources"] = [
+        {
+            "source_provider": "INEOS Sarralbe",
+            "source_title": "Règlement intérieur.pdf",
+            "retrieval_status": "RETRIEVED",
+            "precise_excerpt": "Equipements de protection individuels (EPI) Art 4 Tout membre du personnel...",
+        }
+    ]
+    answer["rule_to_facts_analysis"] = [
+        {
+            "issue": "Disponibilité des EPI",
+            "source_reference": "INEOS Sarralbe — Règlement intérieur.pdf",
+            "rule_summary": "Equipements de protection individuels (EPI) Art 4 Tout membre du personnel...",
+            "provisional_conclusion": "À VÉRIFIER",
+            "next_action": "Obtenir ou vérifier Page 2 dans le règlement intérieur.",
+        }
+    ]
+
+    source = build_final_response(answer)["public_summary"]["source_extractions"][0]
+
+    assert source["reference"] == "Page 2 · Art 4"
+
+
+def test_extracted_clause_without_rule_to_facts_link_is_not_public_evidence() -> None:
+    answer = internal_answer()
+    answer["case_factual_core"]["event_category"] = (
+        "DISCIPLINARY_CASE_UNSPECIFIED"
+    )
+    answer["applicable_sources"] = [
+        {
+            "source_provider": "INEOS Sarralbe",
+            "source_title": "Règlement intérieur.pdf",
+            "retrieval_status": "RETRIEVED",
+            "precise_excerpt": (
+                "Une clause particulière sans lien établi avec le grief annoncé."
+            ),
+        }
+    ]
+    answer["rule_to_facts_analysis"] = []
+
+    summary = build_final_response(answer)["public_summary"]
+
+    assert summary.get("sources", []) == []
+    assert summary.get("source_extractions", []) == []
 
 
 def test_suspended_analysis_is_short_and_explicit() -> None:

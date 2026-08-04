@@ -31,8 +31,8 @@ def source(
     layer: str = "code_travail",
     title: str = "Code du travail — Article L. 0000-1",
     excerpt: str = (
-        "Lorsque la mesure est envisagée, l'employeur doit vérifier les faits "
-        "et respecter la procédure applicable."
+        "Lorsque la sanction est envisagée, l'employeur doit vérifier les faits "
+        "et respecter la procédure disciplinaire applicable."
     ),
     article: str = "Article L. 0000-1",
     **extra,
@@ -72,7 +72,14 @@ def test_search_plan_contains_six_bounded_fact_driven_axes() -> None:
 def test_models_are_immutable_and_serializable() -> None:
     report = analyze_source_to_facts(
         core("Une sanction est envisagée après des courriels insultants."),
-        (source(excerpt="Les faits doivent être précis et la sanction proportionnée."),),
+        (
+            source(
+                excerpt=(
+                    "Les courriels insultants doivent être établis et la sanction "
+                    "doit rester proportionnée."
+                )
+            ),
+        ),
     )
     item = report.applicable_sources[0]
 

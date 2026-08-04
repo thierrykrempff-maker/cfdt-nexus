@@ -38,3 +38,37 @@ def test_same_pv_excerpt_is_displayed_only_once():
         }
     )
     assert str(final).count(excerpt) == 1
+    assert final["public_summary"].get("rule_to_facts", []) == []
+    assert final["public_summary"]["cse_context"][0]["title"] == "CE 2017"
+
+
+def test_title_only_catalog_entry_is_not_presented_as_a_consulted_source():
+    final = build_final_response(
+        {
+            "source_extraction": {
+                "sources": [
+                    {
+                        "provider": "CARSAT",
+                        "title": "Missions de la Carsat Alsace-Moselle",
+                        "availability_status": "TITLE_ONLY",
+                        "link_to_facts": "Prévention des risques professionnels.",
+                    },
+                    {
+                        "provider": "INEOS Sarralbe",
+                        "title": "Règlement intérieur",
+                        "availability_status": "FOUND_VERSION_UNCERTAIN",
+                        "excerpt": "Les équipements de protection individuelle doivent être portés.",
+                        "link_to_facts": "Consigne EPI à vérifier.",
+                    },
+                ]
+            }
+        }
+    )
+
+    assert final["public_summary"]["sources"] == [
+        {"provider": "INEOS Sarralbe", "title": "Règlement intérieur"}
+    ]
+    assert all(
+        item.get("title") != "Missions de la Carsat Alsace-Moselle"
+        for item in final["public_summary"].get("source_extractions", ())
+    )

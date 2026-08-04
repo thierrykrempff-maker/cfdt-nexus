@@ -29,7 +29,8 @@ def test_home_exposes_secondary_tools_and_safe_empty_states() -> None:
     html = source("index.html")
     for label in ("Recherche documentaire", "Dossiers en cours", "Historique", "Outils et modèles"):
         assert label in html
-    assert "Aucun dossier enregistré dans cette version" in html
+    assert "Aucun dossier local enregistré" in html
+    assert "aucune sauvegarde automatique" in html.casefold()
     assert "aucune sauvegarde automatique" in html.lower()
 
 
