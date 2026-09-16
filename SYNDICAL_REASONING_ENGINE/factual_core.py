@@ -1058,6 +1058,19 @@ _DEFINITIONAL_QUESTION_RE = re.compile(
     r"|\bque (signifie|veut dire|represente)\b"
     r"|\bdefinition de\b"
     r"|\bdefinir\b"
+    # General "does the law allow X" phrasings ("l'employeur peut-il...",
+    # "ai-je le droit de...", "est-ce legal...") — no less definitional than
+    # "qu'est-ce que" in intent: both ask what a rule says, not "help me
+    # build a case", so they get the same pedagogical treatment below.
+    r"|\bpuis je\b"
+    r"|\bai je (le )?droit\b"
+    r"|\b(a|ont) t (il|elle|ils|elles|on) (le )?droit\b"
+    r"|\bpeu(t|vent) (il|elle|ils|elles|on)\b"
+    r"|\best ce (legal|autorise|permis|possible)\b"
+    r"|\bsuis je (oblige|tenu|autorise)\b"
+    r"|\bdois je\b"
+    r"|\bque dit (la loi|le code du travail)\b"
+    r"|\bquels? sont mes (droits|obligations)\b"
 )
 
 

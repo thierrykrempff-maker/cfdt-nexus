@@ -1773,9 +1773,21 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
     domains = business_domains(route)
     query = normalize(route.get("query", ""))
     context = source_context(source)
+    # "pratique_officielle" sources (CDTN, CNIL, CARSAT, DREETS, INRS) score
+    # their own matches on a small, curated-keyword scale (10 points per
+    # matched keyword, so ~10-30 for a real hit), unlike the local corpus's
+    # lexical scorer which routinely reaches 200-300 on an unrelated scale.
+    # Applying the same 0.08x to both used to leave a well-matched official
+    # source ~15-20 points behind every local document regardless of
+    # relevance, even after a prior fix removed an even harsher 0.01x/8-point
+    # cap. Rescaling onto a comparable base (up to ~24, similar to a strong
+    # local match's base contribution) lets a real official match compete on
+    # its actual relevance instead of losing on scale alone; it still shows
+    # after code_travail/jurisprudence sources in the final ordering (see
+    # SOURCE_LAYER_ORDER below), so the legal-source priority is unchanged.
     base = source_base_score(source) * 0.08
     if source.get("source_layer") == "pratique_officielle":
-        base = min(source_base_score(source) * 0.01, 8)
+        base = min(source_base_score(source) * 0.8, 24)
     score = base
 
     query_hits = [token for token in significant_tokens(query) if token in significant_tokens(context)]
@@ -1795,6 +1807,16 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
                 score += penalty
 
     document = normalize(str(source.get("document") or ""))
+    title_hits = significant_tokens(query) & significant_tokens(document)
+    if title_hits:
+        # A document literally titled after a term the question asks about
+        # (e.g. "PAP" for "qu'est-ce qu'un PAP ?") is very likely the
+        # authoritative source even when no domain-specific boost applies
+        # and its excerpt doesn't score well on generic vocabulary — a
+        # document called "2018.10.05_PAP 2018.pdf" answering "qu'est-ce
+        # qu'un PAP" should not lose to unrelated pages that merely share
+        # common words.
+        score += min(45, len(title_hits) * 20)
     ppe_query = any(
         term in query
         for term in (
@@ -1865,6 +1887,13 @@ def contextual_source_score(source: dict[str, Any], route: dict[str, Any]) -> fl
         score += 28
     if "droit_syndical" in domains and any(term in document for term in ["droit syndical", "cse", "rp", "dialogue social"]):
         score += 28
+    if "combien" in query and "heure" in query and re.search(r"\d+\s*heures?\b", context):
+        # A "combien d'heures ..." question needs a concrete figure, not just
+        # topically-related vocabulary: a passage that actually states a
+        # number of hours (e.g. "22 heures de delegation mensuelles") is the
+        # one that can answer it, even if a differently-worded passage scores
+        # higher on generic domain-term matches without containing any figure.
+        score += 40
     if "disciplinaire" in domains:
         facts = extract_disciplinary_facts(str(route.get("query") or ""))
         if (
@@ -2048,25 +2077,28 @@ def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], s
             if len(selected) < limit:
                 selected.append(layer_source)
             elif selected:
-                preferred_replace_layers = {"pratique_officielle", "pratique", "autre"}
+                layer_score = contextual_source_score(layer_source, route)
+                # Only displace an already-selected official-reference source
+                # (CNIL/CARSAT/DREETS/INRS/CDTN, or a "pratique"/"autre" one)
+                # if the required local/legal candidate is not meaningfully
+                # less relevant: a real, well-matched connector answer should
+                # not be sacrificed just to force in a weakly related local
+                # document. Both the preferred target and the last-resort
+                # fallback used to skip this check, which unconditionally
+                # evicted pratique_officielle sources regardless of score;
+                # now, if nothing can be fairly displaced, this required
+                # layer simply doesn't get forced in.
                 replace_at = next(
                     (
                         index
                         for index in range(len(selected) - 1, -1, -1)
-                        if selected[index].get("source_layer") in preferred_replace_layers
+                        if selected[index].get("source_layer") not in protected_layers
+                        and layer_score >= contextual_source_score(selected[index], route)
                     ),
                     None,
                 )
-                if replace_at is None:
-                    replace_at = next(
-                        (
-                            index
-                            for index in range(len(selected) - 1, -1, -1)
-                            if selected[index].get("source_layer") not in protected_layers
-                        ),
-                        len(selected) - 1,
-                    )
-                selected[replace_at] = layer_source
+                if replace_at is not None:
+                    selected[replace_at] = layer_source
 
     practice_sources = [
         source

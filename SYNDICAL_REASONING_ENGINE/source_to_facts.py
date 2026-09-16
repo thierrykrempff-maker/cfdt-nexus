@@ -382,7 +382,7 @@ def _tokens(value: object) -> set[str]:
         token
         for token in re.findall(r"[a-z0-9]{3,}", _normalize(value))
         if token not in _STOP_WORDS
-        and (len(token) >= 4 or token in {"epi", "cse", "rps", "cnil"})
+        and (len(token) >= 4 or token in {"epi", "cse", "rps", "cnil", "pap"})
     }
 
 
@@ -420,9 +420,21 @@ def source_topic_relevance(
     excerpt = _normalize(source_excerpt)
     context = _normalize(source_context)
     heading = " ".join((title, reference))
+    # A CSE governance document's TITLE matching a marker (e.g. "mise en
+    # place du CSE") does not mean every clause inside it is off-topic: the
+    # article defining delegation-hour credits lives in exactly that kind of
+    # document, and rejecting it outright for a question like "combien
+    # d'heures de delegation ai-je droit" produced a wrong/irrelevant answer.
+    # Only reject when the retrieved excerpt itself carries no such concrete,
+    # determinant content.
+    excerpt_has_determinant_content = any(
+        term in excerpt
+        for term in ("heures de delegation", "credit d heures", "temps de delegation")
+    )
     if (
         category not in _REPRESENTATIVE_BODY_EVENTS
         and any(marker in heading for marker in _REPRESENTATIVE_BODY_GOVERNANCE_MARKERS)
+        and not excerpt_has_determinant_content
     ):
         return False, "document de gouvernance CSE sans lien direct avec la question juridique"
 
@@ -795,6 +807,15 @@ def _relevance(
     )
     overlap = len(fact_tokens & source_tokens)
     score = min(75, overlap * 9) + min(24, len(matches) * 12)
+    query_text = _normalize(core.primary_event or "")
+    if "combien" in query_text and "heure" in query_text:
+        # A "combien d'heures ..." question needs a concrete figure: a source
+        # whose excerpt states an actual "N heures" is the one that can
+        # answer it, even when generic keyword overlap ties it with an
+        # unrelated passage that only shares vocabulary (see the matching
+        # boost in assistant_ds_router.contextual_source_score).
+        if re.search(r"\d+\s*heures?\b", _normalize(excerpt)):
+            score += 30
     try:
         router_score = float(source.get("_router_score") or source.get("score") or 0)
     except (TypeError, ValueError):
