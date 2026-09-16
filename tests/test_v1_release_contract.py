@@ -82,9 +82,31 @@ def test_launcher_supports_degraded_mode_and_clean_shutdown() -> None:
     assert "exit /b 1" not in missing_block
     assert "CFDT_NEXUS_PYTHON" in launcher
     assert "Python est indisponible" in launcher
+    assert "nexus-local-server.log" in launcher
+    assert '2>&1' in launcher
     assert "/health" in stopper
     assert "nexus-local-interface" in stopper
     assert "Stop-Process" in stopper
+
+
+def test_desktop_server_refuses_duplicate_port_and_survives_closed_log_stream() -> None:
+    module = _server_module()
+    assert module.NexusHTTPServer.allow_reuse_address is False
+
+    class ClosedStream:
+        def write(self, _value):
+            raise ValueError("closed")
+
+        def flush(self):
+            raise ValueError("closed")
+
+    handler = object.__new__(module.NexusHandler)
+    original = module.sys.stderr
+    module.sys.stderr = ClosedStream()
+    try:
+        handler.log_message("%s", "request")
+    finally:
+        module.sys.stderr = original
 
 
 def test_interface_exposes_version_print_and_optional_capabilities() -> None:

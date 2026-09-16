@@ -126,7 +126,7 @@
                 <li>Consultation et réorganisation</li>
                 <li>Avis, résolution et anciens PV</li>
               </ul>
-              <button class="card-button" type="button" data-open-workspace="cse">Ouvrir l’espace CSE</button>
+              <button class="card-button" type="button" data-open-workspace="cse">Importer un ordre du jour</button>
               <div class="quick-links" aria-label="Accès rapides CSE">
                 <button type="button" data-open-workspace="cse" data-preset="reunion">Réunion</button>
                 <button type="button" data-open-workspace="cse" data-preset="reorganisation">Réorganisation</button>
@@ -406,7 +406,7 @@
               <h2 id="stepTwoTitle">Décrivez la situation</h2>
               <label for="questionInput" id="questionInputLabel">Décrivez la situation avec vos propres mots</label>
               <textarea id="questionInput" name="query" rows="8" maxlength="6000" required aria-describedby="privacyInputNotice"></textarea>
-              <div class="question-document-input" id="questionDocumentDropZone" aria-labelledby="questionDocumentTitle">
+              <div class="question-document-input" id="questionDocumentDropZone" aria-labelledby="questionDocumentTitle" data-document-drop-zone>
                 <div>
                   <strong id="questionDocumentTitle">Ajouter des documents utiles</strong>
                   <p>PDF, Word, texte, Markdown ou photo JPEG. Trois fichiers maximum, 5 Mo par fichier.</p>
@@ -418,6 +418,27 @@
                 <ul class="selected-document-list" id="questionDocumentList" aria-label="Documents joints"></ul>
               </div>
               <p class="field-help" id="privacyInputNotice">N’indiquez aucune donnée personnelle inutile. Le texte n’est pas enregistré automatiquement.</p>
+              <section class="cse-agenda-workflow" id="cseAgendaWorkflow" hidden>
+                <div class="cse-previous-pv-input" id="csePreviousPvDropZone">
+                  <div>
+                    <strong>Ajouter les anciens PV à comparer</strong>
+                    <p>Optionnel : PDF, Word, texte, Markdown ou photo JPEG. Trois anciens PV maximum.</p>
+                  </div>
+                  <label class="secondary-button document-picker" for="csePreviousPvDocuments">Choisir les anciens PV</label>
+                  <input id="csePreviousPvDocuments" type="file" accept=".pdf,.docx,.txt,.md,.jpg,.jpeg,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg" multiple>
+                  <button class="text-button" type="button" id="clearCsePreviousPvDocuments" hidden>Retirer les anciens PV</button>
+                  <p class="document-input-status" id="csePreviousPvStatus" role="status">Aucun PV ajouté manuellement. Nexus consultera aussi CSE Memory.</p>
+                  <ul class="selected-document-list" id="csePreviousPvList" aria-label="Anciens PV ajoutés"></ul>
+                </div>
+                <button class="secondary-button" type="button" id="verifyCseAgendaButton">1. Vérifier les points et les anciens PV</button>
+                <p class="field-help" id="cseAgendaVerificationStatus" role="status"></p>
+                <div class="cse-agenda-selection" id="cseAgendaSelection" hidden>
+                  <h3>2. Choisissez les points à approfondir</h3>
+                  <p>Cochez uniquement les questions que vous voulez analyser et développer.</p>
+                  <p class="field-help"><strong>Deux blocs distincts :</strong> points de la Direction, puis questions des membres et organisations syndicales.</p>
+                  <div id="cseAgendaChoices"></div>
+                </div>
+              </section>
             </section>
             <section class="wizard-step" data-step="3" hidden aria-labelledby="stepThreeTitle">
               <p class="step-count">Étape 3 sur 5</p>
@@ -516,6 +537,13 @@
             <section class="response-band">
               <h2>Ce que vous pouvez faire</h2>
               <p id="workingPosition"></p>
+            </section>
+
+            <section class="panel cse-agenda-panel" id="cseAgendaPanel" hidden>
+              <p class="eyebrow">Préparation du CSE</p>
+              <h2>Ordre du jour, anciens PV et questions à la direction</h2>
+              <p class="cse-agenda-summary" id="cseAgendaSummary"></p>
+              <div class="cse-agenda-points" id="cseAgendaPoints"></div>
             </section>
 
             <section class="response-band chatbot-sources-summary" id="chatbotSourcesSummary" hidden>

@@ -39,3 +39,6 @@ OFFICIAL_KNOWLEDGE_DATA/LISEZ_MOI.txt
 # Python local bytecode
 __pycache__/
 *.py[cod]
+
+# Local virtual environment
+.venv/

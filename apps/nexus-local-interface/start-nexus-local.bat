@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0..\.."
 
-set "NEXUS_LOCAL_URL=http://127.0.0.1:8765/"
+set "NEXUS_LOCAL_URL=http://127.0.0.1:8765/?interface=cse-pv-v2"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$client = New-Object Net.Sockets.TcpClient; try { $client.Connect('127.0.0.1', 8765) } catch { exit 1 } finally { $client.Dispose() }; try { $health = Invoke-RestMethod -Uri 'http://127.0.0.1:8765/health' -TimeoutSec 2; if ($health.service -eq 'nexus-local-interface') { exit 0 } } catch {}; exit 2" >nul 2>&1
 set "NEXUS_PORT_STATE=%ERRORLEVEL%"
 
@@ -47,6 +47,7 @@ if not defined CFDT_NEXUS_LEGIFRANCE_CLIENT_SECRET (
 set PYTHONUTF8=1
 set PYTHONIOENCODING=utf-8
 set PYTHONDONTWRITEBYTECODE=1
+set "NEXUS_LOCAL_LOG=%CD%\local-index\nexus-local-server.log"
 
 rem Activation locale explicite : les valeurs par defaut du code restent desactivees.
 set NEXUS_CORE_RUNTIME_ENABLED=true
@@ -60,11 +61,11 @@ set NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED=true
 if defined CFDT_NEXUS_PYTHON (
   "%CFDT_NEXUS_PYTHON%" --version >nul 2>&1
   if errorlevel 1 goto PYTHON_MISSING
-  start "" /b "%CFDT_NEXUS_PYTHON%" apps\nexus-local-interface\server.py
+  start "" /b "%CFDT_NEXUS_PYTHON%" apps\nexus-local-interface\server.py >> "%NEXUS_LOCAL_LOG%" 2>&1
 ) else (
   python --version >nul 2>&1
   if errorlevel 1 goto PYTHON_MISSING
-  start "" /b python apps\nexus-local-interface\server.py
+  start "" /b python apps\nexus-local-interface\server.py >> "%NEXUS_LOCAL_LOG%" 2>&1
 )
 
 set "NEXUS_WAIT_ATTEMPTS=20"

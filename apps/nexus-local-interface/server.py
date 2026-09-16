@@ -15,6 +15,7 @@ import io
 import json
 import os
 import re
+import socket
 import subprocess
 import sys
 import unicodedata
@@ -43,6 +44,7 @@ from historical_cases import (  # noqa: E402
 )
 from local_cases import LocalCaseStore  # noqa: E402
 from local_ocr import LocalOCRUnavailable, extract_text_from_jpeg  # noqa: E402
+from cse_agenda_analysis import build_cse_agenda_analysis  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -89,6 +91,17 @@ CONTROLLED_PILOT_NOTICE = (
     "Elle doit être vérifiée avant toute utilisation auprès d’un salarié, "
     "de l’employeur ou d’une instance."
 )
+
+
+class NexusHTTPServer(ThreadingHTTPServer):
+    """Local server that refuses a second process on the same Windows port."""
+
+    allow_reuse_address = False
+
+    def server_bind(self) -> None:
+        if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
 MAX_FOLLOW_UP_ANSWERS = 12
 MAX_FOLLOW_UP_QUESTION_LENGTH = 500
 MAX_FOLLOW_UP_ANSWER_LENGTH = 3000
@@ -156,6 +169,67 @@ def _clean_document_text(value: object) -> str:
     )
 
 
+def _docx_list_metadata(document: object, paragraph: object) -> tuple[str, int, int] | None:
+    """Return list format, list id and level for a Word paragraph."""
+
+    try:
+        from docx.oxml.ns import qn
+
+        paragraph_properties = paragraph._p.pPr
+        numbering = paragraph_properties.numPr if paragraph_properties is not None else None
+        if numbering is None and paragraph.style is not None:
+            style_properties = paragraph.style.element.pPr
+            numbering = style_properties.numPr if style_properties is not None else None
+        if numbering is None or numbering.numId is None:
+            return None
+        list_id = int(numbering.numId.val)
+        level = int(numbering.ilvl.val) if numbering.ilvl is not None else 0
+        numbering_root = document.part.numbering_part.element
+        abstract_id: int | None = None
+        for instance in numbering_root.findall(qn("w:num")):
+            if int(instance.get(qn("w:numId"))) == list_id:
+                abstract = instance.find(qn("w:abstractNumId"))
+                if abstract is not None:
+                    abstract_id = int(abstract.get(qn("w:val")))
+                break
+        if abstract_id is None:
+            return ("decimal", list_id, level)
+        for abstract in numbering_root.findall(qn("w:abstractNum")):
+            if int(abstract.get(qn("w:abstractNumId"))) != abstract_id:
+                continue
+            for level_node in abstract.findall(qn("w:lvl")):
+                if int(level_node.get(qn("w:ilvl"))) != level:
+                    continue
+                number_format = level_node.find(qn("w:numFmt"))
+                value = number_format.get(qn("w:val")) if number_format is not None else "decimal"
+                return (str(value), list_id, level)
+        return ("decimal", list_id, level)
+    except (AttributeError, KeyError, TypeError, ValueError):
+        return None
+
+
+def _docx_passages(document: object) -> list[dict[str, str]]:
+    """Extract Word paragraphs while preserving automatic agenda numbering."""
+
+    passages: list[dict[str, str]] = []
+    counters: dict[tuple[int, int], int] = {}
+    for index, paragraph in enumerate(document.paragraphs, start=1):
+        text = _clean_document_text(paragraph.text)
+        if not text:
+            continue
+        metadata = _docx_list_metadata(document, paragraph)
+        if metadata is not None:
+            number_format, list_id, level = metadata
+            if number_format == "bullet" or level > 0:
+                text = f"- {text}"
+            else:
+                key = (list_id, level)
+                counters[key] = counters.get(key, 0) + 1
+                text = f"{counters[key]}. {text}"
+        passages.append({"reference": f"Paragraphe {index}", "text": text})
+    return passages
+
+
 def _extract_uploaded_document(raw_document: object) -> dict[str, Any]:
     if not isinstance(raw_document, dict):
         raise ValueError("Pièce jointe invalide.")
@@ -212,11 +286,7 @@ def _extract_uploaded_document(raw_document: object) -> dict[str, Any]:
             from docx import Document
 
             document = Document(io.BytesIO(content))
-            passages = [
-                {"reference": f"Paragraphe {index}", "text": _clean_document_text(paragraph.text)}
-                for index, paragraph in enumerate(document.paragraphs, start=1)
-                if _clean_document_text(paragraph.text)
-            ]
+            passages = _docx_passages(document)
             paragraph_count = len(passages)
             for table_index, table in enumerate(document.tables, start=1):
                 table_text = _clean_document_text(
@@ -775,7 +845,13 @@ class NexusHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(APP_DIR), **kwargs)
 
     def log_message(self, format: str, *args: Any) -> None:  # noqa: A003
-        sys.stderr.write("[nexus-local] " + format % args + "\n")
+        try:
+            sys.stderr.write("[nexus-local] " + format % args + "\n")
+            sys.stderr.flush()
+        except (OSError, ValueError):
+            # A desktop launcher may close its console after detaching Nexus.
+            # Request handling must never depend on that diagnostic stream.
+            pass
 
     def end_headers(self) -> None:
         self.send_header("Cache-Control", "no-store, max-age=0")
@@ -937,7 +1013,11 @@ class NexusHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
-        if parsed.path not in {"/api/analyze", "/api/local-cases"}:
+        if parsed.path not in {
+            "/api/analyze",
+            "/api/local-cases",
+            "/api/cse/agenda-preview",
+        }:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
         try:
@@ -950,6 +1030,22 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
                 )
                 return
+            if parsed.path == "/api/cse/agenda-preview":
+                uploaded_documents = extract_uploaded_documents(payload.get("attachments"))
+                previous_minutes_documents = extract_uploaded_documents(
+                    payload.get("cse_previous_pv_attachments")
+                )
+                self.send_json(
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "cse_agenda_analysis": build_cse_agenda_analysis(
+                            uploaded_documents,
+                            additional_minutes_documents=previous_minutes_documents,
+                        ),
+                    },
+                )
+                return
             source_limit = int(payload.get("source_limit") or 6)
             portal_context = (
                 payload.get("portal_context")
@@ -957,6 +1053,11 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 else {}
             )
             uploaded_documents = extract_uploaded_documents(payload.get("attachments"))
+            previous_minutes_documents = (
+                extract_uploaded_documents(payload.get("cse_previous_pv_attachments"))
+                if portal_context.get("workspace") == "cse"
+                else []
+            )
             if uploaded_documents:
                 portal_context = dict(portal_context)
                 portal_context["uploaded_documents"] = uploaded_documents
@@ -977,6 +1078,17 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 uploaded_documents,
                 str(portal_context.get("user_question") or payload.get("query") or ""),
             )
+            if portal_context.get("workspace") == "cse":
+                selected_positions = portal_context.get("cse_selected_agenda_positions")
+                result["cse_agenda_analysis"] = build_cse_agenda_analysis(
+                    uploaded_documents,
+                    selected_positions=(
+                        selected_positions
+                        if isinstance(selected_positions, list)
+                        else None
+                    ),
+                    additional_minutes_documents=previous_minutes_documents,
+                )
             self.send_json(HTTPStatus.OK, result)
         except ValueError as exc:
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)})
@@ -1019,7 +1131,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = build_parser().parse_args()
-    server = ThreadingHTTPServer((args.host, args.port), NexusHandler)
+    server = NexusHTTPServer((args.host, args.port), NexusHandler)
     url = f"http://{args.host}:{args.port}/"
     print(f"Nexus interface locale: {url}")
     print("Aucun acces internet requis. Arreter avec Ctrl+C.")

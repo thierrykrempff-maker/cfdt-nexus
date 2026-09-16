@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -60,6 +61,26 @@ try:
     import cdtn_connector as cdtn
 except ImportError:  # pragma: no cover - diagnosed at runtime.
     cdtn = None
+
+try:
+    import cnil_connector as cnil
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    cnil = None
+
+try:
+    import carsat_connector as carsat
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    carsat = None
+
+try:
+    import dreets_connector as dreets
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    dreets = None
+
+try:
+    import inrs_connector as inrs
+except ImportError:  # pragma: no cover - diagnosed at runtime.
+    inrs = None
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -1915,6 +1936,39 @@ def clean_source(source: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in source.items() if not key.startswith("_")}
 
 
+def source_has_verifiable_grounding(source: dict[str, Any]) -> bool:
+    """True if a source carries enough identifying data to be checked against
+    the document it claims to come from (article/case number/URL/excerpt),
+    so Nexus never shows a citation-like entry that cannot actually be traced
+    back to a real, locatable passage."""
+    layer = source.get("source_layer") or source_layer_for_source(source)
+    document = str(source.get("document") or "").strip()
+    if layer == "code_travail":
+        return bool(document) and bool(source.get("official_id") or source.get("legifrance_id")) and bool(
+            source.get("article") or source.get("article_or_section")
+        )
+    if layer in {"jurisprudence", "prudhommes"}:
+        return bool(source.get("case_number")) and bool(source.get("url") or source.get("judilibre_id"))
+    if layer == "pratique_officielle":
+        return bool(document) and bool(source.get("url"))
+    # Internal/local sources (accords, convention collective, PV CSE, etc.)
+    # have no public URL: require a document name plus a locatable reference
+    # (article, page/location, or a verbatim excerpt) instead.
+    return bool(document) and bool(
+        source.get("article") or source.get("location") or source.get("excerpt")
+    )
+
+
+def partition_verifiable_sources(
+    sources: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    verifiable: list[dict[str, Any]] = []
+    ungrounded: list[dict[str, Any]] = []
+    for source in sources:
+        (verifiable if source_has_verifiable_grounding(source) else ungrounded).append(source)
+    return verifiable, ungrounded
+
+
 def select_final_sources(sources: list[dict[str, Any]], route: dict[str, Any], source_limit: int) -> list[dict[str, Any]]:
     limit = max(1, min(source_limit, MAX_SOURCE_LIMIT))
     unique: list[dict[str, Any]] = []
@@ -2540,6 +2594,65 @@ def needs_pratique_officielle(query: str, domains: list[str], intents: list[str]
     return operational_domain and practical_subject
 
 
+def needs_cnil_reference(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    if "rgpd_cnil" in domains:
+        return True
+    return bool(
+        re.search(
+            r"\bcnil\b|\brgpd\b|donnees? personnelles?|protection des donnees|"
+            r"videosurveillance|video surveillance|camera|geolocalisation|"
+            r"badgeage|badge|controle d.?acces|biometrie|biometrique|"
+            r"cybersurveillance|surveillance des salaries|registre des traitements|"
+            r"vie privee au travail|donnees? de sante|dossier medical|"
+            r"intranet syndical|messagerie syndicale",
+            text,
+        )
+    )
+
+
+def needs_carsat_reference(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    if "retraite_penibilite" in domains:
+        return True
+    return bool(
+        re.search(
+            r"penibilite|\bc2p\b|compte professionnel de prevention|compte penibilite|"
+            r"cotisation at.?mp|taux at.?mp|accident du travail|maladie professionnelle|"
+            r"carsat|prevention des risques professionnels",
+            text,
+        )
+    )
+
+
+def needs_dreets_reference(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    if "inaptitude_reclassement" in domains:
+        return True
+    return bool(
+        re.search(
+            r"\bdreets\b|conseiller du salarie|inspection du travail|inaptitude|reclassement|"
+            r"medecin du travail|autorisation de licenciement|salarie protege|"
+            r"negociation collective|negociation d.?entreprise|questions? reponses? cse",
+            text,
+        )
+    )
+
+
+def needs_inrs_reference(query: str, domains: list[str], intents: list[str]) -> bool:
+    text = normalize(query)
+    if "cssct_securite" in domains:
+        return True
+    return bool(
+        re.search(
+            r"\binrs\b|document unique|\bduerp\b|risque chimique|agents? chimiques?|"
+            r"\bepi\b|equipement de protection individuelle|cssct|missions? du cse|"
+            r"attributions? du cse|prevention des risques",
+            text,
+        )
+    )
+
+
 def judilibre_status_from_env() -> dict[str, Any]:
     if judilibre is None:
         return {
@@ -2588,6 +2701,66 @@ def cdtn_status_from_env() -> dict[str, Any]:
     }
 
 
+def cnil_status_from_env() -> dict[str, Any]:
+    if cnil is None:
+        return {
+            "detected": False,
+            "available": False,
+            "reason": "connecteur CNIL absent",
+        }
+    config = cnil.CnilConfig.from_env()
+    return {
+        "detected": True,
+        "available": True,
+        "curated_pages": len(cnil.CNIL_PAGES),
+        "cache_dir": str(config.cache_dir),
+        "cache_ignored_by_git": "local-index" in config.cache_dir.parts,
+        "reason": "connecteur CNIL configure: pages de reference ciblees, acces public sans secret",
+    }
+
+
+def carsat_status_from_env() -> dict[str, Any]:
+    if carsat is None:
+        return {"detected": False, "available": False, "reason": "connecteur CARSAT absent"}
+    config = carsat._config_from_env()
+    return {
+        "detected": True,
+        "available": True,
+        "curated_pages": len(carsat.CARSAT_PAGES),
+        "cache_dir": str(config.cache_dir),
+        "cache_ignored_by_git": "local-index" in config.cache_dir.parts,
+        "reason": "connecteur CARSAT configure: pages de reference ciblees, acces public sans secret",
+    }
+
+
+def dreets_status_from_env() -> dict[str, Any]:
+    if dreets is None:
+        return {"detected": False, "available": False, "reason": "connecteur DREETS absent"}
+    config = dreets._config_from_env()
+    return {
+        "detected": True,
+        "available": True,
+        "curated_pages": len(dreets.DREETS_PAGES),
+        "cache_dir": str(config.cache_dir),
+        "cache_ignored_by_git": "local-index" in config.cache_dir.parts,
+        "reason": "connecteur DREETS configure: pages de reference ciblees, acces public sans secret",
+    }
+
+
+def inrs_status_from_env() -> dict[str, Any]:
+    if inrs is None:
+        return {"detected": False, "available": False, "reason": "connecteur INRS absent"}
+    config = inrs._config_from_env()
+    return {
+        "detected": True,
+        "available": True,
+        "curated_pages": len(inrs.INRS_PAGES),
+        "cache_dir": str(config.cache_dir),
+        "cache_ignored_by_git": "local-index" in config.cache_dir.parts,
+        "reason": "connecteur INRS configure: pages de reference ciblees, acces public sans secret",
+    }
+
+
 def engine_status() -> dict[str, dict[str, Any]]:
     chunks_path = bible.INDEX_DIR / "chunks.private.jsonl"
     chunks = bible.read_jsonl(chunks_path) if chunks_path.exists() else []
@@ -2598,6 +2771,10 @@ def engine_status() -> dict[str, dict[str, Any]]:
     }
     judilibre_status = judilibre_status_from_env()
     cdtn_status = cdtn_status_from_env()
+    cnil_status = cnil_status_from_env()
+    carsat_status = carsat_status_from_env()
+    dreets_status = dreets_status_from_env()
+    inrs_status = inrs_status_from_env()
     return {
         "bible_accords": {
             "available": bool(chunks),
@@ -2652,6 +2829,22 @@ def engine_status() -> dict[str, dict[str, Any]]:
         "pratique_officielle": {
             **cdtn_status,
             "path": str(SCRIPT_DIR / "cdtn_connector.py"),
+        },
+        "cnil_reference": {
+            **cnil_status,
+            "path": str(SCRIPT_DIR / "cnil_connector.py"),
+        },
+        "carsat_reference": {
+            **carsat_status,
+            "path": str(SCRIPT_DIR / "carsat_connector.py"),
+        },
+        "dreets_reference": {
+            **dreets_status,
+            "path": str(SCRIPT_DIR / "dreets_connector.py"),
+        },
+        "inrs_reference": {
+            **inrs_status,
+            "path": str(SCRIPT_DIR / "inrs_connector.py"),
         },
     }
 
@@ -2709,6 +2902,34 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
             warnings.append(
                 "Explication pratique officielle non alimentee : connecteur Code du travail numerique indisponible."
             )
+    if needs_cnil_reference(query, domains, intents):
+        if status["cnil_reference"]["available"]:
+            engines.append("cnil_reference")
+        else:
+            warnings.append(
+                "Reference CNIL non alimentee : connecteur CNIL indisponible."
+            )
+    if needs_carsat_reference(query, domains, intents):
+        if status["carsat_reference"]["available"]:
+            engines.append("carsat_reference")
+        else:
+            warnings.append(
+                "Reference CARSAT non alimentee : connecteur CARSAT indisponible."
+            )
+    if needs_dreets_reference(query, domains, intents):
+        if status["dreets_reference"]["available"]:
+            engines.append("dreets_reference")
+        else:
+            warnings.append(
+                "Reference DREETS non alimentee : connecteur DREETS indisponible."
+            )
+    if needs_inrs_reference(query, domains, intents):
+        if status["inrs_reference"]["available"]:
+            engines.append("inrs_reference")
+        else:
+            warnings.append(
+                "Reference INRS non alimentee : connecteur INRS indisponible."
+            )
 
     engines = dedupe(engines)
     plan = []
@@ -2750,6 +2971,38 @@ def choose_engines(query: str, domains: list[str], intents: list[str]) -> tuple[
                 {
                     "engine": engine,
                     "action": "rechercher 1 ou 2 contenus explicatifs officiels via le Code du travail numerique",
+                    "status": "connected",
+                }
+            )
+        elif engine == "cnil_reference":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher des pages de reference CNIL ciblees (donnees personnelles, surveillance)",
+                    "status": "connected",
+                }
+            )
+        elif engine == "carsat_reference":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher des pages de reference CARSAT Nord-Est ciblees (penibilite, AT/MP)",
+                    "status": "connected",
+                }
+            )
+        elif engine == "dreets_reference":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher des pages de reference DREETS Grand Est ciblees (inaptitude, CSE, conseiller du salarie)",
+                    "status": "connected",
+                }
+            )
+        elif engine == "inrs_reference":
+            plan.append(
+                {
+                    "engine": engine,
+                    "action": "rechercher des pages de reference INRS ciblees (DUERP, risque chimique, CSSCT)",
                     "status": "connected",
                 }
             )
@@ -2936,6 +3189,10 @@ def route_query(
                 "legifrance_code_travail",
                 "judilibre_jurisprudence",
                 "pratique_officielle",
+                "cnil_reference",
+                "carsat_reference",
+                "dreets_reference",
+                "inrs_reference",
                 "nexus_bible_bridge",
             }
         ]
@@ -4378,6 +4635,54 @@ def merge_cdtn_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
         answer["warnings"].append("Pratique officielle: aucun contenu explicatif officiel pertinent retenu.")
 
 
+def merge_cnil_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    accepted_count = 0
+    for source in result.get("sources", []):
+        normalized = normalize_source(source, "cnil_reference")
+        answer["sources"].append(normalized)
+        accepted_count += 1
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("CNIL: " + str(warning))
+    if result.get("available") and not accepted_count:
+        answer["warnings"].append("CNIL: aucune page de reference ciblee retenue pour cette question.")
+
+
+def merge_carsat_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    accepted_count = 0
+    for source in result.get("sources", []):
+        normalized = normalize_source(source, "carsat_reference")
+        answer["sources"].append(normalized)
+        accepted_count += 1
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("CARSAT: " + str(warning))
+    if result.get("available") and not accepted_count:
+        answer["warnings"].append("CARSAT: aucune page de reference ciblee retenue pour cette question.")
+
+
+def merge_dreets_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    accepted_count = 0
+    for source in result.get("sources", []):
+        normalized = normalize_source(source, "dreets_reference")
+        answer["sources"].append(normalized)
+        accepted_count += 1
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("DREETS: " + str(warning))
+    if result.get("available") and not accepted_count:
+        answer["warnings"].append("DREETS: aucune page de reference ciblee retenue pour cette question.")
+
+
+def merge_inrs_result(answer: dict[str, Any], result: dict[str, Any]) -> None:
+    accepted_count = 0
+    for source in result.get("sources", []):
+        normalized = normalize_source(source, "inrs_reference")
+        answer["sources"].append(normalized)
+        accepted_count += 1
+    for warning in result.get("warnings", []):
+        answer["warnings"].append("INRS: " + str(warning))
+    if result.get("available") and not accepted_count:
+        answer["warnings"].append("INRS: aucune page de reference ciblee retenue pour cette question.")
+
+
 def judilibre_query_for_route(query: str, route: dict[str, Any]) -> tuple[str, str]:
     text = normalize(query)
     domains = set(route.get("domains", []))
@@ -4614,6 +4919,12 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     limits = answer_limits(route, source_limit)
 
     answer["sources"] = select_final_sources(answer["sources"], route, limits["sources"])
+    answer["sources"], ungrounded_sources = partition_verifiable_sources(answer["sources"])
+    if ungrounded_sources:
+        answer["warnings"].append(
+            f"{len(ungrounded_sources)} source(s) écartée(s) faute d'identifiant vérifiable "
+            "(article, n° de décision, URL ou extrait exploitable)."
+        )
     answer["source_layers"] = build_source_layers(answer["sources"])
 
     business_findings, prudence_findings = split_prudence_findings([item for item in answer["findings"] if item])
@@ -4647,6 +4958,17 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["case_factual_core"] = factual_core.to_dict()
     answer["actionable_preparation"] = preparation
     answer["syndical_position"] = union_position
+    # GENERAL_EMPLOYEE_QUESTION is the factual-core fallback category used
+    # when no specific workplace event was detected at all (e.g. "qu'est-ce
+    # qu'un PAP ?"). Any other category, or an explicit disciplinary path,
+    # means a real event was identified and deserves the full defense-style
+    # framing further down (findings/working_position/short_answer/
+    # questions/documents); a purely informational question must not be
+    # answered with a "contester/négocier une sanction" framing there.
+    is_disciplinary_case = (
+        route.get("employee_path") == ASSISTANCE_ENTRETIEN_DISCIPLINAIRE
+        or factual_core.event_category != "GENERAL_EMPLOYEE_QUESTION"
+    )
     retrieval_result = None
     analysis_sources = tuple(
         source
@@ -4712,137 +5034,149 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
     answer["control_device_hypotheses"] = source_to_facts_payload[
         "control_device_hypotheses"
     ]
-    question_rows = [
-        *preparation["questions_for_employee"],
-        *preparation["questions_for_employer"],
-        *preparation["representative_checks"],
-    ]
-    factual_text = normalize(
-        " ".join(item.canonical_text for item in factual_core.canonical_facts)
-    ).replace("’", " ").replace("'", " ")
-    schedule_has_no_night = bool(
-        re.search(
-            r"\b(?:pas de nuit|aucune nuit|sans travail de nuit|il n y a pas de nuit)\b",
-            factual_text,
-        )
-    )
-    schedule_has_weekend_or_holiday = bool(
-        re.search(
-            r"\b(?:week[- ]?ends?|samedi|dimanche|jours? feries?)\b",
-            factual_text,
-        )
-    )
-    schedule_mentions_amendment = "avenant" in factual_text
-    schedule_mentions_dismissal = "licenciement" in factual_text
-    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
-        if schedule_mentions_dismissal:
-            question_rows = [
-                {
-                    "question": (
-                        "Quel motif juridique précis l'employeur invoquerait-il si l'avenant "
-                        "était refusé ?"
-                    )
-                },
-                {
-                    "question": (
-                        "La direction confirme-t-elle par écrit les termes employés pendant "
-                        "l'entretien et la conséquence annoncée ?"
-                    )
-                },
-                *question_rows,
-            ]
-    answer["questions_to_ask"] = [row["question"] for row in question_rows]
-    answer["documents_to_request"] = [
-        row["document"] for row in preparation["documents_to_request"]
-    ]
-    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
-        priority_documents = []
-        if schedule_mentions_amendment:
-            priority_documents.append(
-                "Projet écrit d'avenant avec cycle, horaires, week-ends, jours fériés, "
-                "date d'effet et contreparties"
+    # This whole section (questions_to_ask, documents_to_request, findings,
+    # working_position, short_answer, next_action) builds a defense-case
+    # framing ("contester", "position de l'employeur", "négocier une mesure
+    # proportionnée"...). It must stay scoped to a genuine workplace event
+    # (is_disciplinary_case, computed above) and never overwrite the short,
+    # pedagogical answer already computed above for a purely informational
+    # question (route response_profile "public_pedagogical").
+    if is_disciplinary_case:
+        question_rows = [
+            *preparation["questions_for_employee"],
+            *preparation["questions_for_employer"],
+            *preparation["representative_checks"],
+        ]
+        factual_text = normalize(
+            " ".join(item.canonical_text for item in factual_core.canonical_facts)
+        ).replace("’", " ").replace("'", " ")
+        schedule_has_no_night = bool(
+            re.search(
+                r"\b(?:pas de nuit|aucune nuit|sans travail de nuit|il n y a pas de nuit)\b",
+                factual_text,
             )
-        if schedule_mentions_dismissal:
-            priority_documents.append(
-                "Compte rendu daté de l'entretien avec la direction et confirmation écrite "
-                "de la conséquence annoncée en cas de refus"
+        )
+        schedule_has_weekend_or_holiday = bool(
+            re.search(
+                r"\b(?:week[- ]?ends?|samedi|dimanche|jours? feries?)\b",
+                factual_text,
             )
-        if factual_core.collective_impact_possible:
-            answer["documents_to_request"].extend(
-                [
-                    "Évaluation avant/après des effectifs, de la charge et des compétences "
-                    "du service de jour",
-                    "Évaluation des risques et éléments d'information ou de consultation du CSE "
-                    "sur la réorganisation",
+        )
+        schedule_mentions_amendment = "avenant" in factual_text
+        schedule_mentions_dismissal = "licenciement" in factual_text
+        if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+            if schedule_mentions_dismissal:
+                question_rows = [
+                    {
+                        "question": (
+                            "Quel motif juridique précis l'employeur invoquerait-il si l'avenant "
+                            "était refusé ?"
+                        )
+                    },
+                    {
+                        "question": (
+                            "La direction confirme-t-elle par écrit les termes employés pendant "
+                            "l'entretien et la conséquence annoncée ?"
+                        )
+                    },
+                    *question_rows,
                 ]
-            )
-        answer["documents_to_request"] = semantic_dedupe(
-            [*priority_documents, *answer["documents_to_request"]]
-        )
-    answer["source_extraction"] = build_source_extraction_report(
-        factual_core,
-        analysis_sources,
-        (
-            *tuple(preparation["documents_to_request"]),
-            *tuple(source_to_facts_payload["missing_source_requirements"]),
-        ),
-    ).to_dict()
-    answer["findings"] = semantic_dedupe(
-        [
-            "Fait principal : " + factual_core.primary_grievance_or_decision,
-            "Position du salarié : " + factual_core.employee_position,
-            "Position de l'employeur : " + factual_core.employer_position,
-            *[
-                "Ambiguïté bloquante : " + item
-                for item in factual_core.blocking_ambiguities
-            ],
+        answer["questions_to_ask"] = [row["question"] for row in question_rows]
+        answer["documents_to_request"] = [
+            row["document"] for row in preparation["documents_to_request"]
         ]
-    )[:6]
-    answer["issue_groups"] = []
-    answer["working_position"] = (
-        union_position["point_to_challenge"]
-        + " "
-        + union_position["point_to_negotiate"]
-    )
-    if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
-        employee_is_feminine = "salariée" in route["query"].casefold()
-        employee_label = "la salariée" if employee_is_feminine else "le salarié"
-        employee_pronoun = "elle" if employee_is_feminine else "il"
-        position_parts = [
+        if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+            priority_documents = []
+            if schedule_mentions_amendment:
+                priority_documents.append(
+                    "Projet écrit d'avenant avec cycle, horaires, week-ends, jours fériés, "
+                    "date d'effet et contreparties"
+                )
+            if schedule_mentions_dismissal:
+                priority_documents.append(
+                    "Compte rendu daté de l'entretien avec la direction et confirmation écrite "
+                    "de la conséquence annoncée en cas de refus"
+                )
+            if factual_core.collective_impact_possible:
+                answer["documents_to_request"].extend(
+                    [
+                        "Évaluation avant/après des effectifs, de la charge et des compétences "
+                        "du service de jour",
+                        "Évaluation des risques et éléments d'information ou de consultation du CSE "
+                        "sur la réorganisation",
+                    ]
+                )
+            answer["documents_to_request"] = semantic_dedupe(
+                [*priority_documents, *answer["documents_to_request"]]
+            )
+        answer["source_extraction"] = build_source_extraction_report(
+            factual_core,
+            analysis_sources,
             (
-                f"Défendre {employee_label} sans laisser entendre qu'{employee_pronoun} a accepté : "
-                "contrôler le contrat, le cycle, le délai, l'accord applicable et les contreparties, "
-                "puis rechercher un maintien ou un aménagement négocié."
-            )
-        ]
-        if schedule_mentions_amendment:
-            position_parts.append(
-                "Demander le projet d'avenant écrit et un délai raisonnable d'examen ; ne pas "
-                "présumer qu'il peut être imposé avant d'avoir qualifié précisément la modification."
-            )
-        if schedule_has_no_night and schedule_has_weekend_or_holiday:
-            position_parts.append(
-                "L'absence de travail de nuit écarte une assimilation automatique au passage "
-                "jour-nuit, mais ne rend pas le changement automatiquement imposable : les "
-                "week-ends, jours fériés, repos et l'ampleur du nouveau cycle restent à comparer "
-                "au contrat et à l'accord applicable."
-            )
-        if factual_core.collective_impact_possible:
-            position_parts.append(
-                "Sur le plan collectif, exiger les effectifs avant/après, l'analyse de charge, "
-                "l'évaluation des risques et les éléments d'information ou de consultation du CSE "
-                "avant mise en œuvre."
-            )
-        if schedule_mentions_dismissal:
-            position_parts.append(
-                "Faire consigner l'alternative « accepter ou licenciement » et demander le motif "
-                "juridique envisagé : le seul refus d'un avenant ne démontre pas, à lui seul, "
-                "qu'un licenciement serait fondé."
-            )
-        position_parts.append(
-            "Éviter un refus non préparé comme toute promesse de victoire."
+                *tuple(preparation["documents_to_request"]),
+                *tuple(source_to_facts_payload["missing_source_requirements"]),
+            ),
+        ).to_dict()
+        answer["findings"] = semantic_dedupe(
+            [
+                "Fait principal : " + factual_core.primary_grievance_or_decision,
+                "Position du salarié : " + factual_core.employee_position,
+                "Position de l'employeur : " + factual_core.employer_position,
+                *[
+                    "Ambiguïté bloquante : " + item
+                    for item in factual_core.blocking_ambiguities
+                ],
+            ]
+        )[:6]
+        answer["issue_groups"] = []
+        answer["working_position"] = (
+            union_position["point_to_challenge"]
+            + " "
+            + union_position["point_to_negotiate"]
         )
-        answer["working_position"] = " ".join(position_parts)
+        if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
+            employee_is_feminine = "salariée" in route["query"].casefold()
+            employee_label = "la salariée" if employee_is_feminine else "le salarié"
+            employee_pronoun = "elle" if employee_is_feminine else "il"
+            position_parts = [
+                (
+                    f"Défendre {employee_label} sans laisser entendre qu'{employee_pronoun} a accepté : "
+                    "contrôler le contrat, le cycle, le délai, l'accord applicable et les contreparties, "
+                    "puis rechercher un maintien ou un aménagement négocié."
+                )
+            ]
+            if schedule_mentions_amendment:
+                position_parts.append(
+                    "Demander le projet d'avenant écrit et un délai raisonnable d'examen ; ne pas "
+                    "présumer qu'il peut être imposé avant d'avoir qualifié précisément la modification."
+                )
+            if schedule_has_no_night and schedule_has_weekend_or_holiday:
+                position_parts.append(
+                    "L'absence de travail de nuit écarte une assimilation automatique au passage "
+                    "jour-nuit, mais ne rend pas le changement automatiquement imposable : les "
+                    "week-ends, jours fériés, repos et l'ampleur du nouveau cycle restent à comparer "
+                    "au contrat et à l'accord applicable."
+                )
+            if factual_core.collective_impact_possible:
+                position_parts.append(
+                    "Sur le plan collectif, exiger les effectifs avant/après, l'analyse de charge, "
+                    "l'évaluation des risques et les éléments d'information ou de consultation du CSE "
+                    "avant mise en œuvre."
+                )
+            if schedule_mentions_dismissal:
+                position_parts.append(
+                    "Faire consigner l'alternative « accepter ou licenciement » et demander le motif "
+                    "juridique envisagé : le seul refus d'un avenant ne démontre pas, à lui seul, "
+                    "qu'un licenciement serait fondé."
+                )
+            position_parts.append(
+                "Éviter un refus non préparé comme toute promesse de victoire."
+            )
+            answer["working_position"] = " ".join(position_parts)
+    # A blocking factual ambiguity forces a clarifying question regardless of
+    # path: even a simple public question can be too ambiguous to answer, and
+    # Nexus must say so rather than guess. Only the defense-case framing below
+    # (no ambiguity, "contester/négocier"...) stays scoped to disciplinary cases.
     if factual_core.blocking_ambiguities:
         first_question = preparation["questions_for_employee"][0]["question"]
         answer["short_answer"] = (
@@ -4851,7 +5185,7 @@ def finalize_answer(answer: dict[str, Any], source_limit: int = DEFAULT_SOURCE_L
         )
         answer["next_action"] = first_question
         answer["confidence"] = "faible"
-    else:
+    elif is_disciplinary_case:
         if factual_core.event_category == "WORK_SCHEDULE_CHANGE":
             remuneration_note = (
                 " Une rémunération supérieure ne prouve ni accord, ni volontariat, ni caractère favorable."
@@ -5015,7 +5349,16 @@ def ask(
         except SystemExit as exc:
             answer["warnings"].append(f"Pont Nexus/Bible indisponible: {exc}")
 
-    if "legifrance_code_travail" in route["engines"] and legifrance is not None:
+    legifrance_enabled = "legifrance_code_travail" in route["engines"] and legifrance is not None
+    judilibre_enabled = "judilibre_jurisprudence" in route["engines"] and judilibre is not None
+    cdtn_enabled = "pratique_officielle" in route["engines"] and cdtn is not None
+    cnil_enabled = "cnil_reference" in route["engines"] and cnil is not None
+    carsat_enabled = "carsat_reference" in route["engines"] and carsat is not None
+    dreets_enabled = "dreets_reference" in route["engines"] and dreets is not None
+    inrs_enabled = "inrs_reference" in route["engines"] and inrs is not None
+
+    def fetch_legifrance() -> tuple[list[dict[str, Any]], Exception | None]:
+        results: list[dict[str, Any]] = []
         try:
             client = legifrance.LegifranceClient()
             for search_query in dict.fromkeys(
@@ -5027,11 +5370,93 @@ def ask(
                     ),
                 )
             ):
-                merge_legifrance_result(
-                    answer, client.search_code_sources(search_query, limit=5)
-                )
+                results.append(client.search_code_sources(search_query, limit=5))
         except Exception as exc:  # pragma: no cover - network and credential boundary.
-            error = str(exc)
+            return results, exc
+        return results, None
+
+    def fetch_judilibre() -> tuple[dict[str, Any] | None, Exception | None]:
+        try:
+            client = judilibre.JudilibreClient()
+            search_query, theme = judilibre_query_for_route(
+                targeted_queries.get("D_PROPORTIONALITY", retrieval_query),
+                route,
+            )
+            return client.search_sources(search_query, limit=2, theme=theme), None
+        except Exception as exc:  # pragma: no cover - network and credential boundary.
+            return None, exc
+
+    def fetch_cdtn() -> tuple[list[dict[str, Any]], Exception | None]:
+        results: list[dict[str, Any]] = []
+        try:
+            client = cdtn.CdtnClient()
+            for factual_query in dict.fromkeys(
+                (
+                    targeted_queries.get("B_PROCEDURE", retrieval_query),
+                    targeted_queries.get(
+                        "E_HEALTH_SAFETY_ORGANISATION", retrieval_query
+                    ),
+                )
+            ):
+                search_query, theme = cdtn_query_for_route(factual_query, route)
+                results.append(client.search_sources(search_query, limit=2, theme=theme))
+        except Exception as exc:  # pragma: no cover - public network boundary.
+            return results, exc
+        return results, None
+
+    def fetch_cnil() -> tuple[dict[str, Any] | None, Exception | None]:
+        try:
+            return cnil.CnilClient().search_sources(retrieval_query, limit=2), None
+        except Exception as exc:  # pragma: no cover - public network boundary.
+            return None, exc
+
+    def fetch_carsat() -> tuple[dict[str, Any] | None, Exception | None]:
+        try:
+            return carsat.CarsatClient().search_sources(retrieval_query, limit=2), None
+        except Exception as exc:  # pragma: no cover - public network boundary.
+            return None, exc
+
+    def fetch_dreets() -> tuple[dict[str, Any] | None, Exception | None]:
+        try:
+            return dreets.DreetsClient().search_sources(retrieval_query, limit=2), None
+        except Exception as exc:  # pragma: no cover - public network boundary.
+            return None, exc
+
+    def fetch_inrs() -> tuple[dict[str, Any] | None, Exception | None]:
+        try:
+            return inrs.InrsClient().search_sources(retrieval_query, limit=2), None
+        except Exception as exc:  # pragma: no cover - public network boundary.
+            return None, exc
+
+    # The seven connectors below are independent network calls (Legifrance,
+    # Judilibre, CDTN, CNIL, CARSAT, DREETS, INRS): run them concurrently
+    # instead of sequentially, then merge results in the same fixed order as
+    # before so answer["sources"] stays deterministic regardless of which
+    # network call returns first.
+    legifrance_future = judilibre_future = cdtn_future = None
+    cnil_future = carsat_future = dreets_future = inrs_future = None
+    with ThreadPoolExecutor(max_workers=7) as executor:
+        if legifrance_enabled:
+            legifrance_future = executor.submit(fetch_legifrance)
+        if judilibre_enabled:
+            judilibre_future = executor.submit(fetch_judilibre)
+        if cdtn_enabled:
+            cdtn_future = executor.submit(fetch_cdtn)
+        if cnil_enabled:
+            cnil_future = executor.submit(fetch_cnil)
+        if carsat_enabled:
+            carsat_future = executor.submit(fetch_carsat)
+        if dreets_enabled:
+            dreets_future = executor.submit(fetch_dreets)
+        if inrs_enabled:
+            inrs_future = executor.submit(fetch_inrs)
+
+    if legifrance_future is not None:
+        legifrance_results, legifrance_exc = legifrance_future.result()
+        for result in legifrance_results:
+            merge_legifrance_result(answer, result)
+        if legifrance_exc is not None:
+            error = str(legifrance_exc)
             answer["legifrance_audit"].append(
                 {
                     "attempted": True,
@@ -5046,35 +5471,47 @@ def ask(
             )
             answer["warnings"].append(f"Legifrance indisponible: {error}")
 
-    if "judilibre_jurisprudence" in route["engines"] and judilibre is not None:
-        try:
-            client = judilibre.JudilibreClient()
-            search_query, theme = judilibre_query_for_route(
-                targeted_queries.get("D_PROPORTIONALITY", retrieval_query),
-                route,
-            )
-            merge_judilibre_result(answer, client.search_sources(search_query, limit=2, theme=theme))
-        except Exception as exc:  # pragma: no cover - network and credential boundary.
-            answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {exc}")
+    if judilibre_future is not None:
+        judilibre_result, judilibre_exc = judilibre_future.result()
+        if judilibre_exc is not None:
+            answer["warnings"].append(f"Jurisprudence JUDILIBRE indisponible: {judilibre_exc}")
+        else:
+            merge_judilibre_result(answer, judilibre_result)
 
-    if "pratique_officielle" in route["engines"] and cdtn is not None:
-        try:
-            client = cdtn.CdtnClient()
-            for factual_query in dict.fromkeys(
-                (
-                    targeted_queries.get("B_PROCEDURE", retrieval_query),
-                    targeted_queries.get(
-                        "E_HEALTH_SAFETY_ORGANISATION", retrieval_query
-                    ),
-                )
-            ):
-                search_query, theme = cdtn_query_for_route(factual_query, route)
-                merge_cdtn_result(
-                    answer,
-                    client.search_sources(search_query, limit=2, theme=theme),
-                )
-        except Exception as exc:  # pragma: no cover - public network boundary.
-            answer["warnings"].append(f"Pratique officielle indisponible: {exc}")
+    if cdtn_future is not None:
+        cdtn_results, cdtn_exc = cdtn_future.result()
+        for result in cdtn_results:
+            merge_cdtn_result(answer, result)
+        if cdtn_exc is not None:
+            answer["warnings"].append(f"Pratique officielle indisponible: {cdtn_exc}")
+
+    if cnil_future is not None:
+        cnil_result, cnil_exc = cnil_future.result()
+        if cnil_exc is not None:
+            answer["warnings"].append(f"Reference CNIL indisponible: {cnil_exc}")
+        else:
+            merge_cnil_result(answer, cnil_result)
+
+    if carsat_future is not None:
+        carsat_result, carsat_exc = carsat_future.result()
+        if carsat_exc is not None:
+            answer["warnings"].append(f"Reference CARSAT indisponible: {carsat_exc}")
+        else:
+            merge_carsat_result(answer, carsat_result)
+
+    if dreets_future is not None:
+        dreets_result, dreets_exc = dreets_future.result()
+        if dreets_exc is not None:
+            answer["warnings"].append(f"Reference DREETS indisponible: {dreets_exc}")
+        else:
+            merge_dreets_result(answer, dreets_result)
+
+    if inrs_future is not None:
+        inrs_result, inrs_exc = inrs_future.result()
+        if inrs_exc is not None:
+            answer["warnings"].append(f"Reference INRS indisponible: {inrs_exc}")
+        else:
+            merge_inrs_result(answer, inrs_result)
 
     return finalize_answer(answer, source_limit)
 
@@ -5279,6 +5716,10 @@ def diagnose() -> dict[str, Any]:
         "legifrance_code_travail": status["legifrance_code_travail"],
         "judilibre_jurisprudence": status["judilibre_jurisprudence"],
         "pratique_officielle": status["pratique_officielle"],
+        "cnil_reference": status["cnil_reference"],
+        "carsat_reference": status["carsat_reference"],
+        "dreets_reference": status["dreets_reference"],
+        "inrs_reference": status["inrs_reference"],
         "corpus_local_configured": source_config.exists(),
         "source_config_path": str(source_config),
         "local_index_ignored": local_index_ignored,

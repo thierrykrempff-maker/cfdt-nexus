@@ -314,11 +314,46 @@ def test_public_response_exposes_each_decisive_source_once() -> None:
     assert set(summary["source_extractions"][0]) == {
         "provider",
         "title",
+        "source_layer",
         "reference",
         "excerpt",
         "link_to_facts",
         "availability_status",
     }
+    assert summary["source_extractions"][0]["source_layer"] == "accord_entreprise"
     assert response["detailed_analysis"]["source_extraction"]["sources"][0][
         "publication_date"
     ] == "2014-06-12"
+
+
+def test_public_sources_keep_their_safe_business_layer() -> None:
+    response = build_final_response(
+        {
+            "case_factual_core": _core(
+                "La direction envisage un passage vers des horaires postés."
+            ).to_dict(),
+            "source_extraction": {
+                "sources": [
+                    {
+                        "provider": "INEOS Sarralbe",
+                        "title": "Avenant à l'accord sur les horaires postés",
+                        "document_type": "avenant",
+                        "excerpt": "Le cycle de travail est défini par l'accord.",
+                        "availability_status": "FOUND_VERSION_UNCERTAIN",
+                    },
+                    {
+                        "provider": "INEOS Sarralbe",
+                        "title": "ccnic_septembre2013.pdf",
+                        "document_type": "convention_collective",
+                        "excerpt": "La convention encadre l'organisation du travail.",
+                        "availability_status": "FOUND_VERSION_UNCERTAIN",
+                    },
+                ]
+            },
+        }
+    )
+
+    assert [
+        source["source_layer"]
+        for source in response["public_summary"]["source_extractions"]
+    ] == ["accord_entreprise", "convention_collective"]

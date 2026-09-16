@@ -63,10 +63,21 @@ const stepTwoTitle = document.getElementById("stepTwoTitle");
 const questionInputLabel = document.getElementById("questionInputLabel");
 const privacyInputNotice = document.getElementById("privacyInputNotice");
 const questionDocuments = document.getElementById("questionDocuments");
+const questionDocumentTitle = document.getElementById("questionDocumentTitle");
 const questionDocumentStatus = document.getElementById("questionDocumentStatus");
 const clearQuestionDocuments = document.getElementById("clearQuestionDocuments");
 const questionDocumentDropZone = document.getElementById("questionDocumentDropZone");
 const questionDocumentList = document.getElementById("questionDocumentList");
+const cseAgendaWorkflow = document.getElementById("cseAgendaWorkflow");
+const verifyCseAgendaButton = document.getElementById("verifyCseAgendaButton");
+const cseAgendaVerificationStatus = document.getElementById("cseAgendaVerificationStatus");
+const cseAgendaSelection = document.getElementById("cseAgendaSelection");
+const cseAgendaChoices = document.getElementById("cseAgendaChoices");
+const csePreviousPvDocuments = document.getElementById("csePreviousPvDocuments");
+const clearCsePreviousPvDocuments = document.getElementById("clearCsePreviousPvDocuments");
+const csePreviousPvDropZone = document.getElementById("csePreviousPvDropZone");
+const csePreviousPvStatus = document.getElementById("csePreviousPvStatus");
+const csePreviousPvList = document.getElementById("csePreviousPvList");
 const situationChoices = document.getElementById("situationChoices");
 const contextFields = document.getElementById("contextFields");
 const documentChoices = document.getElementById("documentChoices");
@@ -110,6 +121,9 @@ const nexusVersionValue = document.getElementById("nexusVersionValue");
 const settingsVersionValue = document.getElementById("settingsVersionValue");
 const optionalFormatsValue = document.getElementById("optionalFormatsValue");
 const cseCorpusStatusValue = document.getElementById("cseCorpusStatusValue");
+const cseAgendaPanel = document.getElementById("cseAgendaPanel");
+const cseAgendaSummary = document.getElementById("cseAgendaSummary");
+const cseAgendaPoints = document.getElementById("cseAgendaPoints");
 const officialConnectorsStatusValue = document.getElementById("officialConnectorsStatusValue");
 const legifranceStatusValue = document.getElementById("legifranceStatusValue");
 const judilibreStatusValue = document.getElementById("judilibreStatusValue");
@@ -192,7 +206,9 @@ let followUpConversation = [];
 let currentLocalCase = null;
 let uploadedQuestionDocuments = [];
 let uploadedFollowUpDocuments = [];
+let uploadedCsePreviousPvDocuments = [];
 let questionDocumentsLoading = false;
+let currentCseAgendaPreview = null;
 
 const MAX_QUESTION_DOCUMENTS = 3;
 const MAX_QUESTION_DOCUMENT_BYTES = 5 * 1024 * 1024;
@@ -259,16 +275,32 @@ function updateFollowUpDocumentDisplay() {
     : "Aucun nouveau document joint.";
 }
 
+function updateCsePreviousPvDisplay() {
+  renderSelectedDocuments(csePreviousPvList, uploadedCsePreviousPvDocuments, (key) => {
+    uploadedCsePreviousPvDocuments = uploadedCsePreviousPvDocuments.filter(
+      (item) => documentKey(item) !== key
+    );
+    resetCseAgendaPreview();
+    updateCsePreviousPvDisplay();
+  });
+  clearCsePreviousPvDocuments.hidden = uploadedCsePreviousPvDocuments.length === 0;
+  csePreviousPvStatus.textContent = uploadedCsePreviousPvDocuments.length
+    ? `${uploadedCsePreviousPvDocuments.length} ancien(s) PV seront comparés uniquement pendant cette analyse.`
+    : "Aucun PV ajouté manuellement. Nexus consultera aussi CSE Memory.";
+}
+
 function setQuestionDocumentLoading(loading) {
   questionDocumentsLoading = loading;
   analyzeButton.disabled = loading;
   if (refineAnalysisButton) refineAnalysisButton.disabled = loading;
+  if (verifyCseAgendaButton) verifyCseAgendaButton.disabled = loading;
 }
 
 function resetQuestionDocuments() {
   uploadedQuestionDocuments = [];
   if (questionDocuments) questionDocuments.value = "";
   updateQuestionDocumentDisplay();
+  resetCseAgendaPreview();
 }
 
 function resetFollowUpDocuments() {
@@ -277,18 +309,33 @@ function resetFollowUpDocuments() {
   updateFollowUpDocumentDisplay();
 }
 
+function resetCsePreviousPvDocuments() {
+  uploadedCsePreviousPvDocuments = [];
+  if (csePreviousPvDocuments) csePreviousPvDocuments.value = "";
+  updateCsePreviousPvDisplay();
+  resetCseAgendaPreview();
+}
+
 async function loadQuestionDocuments(filesInput, target = "initial") {
   const files = Array.from(filesInput || []);
   if (!files.length) return;
-  const existing = target === "initial" ? uploadedQuestionDocuments : uploadedFollowUpDocuments;
-  const reserved = target === "initial"
-    ? 0
-    : (currentAnalysisRequest?.attachments || uploadedQuestionDocuments).length;
+  const existing = target === "initial"
+    ? uploadedQuestionDocuments
+    : target === "cse-pv"
+      ? uploadedCsePreviousPvDocuments
+      : uploadedFollowUpDocuments;
+  const reserved = target === "follow-up"
+    ? (currentAnalysisRequest?.attachments || uploadedQuestionDocuments).length
+    : 0;
   const uniqueFiles = files.filter(
     (file) => !existing.some((item) => documentKey(item) === `${file.name.toLowerCase()}|${file.size}`)
   );
   if (reserved + existing.length + uniqueFiles.length > MAX_QUESTION_DOCUMENTS) {
-    const status = target === "initial" ? questionDocumentStatus : followUpDocumentStatus;
+    const status = target === "initial"
+      ? questionDocumentStatus
+      : target === "cse-pv"
+        ? csePreviousPvStatus
+        : followUpDocumentStatus;
     status.dataset.state = "error";
     status.textContent = "Trois documents maximum peuvent être analysés dans une même conversation.";
     return;
@@ -297,12 +344,20 @@ async function loadQuestionDocuments(filesInput, target = "initial") {
     (file) => !questionDocumentExtension(file.name) || file.size > MAX_QUESTION_DOCUMENT_BYTES
   );
   if (invalid) {
-    const status = target === "initial" ? questionDocumentStatus : followUpDocumentStatus;
+    const status = target === "initial"
+      ? questionDocumentStatus
+      : target === "cse-pv"
+        ? csePreviousPvStatus
+        : followUpDocumentStatus;
     status.dataset.state = "error";
     status.textContent = `${invalid.name} n’est pas accepté ou dépasse 5 Mo.`;
     return;
   }
-  const status = target === "initial" ? questionDocumentStatus : followUpDocumentStatus;
+  const status = target === "initial"
+    ? questionDocumentStatus
+    : target === "cse-pv"
+      ? csePreviousPvStatus
+      : followUpDocumentStatus;
   status.dataset.state = "";
   status.textContent = "Lecture locale des documents…";
   setQuestionDocumentLoading(true);
@@ -316,9 +371,12 @@ async function loadQuestionDocuments(filesInput, target = "initial") {
       }))
     );
     if (target === "initial") uploadedQuestionDocuments = [...existing, ...prepared];
+    else if (target === "cse-pv") uploadedCsePreviousPvDocuments = [...existing, ...prepared];
     else uploadedFollowUpDocuments = [...existing, ...prepared];
+    if (target === "initial" || target === "cse-pv") resetCseAgendaPreview();
     updateQuestionDocumentDisplay();
     updateFollowUpDocumentDisplay();
+    updateCsePreviousPvDisplay();
   } catch (error) {
     status.dataset.state = "error";
     status.textContent = error instanceof Error ? error.message : "Lecture locale impossible.";
@@ -659,6 +717,38 @@ function sourceLine(source) {
   return source.excerpt ? `${line} | extrait: ${source.excerpt}` : line;
 }
 
+async function requestCseAgendaPreview() {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), ANALYZE_TIMEOUT_MS);
+  let response;
+  try {
+    response = await fetch("/api/cse/agenda-preview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        attachments: uploadedQuestionDocuments,
+        cse_previous_pv_attachments: uploadedCsePreviousPvDocuments
+      }),
+      signal: controller.signal
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new NexusRequestError("timeout", ANALYZE_TIMEOUT_MESSAGE);
+    }
+    throw new NexusRequestError("network", SERVER_UNAVAILABLE_MESSAGE);
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+  const payload = parseNexusResponse(await response.text());
+  if (!response.ok) {
+    throw new NexusRequestError("http", httpErrorMessage(response, payload), response.status);
+  }
+  if (!payload?.ok || !payload.cse_agenda_analysis) {
+    throw new NexusRequestError("business", payload?.error || "L’ordre du jour n’a pas pu être vérifié.");
+  }
+  return payload.cse_agenda_analysis;
+}
+
 function appendHighlightedExcerpt(container, value) {
   const text = String(value || "").trim();
   if (!text) return;
@@ -788,9 +878,32 @@ function sourceLayerFallback(sources) {
   });
 }
 
-function renderSources(element, answer, orchestration) {
+function publicSourcesForLayers(publicSummary) {
+  return (publicSummary.source_extractions || publicSummary.sources || []).map((source) => {
+    const provider = String(source.provider || "").trim();
+    const title = String(source.title || "").trim();
+    const status = String(source.availability_status || "").toUpperCase();
+    return {
+      document: [provider, title].filter(Boolean).join(" — ") || "Source métier",
+      article_or_section: source.reference || "",
+      excerpt: source.excerpt || "",
+      source_layer: source.source_layer || "autre",
+      source_quality_warning: status === "FOUND_VERSION_UNCERTAIN"
+        ? "Version applicable à la date des faits à confirmer."
+        : status === "TITLE_ONLY" || status === "METADATA_ONLY"
+          ? "Référence repérée sans extrait exploitable."
+          : ""
+    };
+  });
+}
+
+function renderSources(element, answer, orchestration, publicSummary = {}) {
   element.textContent = "";
-  const layers = answer.source_layers || orchestration.source_layers || sourceLayerFallback(answer.sources || []);
+  const publicSources = publicSourcesForLayers(publicSummary);
+  const answerSources = Array.isArray(answer.sources) ? answer.sources : [];
+  const layers = answer.source_layers || orchestration.source_layers || sourceLayerFallback(
+    answerSources.length ? answerSources : publicSources
+  );
   for (const layer of layers) {
     const section = document.createElement("section");
     section.className = `source-layer source-layer-${layer.status || "absent"}`;
@@ -1394,6 +1507,239 @@ async function refineAnalysisWithFollowUp() {
   }
 }
 
+function selectedCseAgendaPoints() {
+  return Array.from(cseAgendaChoices.querySelectorAll('input[name="cseAgendaPoint"]:checked'))
+    .map((input) => ({ position: input.value, title: input.dataset.title || "" }));
+}
+
+function updateCseAgendaAnalyzeButton() {
+  if (currentWorkspace !== "cse") return;
+  const count = selectedCseAgendaPoints().length;
+  analyzeButton.disabled = count === 0;
+  analyzeButton.textContent = count
+    ? `Analyser et développer ${count} point(s) sélectionné(s)`
+    : "Sélectionnez au moins un point";
+}
+
+function resetCseAgendaPreview() {
+  currentCseAgendaPreview = null;
+  if (cseAgendaChoices) cseAgendaChoices.textContent = "";
+  if (cseAgendaSelection) cseAgendaSelection.hidden = true;
+  if (cseAgendaVerificationStatus) cseAgendaVerificationStatus.textContent = "";
+  if (currentWorkspace === "cse") {
+    analyzeButton.hidden = true;
+    analyzeButton.disabled = false;
+  }
+}
+
+function renderCseAgendaSelection(analysis) {
+  currentCseAgendaPreview = analysis;
+  cseAgendaChoices.textContent = "";
+  cseAgendaVerificationStatus.textContent =
+    `${analysis.agenda_point_count} point(s) identifié(s) ; ` +
+    `${analysis.points_with_previous_minutes} déjà rapproché(s) d’anciens PV. ` +
+    `${analysis.uploaded_previous_minutes_count || 0} PV ajouté(s) manuellement. ` +
+    `${analysis.corpus_notice || ""}`;
+  (analysis.points || []).forEach((point) => {
+    const label = document.createElement("label");
+    label.className = "cse-agenda-choice";
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "cseAgendaPoint";
+    checkbox.value = point.position;
+    checkbox.dataset.title = point.title;
+    checkbox.addEventListener("change", updateCseAgendaAnalyzeButton);
+    const content = document.createElement("span");
+    const title = document.createElement("strong");
+    title.textContent = `${point.display_label || `Point ${point.position}`} — ${point.title}`;
+    const history = document.createElement("small");
+    if (point.previously_discussed) {
+      const references = (point.previous_minutes || [])
+        .map((item) => [item.title, item.date].filter(Boolean).join(" — "))
+        .filter(Boolean)
+        .slice(0, 2);
+      history.textContent = `Déjà traité : ${references.join(" ; ")}.`;
+      history.dataset.previous = "true";
+    } else {
+      history.textContent = "Aucun passage comparable retrouvé dans les PV disponibles.";
+    }
+    content.append(title, history);
+    label.append(checkbox, content);
+    cseAgendaChoices.appendChild(label);
+  });
+  const allPoints = analysis.points || [];
+  const directionCount = allPoints.filter((point) => String(point.position || "").startsWith("D")).length;
+  const memberCount = allPoints.length - directionCount;
+  cseAgendaVerificationStatus.textContent =
+    `${directionCount} point(s) de la Direction et ${memberCount} question(s) des membres identifiés ; ` +
+    `${analysis.points_with_previous_minutes} déjà rapproché(s) d’anciens PV. ` +
+    `${analysis.uploaded_previous_minutes_count || 0} PV ajouté(s) manuellement. ` +
+    `${analysis.corpus_notice || ""}`;
+
+  const choiceLabels = Array.from(cseAgendaChoices.children);
+  const appendChoiceGroup = (titleText, helpText, labels, groupKind) => {
+    if (!labels.length) return;
+    const section = document.createElement("section");
+    section.className = `cse-agenda-group ${groupKind}`;
+    const heading = document.createElement("div");
+    heading.className = "cse-agenda-group-heading";
+    const headingText = document.createElement("div");
+    const title = document.createElement("h4");
+    title.textContent = `${titleText} (${labels.length})`;
+    const help = document.createElement("p");
+    help.textContent = helpText;
+    headingText.append(title, help);
+    const selectButton = document.createElement("button");
+    selectButton.type = "button";
+    selectButton.className = "text-button";
+    selectButton.textContent = "Tout sélectionner";
+    selectButton.addEventListener("click", () => {
+      section.querySelectorAll('input[name="cseAgendaPoint"]').forEach((input) => {
+        input.checked = true;
+      });
+      updateCseAgendaAnalyzeButton();
+    });
+    heading.append(headingText, selectButton);
+    const list = document.createElement("div");
+    list.className = "cse-agenda-group-list";
+    labels.forEach((label) => list.appendChild(label));
+    section.append(heading, list);
+    cseAgendaChoices.appendChild(section);
+  };
+  appendChoiceGroup(
+    "Points mis à l’ordre du jour par la Direction",
+    "Projets, informations et consultations présentés par la Direction.",
+    choiceLabels.filter((label) => String(label.querySelector("input")?.value || "").startsWith("D")),
+    "direction"
+  );
+  appendChoiceGroup(
+    "Questions des membres et organisations syndicales",
+    "Questions à développer et à rapprocher des anciens PV.",
+    choiceLabels.filter((label) => !String(label.querySelector("input")?.value || "").startsWith("D")),
+    "members"
+  );
+  cseAgendaSelection.hidden = false;
+  analyzeButton.hidden = false;
+  updateCseAgendaAnalyzeButton();
+}
+
+async function verifyCseAgenda() {
+  wizardError.hidden = true;
+  if (!uploadedQuestionDocuments.length) {
+    wizardError.textContent = "Choisissez ou déposez d’abord l’ordre du jour.";
+    wizardError.hidden = false;
+    return;
+  }
+  verifyCseAgendaButton.disabled = true;
+  cseAgendaVerificationStatus.textContent = "Lecture de l’ordre du jour et comparaison avec les anciens PV…";
+  try {
+    const analysis = await requestCseAgendaPreview();
+    if (analysis.status !== "READY") {
+      throw new NexusRequestError("business", analysis.message || "Ordre du jour illisible.");
+    }
+    renderCseAgendaSelection(analysis);
+  } catch (error) {
+    currentCseAgendaPreview = null;
+    cseAgendaSelection.hidden = true;
+    cseAgendaVerificationStatus.textContent = error instanceof Error
+      ? error.message
+      : "La vérification de l’ordre du jour a échoué.";
+  } finally {
+    verifyCseAgendaButton.disabled = false;
+  }
+}
+
+function appendCseList(container, values) {
+  const list = document.createElement("ul");
+  (values || []).forEach((value) => {
+    const item = document.createElement("li");
+    item.textContent = value;
+    list.appendChild(item);
+  });
+  container.appendChild(list);
+}
+
+function renderCseAgendaAnalysis(analysis) {
+  cseAgendaPoints.innerHTML = "";
+  cseAgendaPanel.hidden = currentWorkspace !== "cse" || !analysis;
+  if (cseAgendaPanel.hidden) return;
+
+  if (analysis.status !== "READY") {
+    cseAgendaSummary.textContent = analysis.message ||
+      "Importez un ordre du jour lisible pour lancer la préparation du CSE.";
+    return;
+  }
+
+  const previousCount = Number(analysis.points_with_previous_minutes || 0);
+  cseAgendaSummary.textContent =
+    `${analysis.agenda_point_count} point(s) analysé(s) dans ${analysis.agenda_document}. ` +
+    `${previousCount} point(s) rapproché(s) d’anciens PV. ${analysis.corpus_notice || ""}`;
+
+  (analysis.points || []).forEach((point) => {
+    const card = document.createElement("article");
+    card.className = "cse-agenda-point";
+
+    const heading = document.createElement("div");
+    heading.className = "cse-agenda-point-heading";
+    const title = document.createElement("h3");
+    title.textContent = `Point ${point.position} — ${point.title}`;
+    const badge = document.createElement("span");
+    badge.className = point.previously_discussed
+      ? "cse-agenda-badge previous"
+      : "cse-agenda-badge";
+    badge.textContent = point.previously_discussed
+      ? "Sujet retrouvé dans un ancien PV"
+      : "Aucun précédent retrouvé";
+    heading.append(title, badge);
+    card.appendChild(heading);
+
+    const analysisText = document.createElement("p");
+    analysisText.className = "cse-agenda-analysis-text";
+    analysisText.textContent = point.analysis;
+    card.appendChild(analysisText);
+
+    if ((point.previous_minutes || []).length) {
+      const previousTitle = document.createElement("h4");
+      previousTitle.textContent = "Ce qui a déjà été traité";
+      card.appendChild(previousTitle);
+      const previousGrid = document.createElement("div");
+      previousGrid.className = "cse-previous-minutes";
+      point.previous_minutes.forEach((previous) => {
+        const source = document.createElement("section");
+        source.className = "cse-previous-minute";
+        const sourceTitle = document.createElement("strong");
+        sourceTitle.textContent = [previous.title, previous.date, previous.instance]
+          .filter(Boolean)
+          .join(" — ");
+        const excerpt = document.createElement("mark");
+        excerpt.className = "nexus-source-highlight";
+        excerpt.textContent = previous.excerpt || "Extrait non disponible.";
+        const relation = document.createElement("p");
+        relation.textContent = previous.relation ||
+          "Passage rapproché du point par les termes factuels du sujet.";
+        const limit = document.createElement("small");
+        limit.textContent = (previous.limits || []).join(" ");
+        source.append(sourceTitle, excerpt, relation, limit);
+        previousGrid.appendChild(source);
+      });
+      card.appendChild(previousGrid);
+    }
+
+    const questionsTitle = document.createElement("h4");
+    questionsTitle.textContent = "Questions pertinentes à poser à la direction";
+    card.appendChild(questionsTitle);
+    appendCseList(card, point.questions_for_management);
+
+    const checks = document.createElement("details");
+    const checksTitle = document.createElement("summary");
+    checksTitle.textContent = "Points à vérifier avant la réunion";
+    checks.appendChild(checksTitle);
+    appendCseList(checks, point.checks_before_meeting);
+    card.appendChild(checks);
+    cseAgendaPoints.appendChild(card);
+  });
+}
+
 function renderResult(payload) {
   applyControlledPilotMode(payload.controlled_pilot || controlledPilot);
   currentPayload = payload;
@@ -1443,8 +1789,9 @@ function renderResult(payload) {
       orchestration.position_de_travail ||
       answer.working_position ||
       "A completer.";
+  renderCseAgendaAnalysis(payload.cse_agenda_analysis || null);
   renderConversationalSources(publicSummary);
-  renderSources(sourcesList, answer, orchestration);
+  renderSources(sourcesList, answer, orchestration, publicSummary);
   fillList(findingsList, publicSummary.strengths || answer.findings || []);
   fillList(
     documentsList,
@@ -2675,6 +3022,7 @@ function usesConversationalEmployeeFlow() {
 }
 
 function wizardStepSequence() {
+  if (currentWorkspace === "cse") return [2];
   return usesConversationalEmployeeFlow() ? [2] : [1, 2, 3, 4, 5];
 }
 
@@ -2686,6 +3034,7 @@ function renderWizardProgress() {
     4: "Éléments",
     5: "Résultat"
   };
+  if (currentWorkspace === "cse") labelsByStep[2] = "Ordre du jour";
   const steps = wizardStepSequence();
   wizardProgress.textContent = "";
   steps.forEach((step, index) => {
@@ -2707,17 +3056,46 @@ function renderWizardProgress() {
   const lastStep = steps[steps.length - 1];
   previousStepButton.hidden = steps.indexOf(currentWizardStep) === 0;
   nextStepButton.hidden = currentWizardStep === lastStep;
-  analyzeButton.hidden = currentWizardStep !== lastStep;
+  analyzeButton.hidden = currentWizardStep !== lastStep || (
+    currentWorkspace === "cse" && !currentCseAgendaPreview
+  );
   analyzeButton.textContent = usesConversationalEmployeeFlow()
     ? "Envoyer la question à Nexus"
     : "Analyser avec Nexus";
+  if (currentWorkspace === "cse") {
+    analyzeButton.textContent = "Analyser l’ordre du jour";
+  }
 }
 
 function validateCurrentStep() {
   let message = "";
   if (questionDocumentsLoading) message = "Attendez la fin de la lecture locale des documents.";
   if (currentWizardStep === 1 && !selectedSituation) message = "Choisissez le type de situation à traiter.";
-  if (currentWizardStep === 2 && queryInput.value.trim().length < 12) message = "Décrivez la situation en quelques mots avant de continuer.";
+  if (
+    currentWizardStep === 2 &&
+    currentWorkspace !== "cse" &&
+    queryInput.value.trim().length < 12
+  ) {
+    message = "Décrivez la situation en quelques mots avant de continuer.";
+  }
+  if (
+    currentWizardStep === 2 &&
+    currentWorkspace === "cse" &&
+    uploadedQuestionDocuments.length === 0
+  ) {
+    message = "Choisissez ou déposez l’ordre du jour avant de lancer l’analyse.";
+  }
+  if (currentWizardStep === 2 && currentWorkspace === "cse" && !currentCseAgendaPreview) {
+    message = "Vérifiez d’abord les points de l’ordre du jour et les anciens PV.";
+  }
+  if (
+    currentWizardStep === 2 &&
+    currentWorkspace === "cse" &&
+    currentCseAgendaPreview &&
+    selectedCseAgendaPoints().length === 0
+  ) {
+    message = "Choisissez au moins un point à analyser et développer.";
+  }
   if (currentWizardStep === 5 && !selectedOutcome) message = "Choisissez le résultat souhaité.";
   wizardError.textContent = message;
   wizardError.hidden = !message;
@@ -2734,19 +3112,27 @@ function openWorkspace(workspace, preset = "", employeePath = "") {
   if (!definition) return;
   currentWorkspace = workspace;
   const conversationalFlow = usesConversationalEmployeeFlow();
+  const csePreparation = workspace === "cse";
   currentWizardStep = conversationalFlow ? 2 : 1;
+  if (csePreparation) currentWizardStep = 2;
   selectedSituation = preset || (
     currentEmployeePath === "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
       ? "entretien-prealable"
+      : csePreparation
+        ? "ordre-du-jour"
       : conversationalFlow
         ? "question-salarie"
         : ""
   );
-  selectedOutcome = "";
+  selectedOutcome = csePreparation ? "Poser des questions" : "";
   currentAnalysisRequest = null;
   followUpConversation = [];
-  queryInput.value = "";
+  queryInput.value = csePreparation
+    ? "Analyser chaque point, rechercher les sujets déjà traités et préparer les questions à poser à la direction."
+    : "";
   resetQuestionDocuments();
+  resetCsePreviousPvDocuments();
+  cseAgendaWorkflow.hidden = !csePreparation;
   wizardWorkspaceLabel.textContent = definition.label;
   wizardTitle.textContent = definition.title;
   wizardDescription.textContent = definition.description;
@@ -2758,15 +3144,27 @@ function openWorkspace(workspace, preset = "", employeePath = "") {
       ? "← Autres outils Nexus"
       : "← Revenir à l’accueil";
   }
-  stepTwoTitle.textContent = conversationalFlow
-    ? "Quelle est votre question ?"
-    : "Décrivez la situation";
-  questionInputLabel.textContent = conversationalFlow
-    ? "Votre question"
-    : "Décrivez la situation avec vos propres mots";
-  privacyInputNotice.textContent = conversationalFlow
-    ? "N’indiquez aucun nom ni donnée personnelle inutile. Après la première réponse, vous pourrez préciser les faits dans la conversation."
-    : "N’indiquez aucune donnée personnelle inutile. Le texte n’est pas enregistré automatiquement.";
+  stepTwoTitle.textContent = csePreparation
+    ? "Importez l’ordre du jour"
+    : conversationalFlow
+      ? "Quelle est votre question ?"
+      : "Décrivez la situation";
+  questionInputLabel.textContent = csePreparation
+    ? "Contexte de la réunion et points à vérifier"
+    : conversationalFlow
+      ? "Votre question"
+      : "Décrivez la situation avec vos propres mots";
+  questionDocumentTitle.textContent = csePreparation
+    ? "Importer l’ordre du jour"
+    : "Ajouter des documents utiles";
+  queryInput.placeholder = csePreparation
+    ? "Exemple : vérifier les suites données aux engagements précédents et préparer les questions à poser à la direction."
+    : "Décrivez votre situation ici…";
+  privacyInputNotice.textContent = csePreparation
+    ? "Nexus compare chaque point avec les anciens PV disponibles localement. Un PV apporte un contexte historique ; il ne constitue jamais une règle juridique."
+    : conversationalFlow
+      ? "N’indiquez aucun nom ni donnée personnelle inutile. Après la première réponse, vous pourrez préciser les faits dans la conversation."
+      : "N’indiquez aucune donnée personnelle inutile. Le texte n’est pas enregistré automatiquement.";
   payrollWarning.hidden = workspace !== "payroll";
   renderSituationChoices(definition);
   renderContextFields(definition);
@@ -2801,6 +3199,9 @@ function buildStructuredRequest() {
   );
   const context = getContextValues();
   const interviewAnswers = getInterviewAnswers();
+  const selectedAgendaPoints = currentWorkspace === "cse"
+    ? selectedCseAgendaPoints()
+    : [];
   const facts = Object.entries(context)
     .filter(([, value]) => value !== false && value !== "")
     .map(([key, value]) => `${key}: ${value === true ? "oui" : value}`);
@@ -2808,6 +3209,9 @@ function buildStructuredRequest() {
     `[Espace métier: ${definition.label}]`,
     `[Type de situation: ${selectedSituation}]`,
     queryInput.value.trim(),
+    selectedAgendaPoints.length
+      ? `Points CSE sélectionnés : ${selectedAgendaPoints.map((item) => item.title).join(" ; ")}.`
+      : "",
     facts.length ? `Repères: ${facts.join("; ")}.` : "",
     ...Object.entries(interviewAnswers).map(
       ([id, answer]) => `Question salarié — ${interviewQuestionLabel(id)} Réponse : ${answer}`
@@ -2825,6 +3229,7 @@ function buildStructuredRequest() {
     source_limit: Number(sourceLimitInput.value || 6),
     employee_path: currentEmployeePath,
     attachments: uploadedQuestionDocuments,
+    cse_previous_pv_attachments: uploadedCsePreviousPvDocuments,
     portal_context: {
       workspace: currentWorkspace,
       employee_path: currentEmployeePath,
@@ -2840,6 +3245,8 @@ function buildStructuredRequest() {
       period: context.payrollMonth || context.startDate || context.meetingDate || null,
       urgency: Boolean(context.urgentSituation),
       desired_outcome: desiredOutcome,
+      cse_selected_agenda_positions: selectedAgendaPoints.map((item) => item.position),
+      cse_selected_agenda_titles: selectedAgendaPoints.map((item) => item.title),
       response_mode: responseMode,
       allowed_engines: currentWorkspace === "payroll" ? ["historical_payroll_if_enabled"] : ["assistant_router"],
       confidentiality: confidentialityLevel.value
@@ -2877,10 +3284,14 @@ form.addEventListener("submit", async (event) => {
 });
 
 questionDocuments?.addEventListener("change", () => loadQuestionDocuments(questionDocuments.files));
+csePreviousPvDocuments?.addEventListener("change", () =>
+  loadQuestionDocuments(csePreviousPvDocuments.files, "cse-pv")
+);
 followUpDocumentInput?.addEventListener("change", () =>
   loadQuestionDocuments(followUpDocumentInput.files, "follow-up")
 );
 clearQuestionDocuments?.addEventListener("click", resetQuestionDocuments);
+clearCsePreviousPvDocuments?.addEventListener("click", resetCsePreviousPvDocuments);
 queryInput?.addEventListener("paste", (event) => {
   const pastedFiles = Array.from(event.clipboardData?.files || []);
   if (pastedFiles.length) {
@@ -2905,6 +3316,23 @@ questionDocumentDropZone?.addEventListener("drop", (event) => {
   questionDocumentDropZone.classList.remove("is-dragging");
   loadQuestionDocuments(event.dataTransfer?.files || []);
 });
+questionDocumentDropZone?.addEventListener("click", (event) => {
+  if (event.target.closest("label, button, input")) return;
+  questionDocuments?.click();
+});
+csePreviousPvDropZone?.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  csePreviousPvDropZone.classList.add("is-dragging");
+});
+csePreviousPvDropZone?.addEventListener("dragleave", () => {
+  csePreviousPvDropZone.classList.remove("is-dragging");
+});
+csePreviousPvDropZone?.addEventListener("drop", (event) => {
+  event.preventDefault();
+  csePreviousPvDropZone.classList.remove("is-dragging");
+  loadQuestionDocuments(event.dataTransfer?.files || [], "cse-pv");
+});
+verifyCseAgendaButton?.addEventListener("click", verifyCseAgenda);
 
 refineAnalysisButton.addEventListener("click", refineAnalysisWithFollowUp);
 chatbotDetailsButton.addEventListener("click", () => {

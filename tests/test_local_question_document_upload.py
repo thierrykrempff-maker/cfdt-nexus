@@ -155,6 +155,30 @@ def test_png_content_downloaded_with_a_jpeg_extension_is_normalized_and_read() -
     assert "consigne de securite" in documents[0]["text"]
 
 
+def test_word_agenda_preserves_direction_points_and_member_questions() -> None:
+    from docx import Document
+    from cse_agenda_analysis import extract_agenda_points
+
+    document = Document()
+    document.add_paragraph("COMITÉ SOCIAL ET ÉCONOMIQUE")
+    document.add_paragraph("Réunion ordinaire du 12 mars 2026")
+    for index in range(1, 13):
+        document.add_paragraph(f"Point de la direction numéro {index}", style="List Number")
+    document.add_paragraph("Questions des membres du CSE", style="List Number")
+    stream = io.BytesIO()
+    document.save(stream)
+
+    documents = SERVER.extract_uploaded_documents(
+        [attachment("ordre-du-jour.docx", stream.getvalue(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document")]
+    )
+    points = extract_agenda_points(documents[0])
+
+    assert [point["position"] for point in points] == [str(index) for index in range(1, 14)]
+    assert points[0]["title"] == "Point de la direction numéro 1"
+    assert points[11]["title"] == "Point de la direction numéro 12"
+    assert points[12]["title"] == "Questions des membres du CSE"
+
+
 def test_interface_exposes_paste_feedback_and_local_file_picker() -> None:
     html = (SERVER_PATH.parent / "index.html").read_text(encoding="utf-8")
     javascript = (SERVER_PATH.parent / "app.js").read_text(encoding="utf-8")
@@ -174,6 +198,15 @@ def test_interface_exposes_paste_feedback_and_local_file_picker() -> None:
         javascript.index("function loadQuestionDocuments") + 2600
     ]
     assert "localStorage" not in upload_code
+
+
+def test_interface_reuses_public_sources_in_the_legal_source_layers() -> None:
+    javascript = (SERVER_PATH.parent / "app.js").read_text(encoding="utf-8")
+
+    assert "function publicSourcesForLayers(publicSummary)" in javascript
+    assert "publicSummary.source_extractions || publicSummary.sources || []" in javascript
+    assert "renderSources(sourcesList, answer, orchestration, publicSummary)" in javascript
+    assert 'source_layer: source.source_layer || "autre"' in javascript
 
 
 def test_document_extraction_does_not_write_or_expose_a_local_path() -> None:

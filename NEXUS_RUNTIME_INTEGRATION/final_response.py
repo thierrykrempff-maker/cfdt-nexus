@@ -18,9 +18,20 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
 
     core = _mapping(answer.get("case_factual_core"))
     preparation = _mapping(answer.get("actionable_preparation"))
-    position = _mapping(answer.get("syndical_position"))
+    route_info = _mapping(answer.get("route"))
+    # The router always populates answer["syndical_position"] (defense-framing
+    # text: "contester la qualification...", "négocier une mesure...") even for
+    # purely informational questions with no identified workplace event, because
+    # other tests rely on actionable_preparation/syndical_position never being
+    # empty. Here, in the public-facing projection, that defense framing must
+    # only surface for an actual disciplinary case.
+    is_disciplinary_case = (
+        route_info.get("employee_path") == "ASSISTANCE_ENTRETIEN_DISCIPLINAIRE"
+        or _text(core.get("event_category"), 100) != "GENERAL_EMPLOYEE_QUESTION"
+    )
+    position = _mapping(answer.get("syndical_position")) if is_disciplinary_case else {}
     discipline = _mapping(answer.get("disciplinary_assistance"))
-    suspended = bool(_mapping(answer.get("route")).get("analysis_suspended"))
+    suspended = bool(route_info.get("analysis_suspended"))
     suspended = suspended or bool(core.get("blocking_ambiguities"))
     all_questions = _questions(preparation, bounded=False)
     questions = _bounded_questions(all_questions)
@@ -112,11 +123,23 @@ def build_final_response(answer: Mapping[str, Any]) -> dict[str, Any]:
         ),
         "avoid": avoid[:2],
     }
+    # These exact strings are the factual core's generic "no fact extracted"
+    # placeholders (see _employee_position/_employer_position). Outside a real
+    # disciplinary/event case they only imply a dispute that doesn't exist.
+    _no_employee_position = "La position exacte du salarié reste à recueillir."
+    _no_employer_position = "La position précise de l'employeur reste à demander."
+    employee_position = core.get("employee_position")
+    employer_position = core.get("employer_position")
+    if not is_disciplinary_case:
+        if employee_position == _no_employee_position:
+            employee_position = None
+        if employer_position == _no_employer_position:
+            employer_position = None
     situation = _dedupe(
         [
             core.get("primary_event"),
-            core.get("employee_position"),
-            core.get("employer_position"),
+            employee_position,
+            employer_position,
             *_strings(core.get("dates_and_chronology"), limit=2),
         ],
         limit=6,
@@ -713,10 +736,12 @@ def _sources(value: Any, *, limit: int = 5) -> list[dict[str, str]]:
         )
         if not provider and not title:
             continue
+        source_layer = _public_source_layer(item, provider, title)
         output.append(
             {
                 "provider": _text(provider, 120),
                 "title": _text(title, 220),
+                "source_layer": source_layer,
                 "reference": _text(item.get("article_or_clause"), 120),
                 "nature": _text(item.get("legal_nature") or item.get("document_type"), 120),
                 "status": _text(
@@ -760,6 +785,70 @@ def _sources(value: Any, *, limit: int = 5) -> list[dict[str, str]]:
             }
         )
     return _dedupe_dicts(output, "provider", secondary="title")[:limit]
+
+
+def _public_source_layer(
+    source: Mapping[str, Any],
+    provider: Any,
+    title: Any,
+) -> str:
+    """Return a safe business classification for a public source reference."""
+
+    explicit = _text(source.get("source_layer"), 80).casefold()
+    nature = _text(source.get("document_type"), 100).casefold()
+    searchable = " ".join(
+        (
+            explicit,
+            nature,
+            _text(provider, 120).casefold(),
+            _text(title, 220).casefold(),
+        )
+    )
+    if explicit in {
+        "accord_entreprise",
+        "convention_collective",
+        "code_travail",
+        "jurisprudence",
+        "prudhommes",
+        "pratique",
+        "pratique_officielle",
+        "autre",
+    }:
+        return explicit
+    if nature in {"accord", "accord_entreprise", "avenant"}:
+        return "accord_entreprise"
+    if nature in {"convention", "convention_collective"}:
+        return "convention_collective"
+    if "ccnic" in searchable or "convention collective" in searchable:
+        return "convention_collective"
+    if "prud'hom" in searchable or "prudhom" in searchable:
+        return "prudhommes"
+    if any(value in searchable for value in ("judilibre", "jurisprudence", "cour de cassation")):
+        return "jurisprudence"
+    if any(value in searchable for value in ("legifrance", "code du travail")):
+        return "code_travail"
+    if nature in {"decision", "decision_judiciaire"}:
+        return "jurisprudence"
+    if any(
+        value in searchable
+        for value in (
+            "code du travail numerique",
+            "cdtn",
+            "service-public",
+            "ministere du travail",
+            "cnil",
+            "carsat",
+            "inrs",
+            "anact",
+            "assurance maladie",
+            "urssaf",
+            "agirc-arrco",
+        )
+    ):
+        return "pratique"
+    if "ineos sarralbe" in searchable or "accord" in searchable or "avenant" in searchable:
+        return "accord_entreprise"
+    return "autre"
 
 
 def _usable_public_source(source: Mapping[str, Any]) -> bool:
@@ -934,6 +1023,7 @@ def _compact_public_extractions(
     keys = (
         "provider",
         "title",
+        "source_layer",
         "reference",
         "excerpt",
         "link_to_facts",

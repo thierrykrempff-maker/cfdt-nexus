@@ -16,6 +16,7 @@ No document is copied into Git. Outputs are written under local-index/agreements
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import importlib.util
 import json
@@ -50,6 +51,11 @@ OCR_LOW_CONFIDENCE_THRESHOLD = 70.0
 OCR_LANG_DEFAULT = "fra+eng"
 
 DOCUMENT_TYPES = [
+    ("pv cse", [
+        r"proces.?verbal", r"compte.?rendu.*(cse|reunion)", r"\bpv\b.*(cse|reunion)",
+        r"seance (du |ordinaire |extraordinaire )?cse", r"releve de decisions?",
+        r"reunion (ordinaire|extraordinaire) (du )?cse",
+    ]),
     ("avenant", [r"\bavenant\b", r"\bmodification\b"]),
     ("convention_collective", [r"convention collective nationale", r"\bidcc\s*44\b", r"\bccnic\b"]),
     ("règlement intérieur", [r"reglement interieur", r"règlement intérieur"]),
@@ -734,6 +740,56 @@ SEARCH_PROFILES = [
         ],
     },
     {
+        "name": "donnees personnelles / surveillance / CNIL",
+        "triggers": [
+            "cnil",
+            "rgpd",
+            "donnees personnelles",
+            "protection des donnees",
+            "videosurveillance",
+            "video surveillance",
+            "camera",
+            "cameras",
+            "geolocalisation",
+            "geolocalisation vehicule",
+            "badgeage",
+            "badge",
+            "controle d acces",
+            "controle acces",
+            "cybersurveillance",
+            "surveillance des salaries",
+            "traitement de donnees",
+            "vie privee au travail",
+            "registre des traitements",
+            "dpo",
+            "delegue a la protection des donnees",
+        ],
+        "synonym_phrases": [
+            "CNIL",
+            "RGPD",
+            "donnees personnelles",
+            "protection des donnees",
+            "videosurveillance",
+            "geolocalisation",
+            "badgeage",
+            "controle d acces",
+            "cybersurveillance",
+            "surveillance des salaries",
+            "DPO",
+            "vie privee au travail",
+        ],
+        "title_terms": [
+            "cnil",
+            "rgpd",
+            "donnees personnelles",
+            "videosurveillance",
+            "geolocalisation",
+            "badgeage",
+            "controle acces",
+            "cybersurveillance",
+        ],
+    },
+    {
         "name": "relations collectives / droit syndical",
         "triggers": [
             "droit syndical",
@@ -1151,6 +1207,11 @@ def source_layer_for_document(document_type: str | None, relative_path: str = ""
         return "code_travail"
     if "jurisprudence" in doc_type or "jurisprudence" in path_text or "cour de cassation" in path_text:
         return "jurisprudence"
+    if any(
+        marker in f"{doc_type} {path_text}"
+        for marker in ("pv cse", "proces verbal", "compte rendu cse", "historique cse", "decision cse")
+    ):
+        return "historique_cse"
     if "prudhom" in text and ("decision" in doc_type or "jugement" in doc_type or "decision" in path_text or "jugement" in path_text):
         return "prudhommes"
     if any(marker in text for marker in ["bulletin", "guide", "calendrier", "horaires", "annexe", "communication", "kit pedagogique"]):
@@ -2254,6 +2315,11 @@ def non_relevant_penalty(chunk: dict[str, Any], title_haystack: str, profile: di
     return penalty, reasons
 
 
+def closest_chunk_token(token: str, counts: Counter[str]) -> str | None:
+    matches = difflib.get_close_matches(token, counts.keys(), n=1, cutoff=0.82)
+    return matches[0] if matches else None
+
+
 def score_chunk_details(chunk: dict[str, Any], query_tokens: list[str], exact_query: str) -> dict[str, Any]:
     text = chunk.get("text", "")
     normalized_text = normalize(text)
@@ -2270,6 +2336,18 @@ def score_chunk_details(chunk: dict[str, Any], query_tokens: list[str], exact_qu
             gain = weight + min(counts[token], 6)
             lexical += gain
             lexical_reasons.append(f"{token}: +{round(gain, 2)}")
+        elif len(token) >= 5:
+            # Tolerate a probable typo (e.g. "geolocalistion") by falling back
+            # to the closest word actually present in the chunk, at a reduced
+            # weight so a fuzzy hit never outscores a real exact match.
+            fuzzy_match = closest_chunk_token(token, counts)
+            if fuzzy_match:
+                weight = 2 if token in WEAK_QUERY_TOKENS else 7
+                gain = (weight + min(counts[fuzzy_match], 6)) * 0.6
+                lexical += gain
+                lexical_reasons.append(
+                    f"{token}~{fuzzy_match} (faute de frappe probable): +{round(gain, 2)}"
+                )
 
     exact_expression_bonus = 0.0
     exact_reasons = []

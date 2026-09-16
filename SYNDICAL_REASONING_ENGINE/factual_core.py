@@ -1052,12 +1052,38 @@ def _d(
     return ActionableDocument(document, purpose, confirms, priority)
 
 
+_DEFINITIONAL_QUESTION_RE = re.compile(
+    r"\bqu est ce (qu|que|un|une|le|la|les|c)\b"
+    r"|\bc est quoi\b"
+    r"|\bque (signifie|veut dire|represente)\b"
+    r"|\bdefinition de\b"
+    r"|\bdefinir\b"
+)
+
+
+def _is_definitional_question(core: CaseFactualCore) -> bool:
+    text = normalize(
+        f"{core.primary_event or ''} {core.primary_grievance_or_decision or ''}"
+    ).replace("-", " ")
+    return bool(_DEFINITIONAL_QUESTION_RE.search(text))
+
+
 def _event_questions(core: CaseFactualCore) -> tuple[list[ActionableQuestion], list[ActionableQuestion], list[ActionableDocument], list[ActionableQuestion]]:
     category = core.event_category
     employee: list[ActionableQuestion] = []
     employer: list[ActionableQuestion] = []
     documents: list[ActionableDocument] = []
     checks: list[ActionableQuestion] = []
+
+    if (
+        category == "GENERAL_EMPLOYEE_QUESTION"
+        and not core.blocking_ambiguities
+        and _is_definitional_question(core)
+    ):
+        # A purely lexical/definitional question ("qu'est-ce qu'un PAP ?") has
+        # no employer decision, no dispute and no document to obtain: the
+        # generic fallback below wrongly assumes a contestation is underway.
+        return employee, employer, documents, checks
 
     if category == "AMBIGUOUS_TEN_PERCENT_RULE":
         employee.append(_q(
