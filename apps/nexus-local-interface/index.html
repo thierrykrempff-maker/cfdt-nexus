@@ -188,6 +188,10 @@
               <span aria-hidden="true">✎</span><strong>Outils et modèles</strong>
               <small>Courriers, questions CSE, avis, résolutions et listes de preuves</small>
             </button>
+            <button class="tool-card" type="button" id="rgpdToolCard">
+              <span aria-hidden="true">⚿</span><strong>Analyse RGPD</strong>
+              <small>Vérifie un accord ou un écrit face aux obligations CNIL (finalité, durée, information, CSE)</small>
+            </button>
           </div>
           <div class="secondary-message" id="secondaryMessage" role="status" hidden></div>
         </section>
@@ -295,6 +299,49 @@
             </div>
           </form>
         </article>
+      </section>
+
+      <section class="rgpd-view" id="rgpdView" hidden aria-labelledby="rgpdTitle" tabindex="-1">
+        <div class="view-toolbar">
+          <button class="back-button" type="button" id="rgpdHomeButton">← Revenir à l’accueil</button>
+          <span class="confidentiality-label">Analyse locale · rien n’est envoyé hors de ce poste</span>
+        </div>
+        <div class="cases-heading">
+          <div>
+            <p class="eyebrow">Conformité données personnelles</p>
+            <h1 id="rgpdTitle">Analyse RGPD d’un accord ou d’un écrit</h1>
+            <p>
+              Pour chaque sujet sensible repéré (vidéosurveillance, géolocalisation, badgeage,
+              biométrie, cybersurveillance, données de santé, communication syndicale,
+              élections professionnelles, registre des traitements, gestion du personnel),
+              Nexus vérifie si les mentions attendues (finalité, durée de conservation,
+              information des salariés, consultation du CSE…) figurent littéralement dans le
+              texte, en citant le passage exact. Rien n’est déduit ni inventé : une mention
+              absente du texte fourni n’est pas nécessairement une non-conformité — elle peut
+              exister ailleurs (registre des traitements, note RH…).
+            </p>
+          </div>
+        </div>
+
+        <div class="rgpd-actions-grid">
+          <div class="rgpd-upload-card">
+            <h2>Analyser un document</h2>
+            <p class="field-help">PDF, DOCX, TXT, MD ou JPG — 5 Mo maximum, un document à la fois.</p>
+            <input id="rgpdDocumentInput" type="file" accept=".pdf,.docx,.txt,.md,.jpg,.jpeg,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg">
+            <button class="secondary-button" type="button" id="rgpdUploadButton">Choisir un document</button>
+            <p id="rgpdUploadStatus" role="status" aria-live="polite"></p>
+            <ul class="selected-document-list" id="rgpdSelectedDocument"></ul>
+            <button class="primary-button" type="button" id="rgpdAnalyzeUploadButton" disabled>Lancer l’analyse RGPD</button>
+          </div>
+          <div class="rgpd-corpus-card">
+            <h2>Analyser les accords déjà indexés</h2>
+            <p class="field-help">Passe en revue tous les accords INEOS déjà connus de Nexus.</p>
+            <button class="primary-button" type="button" id="rgpdCorpusScanButton">Analyser le corpus INEOS</button>
+          </div>
+        </div>
+
+        <p id="rgpdAnalysisStatus" role="status" aria-live="polite"></p>
+        <div class="rgpd-results" id="rgpdResults" hidden></div>
       </section>
 
       <section class="history-view" id="historyView" hidden aria-labelledby="historyTitle" tabindex="-1">

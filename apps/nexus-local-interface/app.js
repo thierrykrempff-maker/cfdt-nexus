@@ -187,6 +187,18 @@ const pilotBannerInput = document.getElementById("pilotBannerInput");
 const pilotBannerResult = document.getElementById("pilotBannerResult");
 const pilotBannerReport = document.getElementById("pilotBannerReport");
 
+const rgpdToolCard = document.getElementById("rgpdToolCard");
+const rgpdView = document.getElementById("rgpdView");
+const rgpdHomeButton = document.getElementById("rgpdHomeButton");
+const rgpdDocumentInput = document.getElementById("rgpdDocumentInput");
+const rgpdUploadButton = document.getElementById("rgpdUploadButton");
+const rgpdUploadStatus = document.getElementById("rgpdUploadStatus");
+const rgpdSelectedDocument = document.getElementById("rgpdSelectedDocument");
+const rgpdAnalyzeUploadButton = document.getElementById("rgpdAnalyzeUploadButton");
+const rgpdCorpusScanButton = document.getElementById("rgpdCorpusScanButton");
+const rgpdAnalysisStatus = document.getElementById("rgpdAnalysisStatus");
+const rgpdResults = document.getElementById("rgpdResults");
+
 let currentPayload = null;
 let currentReportMarkdown = "";
 let currentCasePayload = null;
@@ -2794,6 +2806,7 @@ function showOnly(view) {
   analysisState.hidden = view !== "loading";
   historyView.hidden = view !== "history";
   casesView.hidden = view !== "cases";
+  rgpdView.hidden = view !== "rgpd";
   if (view === "home") {
     document.getElementById("homeTitle").focus?.();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -3349,6 +3362,206 @@ deleteCaseButton.addEventListener("click", deleteCurrentLocalCase);
 caseBackToList.addEventListener("click", openLocalCases);
 casesHomeButton.addEventListener("click", () => showOnly("home"));
 refreshCasesButton.addEventListener("click", openLocalCases);
+
+let rgpdSelectedFile = null;
+
+function renderRgpdSelectedDocument() {
+  rgpdSelectedDocument.textContent = "";
+  rgpdAnalyzeUploadButton.disabled = !rgpdSelectedFile;
+  if (!rgpdSelectedFile) return;
+  const item = document.createElement("li");
+  const name = document.createElement("span");
+  const sizeKb = Math.max(1, Math.round(rgpdSelectedFile.size / 1024));
+  name.textContent = `${rgpdSelectedFile.name} · ${sizeKb} Ko`;
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.textContent = "Retirer";
+  remove.setAttribute("aria-label", `Retirer ${rgpdSelectedFile.name}`);
+  remove.addEventListener("click", () => {
+    rgpdSelectedFile = null;
+    rgpdDocumentInput.value = "";
+    renderRgpdSelectedDocument();
+  });
+  item.append(name, remove);
+  rgpdSelectedDocument.appendChild(item);
+}
+
+rgpdUploadButton?.addEventListener("click", () => rgpdDocumentInput?.click());
+rgpdDocumentInput?.addEventListener("change", () => {
+  const file = rgpdDocumentInput.files?.[0];
+  rgpdUploadStatus.dataset.state = "";
+  rgpdUploadStatus.textContent = "";
+  if (!file) return;
+  if (!questionDocumentExtension(file.name)) {
+    rgpdUploadStatus.dataset.state = "error";
+    rgpdUploadStatus.textContent = `${file.name} n’est pas un format accepté (PDF, DOCX, TXT, MD, JPG).`;
+    rgpdDocumentInput.value = "";
+    return;
+  }
+  if (file.size > MAX_QUESTION_DOCUMENT_BYTES) {
+    rgpdUploadStatus.dataset.state = "error";
+    rgpdUploadStatus.textContent = `${file.name} dépasse 5 Mo.`;
+    rgpdDocumentInput.value = "";
+    return;
+  }
+  rgpdSelectedFile = file;
+  renderRgpdSelectedDocument();
+});
+
+const RGPD_TOPIC_LABELS = {
+  videosurveillance_travail: "Vidéosurveillance",
+  geolocalisation_vehicules: "Géolocalisation des véhicules",
+  controle_horaires_acces: "Contrôle d’accès / badgeage",
+  controle_acces_biometrique: "Contrôle d’accès biométrique",
+  gestion_activite_equipements: "Cybersurveillance / contrôle de l’activité",
+  intranet_messagerie_syndicats: "Communication syndicale (intranet, messagerie)",
+  elections_pro_donnees: "Élections professionnelles",
+  registre_traitements: "Registre des traitements",
+  gestion_personnel: "Gestion du personnel",
+  donnees_sante_pratique: "Données de santé",
+};
+
+const RGPD_RISK_LABELS = { eleve: "Risque élevé", moyen: "Risque moyen", faible: "Risque faible" };
+
+function renderRgpdAnalysis(analysis) {
+  rgpdResults.textContent = "";
+  rgpdResults.hidden = false;
+
+  const banner = document.createElement("div");
+  banner.className = "rgpd-summary-banner";
+  const documentCount = analysis.documents_scanned ?? analysis.documents_analyzed;
+  const findingsCount = analysis.documents_with_findings ?? analysis.documents.length;
+  banner.textContent =
+    `${documentCount} document(s) analysé(s) · ${findingsCount} avec au moins un sujet sensible repéré · ` +
+    `${analysis.total_gaps_found} mention(s) manquante(s) au total.`;
+  rgpdResults.appendChild(banner);
+
+  if (!analysis.documents.length) {
+    const empty = document.createElement("p");
+    empty.className = "rgpd-no-topic";
+    empty.textContent =
+      "Aucun sujet sensible (vidéosurveillance, géolocalisation, badgeage, biométrie, données de santé…) repéré dans le texte fourni.";
+    rgpdResults.appendChild(empty);
+  }
+
+  for (const report of analysis.documents) {
+    const card = document.createElement("article");
+    card.className = "rgpd-document-report";
+    const title = document.createElement("h3");
+    title.textContent = report.document_name || "Document";
+    card.appendChild(title);
+    if (report.no_sensitive_topic_detected) {
+      const p = document.createElement("p");
+      p.className = "rgpd-no-topic";
+      p.textContent = "Aucun sujet sensible repéré dans ce document.";
+      card.appendChild(p);
+      rgpdResults.appendChild(card);
+      continue;
+    }
+    for (const topic of report.topics) {
+      const topicCard = document.createElement("div");
+      topicCard.className = "rgpd-topic-card";
+      const head = document.createElement("div");
+      head.className = "rgpd-topic-head";
+      const label = document.createElement("strong");
+      label.textContent = RGPD_TOPIC_LABELS[topic.topic_id] || topic.topic_id;
+      const badge = document.createElement("span");
+      badge.className = "rgpd-risk-badge";
+      badge.dataset.risk = topic.risk_level;
+      badge.textContent = RGPD_RISK_LABELS[topic.risk_level] || topic.risk_level;
+      const link = document.createElement("a");
+      link.href = topic.cnil_reference_url;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "Référence CNIL ↗";
+      head.append(label, badge, link);
+      topicCard.appendChild(head);
+
+      if (topic.excerpts?.length) {
+        const excerptList = document.createElement("ul");
+        excerptList.className = "rgpd-excerpts";
+        for (const excerpt of topic.excerpts) {
+          const li = document.createElement("li");
+          li.textContent = excerpt.reference ? `${excerpt.reference} — « ${excerpt.text} »` : `« ${excerpt.text} »`;
+          excerptList.appendChild(li);
+        }
+        topicCard.appendChild(excerptList);
+      }
+
+      const checklist = document.createElement("ul");
+      checklist.className = "rgpd-checklist";
+      for (const item of topic.checklist) {
+        const li = document.createElement("li");
+        li.dataset.present = String(item.present);
+        const mark = document.createElement("span");
+        mark.className = "rgpd-check-mark";
+        mark.textContent = item.present ? "✓" : "✕";
+        const text = document.createElement("span");
+        const labelSpan = document.createElement("span");
+        labelSpan.textContent = item.present ? item.label : `${item.label} — absent du texte fourni`;
+        text.appendChild(labelSpan);
+        if (item.present && item.evidence) {
+          const evidence = document.createElement("span");
+          evidence.className = "rgpd-evidence";
+          evidence.textContent = item.evidence.reference
+            ? `${item.evidence.reference} — « ${item.evidence.text} »`
+            : `« ${item.evidence.text} »`;
+          text.appendChild(evidence);
+        }
+        li.append(mark, text);
+        checklist.appendChild(li);
+      }
+      topicCard.appendChild(checklist);
+      card.appendChild(topicCard);
+    }
+    rgpdResults.appendChild(card);
+  }
+}
+
+async function requestRgpdAnalysis(url, init) {
+  rgpdAnalysisStatus.dataset.state = "";
+  rgpdAnalysisStatus.textContent = "Analyse en cours…";
+  rgpdResults.hidden = true;
+  try {
+    const response = await fetch(url, init);
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "L’analyse RGPD a échoué.");
+    }
+    rgpdAnalysisStatus.textContent = "";
+    renderRgpdAnalysis(data.rgpd_analysis);
+  } catch (error) {
+    rgpdAnalysisStatus.dataset.state = "error";
+    rgpdAnalysisStatus.textContent = error.message || "L’analyse RGPD a échoué.";
+  }
+}
+
+rgpdAnalyzeUploadButton?.addEventListener("click", async () => {
+  if (!rgpdSelectedFile) return;
+  rgpdAnalyzeUploadButton.disabled = true;
+  try {
+    const encoded = await fileAsBase64(rgpdSelectedFile);
+    await requestRgpdAnalysis("/api/rgpd/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        attachments: [{ name: rgpdSelectedFile.name, content_base64: encoded }],
+      }),
+    });
+  } catch (error) {
+    rgpdAnalysisStatus.dataset.state = "error";
+    rgpdAnalysisStatus.textContent = error.message || "Lecture du document impossible.";
+  } finally {
+    rgpdAnalyzeUploadButton.disabled = !rgpdSelectedFile;
+  }
+});
+
+rgpdCorpusScanButton?.addEventListener("click", () => {
+  requestRgpdAnalysis("/api/rgpd/corpus-scan", { method: "GET" });
+});
+
+rgpdToolCard?.addEventListener("click", () => showOnly("rgpd"));
+rgpdHomeButton?.addEventListener("click", () => showOnly("home"));
 
 document.querySelectorAll("[data-open-workspace]").forEach((button) => {
   button.addEventListener("click", () => openWorkspace(button.dataset.openWorkspace, button.dataset.preset || "", button.dataset.employeePath || ""));

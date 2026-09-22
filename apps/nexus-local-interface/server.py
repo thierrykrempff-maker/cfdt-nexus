@@ -45,6 +45,7 @@ from historical_cases import (  # noqa: E402
 from local_cases import LocalCaseStore  # noqa: E402
 from local_ocr import LocalOCRUnavailable, extract_text_from_jpeg  # noqa: E402
 from cse_agenda_analysis import build_cse_agenda_analysis  # noqa: E402
+from rgpd_analysis import build_rgpd_analysis, build_rgpd_corpus_scan  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -932,6 +933,15 @@ class NexusHandler(SimpleHTTPRequestHandler):
             except Exception as exc:  # pragma: no cover - defensive local boundary.
                 self.send_internal_error(exc)
             return
+        if parsed.path == "/api/rgpd/corpus-scan":
+            try:
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "rgpd_analysis": build_rgpd_corpus_scan()},
+                )
+            except Exception as exc:  # pragma: no cover - defensive local server boundary.
+                self.send_internal_error(exc)
+            return
         if parsed.path == "/api/local-cases":
             try:
                 self.send_json(
@@ -1017,6 +1027,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             "/api/analyze",
             "/api/local-cases",
             "/api/cse/agenda-preview",
+            "/api/rgpd/analyze",
         }:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
@@ -1028,6 +1039,15 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 self.send_json(
                     HTTPStatus.OK,
                     {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
+                )
+                return
+            if parsed.path == "/api/rgpd/analyze":
+                uploaded_documents = extract_uploaded_documents(payload.get("attachments"))
+                if not uploaded_documents:
+                    raise ValueError("Aucun document a analyser.")
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "rgpd_analysis": build_rgpd_analysis(uploaded_documents)},
                 )
                 return
             if parsed.path == "/api/cse/agenda-preview":
