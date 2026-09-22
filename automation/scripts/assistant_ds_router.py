@@ -1351,8 +1351,51 @@ def explicit_astreinte_exclusion(query: str) -> bool:
     )
 
 
+_SIMPLE_WORD_PATTERN_RE = re.compile(r"^\\b([a-z][a-z']*)\\b$")
+
+
+def domain_stem(token: str) -> str:
+    """Stem a single token for domain/intent classification.
+
+    DOMAIN_RULES/INTENT_RULES patterns like r"\\blicenciement\\b" only ever
+    matched that exact word, so a naturally-phrased question using the verb
+    ("...peut-il me licencier...") silently classified into no domain at
+    all and never reached Legifrance/Judilibre/etc. Stemming both the
+    pattern word and the query lets the noun and its related verb forms
+    (infinitive, conjugated, participle) match the same rule.
+    """
+    for suffix in (
+        "issons", "issez", "issent",
+        "ements", "ement", "ations", "ation", "iques", "ique",
+        "elles", "elle", "ites", "ite", "eurs", "euses", "euse",
+        "ee", "es", "er", "ir", "re", "e", "s",
+    ):
+        if len(token) > len(suffix) + 3 and token.endswith(suffix):
+            return token[: -len(suffix)]
+    return token
+
+
 def match_patterns(text: str, patterns: list[str]) -> list[str]:
-    return [pattern for pattern in patterns if re.search(pattern, text)]
+    matched: list[str] = []
+    query_stems: set[str] | None = None
+    for pattern in patterns:
+        if re.search(pattern, text):
+            matched.append(pattern)
+            continue
+        word_match = _SIMPLE_WORD_PATTERN_RE.match(pattern)
+        if not word_match:
+            continue
+        word = word_match.group(1).replace("'", "")
+        if len(word) < 4:
+            continue
+        if query_stems is None:
+            query_stems = {
+                domain_stem(token)
+                for token in re.findall(r"[a-z0-9']{3,}", text)
+            }
+        if domain_stem(word) in query_stems:
+            matched.append(pattern)
+    return matched
 
 
 def mandate_meeting_query(query: str) -> bool:
@@ -1706,6 +1749,19 @@ def legifrance_concepts(text: str) -> set[str]:
     }
 
 
+_LEGIFRANCE_GENERIC_WORD_TOKENS = {
+    "travail", "code", "salarie", "employeur", "contrat", "entreprise",
+    "disposition", "article", "cas", "dispositions", "employeurs",
+    "salaries",
+}
+
+
+def _legifrance_word_tokens(value: Any) -> set[str]:
+    text = normalize(str(value or ""))
+    tokens = re.findall(r"[a-z0-9]{3,}", text)
+    return {domain_stem(token) for token in tokens if token not in STOPWORDS}
+
+
 def legifrance_relevance_evaluation(source: dict[str, Any], route: dict[str, Any]) -> dict[str, Any]:
     domains = business_domains(route)
     query = expand_legifrance_query(route.get("query", ""))
@@ -1732,6 +1788,18 @@ def legifrance_relevance_evaluation(source: dict[str, Any], route: dict[str, Any
         and normalize(term) in query
         and normalize(term) in context
     )
+    # LEGIFRANCE_CONCEPT_TERMS and DOMAIN_SOURCE_BOOSTS are both curated,
+    # hand-picked lists; several domains (e.g. droit_travail_general) have
+    # no boost entry at all, so a genuinely relevant article was rejected
+    # here purely for lack of coverage in those lists. Fall back to a plain
+    # word-stem overlap between the question and the article's own text
+    # (excluding words so generic to "Code du travail" they'd match almost
+    # any article), requiring at least two distinct shared, meaningful
+    # words before trusting it.
+    word_overlap = sorted(
+        (_legifrance_word_tokens(query) & _legifrance_word_tokens(context))
+        - _LEGIFRANCE_GENERIC_WORD_TOKENS
+    )
     score = 0
     if shared_concepts:
         concept_score = min(60, len(shared_concepts) * 40)
@@ -1741,6 +1809,10 @@ def legifrance_relevance_evaluation(source: dict[str, Any], route: dict[str, Any
         term_score = min(36, len(shared_terms) * 12)
         score += term_score
         reasons.append("termes metier partages: " + ", ".join(shared_terms[:5]) + f" (+{term_score})")
+    if len(word_overlap) >= 2:
+        overlap_score = min(40, len(word_overlap) * 15)
+        score += overlap_score
+        reasons.append("mots partages (racines): " + ", ".join(word_overlap[:5]) + f" (+{overlap_score})")
 
     try:
         base_score = float(source.get("score") or source.get("match_score") or 0)
@@ -1751,7 +1823,7 @@ def legifrance_relevance_evaluation(source: dict[str, Any], route: dict[str, Any
         score += base_bonus
         reasons.append(f"score connecteur pris en compte (+{round(base_bonus, 1)})")
 
-    has_business_match = bool(shared_concepts or shared_terms)
+    has_business_match = bool(shared_concepts or shared_terms or len(word_overlap) >= 2)
     accepted = score >= 35 and has_business_match
     return {
         "accepted": accepted,

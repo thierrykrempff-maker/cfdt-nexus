@@ -607,6 +607,40 @@ class LegifranceClient:
                     warnings.append(f"source Code du travail ignoree ({article}): {quality_warning}")
                     continue
                 usable_sources.append(source)
+            if not usable_sources:
+                # The curated mini-index only covers a few dozen hand-picked
+                # topics: most real questions don't match any of them. Fall
+                # back to a genuine free-text Legifrance search on the raw
+                # query instead of giving up, so Nexus isn't limited to
+                # those pre-selected topics.
+                try:
+                    fallback_hits = self.search_article_hits(query, limit=max(limit, 3))
+                except LegifranceError as exc:
+                    warnings.append(f"Recherche libre Code du travail indisponible: {exc}")
+                    fallback_hits = []
+                fallback_sources: list[dict[str, Any]] = []
+                for candidate in fallback_hits:
+                    article_id = candidate.get("official_id")
+                    if not article_id:
+                        continue
+                    try:
+                        fallback_sources.append(self.article_source(str(article_id), candidate))
+                    except LegifranceError as exc:
+                        warnings.append(str(exc))
+                for source in dedupe_hits(fallback_sources):
+                    quality_warning = code_source_quality_warning(source)
+                    if quality_warning:
+                        article = source.get("article") or source.get("article_or_section") or source.get("official_id")
+                        warnings.append(f"source Code du travail ignoree ({article}): {quality_warning}")
+                        continue
+                    usable_sources.append(source)
+                    if len(usable_sources) >= limit:
+                        break
+                if fallback_hits:
+                    warnings.append(
+                        "Mini-index Code du travail V1 sans correspondance : recherche Legifrance "
+                        "en texte libre utilisee a la place."
+                    )
             sources = usable_sources[: max(1, limit)]
             if not hits:
                 warnings.append("Mini-index Code du travail V1: aucun article cible selectionne pour cette question.")
@@ -1624,6 +1658,13 @@ def code_source_quality_warning(source: dict[str, Any]) -> str | None:
         return "identifiant officiel Legifrance absent"
     if not etat:
         return "etat de vigueur absent"
+    if source.get("is_in_force") is False:
+        # A free-text Legifrance search returns every historical version of
+        # an article, including repealed ones (etat ABROGE/MODIFIE) — unlike
+        # the curated mini-index, which only ever pointed at current
+        # articles. Showing a repealed article as applicable law would be
+        # actively misleading, worse than citing nothing.
+        return f"article non en vigueur (etat: {etat})"
     if len(normalized_excerpt) < 40 or normalized_excerpt in {"code du travail", normalize_text(article)}:
         return "extrait utile absent"
     return None
