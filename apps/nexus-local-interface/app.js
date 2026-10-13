@@ -1736,6 +1736,7 @@ function renderCseAgendaAnalysis(analysis) {
       });
       card.appendChild(previousGrid);
     }
+    window.NexusPvArchive?.appendAgreements(card, point.agreements);
 
     const questionsTitle = document.createElement("h4");
     questionsTitle.textContent = "Questions pertinentes à poser à la direction";
@@ -3147,6 +3148,7 @@ function openWorkspace(workspace, preset = "", employeePath = "") {
   resetQuestionDocuments();
   resetCsePreviousPvDocuments();
   cseAgendaWorkflow.hidden = !csePreparation;
+  window.NexusAgreementCompare?.onWorkspace(workspace);
   wizardWorkspaceLabel.textContent = definition.label;
   wizardTitle.textContent = definition.title;
   wizardDescription.textContent = definition.description;

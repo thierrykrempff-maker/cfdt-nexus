@@ -719,4 +719,47 @@ textarea { resize: vertical; }
 .pv-archive-message { padding: 10px 12px; border-radius: 8px; background: #f4f6f8; color: var(--muted); margin: 0; }
 .pv-archive-inline { display: grid; gap: 10px; }
 .pv-archive-inline .secondary-button { justify-self: start; }
-@media print { .pv-archive-panel, .pv-archive-inline, #pvSearchButton { display: none !important; } }
+@media print { .pv-archive-panel, .pv-archive-inline, #pvSearchButton, #accordsSearchButton, #compareSearchButton, #negotiationCompareWorkflow { display: none !important; } }
+
+/* Comparaison d'accords (à l'écran uniquement) */
+.agreement-compare-panel { max-width: 1100px; }
+.cmp-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cmp-side { display: grid; gap: 8px; margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; }
+.cmp-side legend { padding: 0 6px; font-weight: 700; }
+.cmp-side input[type="search"], .cmp-side select { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.cmp-file { display: grid; gap: 4px; font-size: 0.9rem; color: var(--muted); }
+.cmp-heading { margin: 22px 0 8px; font-size: 1.05rem; }
+.cmp-summary .cmp-heading { margin-top: 18px; }
+.cmp-detail { margin: 4px 0; color: var(--muted); font-size: 0.92rem; }
+.cmp-empty { margin: 4px 0; color: var(--muted); font-style: italic; }
+.cmp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.cmp-chip { padding: 3px 10px; border-radius: 999px; background: #eef2f6; font-size: 0.88rem; }
+.cmp-list { margin: 6px 0; padding-left: 20px; display: grid; gap: 6px; }
+.cmp-change { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-left-width: 4px; border-radius: 8px; background: white; }
+.cmp-change--modifie { border-left-color: #d59b00; }
+.cmp-change--ajoute { border-left-color: #2e7d32; }
+.cmp-change--supprime { border-left-color: #b3261e; }
+.cmp-change summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cmp-badge { padding: 1px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; color: white; }
+.cmp-badge--modifie { background: #b07f00; }
+.cmp-badge--ajoute { background: #2e7d32; }
+.cmp-badge--supprime { background: #b3261e; }
+.cmp-figure { padding: 1px 8px; border-radius: 6px; background: #fff3cd; font-size: 0.85rem; }
+.cmp-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+.cmp-column { padding: 8px 10px; border-radius: 8px; background: #f7f8fa; }
+.cmp-column ul { margin: 6px 0 0; padding-left: 18px; }
+.cmp-topic { margin: 14px 0; }
+.cmp-topic h4 { margin: 0 0 4px; }
+.cmp-warning { margin: 6px 0 0; padding: 6px 8px; border-radius: 6px; background: #fdecea; color: #7a1c15; font-size: 0.9rem; }
+.cmp-warning-inline { color: #b3261e; font-weight: 600; }
+.cmp-ok { color: #2e7d32; }
+.cmp-limits { margin-top: 18px; }
+.negotiation-compare-workflow { display: grid; gap: 8px; margin: 12px 0; padding: 14px; border: 1px dashed var(--line); border-radius: 10px; background: #faf8fc; }
+.negotiation-compare-workflow p { margin: 0; color: var(--muted); }
+.negotiation-compare-workflow .secondary-button { justify-self: start; }
+@media (max-width: 760px) { .cmp-sides, .cmp-columns { grid-template-columns: 1fr; } }
+
+/* En-tête : les boutons de recherche et de comparaison passent à la ligne quand la place manque */
+.app-header { flex-wrap: wrap; }
+.header-actions { flex-wrap: wrap; justify-content: flex-end; gap: 8px 12px; }
+.header-actions .settings-button { white-space: nowrap; }

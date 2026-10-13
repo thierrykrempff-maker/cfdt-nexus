@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="styles.css?v=nexus-effective-2">
     <script src="app.js?v=nexus-effective-2" defer></script>
     <script src="pv-archive.js?v=1" defer></script>
+    <script src="agreement-compare.js?v=1" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#mainContent">Aller au contenu principal</a>
@@ -36,6 +37,12 @@
         </span>
         <button class="settings-button" type="button" id="pvSearchButton" aria-expanded="false" aria-controls="pvArchivePanel">
           Recherche dans les PV
+        </button>
+        <button class="settings-button" type="button" id="accordsSearchButton" aria-expanded="false" aria-controls="accordsArchivePanel">
+          Recherche dans les accords
+        </button>
+        <button class="settings-button" type="button" id="compareSearchButton" aria-expanded="false" aria-controls="agreementComparePanel">
+          Comparer des accords
         </button>
         <button class="settings-button" type="button" id="settingsButton" aria-expanded="false" aria-controls="settingsPanel">
           Paramètres
@@ -90,6 +97,69 @@
       <p class="source-context-notice" id="pvArchiveStatus" role="status"></p>
       <div class="pv-archive-results" id="pvArchiveResults" aria-live="polite"></div>
       <p class="source-context-notice">Les extraits restent à l’écran : ils ne sont ajoutés ni au rapport, ni aux copies, impressions ou téléchargements.</p>
+    </section>
+
+    <section class="pv-archive-panel" id="accordsArchivePanel" hidden aria-labelledby="accordsArchiveTitle">
+      <div class="pv-archive-heading">
+        <div>
+          <p class="eyebrow">Archive locale des accords d’entreprise</p>
+          <h2 id="accordsArchiveTitle">Rechercher dans les accords</h2>
+        </div>
+        <button class="icon-button" type="button" id="accordsArchiveClose" aria-label="Fermer la recherche dans les accords">×</button>
+      </div>
+      <form class="pv-archive-form" id="accordsArchiveForm" novalidate>
+        <label for="accordsArchiveQuery">Une question ou quelques mots-clés</label>
+        <input id="accordsArchiveQuery" type="search" maxlength="600" autocomplete="off"
+               placeholder="ex. prime tuteur formation des nouveaux entrants">
+        <div class="pv-archive-options">
+          <label>Depuis <input id="accordsArchiveSince" type="number" min="1990" max="2100" placeholder="année"></label>
+          <label>Jusqu’à <input id="accordsArchiveUntil" type="number" min="1990" max="2100" placeholder="année"></label>
+          <label>Trier
+            <select id="accordsArchiveSort">
+              <option value="relevance">Pertinence</option>
+              <option value="recent">Plus récents d’abord</option>
+              <option value="old">Plus anciens d’abord</option>
+            </select>
+          </label>
+          <button class="primary-button" type="submit">Rechercher</button>
+        </div>
+      </form>
+      <p class="source-context-notice" id="accordsArchiveStatus" role="status"></p>
+      <div class="pv-archive-results" id="accordsArchiveResults" aria-live="polite"></div>
+      <p class="source-context-notice">Les extraits restent à l’écran : ils ne sont ajoutés ni au rapport, ni aux copies, impressions ou téléchargements. Vérifiez toujours la version en vigueur (avenants, dénonciation).</p>
+    </section>
+
+    <section class="pv-archive-panel agreement-compare-panel" id="agreementComparePanel" hidden aria-labelledby="agreementCompareTitle">
+      <div class="pv-archive-heading">
+        <div>
+          <p class="eyebrow">Réunions paritaires et accords INEOS</p>
+          <h2 id="agreementCompareTitle">Comparer des accords et vérifier les interférences</h2>
+        </div>
+        <button class="icon-button" type="button" id="agreementCompareClose" aria-label="Fermer la comparaison d’accords">×</button>
+      </div>
+      <p class="source-context-notice">Choisissez l’ancien accord, puis le nouvel accord, l’avenant ou le projet reçu (dans l’archive, ou en important le fichier). Nexus compare article par article, relève les valeurs chiffrées modifiées, cherche les autres accords qui traitent des mêmes sujets et rappelle ce qui a été dit en réunion.</p>
+      <form class="agreement-compare-form" id="agreementCompareForm" novalidate>
+        <div class="cmp-sides">
+        <fieldset class="cmp-side">
+          <legend>Ancien accord</legend>
+          <input id="cmpOldFilter" type="search" autocomplete="off" placeholder="Filtrer l’archive (ex. télétravail, intéressement)" aria-label="Filtrer ancien accord">
+          <select id="cmpOldSelect" size="7" aria-label="Ancien accord"></select>
+          <label class="cmp-file">… ou importer l’ancien texte <input id="cmpOldFile" type="file" accept=".pdf,.docx,.txt,.md"></label>
+        </fieldset>
+        <fieldset class="cmp-side">
+          <legend>Nouvel accord, avenant ou projet</legend>
+          <input id="cmpNewFilter" type="search" autocomplete="off" placeholder="Filtrer l’archive (ex. télétravail, intéressement)" aria-label="Filtrer nouvel accord, avenant ou projet">
+          <select id="cmpNewSelect" size="7" aria-label="Nouvel accord, avenant ou projet"></select>
+          <label class="cmp-file">… ou importer le nouveau texte <input id="cmpNewFile" type="file" accept=".pdf,.docx,.txt,.md"></label>
+        </fieldset>
+        </div>
+        <div class="pv-archive-options">
+          <button class="primary-button" type="submit" id="cmpRun">Comparer et vérifier les interférences</button>
+          <span class="source-context-notice" id="cmpStatus" role="status"></span>
+        </div>
+      </form>
+      <div class="cmp-results" id="cmpResults" aria-live="polite"></div>
+      <p class="source-context-notice">Les textes et extraits restent à l’écran : ils ne sont ajoutés ni au rapport, ni aux copies, impressions ou téléchargements. Un fichier importé n’est pas conservé.</p>
     </section>
 
     <main id="mainContent">
@@ -477,6 +547,11 @@
 
           <form id="questionForm" class="question-form" novalidate>
             <div class="wizard-error" id="wizardError" role="alert" hidden></div>
+            <section class="negotiation-compare-workflow" id="negotiationCompareWorkflow" hidden>
+              <strong>Comparer un accord avec l’archive</strong>
+              <p>Comparez l’ancien accord avec le nouvel accord, l’avenant ou le projet de la direction, et vérifiez qu’il n’interfère pas avec un autre accord.</p>
+              <button class="secondary-button" type="button" id="negotiationCompareButton">Comparer avec l’archive des accords</button>
+            </section>
             <section class="wizard-step" data-step="1" aria-labelledby="stepOneTitle">
               <p class="step-count">Étape 1 sur 5</p>
               <h2 id="stepOneTitle">Quel est votre besoin&nbsp;?</h2>
@@ -632,6 +707,13 @@
               <p class="source-context-notice">Passages retrouvés par les mots de votre question. Affichés ici uniquement : non repris dans le rapport ni les exports.</p>
               <div id="pvArchiveInlineBody" aria-live="polite"></div>
               <button class="secondary-button" type="button" id="pvArchiveInlineMore">Chercher plus largement dans les PV</button>
+            </section>
+
+            <section class="response-band pv-archive-inline" id="accordsArchiveInline" hidden>
+              <h2>Dans les accords d’entreprise</h2>
+              <p class="source-context-notice">Textes de l’archive retrouvés par les mots de votre question. Affichés ici uniquement : non repris dans le rapport ni les exports. Vérifiez la version en vigueur.</p>
+              <div id="accordsArchiveInlineBody" aria-live="polite"></div>
+              <button class="secondary-button" type="button" id="accordsArchiveInlineMore">Chercher plus largement dans les accords</button>
             </section>
 
             <section class="response-band chatbot-sources-summary" id="chatbotSourcesSummary" hidden>

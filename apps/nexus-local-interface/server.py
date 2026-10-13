@@ -46,7 +46,8 @@ from local_cases import LocalCaseStore  # noqa: E402
 from local_ocr import LocalOCRUnavailable, extract_text_from_jpeg  # noqa: E402
 from cse_agenda_analysis import build_cse_agenda_analysis  # noqa: E402
 from rgpd_analysis import build_rgpd_analysis, build_rgpd_corpus_scan  # noqa: E402
-from pv_archive_search import archive_status, search_pv_archive  # noqa: E402
+from pv_archive_search import archive_status, search_archive  # noqa: E402
+from agreement_compare import compare_request, list_archive_agreements  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -840,6 +841,21 @@ def analyze_public_question(
     return sanitize_public_payload(result)
 
 
+def _read_comparison_attachment(attachment: object) -> tuple[str, str]:
+    """Fichier importé pour la comparaison d'accords : lu en mémoire, jamais conservé."""
+
+    documents = extract_uploaded_documents([attachment])
+    if not documents:
+        raise ValueError("Le fichier importé est vide ou illisible.")
+    document = documents[0]
+    text = str(document.get("text") or "")
+    if not text.strip():
+        text = "\n".join(str(item.get("text") or "") for item in document.get("passages") or [] if isinstance(item, dict))
+    if not text.strip():
+        raise ValueError("Aucun texte lisible dans le fichier importé.")
+    return str(document.get("name") or "Texte importé"), text
+
+
 class NexusHandler(SimpleHTTPRequestHandler):
     server_version = "NexusLocalInterface"
 
@@ -897,8 +913,12 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 },
             )
             return
-        if parsed.path == "/api/pv-archive/status":
-            self.send_json(HTTPStatus.OK, {"ok": True, **archive_status()})
+        if parsed.path in {"/api/pv-archive/status", "/api/accords-archive/status"}:
+            corpus = "accords" if parsed.path.startswith("/api/accords") else "pv"
+            self.send_json(HTTPStatus.OK, {"ok": True, **archive_status(corpus)})
+            return
+        if parsed.path == "/api/agreements/list":
+            self.send_json(HTTPStatus.OK, {"ok": True, **list_archive_agreements()})
             return
         if parsed.path == "/api/employee-case/scenarios":
             self.send_json(HTTPStatus.OK, {"ok": True, "scenarios": public_scenarios(), "synthetic_only": True})
@@ -1033,6 +1053,8 @@ class NexusHandler(SimpleHTTPRequestHandler):
             "/api/cse/agenda-preview",
             "/api/rgpd/analyze",
             "/api/pv-archive/search",
+            "/api/accords-archive/search",
+            "/api/agreements/compare",
         }:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
@@ -1046,14 +1068,21 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
                 )
                 return
-            if parsed.path == "/api/pv-archive/search":
+            if parsed.path == "/api/agreements/compare":
+                self.send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "comparison": compare_request(payload, _read_comparison_attachment)},
+                )
+                return
+            if parsed.path in {"/api/pv-archive/search", "/api/accords-archive/search"}:
                 if not isinstance(payload, dict):
                     raise ValueError("Requete invalide.")
                 self.send_json(
                     HTTPStatus.OK,
                     {
                         "ok": True,
-                        "pv_archive": search_pv_archive(
+                        "pv_archive": search_archive(
+                            "accords" if parsed.path.startswith("/api/accords") else "pv",
                             payload.get("query"),
                             since=payload.get("since"),
                             until=payload.get("until"),

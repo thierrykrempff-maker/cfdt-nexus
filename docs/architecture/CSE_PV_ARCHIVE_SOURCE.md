@@ -1,4 +1,4 @@
-# Archive des PV : ordre du jour CSE, questions et recherche libre
+# Archives locales (PV et accords) : ordre du jour CSE, questions et recherche libre
 
 Statut : optionnelle, **désactivée par défaut**, activée localement par `NEXUS_PV_ARCHIVE_ENABLED`.
 
@@ -95,6 +95,57 @@ server.py -> pv_archive_search.search_pv_archive
 
 Tests : `tests/test_pv_archive_search.py` (mots-clés, bornes d'années, limite, option désactivée, service absent ou non local,
 réponse malformée, routes HTTP du vrai serveur Nexus avec un faux service).
+
+## Archive des accords d'entreprise (second corpus)
+
+Même mécanique que les PV, avec le corpus « accords » du même service local (`POST /api/passages`, champ `corpus`).
+Option indépendante : `NEXUS_ACCORDS_ARCHIVE_ENABLED` (désactivée par défaut, activée dans `start-nexus-local.bat`).
+L'index (`~/.claude/nexus-private/accords_index`, issu de `D:\accords`) reste **hors dépôt**.
+
+| Endroit | Fonctionnement |
+| --- | --- |
+| Bouton « Recherche dans les accords » | panneau autonome (question ou mots-clés, bornes d'années, tri, 10 résultats) |
+| Question | bloc « Dans les accords d'entreprise » sous la réponse (4 passages au plus), à côté du bloc PV |
+| Ordre du jour CSE | liste `agreements` par point (3 au plus), titre « Accords et textes de l'archive » ; **séparée** de `previous_minutes` car un accord n'est pas un ancien PV |
+
+Les extraits d'accord portent `origin = "ACCORDS_ARCHIVE"`, `nature = "TEXTE_ACCORD"`, un titre sans date ni extension,
+un type déduit du nom (Avenant, Protocole d'accord, PV de désaccord, Charte, Accord, Document) et la mention
+« Vérifiez la version en vigueur, les avenants et une éventuelle dénonciation ». Ils restent à l'écran, hors rapport et exports.
+Le classement valorise un mot-clé présent dans le **titre** du document (ex. « Accord prime tuteur »).
+
+Champs ajoutés à l'analyse d'ordre du jour, **uniquement quand l'option est active** : `accords_status`
+(`READY` ou `UNAVAILABLE`), `points_with_agreements`, `points[].agreements`.
+
+## Comparaison d'accords et contrôle des interférences
+
+Bouton « Comparer des accords » (en-tête) et bloc « Comparer un accord avec l'archive » dans l'espace
+« Négociations et accords » (réunions paritaires et accords INEOS). Module `agreement_compare.py`, routes
+`GET /api/agreements/list` et `POST /api/agreements/compare`, interface `agreement-compare.js`. Option :
+`NEXUS_ACCORDS_ARCHIVE_ENABLED` (le contexte des réunions demande en plus `NEXUS_PV_ARCHIVE_ENABLED`).
+
+Entrées : un **ancien accord** et un **nouvel accord, avenant ou projet**, chacun choisi dans l'archive ou importé
+(PDF, Word, texte ; lu en mémoire, jamais conservé).
+
+| Étape | Fonctionnement |
+| --- | --- |
+| Découpage | articles (« Article 4 - Titre »), sinon rubriques numérotées, sinon passages ; pages et numéros de page ignorés |
+| Remplacement | appariement des articles (même numéro et contenu proche, puis meilleure ressemblance) ; articles modifiés, ajoutés, supprimés |
+| Avenant | un avenant ne reprend pas la numérotation : chaque phrase est cherchée dans **tout** l'ancien accord (insensible aux mots collés par l'OCR) ; chaque modification est rattachée à l'article de l'ancien texte ; les articles non visés restent applicables |
+| Différences | phrases avant / après, **valeurs chiffrées** modifiées (%, €, jours, heures, horaires « 8h30 »), termes d'obligation (peut / doit, facultatif / obligatoire) |
+| Textes cités | références datées (« annule et remplace l'accord du 14/02/2022 »), leur effet (remplace, abroge, dénonce, révise, modifie, complète, maintient) et leur présence dans l'archive |
+| Interférences | pour les sujets modifiés, les passages **d'autres accords** de l'archive (les deux textes comparés sont exclus), avec les valeurs qui diffèrent |
+| Réunions | ce qui a été dit sur ces sujets dans les PV du CE/CSE (si l'archive des PV est activée) |
+
+« Réunions paritaires » : aucun dossier distinct n'existe ; Nexus utilise les PV du CE/CSE. Les documents de négociation
+(ex. présentation NAO) ne sont pas dans cette archive tant qu'ils ne sont pas indexés.
+
+Service local : `GET /api/documents?corpus=accords` (liste) et `POST /api/document` (texte complet) sont réservés au serveur
+Nexus (aucun appel de navigateur). Les accords sont désignés par une **référence de 16 caractères** : le filtre de sortie de
+Nexus (`sanitize_http_public_payload`) masque les chaînes hexadécimales de 32 caractères ou plus.
+
+Le résultat n'est qu'une aide à la vérification (découpage heuristique, OCR possible) : pas d'avis juridique ; vérifier la
+version en vigueur, les avenants, la dénonciation et la hiérarchie des normes. Les textes et extraits restent à l'écran,
+hors rapport et exports. Tests : `tests/test_agreement_compare.py`.
 
 ## Limites connues
 

@@ -25,6 +25,9 @@ MAX_ARCHIVE_PASSAGES = 3
 # Source optionnelle « archive PV » : service local du module Précédents (loopback uniquement).
 # Désactivée par défaut, comme les autres activations locales (voir start-nexus-local.bat).
 _ARCHIVE_FLAG = "NEXUS_PV_ARCHIVE_ENABLED"
+# Seconde archive : accords d'entreprise (même service local, corpus « accords »). Désactivée par défaut.
+_ACCORDS_FLAG = "NEXUS_ACCORDS_ARCHIVE_ENABLED"
+MAX_ACCORDS_PASSAGES = 3
 _ARCHIVE_URL_VARIABLE = "NEXUS_PV_ARCHIVE_URL"
 _ARCHIVE_DEFAULT_URL = "http://127.0.0.1:8791"
 _ARCHIVE_TIMEOUT_SECONDS = 10
@@ -475,6 +478,109 @@ def _search_pv_archive(
     return rows, "READY"
 
 
+def _accords_enabled() -> bool:
+    return os.environ.get(_ACCORDS_FLAG, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+_ACCORD_KINDS = (
+    ("desaccord", "PV de désaccord"),  # avant « accord », que ce mot contient
+    ("avenant", "Avenant"),
+    ("protocole", "Protocole d’accord"),
+    ("reglement", "Règlement"),
+    ("charte", "Charte"),
+    ("code de conduite", "Code de conduite"),
+    ("accord", "Accord"),
+)
+
+
+def _accord_kind(name: str) -> str:
+    folded = _normalize(name)
+    for marker, label in _ACCORD_KINDS:
+        if marker in folded:
+            return label
+    return "Document"
+
+
+def _accord_row(raw: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Passage d'un accord de l'archive locale, au format des autres extraits (titre, date, extrait...)."""
+
+    excerpt = _public_text(raw.get("extrait"), 700)
+    if not excerpt:
+        return None
+    path = str(raw.get("fichier") or "")
+    name = re.split(r"[\\/]", path)[-1]
+    base = re.sub(r"\.[A-Za-z0-9]{2,5}$", "", name)
+    title = _public_text(re.sub(r"^\d{4}[.\-_ ]\d{2}[.\-_ ]\d{2}\s*[-_ ]*", "", base), 180) or "Accord de l’archive"
+    notions = [
+        _public_text(item, 60)
+        for item in (raw.get("notions") if isinstance(raw.get("notions"), Sequence) else ())
+        if item
+    ]
+    page = raw.get("page")
+    return {
+        "title": title,
+        "date": _archive_date(raw.get("date"), raw.get("precision_date")),
+        "instance": f"{_accord_kind(name)} · archive accords",
+        "reference": f"p. {page}" if isinstance(page, int) and page > 0 else "",
+        "excerpt": excerpt,
+        "nature": "TEXTE_ACCORD",
+        "origin": "ACCORDS_ARCHIVE",
+        "relation": (
+            f"Notion(s) du point retrouvée(s) dans ce texte : {', '.join(notions)}."
+            if notions
+            else "Passage rapproché du point par les termes factuels du sujet."
+        ),
+        "limits": [
+            "Texte tiré de l’archive locale des accords (OCR possible sur les anciens scans).",
+            "Vérifiez la version en vigueur, les avenants et une éventuelle dénonciation avant de vous en servir.",
+            "Ce n’est pas une analyse juridique ; l’absence de résultat ne prouve pas qu’aucun accord n’existe.",
+        ],
+    }
+
+
+def _search_accords_archive(
+    points: Sequence[Mapping[str, Any]],
+) -> tuple[dict[int, list[dict[str, Any]]], str]:
+    """Cherche chaque point dans l'archive des accords (une seule requête) ; ne lève jamais d'exception."""
+
+    if not _accords_enabled():
+        return {}, "DISABLED"
+    endpoint = _archive_endpoint()
+    if endpoint is None:
+        return {}, "UNAVAILABLE"
+    request_points = []
+    for index, point in enumerate(points):
+        concepts = _concepts(str(point.get("title") or ""))
+        if concepts:
+            request_points.append(
+                {"id": str(index), "concepts": list(concepts), "min_matches": 2 if len(concepts) >= 3 else 1}
+            )
+    if not request_points:
+        return {}, "READY"
+    request = urllib_request.Request(
+        endpoint,
+        data=json.dumps({"corpus": "accords", "points": request_points}).encode("utf-8"),
+        headers={"Content-Type": "application/json", "X-Nexus": "1", "X-Nexus-Server": "1"},
+        method="POST",
+    )
+    try:
+        with urllib_request.urlopen(request, timeout=_ARCHIVE_TIMEOUT_SECONDS) as response:  # noqa: S310 - loopback verifie
+            payload = json.loads(response.read().decode("utf-8"))
+    except (urllib_error.URLError, OSError, ValueError):
+        return {}, "UNAVAILABLE"
+    by_point = payload.get("points") if isinstance(payload, Mapping) else None
+    if not isinstance(by_point, Mapping):
+        return {}, "UNAVAILABLE"
+    rows: dict[int, list[dict[str, Any]]] = {}
+    for key, items in by_point.items():
+        if not str(key).isdigit() or not isinstance(items, Sequence) or isinstance(items, (str, bytes)):
+            continue
+        converted = [row for row in (_accord_row(item) for item in items if isinstance(item, Mapping)) if row]
+        if converted:
+            rows[int(key)] = converted[:MAX_ACCORDS_PASSAGES]
+    return rows, "READY"
+
+
 def _merge_previous_minutes(
     uploaded: Sequence[Mapping[str, Any]],
     corpus: Sequence[Mapping[str, Any]],
@@ -574,6 +680,7 @@ def build_cse_agenda_analysis(
     analyzed = []
     corpus_status = engine.inventory().root_status
     archive_rows, archive_status = _search_pv_archive(points)
+    accords_rows, accords_status = _search_accords_archive(points)
     for index, point in enumerate(points):
         corpus_previous, corpus_status = _search_previous_minutes(
             engine,
@@ -600,6 +707,8 @@ def build_cse_agenda_analysis(
                 ],
             }
         )
+        if accords_status != "DISABLED":
+            analyzed[-1]["agreements"] = accords_rows.get(index, [])
     result: dict[str, Any] = {
         "status": "READY",
         "agenda_document": _public_text(document.get("name"), 160),
@@ -625,6 +734,17 @@ def build_cse_agenda_analysis(
                 "L’archive complète des PV du CE/CSE a aussi été interrogée (extraits locaux, jamais publiés)."
                 if archive_status == "READY"
                 else "L’archive des PV est activée mais indisponible : lancez le service local « Précédents »."
+            )
+        )
+    if accords_status != "DISABLED":
+        result["accords_status"] = accords_status
+        result["points_with_agreements"] = sum(bool(item.get("agreements")) for item in analyzed)
+        result["corpus_notice"] = (
+            f"{result['corpus_notice']} "
+            + (
+                "Les accords de l’archive locale ont aussi été consultés (extraits locaux, jamais publiés)."
+                if accords_status == "READY"
+                else "L’archive des accords est activée mais indisponible : lancez le service local « Précédents »."
             )
         )
     return result

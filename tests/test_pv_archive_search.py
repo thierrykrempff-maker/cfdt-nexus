@@ -52,8 +52,28 @@ ARCHIVE_ROWS = [
 ]
 
 
+ACCORD_ROWS = [
+    {
+        "date": "2014-12-17",
+        "precision_date": "jour",
+        "fichier": "2014.12.17_Avenant 2_Accord Mutuelle.pdf",
+        "page": 3,
+        "notions": ["mutuelle"],
+        "extrait": "Fictif : article 4, la cotisation mutuelle est prise en charge par l'employeur.",
+    },
+    {
+        "date": "2025-01-01",
+        "precision_date": "année",
+        "fichier": "Calendrier postes Labo_2025-3x8.pdf",
+        "page": 1,
+        "notions": [],
+        "extrait": "Fictif : planning des équipes du laboratoire.",
+    },
+]
+
+
 class _FakeArchive:
-    def __init__(self, rows=ARCHIVE_ROWS):
+    def __init__(self, rows=ARCHIVE_ROWS, accord_rows=ACCORD_ROWS):
         self.posts: list[dict[str, object]] = []
         outer = self
 
@@ -69,12 +89,13 @@ class _FakeArchive:
                 self.wfile.write(raw)
 
             def do_GET(self):
-                self._answer({"ok": True, "pv_indexes": 783})
+                self._answer({"ok": True, "pv_indexes": 783, "corpora": {"pv": 783, "accords": 106}})
 
             def do_POST(self):
                 body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
                 outer.posts.append({"path": self.path, "headers": dict(self.headers), "body": body})
-                self._answer({"ok": True, "points": {point["id"]: rows for point in body["points"]}})
+                chosen = accord_rows if body.get("corpus") == "accords" else rows
+                self._answer({"ok": True, "points": {point["id"]: chosen for point in body["points"]}})
 
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
         self.url = f"http://127.0.0.1:{self.server.server_address[1]}"
@@ -234,3 +255,83 @@ def test_http_search_is_disabled_by_default_and_rejects_bad_bodies(monkeypatch, 
     assert code == 400 and body["ok"] is False
     code, _ = _post(nexus_http, "/api/pv-archive/inconnu", {})
     assert code == 404
+
+
+# --- second corpus : accords d'entreprise ---------------------------------------------------------
+
+
+@pytest.fixture
+def accords(monkeypatch):
+    fake = _FakeArchive()
+    monkeypatch.delenv("NEXUS_PV_ARCHIVE_ENABLED", raising=False)
+    monkeypatch.setenv("NEXUS_ACCORDS_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    yield fake
+    fake.close()
+
+
+def test_accords_have_their_own_flag_independent_from_the_pv_flag(monkeypatch) -> None:
+    fake = _FakeArchive()
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+    monkeypatch.delenv("NEXUS_ACCORDS_ARCHIVE_ENABLED", raising=False)
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    try:
+        refused = MODULE.search_archive("accords", "mutuelle cotisation")
+        status = MODULE.archive_status("accords")
+        pv = MODULE.search_archive("pv", "connaissances installations")
+    finally:
+        fake.close()
+    assert refused["status"] == "DISABLED" and "accords" in refused["notice"]
+    assert status == {"enabled": False, "available": False}
+    assert pv["status"] == "READY"
+    assert [post["body"]["corpus"] for post in fake.posts] == ["pv"]  # aucun appel pour les accords
+
+
+def test_accords_search_asks_the_accords_corpus_and_shapes_rows(accords) -> None:
+    result = MODULE.search_archive("accords", "mutuelle cotisation employeur", limit=4)
+    assert result["status"] == "READY"
+    body = accords.posts[0]["body"]
+    assert body["corpus"] == "accords" and body["limit"] == 4
+    first, second = result["results"]
+    assert first["title"] == "Avenant 2_Accord Mutuelle"  # date et extension retirées du titre
+    assert first["date"] == "2014-12-17" and first["reference"] == "p. 3"
+    assert first["instance"] == "Avenant · archive accords" and first["origin"] == "ACCORDS_ARCHIVE"
+    assert first["nature"] == "TEXTE_ACCORD"
+    assert "version en vigueur" in " ".join(first["limits"])
+    assert second["title"] == "Calendrier postes Labo_2025-3x8" and second["date"] == "2025"
+    assert second["instance"] == "Document · archive accords"
+    assert "version en vigueur" in result["notice"] and "ne constituent pas" not in result["notice"]
+
+
+def test_accord_kind_is_read_from_the_file_name() -> None:
+    from cse_agenda_analysis import _accord_kind
+
+    assert _accord_kind("2014.12.17_Avenant 2_Accord Mutuelle.pdf") == "Avenant"
+    assert _accord_kind("2024.04.10_INEOS - Accord prime tuteur.pdf") == "Accord"
+    assert _accord_kind("2021.06.16_Protocole accord salarial 2021.pdf") == "Protocole d’accord"
+    assert _accord_kind("2026.06.11-PV de desaccord NAO 2026.pdf") == "PV de désaccord"  # pas « Accord »
+    assert _accord_kind("Kit pedagogique_Prelevement a la source.pdf") == "Document"
+
+
+def test_pv_search_still_asks_the_pv_corpus(archive) -> None:
+    MODULE.search_pv_archive("connaissances installations")
+    assert archive.posts[0]["body"]["corpus"] == "pv"
+
+
+def test_accords_status_needs_a_loaded_corpus(accords) -> None:
+    assert MODULE.archive_status("accords") == {"enabled": True, "available": True, "indexed_documents": 106}
+    assert MODULE.archive_status("inconnu") == {"enabled": False, "available": False}
+    assert MODULE.search_archive("inconnu", "mutuelle cotisation")["status"] == "UNAVAILABLE"
+
+
+def test_http_routes_for_accords(accords, nexus_http) -> None:
+    with urllib.request.urlopen(nexus_http + "/api/accords-archive/status", timeout=30) as response:
+        status = json.loads(response.read())
+    assert status == {"ok": True, "enabled": True, "available": True, "indexed_documents": 106}
+
+    code, body = _post(nexus_http, "/api/accords-archive/search", {"query": "mutuelle cotisation"})
+    assert code == 200 and body["pv_archive"]["status"] == "READY"
+    assert [row["origin"] for row in body["pv_archive"]["results"]] == ["ACCORDS_ARCHIVE", "ACCORDS_ARCHIVE"]
+    # l'archive des PV reste désactivée : les deux options sont indépendantes
+    code, body = _post(nexus_http, "/api/pv-archive/search", {"query": "mutuelle cotisation"})
+    assert code == 200 and body["pv_archive"]["status"] == "DISABLED"

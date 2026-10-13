@@ -413,3 +413,113 @@ def test_pv_archive_passages_are_capped_and_deduplicated(tmp_path, monkeypatch) 
     excerpts = [row["excerpt"] for row in result["points"][0]["previous_minutes"]]
     assert len(excerpts) == MODULE.MAX_ARCHIVE_PASSAGES == 3
     assert len(set(excerpts)) == len(excerpts)
+
+
+# --- Accords d'entreprise : seconde archive de l'ordre du jour -------------------------------------
+
+
+def _accords_service(monkeypatch, rows=None):
+    """Service fictif qui sert les PV et les accords selon le corpus demandé."""
+
+    seen: list[dict[str, object]] = []
+    accord_rows = rows if rows is not None else [
+        {
+            "date": "2024-04-10",
+            "precision_date": "jour",
+            "fichier": "2024.04.10_INEOS - Accord prime tuteur.pdf",
+            "page": 2,
+            "notions": ["formations"],
+            "extrait": "Fictif : le tuteur perçoit une prime pour la formation des nouveaux entrants.",
+        }
+    ]
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+
+        def do_POST(self):
+            body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+            seen.append(body)
+            chosen = accord_rows if body.get("corpus") == "accords" else ARCHIVE_ROWS
+            raw = json.dumps({"ok": True, "points": {point["id"]: chosen for point in body["points"]}}).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(raw)))
+            self.end_headers()
+            self.wfile.write(raw)
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", f"http://127.0.0.1:{server.server_address[1]}")
+    return server, seen
+
+
+def test_accords_are_off_by_default_and_change_nothing(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("NEXUS_ACCORDS_ARCHIVE_ENABLED", raising=False)
+    monkeypatch.delenv("NEXUS_PV_ARCHIVE_ENABLED", raising=False)
+    server, seen = _accords_service(monkeypatch)
+    try:
+        result = _analysis(tmp_path)
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert seen == []
+    assert "accords_status" not in result and "points_with_agreements" not in result
+    assert "agreements" not in result["points"][0]
+
+
+def test_accords_are_listed_per_point_separately_from_previous_minutes(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("NEXUS_PV_ARCHIVE_ENABLED", raising=False)  # PV et accords sont indépendants
+    monkeypatch.setenv("NEXUS_ACCORDS_ARCHIVE_ENABLED", "true")
+    server, seen = _accords_service(monkeypatch)
+    try:
+        result = _analysis(tmp_path)
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert [body["corpus"] for body in seen] == ["accords"]  # un seul appel, corpus accords, pas d'appel PV
+    point = result["points"][0]
+    assert point["previous_minutes"] == []  # un accord n'est pas un ancien PV
+    row = point["agreements"][0]
+    assert row["title"] == "INEOS - Accord prime tuteur"  # date et extension retirées
+    assert row["date"] == "2024-04-10" and row["instance"] == "Accord · archive accords"
+    assert row["origin"] == "ACCORDS_ARCHIVE" and "version en vigueur" in " ".join(row["limits"])
+    assert result["accords_status"] == "READY" and result["points_with_agreements"] == 1
+    assert "accords" in result["corpus_notice"].lower()
+
+
+def test_both_archives_can_be_active_together(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_ACCORDS_ARCHIVE_ENABLED", "true")
+    server, seen = _accords_service(monkeypatch)
+    try:
+        result = _analysis(tmp_path)
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert sorted(body.get("corpus", "pv") for body in seen) == ["accords", "pv"]
+    point = result["points"][0]
+    assert {row["origin"] for row in point["previous_minutes"]} == {"PV_ARCHIVE"}
+    assert [row["origin"] for row in point["agreements"]] == ["ACCORDS_ARCHIVE"]
+    assert result["archive_status"] == "READY" and result["accords_status"] == "READY"
+
+
+def test_accords_unavailable_or_malformed_never_breaks_the_analysis(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("NEXUS_ACCORDS_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", "http://127.0.0.1:9")
+    down = _analysis(tmp_path)
+    assert down["status"] == "READY" and down["accords_status"] == "UNAVAILABLE"
+    assert down["points"][0]["agreements"] == [] and "indisponible" in down["corpus_notice"]
+
+    server, _ = _accords_service(monkeypatch, rows=[{"extrait": ""}, "pas un objet", {"fichier": "x.pdf"}])
+    try:
+        bad = _analysis(tmp_path)
+    finally:
+        server.shutdown()
+        server.server_close()
+    assert bad["accords_status"] == "READY" and bad["points"][0]["agreements"] == []
+
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", "http://example.org:8791")
+    assert _analysis(tmp_path)["accords_status"] == "UNAVAILABLE"  # URL non locale refusée

@@ -1,4 +1,4 @@
-"""Recherche libre dans l'archive locale des PV du CE/CSE.
+"""Recherche libre dans les archives locales : PV du CE/CSE et accords d'entreprise.
 
 Disponible partout dans l'interface Nexus : sous une réponse à une question, et par le bouton « Recherche dans les PV ».
 (L'analyse d'ordre du jour CSE utilise la même archive dans ``cse_agenda_analysis``.)
@@ -26,6 +26,8 @@ from cse_agenda_analysis import (
     _STOP_WORDS,
     _archive_enabled,
     _archive_endpoint,
+    _accord_row,
+    _accords_enabled,
     _archive_row,
     _normalize,
     _public_text,
@@ -56,6 +58,29 @@ NOTICE = (
     "Ils apportent un contexte historique et ne constituent pas une norme juridique. "
     "L’absence de résultat ne prouve pas que le sujet n’a jamais été traité."
 )
+
+
+NOTICE_ACCORDS = (
+    "Ces passages viennent de l’archive locale des accords (OCR possible sur les anciens scans). "
+    "Vérifiez la version en vigueur, les avenants et une éventuelle dénonciation avant de vous en servir. "
+    "Ce n’est pas une analyse juridique ; l’absence de résultat ne prouve pas qu’aucun accord n’existe."
+)
+
+# Deux archives, un seul service local : le corpus est choisi par le champ « corpus » de la requête.
+CORPORA: dict[str, dict[str, Any]] = {
+    "pv": {
+        "enabled": _archive_enabled,
+        "row": _archive_row,
+        "notice": NOTICE,
+        "disabled": "La recherche dans les PV n’est pas activée sur ce poste.",
+    },
+    "accords": {
+        "enabled": _accords_enabled,
+        "row": _accord_row,
+        "notice": NOTICE_ACCORDS,
+        "disabled": "La recherche dans les accords n’est pas activée sur ce poste.",
+    },
+}
 
 
 def query_concepts(text: str) -> list[str]:
@@ -108,10 +133,11 @@ def _service_post(endpoint: str, body: Mapping[str, Any]) -> Mapping[str, Any] |
     return payload if isinstance(payload, Mapping) else None
 
 
-def archive_status() -> dict[str, Any]:
-    """Option activée ? service joignable ? (sans lever d'exception)."""
+def archive_status(corpus: str = "pv") -> dict[str, Any]:
+    """Option activée ? service joignable ? corpus chargé ? (sans lever d'exception)."""
 
-    status: dict[str, Any] = {"enabled": _archive_enabled(), "available": False}
+    config = CORPORA.get(corpus)
+    status: dict[str, Any] = {"enabled": bool(config and config["enabled"]()), "available": False}
     if not status["enabled"]:
         return status
     endpoint = _archive_endpoint()
@@ -125,20 +151,33 @@ def archive_status() -> dict[str, Any]:
     except (urllib_error.URLError, OSError, ValueError):
         return status
     if isinstance(payload, Mapping) and payload.get("ok"):
-        status["available"] = True
-        status["indexed_documents"] = int(payload.get("pv_indexes") or 0)
+        corpora = payload.get("corpora") if isinstance(payload.get("corpora"), Mapping) else {}
+        size = int(corpora.get(corpus, payload.get("pv_indexes") if corpus == "pv" else 0) or 0)
+        status["available"] = size > 0
+        status["indexed_documents"] = size
     return status
 
 
-def search_pv_archive(
+def search_pv_archive(query: object, **options: Any) -> dict[str, Any]:
+    """Cherche dans l'archive des PV (voir ``search_archive``)."""
+
+    return search_archive("pv", query, **options)
+
+
+def search_archive(
+    corpus: str,
     query: object,
     *,
     since: object = None,
     until: object = None,
     limit: object = DEFAULT_LIMIT,
 ) -> dict[str, Any]:
-    """Cherche une question ou des mots-clés dans l'archive. Ne lève jamais d'exception."""
+    """Cherche une question ou des mots-clés dans une archive (« pv » ou « accords »). Ne lève jamais d'exception."""
 
+    config = CORPORA.get(corpus)
+    if config is None:
+        return {"status": "UNAVAILABLE", "query": "", "concepts": [], "required_matches": 0, "results": [],
+                "notice": "Archive inconnue."}
     text = _public_text(query, MAX_QUERY_CHARS) if isinstance(query, str) else ""
     result: dict[str, Any] = {
         "status": "READY",
@@ -146,10 +185,10 @@ def search_pv_archive(
         "concepts": [],
         "required_matches": 0,
         "results": [],
-        "notice": NOTICE,
+        "notice": config["notice"],
     }
-    if not _archive_enabled():
-        return {**result, "status": "DISABLED", "notice": "La recherche dans les PV n’est pas activée sur ce poste."}
+    if not config["enabled"]():
+        return {**result, "status": "DISABLED", "notice": config["disabled"]}
     concepts = query_concepts(text)
     if not concepts:
         return {**result, "status": "EMPTY_QUERY", "notice": "Saisissez au moins un mot-clé de 4 lettres ou plus."}
@@ -158,6 +197,7 @@ def search_pv_archive(
         return {**result, "status": "UNAVAILABLE", "concepts": concepts}
     need = required_matches(len(concepts))
     body: dict[str, Any] = {
+        "corpus": corpus,
         "points": [{"id": "q", "concepts": concepts, "min_matches": need}],
         "limit": max(1, min(int(limit) if str(limit).isdigit() else DEFAULT_LIMIT, MAX_LIMIT)),
     }
@@ -172,7 +212,7 @@ def search_pv_archive(
     seen: set[str] = set()
     items = by_point.get("q")
     for item in items if isinstance(items, Sequence) and not isinstance(items, (str, bytes)) else ():
-        row = _archive_row(item) if isinstance(item, Mapping) else None
+        row = config["row"](item) if isinstance(item, Mapping) else None
         key = _normalize(row.get("excerpt")) if row else ""
         if row and key and key not in seen:
             seen.add(key)
