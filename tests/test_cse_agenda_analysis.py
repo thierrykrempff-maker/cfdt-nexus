@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import sys
+import threading
 
 from tests.cse_cssct_test_support import corpus
 
@@ -237,3 +240,176 @@ def test_interface_and_server_expose_only_the_cse_specific_projection() -> None:
     assert '? "ordre-du-jour"' in javascript
     assert "Analyser l’ordre du jour" in javascript
     assert "Importer un ordre du jour" in html
+
+
+# --- Source optionnelle « archive PV » (service local, loopback) -------------------------------------
+# Corpus et réponses FICTIFS : aucun vrai PV n'entre dans le dépôt.
+
+ARCHIVE_ROWS = [
+    {
+        "date": "2016-03-31",
+        "precision_date": "jour",
+        "fichier": "PV du CE 2016\\03\\2016.03.31 Compte Rendu CE.doc",
+        "page": 2,
+        "notions": ["formations"],
+        "extrait": "Fictif : la direction présente le calendrier des formations professionnelles.",
+    },
+    {
+        "date": "2022-01-01",
+        "precision_date": "année",
+        "fichier": "PV du CSE 2022\\Annexe plan de formation.pdf",
+        "page": 5,
+        "notions": ["formations", "calendrier"],
+        "extrait": "Fictif : le plan de formation est présenté aux élus du CSE.",
+    },
+]
+
+
+class _FakeArchive:
+    """Service d'archive fictif : enregistre les requêtes reçues."""
+
+    def __init__(self, rows=ARCHIVE_ROWS, status=200):
+        self.requests: list[dict[str, object]] = []
+        outer = self
+
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *args):  # silence
+                pass
+
+            def do_POST(self):
+                body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                outer.requests.append({"path": self.path, "headers": dict(self.headers), "body": body})
+                answer = {"ok": True, "points": {point["id"]: rows for point in body["points"]}}
+                raw = json.dumps(answer).encode("utf-8")
+                self.send_response(status)
+                self.send_header("Content-Length", str(len(raw)))
+                self.end_headers()
+                self.wfile.write(raw)
+
+        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        self.url = f"http://127.0.0.1:{self.server.server_address[1]}"
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+
+    def close(self) -> None:
+        self.server.shutdown()
+        self.server.server_close()
+
+
+def _analysis(tmp_path, **kwargs):
+    return MODULE.build_cse_agenda_analysis(
+        [agenda_document()], processed_root=tmp_path / "absent", selected_positions=["2"], **kwargs
+    )
+
+
+def test_pv_archive_is_disabled_by_default_and_changes_nothing(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("NEXUS_PV_ARCHIVE_ENABLED", raising=False)
+    fake = _FakeArchive()
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    try:
+        result = _analysis(tmp_path)
+    finally:
+        fake.close()
+
+    assert fake.requests == []
+    assert "archive_status" not in result
+    assert "points_with_archive_minutes" not in result
+    assert result["points"][0]["previous_minutes"] == []
+
+
+def test_pv_archive_adds_local_passages_after_existing_sources(tmp_path, monkeypatch) -> None:
+    fake = _FakeArchive()
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    uploaded = {
+        "name": "PV-CSE-janvier-2025.txt",
+        "passages": [{"reference": "Page 4", "text": "Le CSE examine le calendrier prévisionnel des formations professionnelles."}],
+    }
+    try:
+        result = _analysis(tmp_path, additional_minutes_documents=[uploaded])
+    finally:
+        fake.close()
+
+    point = result["points"][0]
+    origins = [row.get("origin") for row in point["previous_minutes"]]
+    assert origins[0] == "UPLOADED_MINUTES"  # les sources existantes passent d'abord, ordre inchangé
+    assert origins[1:] == ["PV_ARCHIVE", "PV_ARCHIVE"]
+    archive = point["previous_minutes"][1]
+    assert archive["title"] == "2016.03.31 Compte Rendu CE"  # nom du PV, jamais de chemin
+    assert "\\" not in archive["title"] and "/" not in archive["title"]
+    assert archive["date"] == "2016-03-31" and archive["instance"] == "CE" and archive["reference"] == "p. 2"
+    assert point["previous_minutes"][2]["date"] == "2022" and point["previous_minutes"][2]["instance"] == "CSE"
+    assert "contexte historique" in " ".join(archive["limits"])
+    assert result["archive_status"] == "READY"
+    assert result["points_with_archive_minutes"] == 1
+    assert "archive" in result["corpus_notice"].lower()
+
+
+def test_pv_archive_sends_one_batched_loopback_request_with_server_headers(tmp_path, monkeypatch) -> None:
+    fake = _FakeArchive()
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "1")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    try:
+        MODULE.build_cse_agenda_analysis([agenda_document()], processed_root=tmp_path / "absent")
+    finally:
+        fake.close()
+
+    assert len(fake.requests) == 1  # un seul appel pour tous les points
+    request = fake.requests[0]
+    assert request["path"] == "/api/passages"
+    headers = {key.lower(): value for key, value in request["headers"].items()}
+    assert headers["x-nexus"] == "1" and headers["x-nexus-server"] == "1"
+    assert "origin" not in headers  # appel serveur, jamais navigateur
+    points = request["body"]["points"]
+    assert len(points) == 2
+    # 3 notions ou plus -> 2 notions minimum ; sinon 1 (même règle que les PV importés)
+    assert points[0]["min_matches"] == 2 and "reorganisation" in " ".join(points[0]["concepts"])
+    assert all(len(point["concepts"]) <= 8 for point in points)
+
+
+def test_pv_archive_unavailable_service_never_breaks_the_analysis(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", "http://127.0.0.1:9")  # port fermé
+    result = _analysis(tmp_path)
+
+    assert result["status"] == "READY"
+    assert result["archive_status"] == "UNAVAILABLE"
+    assert result["points_with_archive_minutes"] == 0
+    assert "indisponible" in result["corpus_notice"]
+    assert result["points"][0]["questions_for_management"]
+
+
+def test_pv_archive_malformed_answer_is_ignored(tmp_path, monkeypatch) -> None:
+    fake = _FakeArchive(rows=[{"extrait": ""}, "pas un objet", {"fichier": "x.pdf"}])
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    try:
+        result = _analysis(tmp_path)
+    finally:
+        fake.close()
+
+    assert result["archive_status"] == "READY"
+    assert result["points"][0]["previous_minutes"] == []
+
+
+def test_pv_archive_refuses_non_local_service_urls(tmp_path, monkeypatch) -> None:
+    for url in ("http://example.org:8791", "https://127.0.0.1:8791", "ftp://127.0.0.1", "http://192.168.1.10:8791"):
+        monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+        monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", url)
+        result = _analysis(tmp_path)
+        assert result["archive_status"] == "UNAVAILABLE", url
+
+
+def test_pv_archive_passages_are_capped_and_deduplicated(tmp_path, monkeypatch) -> None:
+    many = [dict(ARCHIVE_ROWS[0], extrait=f"Fictif distinct numéro {index}.") for index in range(6)]
+    many.append(dict(many[0]))  # doublon exact
+    fake = _FakeArchive(rows=many)
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_ENABLED", "true")
+    monkeypatch.setenv("NEXUS_PV_ARCHIVE_URL", fake.url)
+    try:
+        result = _analysis(tmp_path)
+    finally:
+        fake.close()
+
+    excerpts = [row["excerpt"] for row in result["points"][0]["previous_minutes"]]
+    assert len(excerpts) == MODULE.MAX_ARCHIVE_PASSAGES == 3
+    assert len(set(excerpts)) == len(excerpts)

@@ -4,10 +4,15 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 import hashlib
+import json
+import os
 from pathlib import Path
 import re
 import unicodedata
 from typing import Any
+from urllib import error as urllib_error
+from urllib import parse as urllib_parse
+from urllib import request as urllib_request
 
 from NEXUS_RUNTIME_INTEGRATION.config import RuntimeCSEMemoryConfig
 from SYNDICAL_REASONING_ENGINE.cse_models import MeetingBody, PVSearchQuery
@@ -16,6 +21,14 @@ from SYNDICAL_REASONING_ENGINE.cse_search import CSECSSCTSearchEngine
 
 MAX_AGENDA_POINTS = 40
 MAX_PREVIOUS_PASSAGES = 3
+MAX_ARCHIVE_PASSAGES = 3
+# Source optionnelle « archive PV » : service local du module Précédents (loopback uniquement).
+# Désactivée par défaut, comme les autres activations locales (voir start-nexus-local.bat).
+_ARCHIVE_FLAG = "NEXUS_PV_ARCHIVE_ENABLED"
+_ARCHIVE_URL_VARIABLE = "NEXUS_PV_ARCHIVE_URL"
+_ARCHIVE_DEFAULT_URL = "http://127.0.0.1:8791"
+_ARCHIVE_TIMEOUT_SECONDS = 10
+_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
 _AGENDA_NAME_MARKERS = ("ordre", "jour", "odj", "agenda", "convocation")
 _HEADER = re.compile(
     r"(?i)^(?:ordre\s+du\s+jour|odj|agenda|convocation|réunion\s+(?:ordinaire|extraordinaire)|date|lieu|participants?)\s*:?$"
@@ -348,9 +361,124 @@ def _search_uploaded_minutes(
     return rows
 
 
+def _archive_enabled() -> bool:
+    return os.environ.get(_ARCHIVE_FLAG, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _archive_endpoint() -> str | None:
+    """URL du service d'archive, uniquement si elle désigne la machine locale."""
+
+    base = os.environ.get(_ARCHIVE_URL_VARIABLE, "").strip() or _ARCHIVE_DEFAULT_URL
+    parsed = urllib_parse.urlparse(base)
+    if parsed.scheme != "http" or (parsed.hostname or "") not in _LOOPBACK_HOSTS:
+        return None
+    return f"{parsed.scheme}://{parsed.netloc}/api/passages"
+
+
+def _archive_date(date: object, precision: object) -> str | None:
+    text = str(date or "")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", text) or text.startswith("0000"):
+        return None
+    if precision == "jour":
+        return text
+    if precision == "mois":
+        return text[:7]
+    return text[:4]
+
+
+def _archive_row(raw: Mapping[str, Any]) -> dict[str, Any] | None:
+    excerpt = _public_text(raw.get("extrait"), 700)
+    if not excerpt:
+        return None
+    path = str(raw.get("fichier") or "")
+    name = re.split(r"[\\/]", path)[-1]
+    title = _public_text(re.sub(r"\.[A-Za-z0-9]{2,5}$", "", name), 180) or "PV de l’archive"
+    instance = "CSE" if re.search(r"(?i)\bPV du CSE\b", path) else "CE"
+    notions = [
+        _public_text(item, 60)
+        for item in (raw.get("notions") if isinstance(raw.get("notions"), Sequence) else ())
+        if item
+    ]
+    page = raw.get("page")
+    return {
+        "title": title,
+        "date": _archive_date(raw.get("date"), raw.get("precision_date")),
+        "instance": instance,
+        "reference": f"p. {page}" if isinstance(page, int) and page > 0 else "",
+        "excerpt": excerpt,
+        "nature": "CONTEXTE_HISTORIQUE",
+        "origin": "PV_ARCHIVE",
+        "relation": (
+            f"Notion(s) du point retrouvée(s) dans ce PV de l’archive : {', '.join(notions)}."
+            if notions
+            else "Passage rapproché du point par les termes factuels du sujet."
+        ),
+        "limits": [
+            "Ce passage provient de l’archive locale des PV du CE/CSE (OCR possible sur les anciens scans).",
+            "Il constitue un contexte historique et non une norme juridique.",
+            "L’absence de résultat ne prouve pas que le sujet n’a jamais été traité.",
+        ],
+    }
+
+
+def _search_pv_archive(
+    points: Sequence[Mapping[str, Any]],
+) -> tuple[dict[int, list[dict[str, Any]]], str]:
+    """Interroge l'archive locale des PV en une seule requête ; ne lève jamais d'exception.
+
+    Renvoie ({indice du point: passages}, statut) avec statut DISABLED, READY ou UNAVAILABLE.
+    """
+
+    if not _archive_enabled():
+        return {}, "DISABLED"
+    endpoint = _archive_endpoint()
+    if endpoint is None:
+        return {}, "UNAVAILABLE"
+    request_points = []
+    for index, point in enumerate(points):
+        concepts = _concepts(str(point.get("title") or ""))
+        if concepts:
+            request_points.append(
+                {
+                    "id": str(index),
+                    "concepts": list(concepts),
+                    "min_matches": 2 if len(concepts) >= 3 else 1,
+                }
+            )
+    if not request_points:
+        return {}, "READY"
+    request = urllib_request.Request(
+        endpoint,
+        data=json.dumps({"points": request_points}).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "X-Nexus": "1",
+            "X-Nexus-Server": "1",
+        },
+        method="POST",
+    )
+    try:
+        with urllib_request.urlopen(request, timeout=_ARCHIVE_TIMEOUT_SECONDS) as response:  # noqa: S310 - loopback verifie
+            payload = json.loads(response.read().decode("utf-8"))
+    except (urllib_error.URLError, OSError, ValueError):
+        return {}, "UNAVAILABLE"
+    by_point = payload.get("points") if isinstance(payload, Mapping) else None
+    if not isinstance(by_point, Mapping):
+        return {}, "UNAVAILABLE"
+    rows: dict[int, list[dict[str, Any]]] = {}
+    for key, items in by_point.items():
+        if not str(key).isdigit() or not isinstance(items, Sequence) or isinstance(items, (str, bytes)):
+            continue
+        converted = [row for row in (_archive_row(item) for item in items if isinstance(item, Mapping)) if row]
+        if converted:
+            rows[int(key)] = converted[:MAX_ARCHIVE_PASSAGES]
+    return rows, "READY"
+
+
 def _merge_previous_minutes(
     uploaded: Sequence[Mapping[str, Any]],
     corpus: Sequence[Mapping[str, Any]],
+    archive: Sequence[Mapping[str, Any]] = (),
 ) -> list[dict[str, Any]]:
     merged: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -361,6 +489,17 @@ def _merge_previous_minutes(
         seen.add(key)
         merged.append(dict(row))
         if len(merged) >= MAX_PREVIOUS_PASSAGES:
+            break
+    # L'archive complète les deux sources existantes sans jamais les remplacer ni changer leur ordre.
+    added = 0
+    for row in archive:
+        key = _normalize(row.get("excerpt"))
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        merged.append(dict(row))
+        added += 1
+        if added >= MAX_ARCHIVE_PASSAGES:
             break
     return merged
 
@@ -434,7 +573,8 @@ def build_cse_agenda_analysis(
     engine = _AgendaSearchEngine(root)
     analyzed = []
     corpus_status = engine.inventory().root_status
-    for point in points:
+    archive_rows, archive_status = _search_pv_archive(points)
+    for index, point in enumerate(points):
         corpus_previous, corpus_status = _search_previous_minutes(
             engine,
             point["title"],
@@ -444,7 +584,7 @@ def build_cse_agenda_analysis(
             additional_minutes_documents,
             point["title"],
         )
-        previous = _merge_previous_minutes(uploaded_previous, corpus_previous)
+        previous = _merge_previous_minutes(uploaded_previous, corpus_previous, archive_rows.get(index, ()))
         clarity, analysis = _clarity(point["title"])
         analyzed.append(
             {
@@ -460,7 +600,7 @@ def build_cse_agenda_analysis(
                 ],
             }
         )
-    return {
+    result: dict[str, Any] = {
         "status": "READY",
         "agenda_document": _public_text(document.get("name"), 160),
         "agenda_point_count": len(analyzed),
@@ -474,3 +614,17 @@ def build_cse_agenda_analysis(
         ),
         "points": analyzed,
     }
+    if archive_status != "DISABLED":
+        result["archive_status"] = archive_status
+        result["points_with_archive_minutes"] = sum(
+            any(row.get("origin") == "PV_ARCHIVE" for row in item["previous_minutes"]) for item in analyzed
+        )
+        result["corpus_notice"] = (
+            f"{result['corpus_notice']} "
+            + (
+                "L’archive complète des PV du CE/CSE a aussi été interrogée (extraits locaux, jamais publiés)."
+                if archive_status == "READY"
+                else "L’archive des PV est activée mais indisponible : lancez le service local « Précédents »."
+            )
+        )
+    return result

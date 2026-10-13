@@ -58,6 +58,10 @@ set NEXUS_SOURCE_EXECUTION_COORDINATOR_ENABLED=true
 set NEXUS_RETRIEVAL_TO_FINAL_RESPONSE_ENABLED=true
 set NEXUS_SOURCE_EXECUTION_NETWORK_ENABLED=true
 
+rem Archive des PV du CE/CSE : service local du module Precedents (127.0.0.1:8791, extraits locaux uniquement).
+rem Si le service est arrete, Nexus fonctionne comme avant et le signale dans l'analyse du CSE.
+set NEXUS_PV_ARCHIVE_ENABLED=true
+
 if defined CFDT_NEXUS_PYTHON (
   "%CFDT_NEXUS_PYTHON%" --version >nul 2>&1
   if errorlevel 1 goto PYTHON_MISSING
