@@ -336,8 +336,8 @@ def test_pv_archive_adds_local_passages_after_existing_sources(tmp_path, monkeyp
     archive = point["previous_minutes"][1]
     assert archive["title"] == "2016.03.31 Compte Rendu CE"  # nom du PV, jamais de chemin
     assert "\\" not in archive["title"] and "/" not in archive["title"]
-    assert archive["date"] == "2016-03-31" and archive["instance"] == "CE" and archive["reference"] == "p. 2"
-    assert point["previous_minutes"][2]["date"] == "2022" and point["previous_minutes"][2]["instance"] == "CSE"
+    assert archive["date"] == "2016-03-31" and archive["instance"] == "CE · archive PV" and archive["reference"] == "p. 2"
+    assert point["previous_minutes"][2]["date"] == "2022" and point["previous_minutes"][2]["instance"] == "CSE · archive PV"
     assert "contexte historique" in " ".join(archive["limits"])
     assert result["archive_status"] == "READY"
     assert result["points_with_archive_minutes"] == 1

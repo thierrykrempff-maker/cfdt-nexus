@@ -403,7 +403,7 @@ def _archive_row(raw: Mapping[str, Any]) -> dict[str, Any] | None:
     return {
         "title": title,
         "date": _archive_date(raw.get("date"), raw.get("precision_date")),
-        "instance": instance,
+        "instance": f"{instance} · archive PV",  # visible dans le titre : distingue ces passages des autres sources
         "reference": f"p. {page}" if isinstance(page, int) and page > 0 else "",
         "excerpt": excerpt,
         "nature": "CONTEXTE_HISTORIQUE",

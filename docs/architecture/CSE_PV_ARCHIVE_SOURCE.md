@@ -1,6 +1,9 @@
-# Source « archive PV » de l'analyse d'ordre du jour CSE
+# Archive des PV : ordre du jour CSE, questions et recherche libre
 
 Statut : optionnelle, **désactivée par défaut**, activée localement par `NEXUS_PV_ARCHIVE_ENABLED`.
+
+L'archive des PV est disponible à trois endroits de l'interface : l'analyse d'ordre du jour CSE, la réponse à une question,
+et le bouton « Recherche dans les PV ». Les trois utilisent le même service local.
 
 ## Objectif
 
@@ -66,6 +69,32 @@ l'archive : `archive_status = UNAVAILABLE` et la notice le signale. Aucune excep
 
 `start-nexus-local.bat` active le drapeau. Le service d'archive est le module « Précédents » du site CFDT
 (`private/cfdt-nexus-precedents/service/server.py`), démarré avec la session Windows.
+
+## Recherche libre : questions et bouton « Recherche dans les PV »
+
+Module `apps/nexus-local-interface/pv_archive_search.py`, pas de modification du moteur (`NEXUS_RUNTIME_INTEGRATION`, etc.).
+
+```text
+Navigateur
+  - pv-archive.js : bouton d'en-tête (panneau autonome) et bloc « Dans l'archive des PV » sous la réponse
+  -> GET  /api/pv-archive/status    (option activée ? service joignable ?)
+  -> POST /api/pv-archive/search    {query, since, until, limit}
+server.py -> pv_archive_search.search_pv_archive
+          -> POST http://127.0.0.1:8791/api/passages   (service local du module « Précédents »)
+```
+
+- **Mots-clés** : mots de 4 lettres ou plus, hors mots vides ; 12 au plus (les plus longs si trop nombreux).
+  Mots à retrouver ensemble : tous pour 1-2 mots, environ la moitié au-delà, 4 au plus.
+- **Questions** : après `renderResult`, une ligne dans `app.js` appelle `window.NexusPvArchive.showForQuestion`. Le bloc affiche
+  4 passages au plus et un bouton « Chercher plus largement » qui ouvre le panneau autonome avec la question.
+- **Option désactivée** : le bloc reste caché, le bouton explique que la fonction n'est pas activée. Aucun appel au service.
+- **Exports** : les blocs sont **hors de `#reportPanel`**. Copie et téléchargement utilisent le rapport généré ; l'impression
+  n'affiche que `#reportPanel` (règle existante) et masque explicitement ces blocs. Les extraits ne sont jamais dans un export.
+- **Aucune persistance** : ni requête ni extrait n'est écrit sur disque ou dans `localStorage`.
+- **Dégradation** : service arrêté => message à l'écran, le reste de l'interface est inchangé.
+
+Tests : `tests/test_pv_archive_search.py` (mots-clés, bornes d'années, limite, option désactivée, service absent ou non local,
+réponse malformée, routes HTTP du vrai serveur Nexus avec un faux service).
 
 ## Limites connues
 

@@ -46,6 +46,7 @@ from local_cases import LocalCaseStore  # noqa: E402
 from local_ocr import LocalOCRUnavailable, extract_text_from_jpeg  # noqa: E402
 from cse_agenda_analysis import build_cse_agenda_analysis  # noqa: E402
 from rgpd_analysis import build_rgpd_analysis, build_rgpd_corpus_scan  # noqa: E402
+from pv_archive_search import archive_status, search_pv_archive  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -896,6 +897,9 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 },
             )
             return
+        if parsed.path == "/api/pv-archive/status":
+            self.send_json(HTTPStatus.OK, {"ok": True, **archive_status()})
+            return
         if parsed.path == "/api/employee-case/scenarios":
             self.send_json(HTTPStatus.OK, {"ok": True, "scenarios": public_scenarios(), "synthetic_only": True})
             return
@@ -1028,6 +1032,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             "/api/local-cases",
             "/api/cse/agenda-preview",
             "/api/rgpd/analyze",
+            "/api/pv-archive/search",
         }:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
@@ -1039,6 +1044,22 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 self.send_json(
                     HTTPStatus.OK,
                     {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
+                )
+                return
+            if parsed.path == "/api/pv-archive/search":
+                if not isinstance(payload, dict):
+                    raise ValueError("Requete invalide.")
+                self.send_json(
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "pv_archive": search_pv_archive(
+                            payload.get("query"),
+                            since=payload.get("since"),
+                            until=payload.get("until"),
+                            limit=payload.get("limit", 6),
+                        ),
+                    },
                 )
                 return
             if parsed.path == "/api/rgpd/analyze":

@@ -12,6 +12,7 @@
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="styles.css?v=nexus-effective-2">
     <script src="app.js?v=nexus-effective-2" defer></script>
+    <script src="pv-archive.js?v=1" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#mainContent">Aller au contenu principal</a>
@@ -33,6 +34,9 @@
           <span class="status-dot" aria-hidden="true"></span>
           <span id="runtimeStatusLabel">Mode historique</span>
         </span>
+        <button class="settings-button" type="button" id="pvSearchButton" aria-expanded="false" aria-controls="pvArchivePanel">
+          Recherche dans les PV
+        </button>
         <button class="settings-button" type="button" id="settingsButton" aria-expanded="false" aria-controls="settingsPanel">
           Paramètres
         </button>
@@ -57,6 +61,36 @@
         <p>« Configuré » indique seulement que les identifiants sont présents. Un résultat n’est affiché que si une recherche a réellement abouti. Les moteurs avancés ne sont jamais activés depuis cette interface.</p>
       </aside>
     </header>
+
+    <section class="pv-archive-panel" id="pvArchivePanel" hidden aria-labelledby="pvArchiveTitle">
+      <div class="pv-archive-heading">
+        <div>
+          <p class="eyebrow">Archive locale des PV du CE et du CSE</p>
+          <h2 id="pvArchiveTitle">Rechercher dans les PV</h2>
+        </div>
+        <button class="icon-button" type="button" id="pvArchiveClose" aria-label="Fermer la recherche dans les PV">×</button>
+      </div>
+      <form class="pv-archive-form" id="pvArchiveForm" novalidate>
+        <label for="pvArchiveQuery">Une question ou quelques mots-clés</label>
+        <input id="pvArchiveQuery" type="search" maxlength="600" autocomplete="off"
+               placeholder="ex. suivi des connaissances des opérateurs sur les installations">
+        <div class="pv-archive-options">
+          <label>Depuis <input id="pvArchiveSince" type="number" min="1990" max="2100" placeholder="année"></label>
+          <label>Jusqu’à <input id="pvArchiveUntil" type="number" min="1990" max="2100" placeholder="année"></label>
+          <label>Trier
+            <select id="pvArchiveSort">
+              <option value="relevance">Pertinence</option>
+              <option value="recent">Plus récents d’abord</option>
+              <option value="old">Plus anciens d’abord</option>
+            </select>
+          </label>
+          <button class="primary-button" type="submit">Rechercher</button>
+        </div>
+      </form>
+      <p class="source-context-notice" id="pvArchiveStatus" role="status"></p>
+      <div class="pv-archive-results" id="pvArchiveResults" aria-live="polite"></div>
+      <p class="source-context-notice">Les extraits restent à l’écran : ils ne sont ajoutés ni au rapport, ni aux copies, impressions ou téléchargements.</p>
+    </section>
 
     <main id="mainContent">
       <section class="home-view" id="homeView" aria-labelledby="homeTitle">
@@ -591,6 +625,13 @@
               <h2>Ordre du jour, anciens PV et questions à la direction</h2>
               <p class="cse-agenda-summary" id="cseAgendaSummary"></p>
               <div class="cse-agenda-points" id="cseAgendaPoints"></div>
+            </section>
+
+            <section class="response-band pv-archive-inline" id="pvArchiveInline" hidden>
+              <h2>Dans l’archive des PV</h2>
+              <p class="source-context-notice">Passages retrouvés par les mots de votre question. Affichés ici uniquement : non repris dans le rapport ni les exports.</p>
+              <div id="pvArchiveInlineBody" aria-live="polite"></div>
+              <button class="secondary-button" type="button" id="pvArchiveInlineMore">Chercher plus largement dans les PV</button>
             </section>
 
             <section class="response-band chatbot-sources-summary" id="chatbotSourcesSummary" hidden>

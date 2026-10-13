@@ -704,3 +704,19 @@ textarea { resize: vertical; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Recherche dans l'archive des PV (extraits à l'écran uniquement, hors rapport et exports) */
+.pv-archive-panel { margin: 0 auto; max-width: 980px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+.pv-archive-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.pv-archive-heading h2 { margin: 0; }
+.pv-archive-form { display: grid; gap: 10px; margin: 12px 0; }
+.pv-archive-form input[type="search"], .pv-archive-form input[type="number"], .pv-archive-form select { padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.pv-archive-form input[type="search"] { width: 100%; }
+.pv-archive-options { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.pv-archive-options label { display: grid; gap: 4px; font-size: 0.9rem; color: var(--muted); }
+.pv-archive-options input[type="number"] { width: 100px; }
+.pv-archive-results { display: grid; gap: 10px; }
+.pv-archive-message { padding: 10px 12px; border-radius: 8px; background: #f4f6f8; color: var(--muted); margin: 0; }
+.pv-archive-inline { display: grid; gap: 10px; }
+.pv-archive-inline .secondary-button { justify-self: start; }
+@media print { .pv-archive-panel, .pv-archive-inline, #pvSearchButton { display: none !important; } }
