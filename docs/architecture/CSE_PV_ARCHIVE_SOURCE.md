@@ -182,6 +182,11 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
   Les passages sont classés par rareté des mots et les tables des matières écartées. La Moselle n'a pas de page dédiée : l'inspection du travail
   relève de la DDETS de la Moselle (renseignements en droit du travail : 0 806 000 126 selon le site de la DREETS, à vérifier).
 
+- **Second cerveau (trois modes)** : `claude_dossier.py` produit un dossier unique, sources numérotées [S#] et consigne adaptée, pour
+  une **question** (bouton sous la réponse), un **ordre du jour de CSE** (bouton sous l'analyse de l'ordre du jour : les titres des points,
+  jamais le document, interrogent toutes les sources point par point ; routes `/api/claude-dossier/agenda`) et la **défense d'un salarié**
+  (route `/api/claude-dossier/defense`, ligne de commande `--defense`). Claude analyse ensuite uniquement ce dossier (skill `analyse-nexus`).
+
 Tests : `tests/test_official_sources_search.py`.
 
 ## Limites connues

@@ -104,7 +104,7 @@ def matching_topics(question: object) -> list[dict[str, Any]]:
     found = [
         topic
         for topic in TOPICS
-        if all(any(stem in plain for stem in group) for group in topic["when"])
+        if all(any(re.search(r"\b" + re.escape(stem), plain) for stem in group) for group in topic["when"])
     ]
     precise = [topic for topic in found if not topic.get("generic")]
     return precise or found

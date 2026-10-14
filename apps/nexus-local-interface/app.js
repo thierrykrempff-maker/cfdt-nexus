@@ -1674,6 +1674,7 @@ function appendCseList(container, values) {
 function renderCseAgendaAnalysis(analysis) {
   cseAgendaPoints.innerHTML = "";
   cseAgendaPanel.hidden = currentWorkspace !== "cse" || !analysis;
+  window.NexusOfficialSources?.setAgenda(analysis);
   if (cseAgendaPanel.hidden) return;
 
   if (analysis.status !== "READY") {

@@ -701,6 +701,11 @@
               <h2>Ordre du jour, anciens PV et questions à la direction</h2>
               <p class="cse-agenda-summary" id="cseAgendaSummary"></p>
               <div class="cse-agenda-points" id="cseAgendaPoints"></div>
+              <div class="claude-dossier" id="agendaDossier" hidden>
+                <button class="secondary-button" type="button" id="agendaDossierButton">Préparer le dossier pour Claude (tout l’ordre du jour)</button>
+                <p class="source-context-notice" id="agendaDossierStatus" aria-live="polite">Rassemble, pour chaque point, Légifrance, Judilibre, la convention, les accords, les PV et les guides officiels, à coller dans Claude pour préparer la séance. Extraits confidentiels : ne les collez que dans votre propre session Claude.</p>
+                <textarea id="agendaDossierText" rows="10" readonly hidden aria-label="Dossier de l’ordre du jour pour Claude"></textarea>
+              </div>
             </section>
 
             <section class="response-band pv-archive-inline" id="pvArchiveInline" hidden>

@@ -110,24 +110,19 @@
   }
 
   // Dossier « Nexus → Claude » : toutes les sources rassemblées, copiées sur demande de l'utilisateur uniquement.
-  let dossierBusy = false;
-  async function prepareDossier() {
-    const question = (document.getElementById("resultQuestion") || {}).textContent || (document.getElementById("questionInput") || {}).value || "";
-    const status = $("claudeDossierStatus");
-    const area = $("claudeDossierText");
-    if (!status || !area || dossierBusy) return;
-    if (!question.trim()) {
-      status.textContent = "Posez d’abord une question.";
-      return;
-    }
-    dossierBusy = true;
+  const busy = new Set();
+  async function copyDossier({ key, url, body, statusId, areaId, wait }) {
+    const status = $(statusId);
+    const area = $(areaId);
+    if (!status || !area || busy.has(key)) return;
+    busy.add(key);
     area.hidden = true;
-    status.textContent = "Préparation du dossier (Légifrance, Judilibre, convention, accords, PV)…";
+    status.textContent = wait;
     try {
-      const data = await api("/api/claude-dossier/build", {
+      const data = await api(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: question }),
+        body: JSON.stringify(body),
       });
       const dossier = data.dossier || {};
       if (dossier.status !== "READY") {
@@ -143,19 +138,54 @@
       } catch (error) {
         area.select();
       }
-      status.textContent = `Dossier prêt : ${dossier.sources} sources numérotées. ` +
+      status.textContent = `Dossier prêt : ${dossier.sources} sources numérotées` +
+        (dossier.points ? ` pour ${dossier.points} point(s). ` : ". ") +
         (copied ? "Copié dans le presse-papiers : collez-le dans Claude." : "Sélectionné ci-dessous : copiez-le (Ctrl+C) puis collez-le dans Claude.");
     } catch (error) {
       status.textContent = "La préparation du dossier a échoué.";
     } finally {
-      dossierBusy = false;
+      busy.delete(key);
     }
   }
 
+  function prepareQuestionDossier() {
+    const question = (document.getElementById("resultQuestion") || {}).textContent || (document.getElementById("questionInput") || {}).value || "";
+    if (!question.trim()) {
+      const status = $("claudeDossierStatus");
+      if (status) status.textContent = "Posez d’abord une question.";
+      return;
+    }
+    copyDossier({
+      key: "question", url: "/api/claude-dossier/build", body: { query: question },
+      statusId: "claudeDossierStatus", areaId: "claudeDossierText",
+      wait: "Préparation du dossier (Légifrance, Judilibre, convention, accords, PV, guides officiels)…",
+    });
+  }
+
+  // Ordre du jour du CSE : les titres des points déjà analysés (jamais le document) servent à interroger toutes les sources.
+  let agendaAnalysis = null;
+  function setAgenda(analysis) {
+    agendaAnalysis = analysis && analysis.status === "READY" ? analysis : null;
+    const box = $("agendaDossier");
+    if (box) box.hidden = !agendaAnalysis;
+  }
+
+  function prepareAgendaDossier() {
+    if (!agendaAnalysis) return;
+    copyDossier({
+      key: "agenda", url: "/api/claude-dossier/agenda",
+      body: { points: (agendaAnalysis.points || []).map((p) => ({ position: p.position, title: p.title })), meeting: agendaAnalysis.agenda_document || "" },
+      statusId: "agendaDossierStatus", areaId: "agendaDossierText",
+      wait: "Préparation du dossier de l’ordre du jour (toutes les sources, point par point : environ une minute)…",
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    const button = $("claudeDossierButton");
-    if (button) button.addEventListener("click", prepareDossier);
+    const question = $("claudeDossierButton");
+    if (question) question.addEventListener("click", prepareQuestionDossier);
+    const agenda = $("agendaDossierButton");
+    if (agenda) agenda.addEventListener("click", prepareAgendaDossier);
   });
 
-  window.NexusOfficialSources = { showForQuestion };
+  window.NexusOfficialSources = { showForQuestion, setAgenda };
 })();

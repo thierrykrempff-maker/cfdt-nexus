@@ -95,3 +95,35 @@ def test_convention_pas_dans_les_accords(monkeypatch, fake):
 
 def test_ligne_de_commande_sans_argument(capsys):
     assert module.main([]) == 2
+
+
+def test_ordre_du_jour_point_par_point(fake):
+    result = module.build_agenda_dossier(
+        [{"position": "1", "title": "Projet de licenciement pour inaptitude"}, {"position": "2", "title": "Bilan de la formation"}, {"title": "  "}],
+        "CSE du 16 octobre",
+    )
+    markdown = result["markdown"]
+    assert result["status"] == "READY" and result["points"] == 2
+    assert "## Point 1 — Projet de licenciement pour inaptitude" in markdown and "## Point 2 — Bilan de la formation" in markdown
+    assert "CSE du 16 octobre" in markdown and "point par point" in markdown and "délégué syndical CFDT" in markdown
+    numbers = [int(n) for n in re.findall(r"^\*\*\[S(\d+)\]", markdown, flags=re.M)]
+    assert numbers == list(range(1, len(numbers) + 1)) == list(range(1, result["sources"] + 1))
+    assert "déjà cité plus haut" in markdown  # la même source n'est numérotée qu'une fois
+
+
+def test_ordre_du_jour_vide_ou_trop_long(fake):
+    assert module.build_agenda_dossier([])["status"] == "EMPTY_QUERY"
+    many = [{"title": f"Point {i}"} for i in range(40)]
+    assert module.build_agenda_dossier(many)["points"] == module.MAX_AGENDA_POINTS
+
+
+def test_defense_d_un_salarie(fake):
+    result = module.build_claude_dossier("Licenciement pour insuffisance professionnelle", mode="defense",
+                                         situation="Le salarié a 12 ans d'ancienneté, aucune sanction antérieure.")
+    markdown = result["markdown"]
+    assert "défense d'un salarié" in markdown and "## Situation du salarié" in markdown and "12 ans d'ancienneté" in markdown
+    assert "délais de prescription" in markdown and "[S1]" in markdown
+
+
+def test_mode_inconnu_retombe_sur_question(fake):
+    assert "## Question" in module.build_claude_dossier("licenciement", mode="piratage")["markdown"]

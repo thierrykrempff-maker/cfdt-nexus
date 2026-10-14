@@ -178,3 +178,11 @@ def test_prenom_en_debut_de_phrase_retire():
     assert "pierre" not in module.keywords_for_sources("Pierre Martin conteste son licenciement")
     assert "monsieur" not in module.keywords_for_sources("Monsieur Dupont conteste son licenciement")
     assert "licenciement" in module.keywords_for_sources("Licenciement abusif ?")
+
+
+def test_sujet_reconnu_au_debut_d_un_mot_seulement():
+    # « information » contient « formation » : ne doit pas déclencher le sujet formation
+    assert module.matching_topics("Information sur la mise en place de la vidéosurveillance") == []
+    keys = [t["key"] for t in module.matching_topics("Bilan de la formation des salariés")]
+    assert "formation_entretien" in keys
+    assert module.matching_topics("Un nouvel agent réélu") == []
