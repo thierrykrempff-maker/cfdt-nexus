@@ -169,6 +169,12 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
   si un sujet plus précis est reconnu. Les mots du sujet servent aussi à Judilibre (décisions sans aucun de ces mots écartées) et à la
   convention collective (tous ces mots exigés). Pour ajouter un sujet : une entrée dans `TOPICS`, vérifier les articles sur Légifrance.
 
+- **Autres sources officielles** (`official_extra_sources.py`) : lecture en direct du CDTN, de service-public, de la CNIL, de la DREETS Grand Est,
+  de la CARSAT Nord-Est et de l'INRS (pages choisies : un site sans page pour la question ne renvoie rien), plus les **catalogues** de fiches
+  (titre et lien seulement, contenu non lu) de l'ANACT, l'URSSAF, l'Assurance maladie, le ministère du Travail, France Chimie, le Défenseur des
+  droits, l'Agirc-Arrco, le droit local d'Alsace-Moselle, etc. Les résultats du CDTN et de service-public sont filtrés par pertinence
+  (2 mots de la question, ou 1 mot long et distinctif). Ces sources orientent : elles ne remplacent ni la loi ni la jurisprudence.
+
 Tests : `tests/test_official_sources_search.py`.
 
 ## Limites connues
