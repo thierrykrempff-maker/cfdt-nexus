@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="styles.css?v=nexus-effective-2">
     <script src="app.js?v=nexus-effective-2" defer></script>
     <script src="pv-archive.js?v=1" defer></script>
+    <script src="official-sources.js?v=1" defer></script>
     <script src="agreement-compare.js?v=1" defer></script>
   </head>
   <body>
@@ -714,6 +715,17 @@
               <p class="source-context-notice">Textes de l’archive retrouvés par les mots de votre question. Affichés ici uniquement : non repris dans le rapport ni les exports. Vérifiez la version en vigueur.</p>
               <div id="accordsArchiveInlineBody" aria-live="polite"></div>
               <button class="secondary-button" type="button" id="accordsArchiveInlineMore">Chercher plus largement dans les accords</button>
+            </section>
+
+            <section class="response-band pv-archive-inline" id="officialSourcesInline" hidden>
+              <h2>Sources officielles à vérifier</h2>
+              <p class="source-context-notice">Légifrance, Judilibre et convention collective, cherchés avec quelques mots-clés de votre question (jamais la question entière). Affichés ici uniquement : non repris dans le rapport ni les exports.</p>
+              <div id="officialSourcesBody" aria-live="polite"></div>
+              <div class="claude-dossier" id="claudeDossier">
+                <button class="secondary-button" type="button" id="claudeDossierButton">Préparer le dossier pour Claude</button>
+                <p class="source-context-notice" id="claudeDossierStatus" aria-live="polite">Rassemble Légifrance, Judilibre, la convention collective, les accords et les PV dans un dossier à coller dans Claude, qui l’analysera à partir de ces seules sources. Le dossier contient des extraits confidentiels : ne le collez que dans votre propre session Claude.</p>
+                <textarea id="claudeDossierText" rows="10" readonly hidden aria-label="Dossier pour Claude"></textarea>
+              </div>
             </section>
 
             <section class="response-band chatbot-sources-summary" id="chatbotSourcesSummary" hidden>

@@ -48,6 +48,8 @@ from cse_agenda_analysis import build_cse_agenda_analysis  # noqa: E402
 from rgpd_analysis import build_rgpd_analysis, build_rgpd_corpus_scan  # noqa: E402
 from pv_archive_search import archive_status, search_archive  # noqa: E402
 from agreement_compare import compare_request, list_archive_agreements  # noqa: E402
+from official_sources_search import official_sources_status, search_official_sources  # noqa: E402
+from claude_dossier import build_claude_dossier  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -917,6 +919,9 @@ class NexusHandler(SimpleHTTPRequestHandler):
             corpus = "accords" if parsed.path.startswith("/api/accords") else "pv"
             self.send_json(HTTPStatus.OK, {"ok": True, **archive_status(corpus)})
             return
+        if parsed.path == "/api/official-sources/status":
+            self.send_json(HTTPStatus.OK, {"ok": True, **official_sources_status()})
+            return
         if parsed.path == "/api/agreements/list":
             self.send_json(HTTPStatus.OK, {"ok": True, **list_archive_agreements()})
             return
@@ -1055,6 +1060,8 @@ class NexusHandler(SimpleHTTPRequestHandler):
             "/api/pv-archive/search",
             "/api/accords-archive/search",
             "/api/agreements/compare",
+            "/api/official-sources/search",
+            "/api/claude-dossier/build",
         }:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
@@ -1067,6 +1074,16 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     HTTPStatus.OK,
                     {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
                 )
+                return
+            if parsed.path == "/api/claude-dossier/build":
+                if not isinstance(payload, dict):
+                    raise ValueError("Requete invalide.")
+                self.send_json(HTTPStatus.OK, {"ok": True, "dossier": build_claude_dossier(payload.get("query"))})
+                return
+            if parsed.path == "/api/official-sources/search":
+                if not isinstance(payload, dict):
+                    raise ValueError("Requete invalide.")
+                self.send_json(HTTPStatus.OK, {"ok": True, "official_sources": search_official_sources(payload.get("query"))})
                 return
             if parsed.path == "/api/agreements/compare":
                 self.send_json(

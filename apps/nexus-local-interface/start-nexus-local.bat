@@ -63,6 +63,7 @@ rem Si le service est arrete, Nexus fonctionne comme avant et le signale dans l'
 set NEXUS_PV_ARCHIVE_ENABLED=true
 rem Archive des accords d'entreprise (meme service local, corpus accords). Index prive hors depot.
 set NEXUS_ACCORDS_ARCHIVE_ENABLED=true
+set NEXUS_OFFICIAL_SOURCES_BLOCK_ENABLED=true
 
 if defined CFDT_NEXUS_PYTHON (
   "%CFDT_NEXUS_PYTHON%" --version >nul 2>&1

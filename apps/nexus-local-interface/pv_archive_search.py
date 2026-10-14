@@ -171,6 +171,7 @@ def search_archive(
     since: object = None,
     until: object = None,
     limit: object = DEFAULT_LIMIT,
+    strict: bool = False,
 ) -> dict[str, Any]:
     """Cherche une question ou des mots-clés dans une archive (« pv » ou « accords »). Ne lève jamais d'exception."""
 
@@ -195,7 +196,7 @@ def search_archive(
     endpoint = _archive_endpoint()
     if endpoint is None:
         return {**result, "status": "UNAVAILABLE", "concepts": concepts}
-    need = required_matches(len(concepts))
+    need = len(concepts) if strict and len(concepts) <= 4 else required_matches(len(concepts))
     body: dict[str, Any] = {
         "corpus": corpus,
         "points": [{"id": "q", "concepts": concepts, "min_matches": need}],

@@ -147,6 +147,30 @@ Le résultat n'est qu'une aide à la vérification (découpage heuristique, OCR 
 version en vigueur, les avenants, la dénonciation et la hiérarchie des normes. Les textes et extraits restent à l'écran,
 hors rapport et exports. Tests : `tests/test_agreement_compare.py`.
 
+## Bloc « Sources officielles » (Légifrance, Judilibre, convention collective)
+
+Sous chaque réponse à une question, Nexus propose à l'écran des pistes à vérifier : articles du **Code du travail** (Légifrance),
+**décisions de la Cour de cassation** (Judilibre) et passages de la **convention collective des industries chimiques (IDCC 44)**.
+Module `official_sources_search.py`, routes `GET /api/official-sources/status` et `POST /api/official-sources/search`,
+interface `official-sources.js`, bloc `#officialSourcesInline`. Option `NEXUS_OFFICIAL_SOURCES_BLOCK_ENABLED` (désactivée par défaut,
+activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modifié ; le bloc est à retirer en supprimant l'option.
+
+- **Mots-clés seulement** : 3 à 6 mots (sans noms propres ni nombres) partent vers Légifrance et Judilibre, jamais la question brute ;
+  ils sont affichés à l'écran.
+- **Convention collective** : la recherche IDCC de Légifrance ne renvoie rien ; elle est cherchée dans le document `ccnic*` de l'archive locale
+  des accords (paramètre `include` de `POST /api/passages`). Édition septembre 2013 : vérifier la version en vigueur.
+- Trois sections indépendantes (une panne n'empêche pas les autres) ; liens limités à legifrance.gouv.fr et courdecassation.fr.
+- Hors `#reportPanel` : jamais dans la copie, l'impression ni le téléchargement. Rien n'est conservé sur disque.
+
+- **Sujets reconnus** : `official_topics.py` associe une quinzaine de sujets syndicaux courants (licenciement économique ou pour motif
+  personnel, sanction, heures supplémentaires, astreintes, repos et nuit, congés, santé et sécurité, harcèlement, heures de délégation,
+  salariés protégés, consultations du CSE, accords, télétravail…) à leurs **articles de référence du Code du travail** (numéros seulement).
+  Ces articles sont lus sur Légifrance (texte officiel en vigueur) et affichés en tête. Un sujet large (CSE, accords) est ignoré
+  si un sujet plus précis est reconnu. Les mots du sujet servent aussi à Judilibre (décisions sans aucun de ces mots écartées) et à la
+  convention collective (tous ces mots exigés). Pour ajouter un sujet : une entrée dans `TOPICS`, vérifier les articles sur Légifrance.
+
+Tests : `tests/test_official_sources_search.py`.
+
 ## Limites connues
 
 - Archive limitée aux PV du CE/CSE : pas de PV de CHSCT/CSSCT.

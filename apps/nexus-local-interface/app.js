@@ -1785,6 +1785,7 @@ function renderResult(payload) {
     ? queryInput.value.trim()
     : orchestration.question_posee || answer.query;
   window.NexusPvArchive?.showForQuestion(resultQuestion.textContent);
+  window.NexusOfficialSources?.showForQuestion(resultQuestion.textContent);
   setConfidence(confidenceValue, finalAssistant?.confidence || orchestration.niveau_de_confiance || answer.confidence);
   const finalDomains = finalAssistant
     ? [finalAssistant.primary_domain, ...(finalAssistant.complementary_domains || [])]
