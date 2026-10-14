@@ -187,6 +187,13 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
   jamais le document, interrogent toutes les sources point par point ; routes `/api/claude-dossier/agenda`) et la **défense d'un salarié**
   (route `/api/claude-dossier/defense`, ligne de commande `--defense`). Claude analyse ensuite uniquement ce dossier (skill `analyse-nexus`).
 
+- **Documents syndicaux et paie** : troisième archive locale (corpus `docs`, index privé `docs_index`, option `NEXUS_DOCS_ARCHIVE_ENABLED`)
+  construite à partir des dossiers « cfdt » (NAO, barème, rapport de branche, instruction au personnel…) et « paies et congés » (fiche du
+  congé supplémentaire de naissance…), sans les copies d'accords déjà dans l'archive des accords. Bloc à l'écran sous les réponses
+  (masqué s'il n'y a aucun passage) et section G du dossier pour Claude. Mode **paie** du dossier (`/api/claude-dossier/defense` avec
+  `mode: "paie"`) : contrôle d'un bulletin ou de congés (base légale, accords, prescription, pièces, courrier de régularisation). La table
+  des sujets contient bulletin de paie, régularisation de salaire, maladie et IJSS, congés de maternité/paternité/naissance, jours fériés.
+
 Tests : `tests/test_official_sources_search.py`.
 
 ## Limites connues

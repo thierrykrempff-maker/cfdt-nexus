@@ -145,7 +145,7 @@ def test_table_des_sujets_bien_formee():
     assert len(keys) == len(set(keys))
     for topic in TOPICS:
         assert topic["when"] and all(topic["when"]) and topic["terms"]
-        assert all(_re.fullmatch(r"L\d{4}-\d+(-\d+)?", article) for article in topic["articles"]), topic["key"]
+        assert all(_re.fullmatch(r"[LRD]\d{4}-\d+(-\d+)?", article) for article in topic["articles"]), topic["key"]
 
 
 def test_articles_de_reference_sans_doublon_ni_depassement(monkeypatch):
@@ -186,3 +186,11 @@ def test_sujet_reconnu_au_debut_d_un_mot_seulement():
     keys = [t["key"] for t in module.matching_topics("Bilan de la formation des salariés")]
     assert "formation_entretien" in keys
     assert module.matching_topics("Un nouvel agent réélu") == []
+
+
+def test_conge_supplementaire_de_naissance_n_est_pas_des_heures_supplementaires():
+    keys = [t["key"] for t in module.matching_topics("Congé supplémentaire de naissance après le congé paternité")]
+    assert "conges_naissance" in keys and "heures_supplementaires" not in keys
+    assert "heures_supplementaires" in [t["key"] for t in module.matching_topics("Majoration des heures supplémentaires")]
+    keys = [t["key"] for t in module.matching_topics("Il manque des heures de nuit sur mon bulletin de paie")]
+    assert "bulletin_paie" in keys and "regularisation_salaire" in keys

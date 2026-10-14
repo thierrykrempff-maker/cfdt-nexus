@@ -64,6 +64,8 @@ set NEXUS_PV_ARCHIVE_ENABLED=true
 rem Archive des accords d'entreprise (meme service local, corpus accords). Index prive hors depot.
 set NEXUS_ACCORDS_ARCHIVE_ENABLED=true
 set NEXUS_OFFICIAL_SOURCES_BLOCK_ENABLED=true
+rem Documents syndicaux et de reference (paie, conges, NAO, branche) : meme service local, corpus docs.
+set NEXUS_DOCS_ARCHIVE_ENABLED=true
 
 if defined CFDT_NEXUS_PYTHON (
   "%CFDT_NEXUS_PYTHON%" --version >nul 2>&1

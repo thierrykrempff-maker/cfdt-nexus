@@ -1786,8 +1786,10 @@ function renderResult(payload) {
     ? queryInput.value.trim()
     : orchestration.question_posee || answer.query;
   window.NexusPvArchive?.showForQuestion(resultQuestion.textContent);
-  window.NexusOfficialSources?.setCase(currentWorkspace === "employee" ? currentAnalysisRequest : null, currentWorkspace === "employee"
-    ? (workspaceDefinition("employee").situations.find(([value]) => value === selectedSituation) || [])[1] || "" : "");
+  const caseWorkspace = currentWorkspace === "employee" || currentWorkspace === "payroll";
+  window.NexusOfficialSources?.setCase(caseWorkspace ? currentAnalysisRequest : null, caseWorkspace
+    ? (workspaceDefinition(currentWorkspace).situations.find(([value]) => value === selectedSituation) || [])[1] || "" : "",
+  currentWorkspace === "payroll" ? "paie" : "defense");
   window.NexusOfficialSources?.showForQuestion(resultQuestion.textContent);
   setConfidence(confidenceValue, finalAssistant?.confidence || orchestration.niveau_de_confiance || answer.confidence);
   const finalDomains = finalAssistant

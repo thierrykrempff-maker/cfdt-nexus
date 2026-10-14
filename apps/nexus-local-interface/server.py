@@ -144,6 +144,16 @@ PORTAL_CONTEXT_LABELS = {
 }
 
 
+def _archive_corpus(path: str) -> str:
+    """Corpus d'une route d'archive : /api/accords-archive/… -> accords, /api/docs-archive/… -> docs, sinon pv."""
+
+    if path.startswith("/api/accords-archive"):
+        return "accords"
+    if path.startswith("/api/docs-archive"):
+        return "docs"
+    return "pv"
+
+
 def _env_enabled(name: str) -> bool:
     return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
 
@@ -915,8 +925,8 @@ class NexusHandler(SimpleHTTPRequestHandler):
                 },
             )
             return
-        if parsed.path in {"/api/pv-archive/status", "/api/accords-archive/status"}:
-            corpus = "accords" if parsed.path.startswith("/api/accords") else "pv"
+        if parsed.path in {"/api/pv-archive/status", "/api/accords-archive/status", "/api/docs-archive/status"}:
+            corpus = _archive_corpus(parsed.path)
             self.send_json(HTTPStatus.OK, {"ok": True, **archive_status(corpus)})
             return
         if parsed.path == "/api/official-sources/status":
@@ -1059,6 +1069,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             "/api/rgpd/analyze",
             "/api/pv-archive/search",
             "/api/accords-archive/search",
+            "/api/docs-archive/search",
             "/api/agreements/compare",
             "/api/official-sources/search",
             "/api/claude-dossier/build",
@@ -1087,7 +1098,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     raise ValueError("Requete invalide.")
                 self.send_json(
                     HTTPStatus.OK,
-                    {"ok": True, "dossier": build_claude_dossier(payload.get("kind"), mode="defense", situation=str(payload.get("facts") or ""), topic_text=str(payload.get("question") or ""))},
+                    {"ok": True, "dossier": build_claude_dossier(payload.get("kind"), mode=("paie" if payload.get("mode") == "paie" else "defense"), situation=str(payload.get("facts") or ""), topic_text=str(payload.get("question") or ""))},
                 )
                 return
             if parsed.path == "/api/claude-dossier/build":
@@ -1106,7 +1117,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     {"ok": True, "comparison": compare_request(payload, _read_comparison_attachment)},
                 )
                 return
-            if parsed.path in {"/api/pv-archive/search", "/api/accords-archive/search"}:
+            if parsed.path in {"/api/pv-archive/search", "/api/accords-archive/search", "/api/docs-archive/search"}:
                 if not isinstance(payload, dict):
                     raise ValueError("Requete invalide.")
                 self.send_json(
@@ -1114,7 +1125,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     {
                         "ok": True,
                         "pv_archive": search_archive(
-                            "accords" if parsed.path.startswith("/api/accords") else "pv",
+                            _archive_corpus(parsed.path),
                             payload.get("query"),
                             since=payload.get("since"),
                             until=payload.get("until"),

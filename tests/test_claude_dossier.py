@@ -60,11 +60,11 @@ def test_dossier_complet_et_numerote(fake):
     markdown = result["markdown"]
     assert result["status"] == "READY" and fake["full_text"] is True
     numbers = [int(n) for n in re.findall(r"^\*\*\[S(\d+)\]", markdown, flags=re.M)]
-    assert numbers == list(range(1, len(numbers) + 1)) and result["sources"] == len(numbers) == 6
+    assert numbers == list(range(1, len(numbers) + 1)) and result["sources"] == len(numbers) == 7
     for marker in ("## Consigne", "## Question", "Texte intégral fictif.", "Résumé fictif.", "Passage CCN fictif.",
-                   "Extrait accords.", "Extrait pv.", "Guide DREETS fictif.", "## Limites de la recherche", "uniquement"):
+                   "Extrait accords.", "Extrait pv.", "Extrait docs.", "Guide DREETS fictif.", "## Limites de la recherche", "uniquement"):
         assert marker in markdown
-    assert result["counts"] == {"loi": 1, "jurisprudence": 1, "convention": 1, "accords": 1, "pv": 1, "autres": 1}
+    assert result["counts"] == {"loi": 1, "jurisprudence": 1, "convention": 1, "accords": 1, "pv": 1, "autres": 1, "documents": 1}
 
 
 def test_texte_integral_prefere_a_l_extrait(fake):
@@ -147,3 +147,10 @@ def test_defense_la_recherche_part_du_type_et_de_la_description(monkeypatch, fak
 def test_defense_conserve_les_lignes_des_faits(fake):
     markdown = module.build_claude_dossier("Mise à pied", mode="defense", situation="Ligne un\n\n  - Ligne   deux  ")["markdown"]
     assert "Ligne un\n- Ligne deux" in markdown
+
+
+def test_mode_paie_et_documents(fake):
+    result = module.build_claude_dossier("Heures de nuit manquantes", mode="paie", situation="Bulletin de mars" + chr(10) + "- Heures de nuit : 24")
+    markdown = result["markdown"]
+    assert "contrôle de paie et de congés" in markdown and "## Situation de paie ou de congés à contrôler" in markdown
+    assert "prescription" in markdown and "G. Documents syndicaux" in markdown and "Extrait docs." in markdown

@@ -27,6 +27,7 @@ MAX_ARCHIVE_PASSAGES = 3
 _ARCHIVE_FLAG = "NEXUS_PV_ARCHIVE_ENABLED"
 # Seconde archive : accords d'entreprise (même service local, corpus « accords »). Désactivée par défaut.
 _ACCORDS_FLAG = "NEXUS_ACCORDS_ARCHIVE_ENABLED"
+_DOCS_FLAG = "NEXUS_DOCS_ARCHIVE_ENABLED"
 MAX_ACCORDS_PASSAGES = 3
 _ARCHIVE_URL_VARIABLE = "NEXUS_PV_ARCHIVE_URL"
 _ARCHIVE_DEFAULT_URL = "http://127.0.0.1:8791"
@@ -482,6 +483,10 @@ def _accords_enabled() -> bool:
     return os.environ.get(_ACCORDS_FLAG, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _docs_enabled() -> bool:
+    return os.environ.get(_DOCS_FLAG, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 _ACCORD_KINDS = (
     ("desaccord", "PV de désaccord"),  # avant « accord », que ce mot contient
     ("avenant", "Avenant"),
@@ -536,6 +541,23 @@ def _accord_row(raw: Mapping[str, Any]) -> dict[str, Any] | None:
             "Ce n’est pas une analyse juridique ; l’absence de résultat ne prouve pas qu’aucun accord n’existe.",
         ],
     }
+
+
+def _docs_row(raw: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Passage d'un document syndical ou de référence (paie, congés, NAO, branche…) de l'archive locale."""
+
+    row = _accord_row(raw)
+    if row is None:
+        return None
+    row["instance"] = "Document · archive documents"
+    row["nature"] = "DOCUMENT_SYNDICAL"
+    row["origin"] = "DOCS_ARCHIVE"
+    row["limits"] = [
+        "Document tiré de l’archive locale (OCR possible ; présentation ou guide : ce n’est pas un texte juridique).",
+        "Vérifiez la date et la version du document avant de vous en servir.",
+        "L’absence de résultat ne prouve pas qu’aucun document n’existe.",
+    ]
+    return row
 
 
 def _search_accords_archive(

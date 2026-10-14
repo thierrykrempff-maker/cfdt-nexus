@@ -39,7 +39,7 @@ MAX_QUESTION_CHARS = 1500
 MAX_AGENDA_POINTS = 10
 MAX_FACTS_CHARS = 3000
 COMPACT_TEXT_CHARS = 1500
-COMPACT_LIMITS = {"law": 4, "decisions": 2, "convention": 2, "accords": 3, "pv": 4, "extra": 4}
+COMPACT_LIMITS = {"law": 4, "decisions": 2, "convention": 2, "accords": 3, "pv": 4, "extra": 4, "docs": 3}
 
 ROLE = (
     "L'utilisateur est délégué syndical CFDT et élu au CSE d'INEOS Sarralbe (Moselle : le droit local d'Alsace-Moselle s'applique), "
@@ -72,6 +72,17 @@ INSTRUCTIONS = {
         "engagements non tenus) ; (c) la jurisprudence utile ; (d) les questions précises à poser à la direction ; (e) la position "
         "syndicale conseillée (avis favorable, défavorable, réserves, demande de report ou d'expertise) avec ses justifications ; "
         "(f) les risques et les pièges.\nPuis une synthèse : points prioritaires, ordre de traitement, documents à réclamer avant la séance.\n\n"
+        + COMMON_RULES
+    ),
+    "paie": (
+        "Contrôle la situation de paie ou de congés décrite ci-dessous, **uniquement** à partir des sources numérotées de ce dossier.\n"
+        "Structure : (a) ce qui doit figurer sur le bulletin et comment se calcule l'élément en cause (base légale, convention, accord INEOS, guide Nibelis ou document de paie du dossier) ; "
+        "(b) le contrôle étape par étape : données à relever (heures, taux, majorations, primes, période, jours de congés acquis/pris/maintenus), formule, écart éventuel — ne calcule que si le dossier donne les taux et règles, sinon dis ce qui manque ; "
+        "(c) ce qui a été décidé en CE/CSE et dans les accords (avenants, protocoles salariaux) ; "
+        "(d) droits liés aux congés et absences (maladie, maternité, paternité, congé supplémentaire de naissance, jours fériés, droit local d'Alsace-Moselle) ; "
+        "(e) prescription et délais : les écarts de salaire se réclament dans la limite indiquée par les sources ; "
+        "(f) pièces à réunir (bulletins, relevés de badgeuse ou de planning, décompte Kelio) et courrier de demande de régularisation à rédiger (modèle) ; "
+        "(g) démarches : demande écrite, délégué, inspection du travail, prud'hommes — dans quel ordre.\n\n"
         + COMMON_RULES
     ),
     "defense": (
@@ -132,6 +143,7 @@ def gather(text: str, *, full_text: bool = True) -> dict[str, Any]:
     attempts.append((query, False))
     pv_rows, pv_status = _archive_rows("pv", attempts)
     accord_rows, accord_status = _archive_rows("accords", attempts)
+    docs_rows, docs_status = _archive_rows("docs", attempts)
     sections = official.get("sections") or {}
 
     def part(name: str) -> tuple[list[Mapping[str, Any]], str]:
@@ -147,9 +159,9 @@ def gather(text: str, *, full_text: bool = True) -> dict[str, Any]:
         "text": text,
         "topics": [topic["label"] for topic in topics[:2]],
         "law": [*reference, *free], "decisions": decisions, "convention": convention,
-        "accords": accord_rows, "pv": pv_rows, "extra": extra,
+        "accords": accord_rows, "pv": pv_rows, "extra": extra, "docs": docs_rows,
         "statuses": {"Légifrance": reference_status, "Judilibre": decisions_status, "Convention collective": convention_status,
-                     "Accords": accord_status, "PV": pv_status},
+                     "Accords": accord_status, "PV": pv_status, "Documents": docs_status},
     }
 
 
@@ -217,6 +229,8 @@ def _render(gathered: Mapping[str, Any], numbering: _Numbering, level: str, comp
     block("E. PV du CE/CSE (archive locale, 2000-2024)", "pv", passage, "Aucun PV retrouvé.")
     block("F. Autres sources officielles (guides et explications : CDTN, service-public, CNIL, DREETS Grand Est, CARSAT, INRS…)",
           "extra", guide, "Aucune page de ces sites ne correspond à ce sujet.")
+    block("G. Documents syndicaux et de référence (paie, congés, NAO, branche, guides — dossiers « cfdt » et « paies et congés »)", "docs", passage,
+          "Aucun document correspondant.")
     return lines
 
 
@@ -246,7 +260,8 @@ def _head(mode: str, title: str) -> list[str]:
 
 
 def _counts(gathered_list: Sequence[Mapping[str, Any]]) -> dict[str, int]:
-    names = {"law": "loi", "decisions": "jurisprudence", "convention": "convention", "accords": "accords", "pv": "pv", "extra": "autres"}
+    names = {"law": "loi", "decisions": "jurisprudence", "convention": "convention", "accords": "accords", "pv": "pv", "extra": "autres",
+             "docs": "documents"}
     return {label: sum(len(g[key]) for g in gathered_list) for key, label in names.items()}
 
 
@@ -256,17 +271,19 @@ def build_claude_dossier(question: object, *, mode: str = "question", situation:
     text = " ".join(str(question or "").split())[:MAX_QUESTION_CHARS]
     if not text:
         return {"status": "EMPTY_QUERY", "markdown": "", "sources": 0, "notice": "Saisissez une question."}
-    mode = mode if mode in ("question", "defense") else "question"
+    mode = mode if mode in ("question", "defense", "paie") else "question"
     facts = "\n".join(" ".join(line.split()) for line in str(situation or "").splitlines() if line.strip())[:MAX_FACTS_CHARS]
     # défense : la recherche part du type de situation et de la description du salarié ; l'ensemble des faits n'est qu'affiché
     topic = " ".join(str(topic_text or "").split())[:600]
-    gathered = gather(f"{text} {topic or facts[:600]}".strip() if mode == "defense" else text)
+    gathered = gather(f"{text} {topic or facts[:600]}".strip() if mode in ("defense", "paie") else text)
     numbering = _Numbering()
     sources = _render(gathered, numbering, "###", compact=False)
     topic_line = (f"Sujet reconnu par Nexus : {' ; '.join(gathered['topics'])}." if gathered["topics"]
                   else "Aucun sujet type reconnu : recherche par mots-clés.")
-    middle = ["## Situation du salarié", "", text, "", facts or "_Faits non précisés._"] if mode == "defense" else ["## Question", "", text]
-    title = "Dossier Nexus pour analyse" if mode == "question" else "Dossier Nexus — défense d'un salarié"
+    heading = {"defense": "## Situation du salarié", "paie": "## Situation de paie ou de congés à contrôler"}.get(mode)
+    middle = [heading, "", text, "", facts or "_Faits non précisés._"] if heading else ["## Question", "", text]
+    title = {"question": "Dossier Nexus pour analyse", "defense": "Dossier Nexus — défense d'un salarié",
+             "paie": "Dossier Nexus — contrôle de paie et de congés"}[mode]
     markdown = "\n".join([*_head(mode, title), *middle, "", topic_line, "", "## Sources", *sources,
                           *_limits(_notes(gathered["statuses"]))]) + "\n"
     return {"status": "READY", "markdown": markdown, "sources": numbering.count, "counts": _counts([gathered])}

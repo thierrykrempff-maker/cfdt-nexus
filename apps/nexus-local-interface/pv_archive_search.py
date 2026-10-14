@@ -28,6 +28,8 @@ from cse_agenda_analysis import (
     _archive_endpoint,
     _accord_row,
     _accords_enabled,
+    _docs_enabled,
+    _docs_row,
     _archive_row,
     _normalize,
     _public_text,
@@ -66,7 +68,13 @@ NOTICE_ACCORDS = (
     "Ce n’est pas une analyse juridique ; l’absence de résultat ne prouve pas qu’aucun accord n’existe."
 )
 
-# Deux archives, un seul service local : le corpus est choisi par le champ « corpus » de la requête.
+NOTICE_DOCS = (
+    "Ces passages viennent de vos documents syndicaux et de référence (paie, congés, NAO, branche, guides ; OCR possible). "
+    "Ce sont des documents de travail, pas des textes juridiques : vérifiez leur date et leur version. "
+    "L’absence de résultat ne prouve pas qu’aucun document n’existe."
+)
+
+# Trois archives, un seul service local : le corpus est choisi par le champ « corpus » de la requête.
 CORPORA: dict[str, dict[str, Any]] = {
     "pv": {
         "enabled": _archive_enabled,
@@ -79,6 +87,12 @@ CORPORA: dict[str, dict[str, Any]] = {
         "row": _accord_row,
         "notice": NOTICE_ACCORDS,
         "disabled": "La recherche dans les accords n’est pas activée sur ce poste.",
+    },
+    "docs": {
+        "enabled": _docs_enabled,
+        "row": _docs_row,
+        "notice": NOTICE_DOCS,
+        "disabled": "La recherche dans les documents n’est pas activée sur ce poste.",
     },
 }
 

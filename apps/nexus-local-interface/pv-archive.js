@@ -164,6 +164,10 @@
       try {
         const data = await search(text, { limit: 4 });
         if (ticket !== state.ticket) return; // une réponse plus récente a pris la place
+        if (config.hideWhenEmpty && !(data.results || []).length) {
+          inline.hidden = true; // bloc secondaire : rien à montrer s'il n'y a aucun passage
+          return;
+        }
         render(body, data, "relevance", texts);
       } catch (error) {
         if (ticket === state.ticket) {
@@ -234,7 +238,23 @@
         "L’absence de résultat ne prouve pas qu’aucun accord n’existe.",
     },
   });
-  archives.push(pv, accords);
+  const docs = createArchive({
+    prefix: "docsArchive",
+    button: "docsSearchButton", // pas de bouton ni de panneau autonome : bloc sous la réponse seulement
+    api: "/api/docs-archive",
+    hideWhenEmpty: true,
+    texts: {
+      notEnabled: "La recherche dans les documents n’est pas activée sur ce poste (option NEXUS_DOCS_ARCHIVE_ENABLED).",
+      stopped: "Le service d’archive est arrêté ou l’index des documents est absent.",
+      available: "Archive des documents disponible",
+      unit: "documents",
+      found: "document(s) retrouvé(s).",
+      searching: "Recherche dans vos documents syndicaux…",
+      unreachable: "Le service d’archive est injoignable.",
+      empty: "Aucun passage correspondant dans vos documents.",
+    },
+  });
+  archives.push(pv, accords, docs);
 
   // Accords rapprochés des points d'un ordre du jour CSE (dans la carte de chaque point)
   function appendAgreements(cardElement, rows) {

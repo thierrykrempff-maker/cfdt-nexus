@@ -335,3 +335,20 @@ def test_http_routes_for_accords(accords, nexus_http) -> None:
     # l'archive des PV reste désactivée : les deux options sont indépendantes
     code, body = _post(nexus_http, "/api/pv-archive/search", {"query": "mutuelle cotisation"})
     assert code == 200 and body["pv_archive"]["status"] == "DISABLED"
+
+
+def test_corpus_documents_disponible_et_desactive_par_defaut(monkeypatch):
+    assert "docs" in MODULE.CORPORA
+    monkeypatch.delenv("NEXUS_DOCS_ARCHIVE_ENABLED", raising=False)
+    result = MODULE.search_archive("docs", "congé supplémentaire de naissance")
+    assert result["status"] == "DISABLED" and "documents" in result["notice"]
+
+
+def test_ligne_de_document_syndical():
+    from cse_agenda_analysis import _docs_row
+
+    path = "D:\\cfdt\\NAO 2026 - Présentation.pptx"
+    row = _docs_row({"fichier": path, "page": 1, "date": "0000-00-00", "precision_date": "?",
+                     "extrait": "Calendrier de la NAO 2026 : réunion 1.", "notions": ["nao"]})
+    assert row["origin"] == "DOCS_ARCHIVE" and row["instance"] == "Document · archive documents"
+    assert "texte juridique" in row["limits"][0] and _docs_row({"extrait": ""}) is None
