@@ -17,14 +17,14 @@ TOPICS: list[dict[str, Any]] = [
         "key": "licenciement_economique",
         "label": "Licenciement pour motif économique",
         "when": [["licenci"], ["economi"]],
-        "articles": ["L1233-3", "L1233-4", "L1233-5", "L1233-8", "L1233-61"],
+        "articles": ["L1233-3", "L1233-4", "L1233-5", "L1233-8", "L1233-61", "L1234-9"],
         "terms": ["licenciement", "economique"],
     },
     {
         "key": "licenciement_personnel",
         "label": "Licenciement pour motif personnel (insuffisance professionnelle, faute…)",
         "when": [["licenci"], ["insuffisan", "incompeten", "professionnel", "personnel", "disciplin", "faute", "cause reelle"]],
-        "articles": ["L1232-1", "L1232-2", "L1232-6", "L1235-1"],
+        "articles": ["L1232-1", "L1232-2", "L1232-6", "L1234-1", "L1234-9", "L1235-1", "L1235-3"],
         "terms": ["licenciement"],
     },
     {

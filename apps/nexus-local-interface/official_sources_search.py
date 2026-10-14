@@ -33,7 +33,7 @@ from pv_archive_search import _service_post, query_concepts, required_matches
 ENABLED_VARIABLE = "NEXUS_OFFICIAL_SOURCES_BLOCK_ENABLED"
 MAX_KEYWORDS = 6
 ROWS_PER_SECTION = 3
-MAX_REFERENCE_ARTICLES = 6
+MAX_REFERENCE_ARTICLES = 8
 CALL_TIMEOUT_SECONDS = 25
 CCN_FILE_MARKER = "ccnic"  # convention collective nationale des industries chimiques (fichier de l'archive des accords)
 CCN_TITLE = "Convention collective nationale des industries chimiques (IDCC 44)"
