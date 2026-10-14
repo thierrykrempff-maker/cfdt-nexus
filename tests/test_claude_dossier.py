@@ -37,6 +37,7 @@ def fake(monkeypatch):
             judilibre={"status": "READY", "rows": [{"title": "Cour de cassation 2011", "detail": "Solution : cassation",
                                                     "excerpt": "Résumé fictif.", "url": ""}]},
             convention={"status": "READY", "rows": [{"title": "CCN", "detail": "p. 3", "excerpt": "Passage CCN fictif."}]},
+            autres={"status": "READY", "rows": [{"title": "Guide fictif", "detail": "DREETS Grand Est", "excerpt": "Guide DREETS fictif.", "url": ""}]},
         )
 
     def fake_archive(corpus, query, **kwargs):
@@ -59,11 +60,11 @@ def test_dossier_complet_et_numerote(fake):
     markdown = result["markdown"]
     assert result["status"] == "READY" and fake["full_text"] is True
     numbers = [int(n) for n in re.findall(r"^\*\*\[S(\d+)\]", markdown, flags=re.M)]
-    assert numbers == list(range(1, len(numbers) + 1)) and result["sources"] == len(numbers) == 5
+    assert numbers == list(range(1, len(numbers) + 1)) and result["sources"] == len(numbers) == 6
     for marker in ("## Consigne", "## Question", "Texte intégral fictif.", "Résumé fictif.", "Passage CCN fictif.",
-                   "Extrait accords.", "Extrait pv.", "## Limites de la recherche", "uniquement"):
+                   "Extrait accords.", "Extrait pv.", "Guide DREETS fictif.", "## Limites de la recherche", "uniquement"):
         assert marker in markdown
-    assert result["counts"] == {"loi": 1, "jurisprudence": 1, "convention": 1, "accords": 1, "pv": 1}
+    assert result["counts"] == {"loi": 1, "jurisprudence": 1, "convention": 1, "accords": 1, "pv": 1, "autres": 1}
 
 
 def test_texte_integral_prefere_a_l_extrait(fake):

@@ -27,6 +27,7 @@ from typing import Any
 
 from agreement_compare import HEX_ID, _base_url, _service_call
 from cse_agenda_analysis import _accord_row, _accords_enabled, _archive_endpoint, _public_text
+from official_extra_sources import search_extra_sources
 from official_topics import TOPICS
 from pv_archive_search import _service_post, query_concepts, required_matches
 
@@ -330,6 +331,7 @@ def search_official_sources(question: object, *, full_text: bool = False) -> dic
         "legifrance": lambda: _legifrance_section(" ".join(keywords), keywords, tuple(reference_articles)),
         "judilibre": lambda: _judilibre_section(query, tuple(topic_terms or keywords)),
         "convention": lambda: _ccn_section(topic_terms or keywords, strict=bool(topic_terms)),
+        "autres": lambda: search_extra_sources(query),
     }
     pool = ThreadPoolExecutor(max_workers=len(jobs))
     futures = {name: pool.submit(job) for name, job in jobs.items()}

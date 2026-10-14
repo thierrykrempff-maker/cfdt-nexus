@@ -52,6 +52,7 @@ def test_seuls_les_mots_cles_partent_vers_les_services(monkeypatch):
     monkeypatch.setattr(module, "_legifrance_section", lambda q, *a: seen.setdefault("l", q) and {"status": "READY", "rows": [], "notice": ""})
     monkeypatch.setattr(module, "_judilibre_section", lambda q, *a: seen.setdefault("j", q) and {"status": "READY", "rows": [], "notice": ""})
     monkeypatch.setattr(module, "_ccn_section", lambda k, **kw: {"status": "READY", "rows": [], "notice": ""})
+    monkeypatch.setattr(module, "search_extra_sources", lambda q: {"status": "READY", "rows": [], "notice": ""})
     monkeypatch.setattr(module, "_reference_section", lambda t, *a: {"status": "READY", "rows": [], "notice": ""})
     question = "Pierre Martin, matricule 4412, conteste son licenciement pour insuffisance professionnelle."
     result = module.search_official_sources(question)
@@ -68,6 +69,7 @@ def test_une_section_en_panne_ne_bloque_pas_les_autres(monkeypatch):
         raise RuntimeError("réseau coupé")
 
     monkeypatch.setattr(module, "_legifrance_section", boom)
+    monkeypatch.setattr(module, "search_extra_sources", lambda q: {"status": "READY", "rows": [], "notice": ""})
     monkeypatch.setattr(module, "_reference_section", lambda t, *a: {"status": "READY", "rows": [], "notice": ""})
     monkeypatch.setattr(module, "_judilibre_section", lambda q, *a: {"status": "READY", "rows": [{"title": "x"}], "notice": ""})
     monkeypatch.setattr(module, "_ccn_section", lambda k, **kw: {"status": "UNAVAILABLE", "rows": [], "notice": "arrêté"})

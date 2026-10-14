@@ -37,7 +37,7 @@ MAX_QUESTION_CHARS = 1500
 
 INSTRUCTIONS = """\
 Analyse la question ci-dessous **uniquement** à partir des sources numérotées de ce dossier (Code du travail, jurisprudence,
-convention collective, accords d'entreprise, PV du CE/CSE). Règles :
+convention collective, accords d'entreprise, PV du CE/CSE, guides officiels). Règles :
 1. N'utilise aucune connaissance extérieure au dossier. Si le dossier ne permet pas de répondre à un point, dis-le clairement.
 2. Cite la source de chaque affirmation, sous la forme [S3]. Ne cite jamais une source qui n'est pas dans le dossier.
 3. Structure la réponse : règle légale ; ce que prévoit la convention collective ; ce que prévoient les accords INEOS ;
@@ -125,6 +125,10 @@ def build_claude_dossier(question: object) -> dict[str, Any]:
     def passage(number: int, row: Mapping[str, Any]) -> list[str]:
         return [f"**[S{number}] {_header(row)}**", "", f"> {_dossier_row_text(row)}", ""]
 
+    def guide(number: int, row: Mapping[str, Any]) -> list[str]:
+        link = f" — {row['url']}" if row.get("url") else ""
+        return [f"**[S{number}] {row.get('title')}** ({row.get('detail')}){link}", "", f"> {row.get('excerpt')}", ""]
+
     def part(name: str) -> tuple[list[Mapping[str, Any]], str]:
         item = sections.get(name) or {}
         return list(item.get("rows") or []), str(item.get("status") or "UNAVAILABLE")
@@ -133,6 +137,7 @@ def build_claude_dossier(question: object) -> dict[str, Any]:
     free, _ = part("legifrance")
     decisions, decisions_status = part("judilibre")
     convention, convention_status = part("convention")
+    extra, _ = part("autres")
 
     lines.extend(["## Sources"])
     add("A. Code du travail (Légifrance, texte officiel en vigueur)", [*reference, *free], law,
@@ -144,6 +149,8 @@ def build_claude_dossier(question: object) -> dict[str, Any]:
         "Aucun passage retrouvé dans la convention collective.")
     add("D. Accords d'entreprise INEOS Sarralbe (archive locale)", accord_rows, passage, "Aucun accord retrouvé.")
     add("E. PV du CE/CSE (archive locale, 2000-2024)", pv_rows, passage, "Aucun PV retrouvé.")
+    add("F. Autres sources officielles (explications et guides : CDTN, service-public, CNIL, DREETS Grand Est, CARSAT, INRS)",
+        extra, guide, "Aucune page de ces sites ne correspond à la question.")
 
     for label, status in (("Légifrance", reference_status), ("Judilibre", decisions_status),
                           ("Convention collective", convention_status), ("Accords", accord_status), ("PV", pv_status)):
@@ -169,6 +176,7 @@ def build_claude_dossier(question: object) -> dict[str, Any]:
         "",
         "- Recherche automatique par mots-clés : une absence de résultat ne prouve pas l'absence de règle ou de précédent.",
         "- Légifrance : articles de référence du sujet (liste limitée) ; vérifier les autres textes applicables.",
+        "- Section F : guides et explications officiels ; ils orientent mais ne remplacent ni la loi ni la jurisprudence.",
         "- Judilibre : résumés officiels, pas les arrêts complets ; décisions sélectionnées par mots-clés.",
         "- Convention collective : édition de septembre 2013 de l'archive locale ; la version en vigueur peut différer.",
         "- Accords et PV : texte océrisé (erreurs possibles) ; pas de PV de CHSCT/CSSCT ; vérifier version en vigueur, avenants, dénonciation.",
@@ -177,7 +185,7 @@ def build_claude_dossier(question: object) -> dict[str, Any]:
     ]
     return {"status": "READY", "markdown": "\n".join([*head, *lines, *tail]) + "\n", "sources": counter,
             "counts": {"loi": len(reference) + len(free), "jurisprudence": len(decisions), "convention": len(convention),
-                       "accords": len(accord_rows), "pv": len(pv_rows)}}
+                       "accords": len(accord_rows), "pv": len(pv_rows), "autres": len(extra)}}
 
 
 def main(argv: Sequence[str] | None = None) -> int:

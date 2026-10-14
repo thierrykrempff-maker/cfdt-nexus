@@ -9,12 +9,14 @@
     ["legifrance", "Légifrance — autres articles trouvés par mots-clés"],
     ["judilibre", "Judilibre — Cour de cassation"],
     ["convention", "Convention collective des industries chimiques (IDCC 44)"],
+    ["autres", "Autres sources officielles (CDTN, service-public, CNIL, DREETS, CARSAT, INRS)"],
   ];
   const EMPTY = {
     reference: "",
     legifrance: "Aucun article du Code du travail retrouvé avec ces mots.",
     judilibre: "Aucune décision retrouvée avec ces mots.",
     convention: "Aucun passage de la convention collective retrouvé avec ces mots.",
+    autres: "Aucune page de ces sites officiels ne correspond à ces mots.",
   };
   let ticket = 0;
 
@@ -40,7 +42,7 @@
     excerpt.className = "nexus-source-highlight";
     excerpt.textContent = item.excerpt || "Extrait non disponible.";
     section.append(title, excerpt);
-    if (item.url && /^https:\/\/(www\.legifrance\.gouv\.fr|www\.courdecassation\.fr)\//.test(item.url)) {
+    if (item.url && /^https:\/\//.test(item.url)) {
       const link = document.createElement("a");
       link.href = item.url;
       link.target = "_blank";
