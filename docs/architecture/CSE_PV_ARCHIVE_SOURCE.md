@@ -175,6 +175,13 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
   droits, l'Agirc-Arrco, le droit local d'Alsace-Moselle, etc. Les résultats du CDTN et de service-public sont filtrés par pertinence
   (2 mots de la question, ou 1 mot long et distinctif). Ces sources orientent : elles ne remplacent ni la loi ni la jurisprudence.
 
+- **DREETS Grand Est et la Moselle** : le site de la DREETS a été refondu en 2026 (anciennes adresses mortes). Le connecteur couvre maintenant
+  18 pages (droit local Alsace-Moselle, conseiller du salarié, litiges et prud'hommes, défenseurs syndicaux, formations CSE, accidents du travail,
+  accords…) et `official_local_guides.py` lit en **texte intégral** 7 guides PDF de la DREETS (dont le *Guide du droit local du travail en
+  Alsace-Moselle*), téléchargés une fois dans `local-index/dreets/guides` (ignoré par git) : `python -I official_local_guides.py --prefetch`.
+  Les passages sont classés par rareté des mots et les tables des matières écartées. La Moselle n'a pas de page dédiée : l'inspection du travail
+  relève de la DDETS de la Moselle (renseignements en droit du travail : 0 806 000 126 selon le site de la DREETS, à vérifier).
+
 Tests : `tests/test_official_sources_search.py`.
 
 ## Limites connues

@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from cse_agenda_analysis import _public_text
+from official_local_guides import search_guides
 
 CALL_TIMEOUT_SECONDS = 25
 ROWS_PER_CONNECTOR = 2
@@ -79,6 +80,10 @@ def _enough(wanted: Mapping[str, int], text: object) -> bool:
         return True
     matched = [stem for stem in _stems(text) if stem in wanted]
     return len(matched) >= 2 or any(wanted[stem] >= 7 for stem in matched) or (len(wanted) == 1 and bool(matched))
+
+
+def _enough_text(wanted: Mapping[str, int], text: str) -> bool:
+    return _enough(wanted, text)
 
 
 def _relevant(row: Mapping[str, Any], wanted: Mapping[str, int]) -> bool:
@@ -169,7 +174,12 @@ def search_extra_sources(query: str) -> dict[str, Any]:
             if key not in seen and (key_name not in BROAD or _relevant(row, wanted)):
                 seen.add(key)
                 rows.append(row)
-    for row in search_catalogs(query):
+    guide_rows: list[dict[str, Any]] = []
+    try:
+        guide_rows = search_guides(wanted, _enough_text)
+    except Exception:  # noqa: BLE001
+        pass
+    for row in [*guide_rows, *search_catalogs(query)]:
         if (row["url"] or row["title"]) not in seen:
             seen.add(row["url"] or row["title"])
             rows.append(row)

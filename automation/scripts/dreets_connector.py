@@ -81,6 +81,72 @@ DREETS_PAGES: list[dict[str, Any]] = [
             "guide de la negociation",
         ],
     },
+    {
+        "id": "guide_droit_local_alsace_moselle",
+        "url": "https://grand-est.dreets.gouv.fr/guide-local-du-droit-du-travail-en-alsace-moselle",
+        "keywords": [
+            "droit local", "alsace moselle", "alsace-moselle", "moselle", "jours feries", "vendredi saint",
+            "maintien de salaire", "absence pour motif personnel",
+        ],
+    },
+    {
+        "id": "conseiller_du_salarie",
+        "url": "https://grand-est.dreets.gouv.fr/le-conseiller-du-salarie-un-appui-en-cas-de-licenciement",
+        "keywords": [
+            "conseiller du salarie", "entretien prealable", "licenciement", "entreprise sans representants",
+            "liste des conseillers du salarie",
+        ],
+    },
+    {
+        "id": "conseillers_salarie_moselle",
+        "url": "https://grand-est.dreets.gouv.fr/sites/dreets-als-champ/files/files-spip/pdf/arretecs-57_16-04-2025.pdf",
+        "keywords": ["conseillers du salarie moselle", "liste des conseillers du salarie", "conseiller du salarie moselle"],
+    },
+    {
+        "id": "litige_prudhommes",
+        "url": "https://grand-est.dreets.gouv.fr/jai-un-litige-avec-mon-employeur",
+        "keywords": ["litige", "prud'hommes", "prudhommes", "conseil de prud hommes", "contestation du licenciement"],
+    },
+    {
+        "id": "renseignement_droit_du_travail",
+        "url": "https://grand-est.dreets.gouv.fr/jai-des-questions-en-matiere-de-droit-du-travail",
+        "keywords": ["renseignement droit du travail", "questions droit du travail", "inspection du travail", "service de renseignements"],
+    },
+    {
+        "id": "employeur_ne_respecte_pas",
+        "url": "https://grand-est.dreets.gouv.fr/mon-employeur-ne-respecte-pas-le-droit-du-travail",
+        "keywords": ["employeur ne respecte pas", "signaler un manquement", "saisir l inspection du travail", "inspection du travail"],
+    },
+    {
+        "id": "defenseurs_syndicaux",
+        "url": "https://grand-est.dreets.gouv.fr/les-defenseurs-syndicaux",
+        "keywords": ["defenseur syndical", "defenseurs syndicaux", "prud'hommes assistance"],
+    },
+    {
+        "id": "formations_cse_agrement",
+        "url": "https://grand-est.dreets.gouv.fr/agrement-des-organismes-pour-les-formations-cse",
+        "keywords": ["formation cse", "formation des elus", "agrement organisme de formation", "formation economique cse"],
+    },
+    {
+        "id": "guide_accidents_du_travail",
+        "url": "https://grand-est.dreets.gouv.fr/un-guide-pour-les-victimes-daccidents-du-travail",
+        "keywords": ["accident du travail", "victime d accident du travail", "accident de trajet", "faute inexcusable"],
+    },
+    {
+        "id": "accords_sante_prevoyance",
+        "url": "https://grand-est.dreets.gouv.fr/les-accords-collectifs-sante-et-prevoyance",
+        "keywords": ["accord sante", "prevoyance", "mutuelle", "accord collectif sante"],
+    },
+    {
+        "id": "accords_de_salaire",
+        "url": "https://grand-est.dreets.gouv.fr/les-accords-de-salaire",
+        "keywords": ["accord de salaire", "negociation salariale", "minima de branche", "salaires minima"],
+    },
+    {
+        "id": "dialogue_social_guides_negociation_nouveau",
+        "url": "https://grand-est.dreets.gouv.fr/dialogue-social-guides-de-la-negociation-en-entreprise",
+        "keywords": ["guide de la negociation", "negociation en entreprise", "accord d entreprise"],
+    },
 ]
 
 
