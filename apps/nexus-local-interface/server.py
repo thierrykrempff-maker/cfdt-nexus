@@ -1087,7 +1087,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     raise ValueError("Requete invalide.")
                 self.send_json(
                     HTTPStatus.OK,
-                    {"ok": True, "dossier": build_claude_dossier(payload.get("kind"), mode="defense", situation=str(payload.get("facts") or ""))},
+                    {"ok": True, "dossier": build_claude_dossier(payload.get("kind"), mode="defense", situation=str(payload.get("facts") or ""), topic_text=str(payload.get("question") or ""))},
                 )
                 return
             if parsed.path == "/api/claude-dossier/build":

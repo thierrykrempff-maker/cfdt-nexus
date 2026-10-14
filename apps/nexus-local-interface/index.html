@@ -731,6 +731,11 @@
                 <p class="source-context-notice" id="claudeDossierStatus" aria-live="polite">Rassemble Légifrance, Judilibre, la convention collective, les accords et les PV dans un dossier à coller dans Claude, qui l’analysera à partir de ces seules sources. Le dossier contient des extraits confidentiels : ne le collez que dans votre propre session Claude.</p>
                 <textarea id="claudeDossierText" rows="10" readonly hidden aria-label="Dossier pour Claude"></textarea>
               </div>
+              <div class="claude-dossier" id="defenseDossier" hidden>
+                <button class="primary-button" type="button" id="defenseDossierButton">Préparer le dossier de défense pour Claude</button>
+                <p class="source-context-notice" id="defenseDossierStatus" aria-live="polite">Reprend tout ce que vous avez saisi (situation, réponses du salarié, éléments disponibles) et y ajoute toutes les sources : Légifrance, Judilibre, convention, accords, PV, guides officiels, droit local d’Alsace-Moselle. À coller dans Claude pour préparer la défense. Utilisez des initiales : le dossier contient des extraits confidentiels.</p>
+                <textarea id="defenseDossierText" rows="10" readonly hidden aria-label="Dossier de défense pour Claude"></textarea>
+              </div>
             </section>
 
             <section class="response-band chatbot-sources-summary" id="chatbotSourcesSummary" hidden>

@@ -81,6 +81,48 @@
     body.append(paragraph(data.notice));
   }
 
+  // Parcours « Questions salariés » / « Assistance entretien disciplinaire » : le type de situation et les réponses recueillies
+  // enrichissent la recherche et alimentent le dossier de défense.
+  let currentCase = null;
+  let currentSituation = "";
+  function setCase(request, situationLabel) {
+    currentCase = request && request.portal_context ? request : null;
+    currentSituation = String(situationLabel || "");
+    const box = $("defenseDossier");
+    if (box) box.hidden = !currentCase;
+    const area = $("defenseDossierText");
+    if (area) area.hidden = true;
+  }
+
+  function caseFacts() {
+    const context = (currentCase && currentCase.portal_context) || {};
+    const lines = [];
+    (context.employee_interview || []).forEach((item) => lines.push(`- ${item.question} → ${item.answer}`));
+    Object.entries(context.facts || {}).forEach(([key, value]) => {
+      if (value !== false && value !== "" && value != null) lines.push(`- ${key} : ${value === true ? "oui" : value}`);
+    });
+    if ((context.available_documents || []).length) lines.push(`- Documents disponibles : ${context.available_documents.join(", ")}`);
+    if (context.desired_outcome) lines.push(`- Résultat souhaité : ${context.desired_outcome}`);
+    if (context.urgency) lines.push("- Situation signalée comme urgente");
+    return lines.join("\n");
+  }
+
+  function prepareDefenseDossier() {
+    if (!currentCase) return;
+    const context = currentCase.portal_context;
+    copyDossier({
+      key: "defense", url: "/api/claude-dossier/defense",
+      body: {
+        kind: currentSituation || context.situation_type || "Situation d’un salarié",
+        question: context.user_question || "",
+        facts: `${context.user_question || ""}
+${caseFacts()}`.trim(),
+      },
+      statusId: "defenseDossierStatus", areaId: "defenseDossierText",
+      wait: "Préparation du dossier de défense (toutes les sources)…",
+    });
+  }
+
   async function showForQuestion(questionText) {
     const inline = $("officialSourcesInline");
     const body = $("officialSourcesBody");
@@ -98,7 +140,7 @@
       const data = await api("/api/official-sources/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text }),
+        body: JSON.stringify({ query: currentCase && currentSituation ? `${currentSituation}. ${text}` : text }),
       });
       if (mine === ticket) render(body, data.official_sources || { status: "UNAVAILABLE", notice: "Recherche indisponible." });
     } catch (error) {
@@ -183,9 +225,11 @@
   document.addEventListener("DOMContentLoaded", () => {
     const question = $("claudeDossierButton");
     if (question) question.addEventListener("click", prepareQuestionDossier);
+    const defense = $("defenseDossierButton");
+    if (defense) defense.addEventListener("click", prepareDefenseDossier);
     const agenda = $("agendaDossierButton");
     if (agenda) agenda.addEventListener("click", prepareAgendaDossier);
   });
 
-  window.NexusOfficialSources = { showForQuestion, setAgenda };
+  window.NexusOfficialSources = { showForQuestion, setAgenda, setCase };
 })();

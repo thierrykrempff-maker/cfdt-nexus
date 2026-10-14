@@ -127,3 +127,23 @@ def test_defense_d_un_salarie(fake):
 
 def test_mode_inconnu_retombe_sur_question(fake):
     assert "## Question" in module.build_claude_dossier("licenciement", mode="piratage")["markdown"]
+
+
+def test_defense_la_recherche_part_du_type_et_de_la_description(monkeypatch, fake):
+    seen = {}
+    original = module.gather
+
+    def spy(text, **kwargs):
+        seen["text"] = text
+        return original(text, **kwargs)
+
+    monkeypatch.setattr(module, "gather", spy)
+    result = module.build_claude_dossier("Mise à pied", mode="defense", topic_text="Trois retards en un mois",
+                                         situation="- Date : 12 mars\n- Motif : retards répétés " + "x" * 50)
+    assert seen["text"] == "Mise à pied Trois retards en un mois"
+    assert "retards répétés" in result["markdown"] and "Date : 12 mars" in result["markdown"]
+
+
+def test_defense_conserve_les_lignes_des_faits(fake):
+    markdown = module.build_claude_dossier("Mise à pied", mode="defense", situation="Ligne un\n\n  - Ligne   deux  ")["markdown"]
+    assert "Ligne un\n- Ligne deux" in markdown

@@ -250,15 +250,17 @@ def _counts(gathered_list: Sequence[Mapping[str, Any]]) -> dict[str, int]:
     return {label: sum(len(g[key]) for g in gathered_list) for key, label in names.items()}
 
 
-def build_claude_dossier(question: object, *, mode: str = "question", situation: str = "") -> dict[str, Any]:
+def build_claude_dossier(question: object, *, mode: str = "question", situation: str = "", topic_text: str = "") -> dict[str, Any]:
     """Dossier Markdown pour une question (``question``) ou la défense d'un salarié (``defense``, avec ``situation`` = faits)."""
 
     text = " ".join(str(question or "").split())[:MAX_QUESTION_CHARS]
     if not text:
         return {"status": "EMPTY_QUERY", "markdown": "", "sources": 0, "notice": "Saisissez une question."}
     mode = mode if mode in ("question", "defense") else "question"
-    facts = " ".join(str(situation or "").split())[:MAX_FACTS_CHARS]
-    gathered = gather(f"{text} {facts}".strip() if mode == "defense" else text)
+    facts = "\n".join(" ".join(line.split()) for line in str(situation or "").splitlines() if line.strip())[:MAX_FACTS_CHARS]
+    # défense : la recherche part du type de situation et de la description du salarié ; l'ensemble des faits n'est qu'affiché
+    topic = " ".join(str(topic_text or "").split())[:600]
+    gathered = gather(f"{text} {topic or facts[:600]}".strip() if mode == "defense" else text)
     numbering = _Numbering()
     sources = _render(gathered, numbering, "###", compact=False)
     topic_line = (f"Sujet reconnu par Nexus : {' ; '.join(gathered['topics'])}." if gathered["topics"]
