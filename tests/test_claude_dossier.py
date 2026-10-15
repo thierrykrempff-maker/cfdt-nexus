@@ -169,3 +169,10 @@ def test_reglement_interieur_pas_repete_dans_les_accords(monkeypatch, fake):
     monkeypatch.setattr(module, "search_archive", archive)
     markdown = module.build_claude_dossier("sanction disciplinaire")["markdown"]
     assert "vrai accord" in markdown and "doublon RI" not in markdown and "Échelle des sanctions fictive." in markdown
+
+
+def test_meme_fiche_relayee_par_deux_sites_numerotee_une_fois():
+    numbering = module._Numbering()
+    first = numbering.number({"title": "La procédure", "url": "https://code.travail.gouv.fr/fiche", "excerpt": "Après l'entretien, l'employeur attend deux jours."})
+    second = numbering.number({"title": "La procédure", "url": "https://code.travail.gouv.fr/fiche#procedure", "excerpt": "Après l'entretien, l'employeur attend deux jours."})
+    assert first == (1, False) and second == (1, True)

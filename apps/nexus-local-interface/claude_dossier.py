@@ -189,7 +189,7 @@ class _Numbering:
         self.texts: list[tuple[str, str]] = []  # (étiquette [S#], texte) : pour rapprocher les valeurs chiffrées des sources
 
     def number(self, row: Mapping[str, Any]) -> tuple[int, bool]:
-        key = _plain(f"{row.get('url') or ''}|{row.get('title') or ''}|{_row_text(row)[:80]}")
+        key = _plain(f"{row.get('title') or ''}|{_row_text(row)[:80]}")  # sans l'adresse : une même fiche relayée par deux sites compte une fois
         if key in self.cited:
             return self.cited[key], True
         self.count += 1
