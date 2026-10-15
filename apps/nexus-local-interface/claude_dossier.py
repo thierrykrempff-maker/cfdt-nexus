@@ -32,6 +32,7 @@ if __package__ in (None, ""):  # exécution directe : rendre importables les mod
     sys.path.insert(0, os.path.dirname(os.path.dirname(_HERE)))
 
 from official_sources_search import _plain, keywords_for_sources, matching_topics, search_official_sources  # noqa: E402
+from dossier_checks import check_rows, find_divergences  # noqa: E402
 from pv_archive_search import search_archive  # noqa: E402
 
 ARCHIVE_ROWS = 6
@@ -40,6 +41,11 @@ MAX_AGENDA_POINTS = 10
 MAX_FACTS_CHARS = 3000
 COMPACT_TEXT_CHARS = 1500
 COMPACT_LIMITS = {"law": 4, "decisions": 2, "convention": 2, "reglement": 2, "accords": 3, "pv": 4, "extra": 4, "docs": 3}
+
+VERIFICATION_TAGS = {
+    "verifie": "✔ Extrait vérifié : retrouvé tel quel dans le document source.",
+    "non_retrouve": "⚠ Extrait non retrouvé dans le document source (OCR ou index différent) : à vérifier avant tout usage.",
+}
 
 ROLE = (
     "L'utilisateur est délégué syndical CFDT et élu au CSE d'INEOS Sarralbe (Moselle : le droit local d'Alsace-Moselle s'applique), "
@@ -55,7 +61,13 @@ Règles :
    signale toute règle propre à l'Alsace-Moselle si le dossier en contient.
 4. Les extraits peuvent être tronqués ou mal reconnus (OCR) : ne conclus pas sur un extrait douteux, signale-le.
 5. Ne recopie pas de noms de salariés (désigne « un salarié » et la date) sauf demande expresse.
-6. Termine par les vérifications à faire (version en vigueur, avenants, dénonciation) et rappelle que ce n'est pas un avis juridique :
+6. **Contrôle des sources d'abord.** Avant d'analyser, contrôle chaque extrait : exact (vérifié dans le document, non tronqué, lisible ; signale les
+   extraits « non retrouvés » ou océrisés), pertinent pour la question, et concordant avec les autres sources (voir « Contrôle automatique des
+   sources » et ses divergences éventuelles : compare les valeurs, la date et la version des textes, et dis lesquelles l'emportent et pourquoi).
+   N'utilise que les extraits utiles et fiables ; écarte les autres en une ligne chacun.
+7. **Commence ta réponse par une synthèse** de 8 à 10 lignes (conclusion, règle applicable, point de vigilance, action immédiate), puis le détail
+   et un tableau « source → verdict : fiable / à vérifier / écartée (motif) ».
+8. Termine par les vérifications à faire (version en vigueur, avenants, dénonciation) et rappelle que ce n'est pas un avis juridique :
    un point sensible se valide auprès de la fédération ou d'un conseil.\
 """
 
@@ -112,7 +124,7 @@ def _archive_rows(corpus: str, attempts: Sequence[tuple[str, bool]]) -> tuple[li
 
     status = "READY"
     for query, strict in attempts:
-        result = search_archive(corpus, query, limit=ARCHIVE_ROWS, strict=strict)  # strict : tous les mots ensemble
+        result = search_archive(corpus, query, limit=ARCHIVE_ROWS, strict=strict, keep_source=True)  # strict : tous les mots ensemble
         if result.get("status") != "READY":
             status = str(result.get("status"))
             continue
@@ -156,7 +168,7 @@ def gather(text: str, *, full_text: bool = True) -> dict[str, Any]:
     convention, convention_status = part("convention")
     reglement, reglement_status = part("reglement")
     extra, _ = part("autres")
-    return {
+    gathered = {
         "text": text,
         "topics": [topic["label"] for topic in topics[:2]],
         "law": [*reference, *free], "decisions": decisions, "convention": convention, "reglement": reglement,
@@ -164,6 +176,8 @@ def gather(text: str, *, full_text: bool = True) -> dict[str, Any]:
         "statuses": {"Légifrance": reference_status, "Judilibre": decisions_status, "Convention collective": convention_status, "Règlement intérieur": reglement_status,
                      "Accords": accord_status, "PV": pv_status, "Documents": docs_status},
     }
+    gathered["checks"] = check_rows(gathered, " ".join([text, *keywords]))
+    return gathered
 
 
 class _Numbering:
@@ -172,6 +186,7 @@ class _Numbering:
     def __init__(self) -> None:
         self.count = 0
         self.cited: dict[str, int] = {}
+        self.texts: list[tuple[str, str]] = []  # (étiquette [S#], texte) : pour rapprocher les valeurs chiffrées des sources
 
     def number(self, row: Mapping[str, Any]) -> tuple[int, bool]:
         key = _plain(f"{row.get('url') or ''}|{row.get('title') or ''}|{_row_text(row)[:80]}")
@@ -179,6 +194,7 @@ class _Numbering:
             return self.cited[key], True
         self.count += 1
         self.cited[key] = self.count
+        self.texts.append((f"[S{self.count}]", str(row.get("full_text") or row.get("excerpt") or "")))
         return self.count, False
 
 
@@ -218,7 +234,8 @@ def _render(gathered: Mapping[str, Any], numbering: _Numbering, level: str, comp
         return [f"**[S{n}] {row.get('title')} — {row.get('detail') or ''}**", "", f"> {row.get('excerpt')}", ""]
 
     def passage(n: int, row: Mapping[str, Any]) -> list[str]:
-        return [f"**[S{n}] {_header(row)}**", "", f"> {_row_text(row)}", ""]
+        tag = VERIFICATION_TAGS.get(str(row.get("verification") or ""), "")
+        return [f"**[S{n}] {_header(row)}**", "", f"> {_row_text(row)}", *([tag, ""] if tag else [""])]
 
     def guide(n: int, row: Mapping[str, Any]) -> list[str]:
         link = f" — {row['url']}" if row.get("url") else ""
@@ -237,6 +254,35 @@ def _render(gathered: Mapping[str, Any], numbering: _Numbering, level: str, comp
           "extra", guide, "Aucune page de ces sites ne correspond à ce sujet.")
     block("G. Documents syndicaux et de référence (paie, congés, NAO, branche, guides — dossiers « cfdt » et « paies et congés »)", "docs", passage,
           "Aucun document correspondant.")
+    return lines
+
+
+def _control_lines(gathered_list: Sequence[Mapping[str, Any]], numbering: _Numbering) -> list[str]:
+    """Bilan des contrôles automatiques : extraits gardés ou écartés par type de source, et divergences de valeurs entre sources."""
+
+    names = {"pv": "PV", "accords": "accords", "docs": "documents", "extra": "guides officiels", "convention": "convention collective",
+             "reglement": "règlement intérieur"}
+    kept = {key: 0 for key in names}
+    illegible = {key: 0 for key in names}
+    off_topic = {key: 0 for key in names}
+    for gathered in gathered_list:
+        for key, result in (gathered.get("checks") or {}).items():
+            kept[key] += result.get("gardes", 0)
+            illegible[key] += result.get("illisible", 0)
+            off_topic[key] += result.get("hors_sujet", 0)
+    lines = ["", "## Contrôle automatique des sources", "",
+             "Nexus a contrôlé les extraits des archives locales avant de vous les présenter : relecture dans le document source, "
+             "lisibilité (océrisation) et présence d'un mot distinctif de la question. Ce contrôle est mécanique : il ne juge pas le fond."]
+    for key, label in names.items():
+        if kept[key] or illegible[key] or off_topic[key]:
+            lines.append(f"- {label} : {kept[key]} extrait(s) gardé(s), {illegible[key]} écarté(s) pour illisibilité, "
+                         f"{off_topic[key]} écarté(s) hors sujet.")
+    divergences = find_divergences(numbering.texts)
+    if divergences:
+        lines.extend(["", "Valeurs chiffrées différentes selon les sources (rapprochement mécanique, à confirmer en lisant les extraits) :",
+                      *[f"- {item}" for item in divergences]])
+    else:
+        lines.extend(["", "Aucune divergence de valeur chiffrée repérée automatiquement entre les sources (cela ne remplace pas ta lecture)."])
     return lines
 
 
@@ -291,7 +337,7 @@ def build_claude_dossier(question: object, *, mode: str = "question", situation:
     title = {"question": "Dossier Nexus pour analyse", "defense": "Dossier Nexus — défense d'un salarié",
              "paie": "Dossier Nexus — contrôle de paie et de congés"}[mode]
     markdown = "\n".join([*_head(mode, title), *middle, "", topic_line, "", "## Sources", *sources,
-                          *_limits(_notes(gathered["statuses"]))]) + "\n"
+                          *_control_lines([gathered], numbering), *_limits(_notes(gathered["statuses"]))]) + "\n"
     return {"status": "READY", "markdown": markdown, "sources": numbering.count, "counts": _counts([gathered])}
 
 
@@ -321,7 +367,7 @@ def build_agenda_dossier(points: Sequence[Any], meeting: object = "") -> dict[st
     label = " ".join(str(meeting or "").split())[:160]
     markdown = "\n".join([*_head("agenda", "Dossier Nexus — préparation du CSE"),
                           f"## Réunion{': ' + label if label else ''}", "",
-                          *[f"{position}. {title}" for position, title in cleaned], "", *body, *_limits(_notes(notes))]) + "\n"
+                          *[f"{position}. {title}" for position, title in cleaned], "", *body, *_control_lines(results, numbering), *_limits(_notes(notes))]) + "\n"
     return {"status": "READY", "markdown": markdown, "sources": numbering.count, "points": len(cleaned), "counts": _counts(results)}
 
 

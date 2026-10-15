@@ -18,6 +18,10 @@ sys.path.insert(0, str(APP_DIR))
 import claude_dossier as module  # noqa: E402
 
 
+TOPICS_FAKE = ("Licenciement pour insuffisance professionnelle, heures de nuit manquantes, compte épargne temps, "
+               "sanction disciplinaire, mise à pied, formation, vidéosurveillance, travail de nuit.")
+
+
 def _official(**sections):
     base = {"reference": {"status": "READY", "rows": []}, "legifrance": {"status": "READY", "rows": []},
             "judilibre": {"status": "READY", "rows": []}, "convention": {"status": "READY", "rows": []}}
@@ -37,13 +41,13 @@ def fake(monkeypatch):
             judilibre={"status": "READY", "rows": [{"title": "Cour de cassation 2011", "detail": "Solution : cassation",
                                                     "excerpt": "Résumé fictif.", "url": ""}]},
             convention={"status": "READY", "rows": [{"title": "CCN", "detail": "p. 3", "excerpt": "Passage CCN fictif."}]},
-            reglement={"status": "READY", "rows": [{"title": "Règlement intérieur", "detail": "p. 7", "excerpt": "Échelle des sanctions fictive."}]},
-            autres={"status": "READY", "rows": [{"title": "Guide fictif", "detail": "DREETS Grand Est", "excerpt": "Guide DREETS fictif.", "url": ""}]},
+            reglement={"status": "READY", "rows": [{"title": "Règlement intérieur", "detail": "p. 7", "excerpt": "Échelle des sanctions fictive. " + TOPICS_FAKE}]},
+            autres={"status": "READY", "rows": [{"title": "Guide fictif", "detail": "DREETS Grand Est", "excerpt": "Guide DREETS fictif. " + TOPICS_FAKE, "url": ""}]},
         )
 
     def fake_archive(corpus, query, **kwargs):
         calls.setdefault("archive", []).append((corpus, query, kwargs.get("strict")))
-        row = {"title": f"{corpus} fictif", "date": "2016-11-15", "instance": "CE", "reference": "p. 1", "excerpt": f"Extrait {corpus}."}
+        row = {"title": f"{corpus} fictif", "date": "2016-11-15", "instance": "CE", "reference": "p. 1", "excerpt": f"Extrait {corpus}. {TOPICS_FAKE}"}
         return {"status": "READY", "results": [row]}
 
     monkeypatch.setattr(module, "search_official_sources", fake_official)
@@ -86,7 +90,7 @@ def test_source_indisponible_signalee(monkeypatch, fake):
 
 def test_convention_pas_dans_les_accords(monkeypatch, fake):
     def archive(corpus, query, **kw):
-        rows = [{"title": "ccnic_septembre2013", "excerpt": "doublon CCN"}, {"title": "Accord CET", "excerpt": "vrai accord"}]
+        rows = [{"title": "ccnic_septembre2013", "excerpt": "doublon CCN"}, {"title": "Accord CET", "excerpt": "vrai accord compte épargne temps"}]
         return {"status": "READY", "results": rows if corpus == "accords" else []}
 
     monkeypatch.setattr(module, "search_archive", archive)
@@ -159,7 +163,7 @@ def test_mode_paie_et_documents(fake):
 
 def test_reglement_interieur_pas_repete_dans_les_accords(monkeypatch, fake):
     def archive(corpus, query, **kw):
-        rows = [{"title": "Règlement intérieur", "excerpt": "doublon RI"}, {"title": "Accord CET", "excerpt": "vrai accord"}]
+        rows = [{"title": "Règlement intérieur", "excerpt": "doublon RI"}, {"title": "Accord CET", "excerpt": "vrai accord sanction disciplinaire"}]
         return {"status": "READY", "results": rows if corpus == "accords" else []}
 
     monkeypatch.setattr(module, "search_archive", archive)

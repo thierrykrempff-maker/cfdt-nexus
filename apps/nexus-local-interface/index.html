@@ -70,6 +70,24 @@
       </aside>
     </header>
 
+    <section class="pv-archive-panel" id="allSourcesPanel" hidden aria-labelledby="allSourcesTitle">
+      <div class="pv-archive-heading">
+        <div>
+          <p class="eyebrow">Recherche documentaire</p>
+          <h2 id="allSourcesTitle">Rechercher dans toutes les sources</h2>
+        </div>
+        <button class="icon-button" type="button" id="allSourcesClose" aria-label="Fermer la recherche dans toutes les sources">×</button>
+      </div>
+      <form class="pv-archive-form" id="allSourcesForm" novalidate>
+        <label for="allSourcesQuery">Une question ou quelques mots-clés</label>
+        <input id="allSourcesQuery" type="search" maxlength="600" autocomplete="off"
+               placeholder="ex. préavis en cas de licenciement pour insuffisance professionnelle">
+        <div class="pv-archive-options"><button class="primary-button" type="submit">Chercher partout</button></div>
+      </form>
+      <p class="source-context-notice">Légifrance, Judilibre, convention collective, règlement intérieur, guides officiels (CDTN, DREETS, CNIL, CARSAT, INRS…), accords, PV et documents. Seuls des mots-clés sans noms propres quittent le poste pour les sites officiels. Les extraits restent à l’écran.</p>
+      <div class="pv-archive-results" id="allSourcesResults" aria-live="polite"></div>
+    </section>
+
     <section class="pv-archive-panel" id="pvArchivePanel" hidden aria-labelledby="pvArchiveTitle">
       <div class="pv-archive-heading">
         <div>

@@ -186,6 +186,7 @@ def search_archive(
     until: object = None,
     limit: object = DEFAULT_LIMIT,
     strict: bool = False,
+    keep_source: bool = False,
 ) -> dict[str, Any]:
     """Cherche une question ou des mots-clés dans une archive (« pv » ou « accords »). Ne lève jamais d'exception."""
 
@@ -228,6 +229,8 @@ def search_archive(
     items = by_point.get("q")
     for item in items if isinstance(items, Sequence) and not isinstance(items, (str, bytes)) else ():
         row = config["row"](item) if isinstance(item, Mapping) else None
+        if row and keep_source:
+            row["_source"] = str(item.get("fichier") or "")  # chemin relatif du document, pour contrôler l'extrait (jamais envoyé à l'écran)
         key = _normalize(row.get("excerpt")) if row else ""
         if row and key and key not in seen:
             seen.add(key)

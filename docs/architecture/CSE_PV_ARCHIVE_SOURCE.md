@@ -194,6 +194,14 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
   `mode: "paie"`) : contrôle d'un bulletin ou de congés (base légale, accords, prescription, pièces, courrier de régularisation). La table
   des sujets contient bulletin de paie, régularisation de salaire, maladie et IJSS, congés de maternité/paternité/naissance, jours fériés.
 
+- **Audit des sources et contrôle des extraits (15 oct. 2026)** : question, espaces Salarié (2 parcours), Paie, Négociations, ordre du jour du CSE
+  (chaque point : volet « Sources officielles et documents », chargé à l'ouverture) et « Recherche documentaire » (nouveau panneau :
+  toutes les sources en une requête) interrogent toutes les sources. Lacunes restantes : l'analyse RGPD (checklist CNIL seulement), les
+  boutons d'en-tête PV/accords/comparaison (un corpus chacun, par conception) et les questions de suivi (la recherche reste celle de la
+  question initiale). `dossier_checks.py` contrôle les extraits du dossier pour Claude : relecture dans le document source (« vérifié » /
+  « non retrouvé »), écart des extraits océrisés illisibles ou sans mot de la question, rapprochement mécanique des valeurs chiffrées
+  différentes entre sources. Claude fait ensuite le contrôle de fond et rend une synthèse (consigne du dossier, skill `analyse-nexus`).
+
 Tests : `tests/test_official_sources_search.py`.
 
 ## Limites connues

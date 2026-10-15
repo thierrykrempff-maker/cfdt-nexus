@@ -1738,6 +1738,7 @@ function renderCseAgendaAnalysis(analysis) {
       card.appendChild(previousGrid);
     }
     window.NexusPvArchive?.appendAgreements(card, point.agreements);
+    window.NexusOfficialSources?.appendPointSources(card, point);
 
     const questionsTitle = document.createElement("h4");
     questionsTitle.textContent = "Questions pertinentes à poser à la direction";
@@ -3627,6 +3628,10 @@ document.querySelectorAll("[data-secondary-action]").forEach((button) => {
     }
     if (button.dataset.secondaryAction === "cases") {
       openLocalCases();
+      return;
+    }
+    if (button.dataset.secondaryAction === "search" && window.NexusOfficialSources?.openAll) {
+      window.NexusOfficialSources.openAll();
       return;
     }
     const messages = {

@@ -242,5 +242,117 @@ ${caseFacts()}`.trim(),
     if (agenda) agenda.addEventListener("click", prepareAgendaDossier);
   });
 
-  window.NexusOfficialSources = { showForQuestion, setAgenda, setCase };
+  // Chaque point d'un ordre du jour : toutes les sources officielles et les documents, chargés à l'ouverture du volet.
+  function appendPointSources(cardElement, point) {
+    if (!cardElement || !point || !point.title) return;
+    const details = document.createElement("details");
+    details.className = "point-official-sources";
+    const summary = document.createElement("summary");
+    summary.textContent = "Sources officielles et documents pour ce point (Légifrance, Judilibre, convention, règlement intérieur, guides…)";
+    const body = document.createElement("div");
+    body.setAttribute("aria-live", "polite");
+    details.append(summary, body);
+    let loaded = false;
+    details.addEventListener("toggle", async () => {
+      if (!details.open || loaded) return;
+      loaded = true;
+      body.textContent = "";
+      body.append(paragraph("Recherche dans toutes les sources…", "pv-archive-message"));
+      try {
+        const status = await api("/api/official-sources/status");
+        if (!status.enabled) {
+          body.textContent = "";
+          body.append(paragraph("Le bloc « Sources officielles » n’est pas activé sur ce poste.", "pv-archive-message"));
+          return;
+        }
+        const post = (url, extra) => api(url, {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query: point.title, ...extra }),
+        });
+        const [official, docs] = await Promise.all([
+          post("/api/official-sources/search"),
+          post("/api/docs-archive/search", { limit: 3 }).catch(() => null),
+        ]);
+        render(body, official.official_sources || { status: "UNAVAILABLE", notice: "Recherche indisponible." });
+        const rows = docs && docs.pv_archive && docs.pv_archive.status === "READY" ? docs.pv_archive.results || [] : [];
+        if (rows.length && window.NexusPvArchive) {
+          const heading = document.createElement("h3");
+          heading.textContent = "Vos documents syndicaux (paie, congés, NAO, branche…)";
+          const grid = document.createElement("div");
+          grid.className = "cse-previous-minutes";
+          rows.forEach((row) => grid.append(window.NexusPvArchive.card(row)));
+          body.append(heading, grid);
+        }
+      } catch (error) {
+        loaded = false;
+        body.textContent = "";
+        body.append(paragraph("La recherche dans les sources officielles a échoué.", "pv-archive-message"));
+      }
+    });
+    cardElement.append(details);
+  }
+
+  // « Recherche documentaire » : une requête, toutes les sources (officielles, PV, accords, documents).
+  function openAll() {
+    const panel = $("allSourcesPanel");
+    if (!panel) return;
+    panel.hidden = false;
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    const input = $("allSourcesQuery");
+    if (input) input.focus();
+  }
+
+  async function searchEverywhere(event) {
+    event.preventDefault();
+    const query = ($("allSourcesQuery") || {}).value || "";
+    const out = $("allSourcesResults");
+    if (!out) return;
+    out.textContent = "";
+    if (!query.trim()) {
+      out.append(paragraph("Saisissez une question ou des mots-clés.", "pv-archive-message"));
+      return;
+    }
+    out.append(paragraph("Recherche dans toutes les sources…", "pv-archive-message"));
+    const post = (url, extra) => api(url, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, ...extra }),
+    });
+    try {
+      const [official, pv, accords, docs] = await Promise.all([
+        post("/api/official-sources/search"),
+        post("/api/pv-archive/search", { limit: 6 }).catch(() => null),
+        post("/api/accords-archive/search", { limit: 6 }).catch(() => null),
+        post("/api/docs-archive/search", { limit: 4 }).catch(() => null),
+      ]);
+      out.textContent = "";
+      const officialBody = document.createElement("div");
+      out.append(officialBody);
+      render(officialBody, official.official_sources || { status: "UNAVAILABLE", notice: "Recherche indisponible." });
+      [["Dans les PV du CE/CSE", pv], ["Dans les accords d’entreprise", accords], ["Dans vos documents syndicaux", docs]].forEach(([label, data]) => {
+        const archive = data && data.pv_archive;
+        const heading = document.createElement("h3");
+        heading.textContent = label;
+        out.append(heading);
+        const rows = archive && archive.status === "READY" ? archive.results || [] : [];
+        if (!rows.length) {
+          out.append(paragraph(archive && archive.status !== "READY" ? (archive.notice || "Source non consultée.") : "Aucun passage correspondant.", "pv-archive-message"));
+          return;
+        }
+        const grid = document.createElement("div");
+        grid.className = "cse-previous-minutes";
+        rows.forEach((row) => grid.append(window.NexusPvArchive ? window.NexusPvArchive.card(row) : document.createTextNode(row.excerpt)));
+        out.append(grid);
+      });
+    } catch (error) {
+      out.textContent = "";
+      out.append(paragraph("La recherche a échoué. Nexus est-il toujours lancé ?", "pv-archive-message"));
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = $("allSourcesForm");
+    if (form) form.addEventListener("submit", searchEverywhere);
+    const close = $("allSourcesClose");
+    if (close) close.addEventListener("click", () => { $("allSourcesPanel").hidden = true; });
+  });
+
+  window.NexusOfficialSources = { showForQuestion, setAgenda, setCase, appendPointSources, openAll };
 })();
