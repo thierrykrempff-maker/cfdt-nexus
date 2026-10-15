@@ -1755,6 +1755,17 @@ function renderCseAgendaAnalysis(analysis) {
   });
 }
 
+// Texte envoyé à la recherche des sources : la question et, après un suivi, les précisions apportées (mots-clés seulement côté serveur).
+function sourcesQueryText() {
+  const base = resultQuestion.textContent.trim();
+  const followUps = (currentAnalysisRequest?.portal_context?.follow_up_answers || [])
+    .map((row) => String(row.answer || "").trim())
+    .filter(Boolean)
+    .join(". ")
+    .slice(0, 600);
+  return followUps ? `${base}. ${followUps}` : base;
+}
+
 function renderResult(payload) {
   applyControlledPilotMode(payload.controlled_pilot || controlledPilot);
   currentPayload = payload;
@@ -1786,12 +1797,14 @@ function renderResult(payload) {
   resultQuestion.textContent = currentWorkspace
     ? queryInput.value.trim()
     : orchestration.question_posee || answer.query;
-  window.NexusPvArchive?.showForQuestion(resultQuestion.textContent);
+  const sourcesText = sourcesQueryText();
+  window.NexusOfficialSources?.setQuestionText(sourcesText);
+  window.NexusPvArchive?.showForQuestion(sourcesText);
   const caseWorkspace = currentWorkspace === "employee" || currentWorkspace === "payroll";
   window.NexusOfficialSources?.setCase(caseWorkspace ? currentAnalysisRequest : null, caseWorkspace
     ? (workspaceDefinition(currentWorkspace).situations.find(([value]) => value === selectedSituation) || [])[1] || "" : "",
   currentWorkspace === "payroll" ? "paie" : "defense");
-  window.NexusOfficialSources?.showForQuestion(resultQuestion.textContent);
+  window.NexusOfficialSources?.showForQuestion(sourcesText);
   setConfidence(confidenceValue, finalAssistant?.confidence || orchestration.niveau_de_confiance || answer.confidence);
   const finalDomains = finalAssistant
     ? [finalAssistant.primary_domain, ...(finalAssistant.complementary_domains || [])]
@@ -3526,6 +3539,14 @@ function renderRgpdAnalysis(analysis) {
     }
     rgpdResults.appendChild(card);
   }
+  const topicLabels = [...new Set(analysis.documents.flatMap((report) => (report.topics || [])
+    .map((topic) => RGPD_TOPIC_LABELS[topic.topic_id] || "")))].filter(Boolean);
+  window.NexusOfficialSources?.appendSources(
+    rgpdResults,
+    `${topicLabels.join(" ; ")} protection des données personnelles salariés RGPD CNIL consultation CSE`.trim(),
+    "Sources officielles, PV, accords et documents sur ces sujets (Légifrance, Judilibre, convention, règlement intérieur, guides, CNIL…)",
+    "rgpd",
+  );
 }
 
 async function requestRgpdAnalysis(url, init) {

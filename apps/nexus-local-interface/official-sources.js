@@ -21,6 +21,10 @@
     autres: "Aucune page de ces sites officiels ne correspond à ces mots.",
   };
   let ticket = 0;
+  let questionText = "";
+  function setQuestionText(text) {
+    questionText = String(text || "");
+  }
 
   async function api(path, options) {
     const response = await fetch(path, { cache: "no-store", ...options });
@@ -108,6 +112,7 @@
     const context = (currentCase && currentCase.portal_context) || {};
     const lines = [];
     (context.employee_interview || []).forEach((item) => lines.push(`- ${item.question} → ${item.answer}`));
+    (context.follow_up_answers || []).forEach((item) => lines.push(`- Précision : ${item.question} → ${item.answer}`));
     Object.entries(context.facts || {}).forEach(([key, value]) => {
       if (value !== false && value !== "" && value != null) lines.push(`- ${key} : ${value === true ? "oui" : value}`);
     });
@@ -125,7 +130,7 @@
       body: {
         mode: currentCaseMode,
         kind: currentSituation || context.situation_type || "Situation d’un salarié",
-        question: context.user_question || "",
+        question: [context.user_question || "", ...(context.follow_up_answers || []).map((item) => item.answer)].join(". ").slice(0, 900),
         facts: `${context.user_question || ""}
 ${caseFacts()}`.trim(),
       },
@@ -202,7 +207,7 @@ ${caseFacts()}`.trim(),
   }
 
   function prepareQuestionDossier() {
-    const question = (document.getElementById("resultQuestion") || {}).textContent || (document.getElementById("questionInput") || {}).value || "";
+    const question = questionText || (document.getElementById("resultQuestion") || {}).textContent || (document.getElementById("questionInput") || {}).value || "";
     if (!question.trim()) {
       const status = $("claudeDossierStatus");
       if (status) status.textContent = "Posez d’abord une question.";
@@ -301,16 +306,9 @@ ${caseFacts()}`.trim(),
     if (input) input.focus();
   }
 
-  async function searchEverywhere(event) {
-    event.preventDefault();
-    const query = ($("allSourcesQuery") || {}).value || "";
-    const out = $("allSourcesResults");
-    if (!out) return;
+  // Toutes les sources pour une requête : officielles (Légifrance, Judilibre, convention, règlement, guides), PV, accords, documents.
+  async function fillAllSources(out, query) {
     out.textContent = "";
-    if (!query.trim()) {
-      out.append(paragraph("Saisissez une question ou des mots-clés.", "pv-archive-message"));
-      return;
-    }
     out.append(paragraph("Recherche dans toutes les sources…", "pv-archive-message"));
     const post = (url, extra) => api(url, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, ...extra }),
@@ -338,13 +336,69 @@ ${caseFacts()}`.trim(),
         }
         const grid = document.createElement("div");
         grid.className = "cse-previous-minutes";
-        rows.forEach((row) => grid.append(window.NexusPvArchive ? window.NexusPvArchive.card(row) : document.createTextNode(row.excerpt)));
+        rows.forEach((item) => grid.append(window.NexusPvArchive ? window.NexusPvArchive.card(item) : document.createTextNode(item.excerpt)));
         out.append(grid);
       });
     } catch (error) {
       out.textContent = "";
       out.append(paragraph("La recherche a échoué. Nexus est-il toujours lancé ?", "pv-archive-message"));
     }
+  }
+
+  async function searchEverywhere(event) {
+    event.preventDefault();
+    const query = ($("allSourcesQuery") || {}).value || "";
+    const out = $("allSourcesResults");
+    if (!out) return;
+    if (!query.trim()) {
+      out.textContent = "";
+      out.append(paragraph("Saisissez une question ou des mots-clés.", "pv-archive-message"));
+      return;
+    }
+    await fillAllSources(out, query);
+  }
+
+  // Volet « toutes les sources » ajouté sous un résultat (analyse RGPD…), chargé à l'ouverture, avec le dossier pour Claude.
+  function appendSources(container, query, title, key) {
+    if (!container || !String(query || "").trim()) return;
+    const old = container.querySelector(`details[data-sources-key="${key}"]`);
+    if (old) old.remove();
+    const details = document.createElement("details");
+    details.className = "point-official-sources";
+    details.dataset.sourcesKey = key;
+    const summary = document.createElement("summary");
+    summary.textContent = title;
+    const body = document.createElement("div");
+    body.setAttribute("aria-live", "polite");
+    const dossier = document.createElement("div");
+    dossier.className = "claude-dossier";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "secondary-button";
+    button.textContent = "Préparer le dossier pour Claude";
+    const status = document.createElement("p");
+    status.className = "source-context-notice";
+    status.id = `${key}DossierStatus`;
+    status.setAttribute("aria-live", "polite");
+    const area = document.createElement("textarea");
+    area.id = `${key}DossierText`;
+    area.rows = 10;
+    area.readOnly = true;
+    area.hidden = true;
+    area.setAttribute("aria-label", "Dossier pour Claude");
+    dossier.append(button, status, area);
+    details.append(summary, body, dossier);
+    let loaded = false;
+    details.addEventListener("toggle", () => {
+      if (!details.open || loaded) return;
+      loaded = true;
+      fillAllSources(body, query);
+    });
+    button.addEventListener("click", () => copyDossier({
+      key, url: "/api/claude-dossier/build", body: { query }, statusId: status.id, areaId: area.id,
+      wait: "Préparation du dossier (toutes les sources)…",
+    }));
+    container.append(details);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -354,5 +408,5 @@ ${caseFacts()}`.trim(),
     if (close) close.addEventListener("click", () => { $("allSourcesPanel").hidden = true; });
   });
 
-  window.NexusOfficialSources = { showForQuestion, setAgenda, setCase, appendPointSources, openAll };
+  window.NexusOfficialSources = { showForQuestion, setAgenda, setCase, appendPointSources, openAll, setQuestionText, appendSources };
 })();

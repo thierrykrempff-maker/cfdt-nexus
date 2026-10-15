@@ -196,9 +196,9 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
 
 - **Audit des sources et contrôle des extraits (15 oct. 2026)** : question, espaces Salarié (2 parcours), Paie, Négociations, ordre du jour du CSE
   (chaque point : volet « Sources officielles et documents », chargé à l'ouverture) et « Recherche documentaire » (nouveau panneau :
-  toutes les sources en une requête) interrogent toutes les sources. Lacunes restantes : l'analyse RGPD (checklist CNIL seulement), les
-  boutons d'en-tête PV/accords/comparaison (un corpus chacun, par conception) et les questions de suivi (la recherche reste celle de la
-  question initiale). `dossier_checks.py` contrôle les extraits du dossier pour Claude : relecture dans le document source (« vérifié » /
+  toutes les sources en une requête) interrogent toutes les sources. Traités ensuite : l'**analyse RGPD** (volet « toutes les sources » sur les sujets repérés : vidéosurveillance, badgeage…, avec dossier pour
+  Claude) et les **questions de suivi** (les précisions apportées enrichissent la recherche des sources et les dossiers). Reste limité : les
+  boutons d'en-tête PV/accords/comparaison (un corpus chacun, par conception). `dossier_checks.py` contrôle les extraits du dossier pour Claude : relecture dans le document source (« vérifié » /
   « non retrouvé »), écart des extraits océrisés illisibles ou sans mot de la question, rapprochement mécanique des valeurs chiffrées
   différentes entre sources. Claude fait ensuite le contrôle de fond et rend une synthèse (consigne du dossier, skill `analyse-nexus`).
 
