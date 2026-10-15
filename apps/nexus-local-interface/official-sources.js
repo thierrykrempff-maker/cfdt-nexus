@@ -85,11 +85,19 @@
   // enrichissent la recherche et alimentent le dossier de défense.
   let currentCase = null;
   let currentSituation = "";
-  function setCase(request, situationLabel) {
+  let currentCaseMode = "defense";
+  function setCase(request, situationLabel, mode) {
     currentCase = request && request.portal_context ? request : null;
     currentSituation = String(situationLabel || "");
+    currentCaseMode = mode === "paie" ? "paie" : "defense";
     const box = $("defenseDossier");
     if (box) box.hidden = !currentCase;
+    const button = $("defenseDossierButton");
+    if (button) {
+      button.textContent = currentCaseMode === "paie"
+        ? "Préparer le dossier de contrôle de paie et de congés pour Claude"
+        : "Préparer le dossier de défense pour Claude";
+    }
     const area = $("defenseDossierText");
     if (area) area.hidden = true;
   }
@@ -113,13 +121,14 @@
     copyDossier({
       key: "defense", url: "/api/claude-dossier/defense",
       body: {
+        mode: currentCaseMode,
         kind: currentSituation || context.situation_type || "Situation d’un salarié",
         question: context.user_question || "",
         facts: `${context.user_question || ""}
 ${caseFacts()}`.trim(),
       },
       statusId: "defenseDossierStatus", areaId: "defenseDossierText",
-      wait: "Préparation du dossier de défense (toutes les sources)…",
+      wait: currentCaseMode === "paie" ? "Préparation du dossier de contrôle de paie (toutes les sources)…" : "Préparation du dossier de défense (toutes les sources)…",
     });
   }
 
