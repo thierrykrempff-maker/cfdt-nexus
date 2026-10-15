@@ -9,6 +9,7 @@
     ["legifrance", "Légifrance — autres articles trouvés par mots-clés"],
     ["judilibre", "Judilibre — Cour de cassation"],
     ["convention", "Convention collective des industries chimiques (IDCC 44)"],
+    ["reglement", "Règlement intérieur d’INEOS Sarralbe"],
     ["autres", "Autres sources officielles (CDTN, service-public, CNIL, DREETS, CARSAT, INRS)"],
   ];
   const EMPTY = {
@@ -16,6 +17,7 @@
     legifrance: "Aucun article du Code du travail retrouvé avec ces mots.",
     judilibre: "Aucune décision retrouvée avec ces mots.",
     convention: "Aucun passage de la convention collective retrouvé avec ces mots.",
+    reglement: "Aucun passage du règlement intérieur retrouvé avec ces mots.",
     autres: "Aucune page de ces sites officiels ne correspond à ces mots.",
   };
   let ticket = 0;

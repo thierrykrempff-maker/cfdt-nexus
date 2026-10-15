@@ -104,7 +104,7 @@ def test_convention_restreinte_au_document_ccnic(monkeypatch):
 
     def fake_post(endpoint, body):
         sent.update(body)
-        return {"points": {"ccn": [{"fichier": "ccnic_septembre2013.pdf", "page": 7, "extrait": "Texte fictif sur le repos."}]}}
+        return {"points": {"doc": [{"fichier": "ccnic_septembre2013.pdf", "page": 7, "extrait": "Texte fictif sur le repos."}]}}
 
     monkeypatch.setattr(module, "_service_post", fake_post)
     section = module._ccn_section(["repos", "quotidien"])
@@ -194,3 +194,28 @@ def test_conge_supplementaire_de_naissance_n_est_pas_des_heures_supplementaires(
     assert "heures_supplementaires" in [t["key"] for t in module.matching_topics("Majoration des heures supplémentaires")]
     keys = [t["key"] for t in module.matching_topics("Il manque des heures de nuit sur mon bulletin de paie")]
     assert "bulletin_paie" in keys and "regularisation_salaire" in keys
+
+
+def test_reglement_interieur_restreint_a_son_document(monkeypatch):
+    monkeypatch.setattr(module, "_accords_enabled", lambda: True)
+    monkeypatch.setattr(module, "_base_url", lambda: "http://127.0.0.1:1")
+    monkeypatch.setattr(module, "_archive_endpoint", lambda: "http://127.0.0.1:1/api/passages")
+    monkeypatch.setattr(
+        module,
+        "_service_call",
+        lambda url, body=None: {"documents": [
+            {"id": "a" * 16, "fichier": "2005.06.01_Règlement PEE Innovene.pdf"},
+            {"id": "b" * 16, "fichier": "règlement intérieur" + chr(92) + "Règlement intérieur.pdf"},
+            {"id": "c" * 16, "fichier": "ccnic_septembre2013.pdf"},
+        ]},
+    )
+    sent = {}
+
+    def fake_post(endpoint, body):
+        sent.update(body)
+        return {"points": {"doc": [{"fichier": "Règlement intérieur.pdf", "page": 7, "extrait": "Mise à pied : durée maximale de 5 jours (fictif)."}]}}
+
+    monkeypatch.setattr(module, "_service_post", fake_post)
+    section = module._ri_section(["sanction"], strict=True)
+    assert sent["include"] == ["b" * 16] and section["status"] == "READY"
+    assert section["rows"][0]["title"] == module.RI_TITLE and "2018" in section["notice"]

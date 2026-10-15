@@ -37,6 +37,7 @@ def fake(monkeypatch):
             judilibre={"status": "READY", "rows": [{"title": "Cour de cassation 2011", "detail": "Solution : cassation",
                                                     "excerpt": "Résumé fictif.", "url": ""}]},
             convention={"status": "READY", "rows": [{"title": "CCN", "detail": "p. 3", "excerpt": "Passage CCN fictif."}]},
+            reglement={"status": "READY", "rows": [{"title": "Règlement intérieur", "detail": "p. 7", "excerpt": "Échelle des sanctions fictive."}]},
             autres={"status": "READY", "rows": [{"title": "Guide fictif", "detail": "DREETS Grand Est", "excerpt": "Guide DREETS fictif.", "url": ""}]},
         )
 
@@ -60,11 +61,11 @@ def test_dossier_complet_et_numerote(fake):
     markdown = result["markdown"]
     assert result["status"] == "READY" and fake["full_text"] is True
     numbers = [int(n) for n in re.findall(r"^\*\*\[S(\d+)\]", markdown, flags=re.M)]
-    assert numbers == list(range(1, len(numbers) + 1)) and result["sources"] == len(numbers) == 7
+    assert numbers == list(range(1, len(numbers) + 1)) and result["sources"] == len(numbers) == 8
     for marker in ("## Consigne", "## Question", "Texte intégral fictif.", "Résumé fictif.", "Passage CCN fictif.",
-                   "Extrait accords.", "Extrait pv.", "Extrait docs.", "Guide DREETS fictif.", "## Limites de la recherche", "uniquement"):
+                   "Extrait accords.", "Extrait pv.", "Extrait docs.", "Échelle des sanctions fictive.", "D bis. Règlement intérieur", "Guide DREETS fictif.", "## Limites de la recherche", "uniquement"):
         assert marker in markdown
-    assert result["counts"] == {"loi": 1, "jurisprudence": 1, "convention": 1, "accords": 1, "pv": 1, "autres": 1, "documents": 1}
+    assert result["counts"] == {"loi": 1, "jurisprudence": 1, "convention": 1, "accords": 1, "pv": 1, "autres": 1, "documents": 1, "reglement_interieur": 1}
 
 
 def test_texte_integral_prefere_a_l_extrait(fake):
@@ -154,3 +155,13 @@ def test_mode_paie_et_documents(fake):
     markdown = result["markdown"]
     assert "contrôle de paie et de congés" in markdown and "## Situation de paie ou de congés à contrôler" in markdown
     assert "prescription" in markdown and "G. Documents syndicaux" in markdown and "Extrait docs." in markdown
+
+
+def test_reglement_interieur_pas_repete_dans_les_accords(monkeypatch, fake):
+    def archive(corpus, query, **kw):
+        rows = [{"title": "Règlement intérieur", "excerpt": "doublon RI"}, {"title": "Accord CET", "excerpt": "vrai accord"}]
+        return {"status": "READY", "results": rows if corpus == "accords" else []}
+
+    monkeypatch.setattr(module, "search_archive", archive)
+    markdown = module.build_claude_dossier("sanction disciplinaire")["markdown"]
+    assert "vrai accord" in markdown and "doublon RI" not in markdown and "Échelle des sanctions fictive." in markdown

@@ -35,9 +35,11 @@ ENABLED_VARIABLE = "NEXUS_OFFICIAL_SOURCES_BLOCK_ENABLED"
 MAX_KEYWORDS = 6
 ROWS_PER_SECTION = 3
 MAX_REFERENCE_ARTICLES = 8
+MAX_RI_ROWS = 5
 CALL_TIMEOUT_SECONDS = 25
 CCN_FILE_MARKER = "ccnic"  # convention collective nationale des industries chimiques (fichier de l'archive des accords)
 CCN_TITLE = "Convention collective nationale des industries chimiques (IDCC 44)"
+RI_TITLE = "Règlement intérieur d’INEOS Polymers Sarralbe (en application depuis le 1er octobre 2018)"
 
 _ALLOWED_URL_PREFIXES = (
     "https://www.legifrance.gouv.fr/",
@@ -53,6 +55,10 @@ _WORD = re.compile(r"[^\W\d_]+(?:['’\-][^\W\d_]+)*|[.!?:;\n]")
 NOTICE = (
     "Pistes à vérifier : résultats automatiques par mots-clés. Lisez le texte officiel avant de vous en servir ; "
     "ce n’est ni un avis juridique ni une garantie d’exhaustivité. Affiché ici uniquement : non repris dans le rapport ni les exports."
+)
+NOTICE_RI = (
+    "Version du 1er octobre 2018 (elle remplace celle de novembre 2012) : vérifiez qu’aucune version plus récente ni aucune note de service "
+    "ne la modifie. Le règlement intérieur ne peut pas être moins favorable que la loi, la convention ou les accords."
 )
 NOTICE_CCN = (
     "Édition de l’archive locale : septembre 2013. Vérifiez la version en vigueur (avenants et accords de branche "
@@ -262,51 +268,84 @@ def _judilibre_section(query: str, must_mention: Sequence[str] = ()) -> dict[str
     return {"status": "READY", "rows": rows, "notice": ""}
 
 
-def _ccn_section(keywords: Sequence[str], strict: bool = False) -> dict[str, Any]:
-    """Convention collective : cherchée uniquement dans le document ``ccnic`` de l'archive locale des accords."""
+def _document_section(
+    keywords: Sequence[str],
+    strict: bool,
+    *,
+    is_target: Any,
+    title: str,
+    notice: str,
+    name: str,
+) -> dict[str, Any]:
+    """Cherche dans UN document de l'archive des accords (paramètre ``include`` du service) : convention collective, règlement intérieur…"""
 
     if not _accords_enabled():
-        return {"status": "DISABLED", "rows": [], "notice": "L’archive des accords n’est pas activée : convention collective non consultée."}
+        return {"status": "DISABLED", "rows": [], "notice": f"L’archive des accords n’est pas activée : {name} non consulté."}
     base, endpoint = _base_url(), _archive_endpoint()
     listing = _service_call(f"{base}/api/documents?corpus=accords") if base else None
     items = listing.get("documents") if listing else None
     if not endpoint or not isinstance(items, Sequence) or isinstance(items, (str, bytes)):
-        return {"status": "UNAVAILABLE", "rows": [], "notice": "Le service d’archive est arrêté : convention collective non consultée."}
+        return {"status": "UNAVAILABLE", "rows": [], "notice": f"Le service d’archive est arrêté : {name} non consulté."}
     ids = [
         str(item["id"])
         for item in items
-        if isinstance(item, Mapping)
-        and HEX_ID.fullmatch(str(item.get("id", "")))
-        and CCN_FILE_MARKER in str(item.get("fichier") or "").lower()
+        if isinstance(item, Mapping) and HEX_ID.fullmatch(str(item.get("id", ""))) and is_target(_plain(item.get("fichier")))
     ]
     if not ids:
-        return {"status": "NOT_INDEXED", "rows": [], "notice": "La convention collective n’est pas dans l’archive locale."}
+        return {"status": "NOT_INDEXED", "rows": [], "notice": f"{name[:1].upper()}{name[1:]} n’est pas dans l’archive locale."}
     payload = _service_post(
         endpoint,
         {
             "corpus": "accords",
-            "points": [{"id": "ccn", "concepts": list(keywords), "min_matches": len(keywords) if strict else required_matches(len(keywords))}],
+            "points": [{"id": "doc", "concepts": list(keywords), "min_matches": len(keywords) if strict else required_matches(len(keywords))}],
             "limit": ROWS_PER_SECTION,
             "include": ids,
+            "per_doc": ROWS_PER_SECTION,
         },
     )
     by_point = payload.get("points") if payload else None
     if not isinstance(by_point, Mapping):
-        return {"status": "UNAVAILABLE", "rows": [], "notice": "Le service d’archive est injoignable : convention collective non consultée."}
+        return {"status": "UNAVAILABLE", "rows": [], "notice": f"Le service d’archive est injoignable : {name} non consulté."}
     rows = []
-    for raw in by_point.get("ccn") or []:
+    for raw in by_point.get("doc") or []:
         row = _accord_row(raw) if isinstance(raw, Mapping) else None
         if row:
-            rows.append(
-                {
-                    "title": CCN_TITLE,
-                    "date": None,
-                    "detail": row.get("reference") or "",
-                    "excerpt": row["excerpt"],
-                    "url": "",
-                }
-            )
-    return {"status": "READY", "rows": rows, "notice": NOTICE_CCN}
+            rows.append({"title": title, "date": None, "detail": row.get("reference") or "", "excerpt": row["excerpt"], "url": ""})
+    return {"status": "READY", "rows": rows, "notice": notice}
+
+
+def _ccn_section(keywords: Sequence[str], strict: bool = False) -> dict[str, Any]:
+    """Convention collective : cherchée uniquement dans le document ``ccnic`` de l'archive locale des accords."""
+
+    return _document_section(keywords, strict, is_target=lambda path: CCN_FILE_MARKER in path, title=CCN_TITLE,
+                             notice=NOTICE_CCN, name="convention collective")
+
+
+def _ri_section(keywords: Sequence[str], strict: bool = False) -> dict[str, Any]:
+    """Règlement intérieur d'INEOS Sarralbe : cherché uniquement dans son document de l'archive locale des accords."""
+
+    return _document_section(keywords, strict, is_target=lambda path: "reglement interieur" in path, title=RI_TITLE,
+                             notice=NOTICE_RI, name="règlement intérieur")
+
+
+def _ri_for_topics(topics: Sequence[dict[str, Any]], fallback: Sequence[str], strict: bool) -> dict[str, Any]:
+    """Règlement intérieur : une recherche par sujet reconnu (mots ``ri_terms``), passages fusionnés sans doublon."""
+
+    groups = [list(topic["ri_terms"]) for topic in topics[:2] if topic.get("ri_terms")]
+    if not groups:
+        return _ri_section(fallback, strict=strict)
+    merged: dict[str, Any] = {"status": "READY", "rows": [], "notice": NOTICE_RI}
+    seen: set[str] = set()
+    for group in groups:
+        section = _ri_section(group)
+        if section["status"] != "READY":
+            return section
+        for row in section["rows"]:
+            key = _plain(row.get("excerpt"))[:100]
+            if key not in seen and len(merged["rows"]) < MAX_RI_ROWS:
+                seen.add(key)
+                merged["rows"].append(row)
+    return merged
 
 
 def official_sources_status() -> dict[str, Any]:
@@ -331,6 +370,7 @@ def search_official_sources(question: object, *, full_text: bool = False) -> dic
         "legifrance": lambda: _legifrance_section(" ".join(keywords), keywords, tuple(reference_articles)),
         "judilibre": lambda: _judilibre_section(query, tuple(topic_terms or keywords)),
         "convention": lambda: _ccn_section(topic_terms or keywords, strict=bool(topic_terms)),
+        "reglement": lambda: _ri_for_topics(topics, topic_terms or keywords, strict=bool(topic_terms)),
         "autres": lambda: search_extra_sources(query),
     }
     pool = ThreadPoolExecutor(max_workers=len(jobs))

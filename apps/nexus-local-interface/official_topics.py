@@ -5,6 +5,7 @@ au moins une des racines indiquées. Les articles sont ensuite lus sur Légifran
 cette table ne contient que des numéros, jamais de texte juridique. Elle est ordonnée du plus spécifique au plus général.
 
 ``generic`` : sujet large, ignoré quand un sujet plus précis est reconnu (ex. « en CSE » dans une question sur un licenciement).
+``ri_terms`` : mots cherchés dans le règlement intérieur d'INEOS (un passage par notion : échelle des sanctions, alcool…).
 ``terms`` : mots OBLIGATOIRES (tous ensemble) cherchés dans la convention collective et dans Judilibre quand le sujet est reconnu.
 """
 
@@ -26,6 +27,7 @@ TOPICS: list[dict[str, Any]] = [
         "when": [["licenci"], ["insuffisan", "incompeten", "professionnel", "personnel", "disciplin", "faute", "cause reelle"]],
         "articles": ["L1232-1", "L1232-2", "L1232-6", "L1234-1", "L1234-9", "L1235-1", "L1235-3"],
         "terms": ["licenciement"],
+        "ri_terms": ["sanction", "licenciement", "faute grave", "droits de la defense"],
     },
     {
         "key": "sanction_disciplinaire",
@@ -33,6 +35,7 @@ TOPICS: list[dict[str, Any]] = [
         "when": [["sanction", "disciplin", "avertissement", "blame", "mise a pied"]],
         "articles": ["L1331-1", "L1332-1", "L1332-2", "L1332-4"],
         "terms": ["sanction"],
+        "ri_terms": ["sanction", "avertissement", "blame", "mise a pied", "licenciement", "droits de la defense"],
     },
     {
         "key": "rupture_conventionnelle",
@@ -75,6 +78,21 @@ TOPICS: list[dict[str, Any]] = [
         "when": [["astreinte"]],
         "articles": ["L3121-9", "L3121-10", "L3121-11"],
         "terms": ["astreinte"],
+    },
+    {
+        "key": "alcool_stupefiants",
+        "label": "Alcool, stupéfiants et dépistage sur le lieu de travail",
+        "when": [["alcool", "alcoolemie", "ethylotest", "stupefiant", "drogue", "depistage", "test salivaire"]],
+        "articles": ["R4228-20", "L1321-1", "L4121-1"],
+        "terms": ["alcool"],
+        "ri_terms": ["alcool", "stupefiants", "test", "sanction"],
+    },
+    {
+        "key": "reglement_interieur",
+        "label": "Règlement intérieur",
+        "when": [["reglement interieur"]],
+        "articles": ["L1321-1", "L1321-2", "L1321-3", "L1321-4", "L1322-1", "L1311-2"],
+        "terms": ["reglement"],
     },
     {
         "key": "bulletin_paie",
@@ -132,6 +150,7 @@ TOPICS: list[dict[str, Any]] = [
         "when": [["harcel"]],
         "articles": ["L1152-1", "L1152-4", "L1153-1"],
         "terms": ["harcelement"],
+        "ri_terms": ["harcelement", "sanction"],
     },
     {
         "key": "heures_delegation",

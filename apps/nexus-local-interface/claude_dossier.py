@@ -39,7 +39,7 @@ MAX_QUESTION_CHARS = 1500
 MAX_AGENDA_POINTS = 10
 MAX_FACTS_CHARS = 3000
 COMPACT_TEXT_CHARS = 1500
-COMPACT_LIMITS = {"law": 4, "decisions": 2, "convention": 2, "accords": 3, "pv": 4, "extra": 4, "docs": 3}
+COMPACT_LIMITS = {"law": 4, "decisions": 2, "convention": 2, "reglement": 2, "accords": 3, "pv": 4, "extra": 4, "docs": 3}
 
 ROLE = (
     "L'utilisateur est délégué syndical CFDT et élu au CSE d'INEOS Sarralbe (Moselle : le droit local d'Alsace-Moselle s'applique), "
@@ -51,7 +51,7 @@ COMMON_RULES = """\
 Règles :
 1. N'utilise aucune connaissance extérieure au dossier. Si le dossier ne permet pas de répondre à un point, dis-le clairement.
 2. Cite la source de chaque affirmation, sous la forme [S3]. Ne cite jamais une source qui n'est pas dans le dossier.
-3. Hiérarchie des normes : loi, convention de branche, accord d'entreprise ; signale le plus favorable et les dérogations possibles ;
+3. Hiérarchie des normes : loi, convention de branche, accord d'entreprise, règlement intérieur (qui ne peut être moins favorable) ; signale le plus favorable et les dérogations possibles ;
    signale toute règle propre à l'Alsace-Moselle si le dossier en contient.
 4. Les extraits peuvent être tronqués ou mal reconnus (OCR) : ne conclus pas sur un extrait douteux, signale-le.
 5. Ne recopie pas de noms de salariés (désigne « un salarié » et la date) sauf demande expresse.
@@ -87,7 +87,7 @@ INSTRUCTIONS = {
     ),
     "defense": (
         "Prépare la défense du salarié décrit ci-dessous, **uniquement** à partir des sources numérotées de ce dossier.\n"
-        "Structure : (a) qualification de la situation et règles applicables (loi, convention, accords, droit local) ; (b) procédure : "
+        "Structure : (a) qualification de la situation et règles applicables (loi, convention, accords, règlement intérieur et son échelle de sanctions, droit local) ; (b) procédure : "
         "étapes obligatoires, délais, assistance du salarié (conseiller du salarié, représentant du personnel), consultation du CSE, "
         "points de forme qui peuvent invalider ; (c) fond : le motif est-il réel et sérieux ? ce qu'il faut prouver et par qui ; "
         "(d) précédents : ce qui a été traité en CE/CSE et dans les accords, jurisprudence favorable et défavorable ; (e) pièces et "
@@ -119,8 +119,8 @@ def _archive_rows(corpus: str, attempts: Sequence[tuple[str, bool]]) -> tuple[li
         rows: list[dict[str, Any]] = []
         seen: set[str] = set()
         for row in result.get("results") or []:
-            if corpus == "accords" and "ccnic" in _plain(row.get("title")):
-                continue  # la convention collective a sa propre section
+            if corpus == "accords" and ("ccnic" in _plain(row.get("title")) or "reglement interieur" in _plain(row.get("title"))):
+                continue  # la convention collective et le règlement intérieur ont chacun leur section
             key = _plain(row.get("excerpt"))[:160]
             if key and key not in seen:
                 seen.add(key)
@@ -154,13 +154,14 @@ def gather(text: str, *, full_text: bool = True) -> dict[str, Any]:
     free, _ = part("legifrance")
     decisions, decisions_status = part("judilibre")
     convention, convention_status = part("convention")
+    reglement, reglement_status = part("reglement")
     extra, _ = part("autres")
     return {
         "text": text,
         "topics": [topic["label"] for topic in topics[:2]],
-        "law": [*reference, *free], "decisions": decisions, "convention": convention,
+        "law": [*reference, *free], "decisions": decisions, "convention": convention, "reglement": reglement,
         "accords": accord_rows, "pv": pv_rows, "extra": extra, "docs": docs_rows,
-        "statuses": {"Légifrance": reference_status, "Judilibre": decisions_status, "Convention collective": convention_status,
+        "statuses": {"Légifrance": reference_status, "Judilibre": decisions_status, "Convention collective": convention_status, "Règlement intérieur": reglement_status,
                      "Accords": accord_status, "PV": pv_status, "Documents": docs_status},
     }
 
@@ -213,6 +214,9 @@ def _render(gathered: Mapping[str, Any], numbering: _Numbering, level: str, comp
     def convention(n: int, row: Mapping[str, Any]) -> list[str]:
         return [f"**[S{n}] Convention collective IDCC 44 — {row.get('detail') or ''}**", "", f"> {row.get('excerpt')}", ""]
 
+    def convention_like(n: int, row: Mapping[str, Any]) -> list[str]:
+        return [f"**[S{n}] {row.get('title')} — {row.get('detail') or ''}**", "", f"> {row.get('excerpt')}", ""]
+
     def passage(n: int, row: Mapping[str, Any]) -> list[str]:
         return [f"**[S{n}] {_header(row)}**", "", f"> {_row_text(row)}", ""]
 
@@ -226,6 +230,8 @@ def _render(gathered: Mapping[str, Any], numbering: _Numbering, level: str, comp
     block("C. Convention collective nationale des industries chimiques (IDCC 44 — édition septembre 2013)", "convention", convention,
           "Aucun passage retrouvé dans la convention collective.")
     block("D. Accords d'entreprise INEOS Sarralbe (archive locale)", "accords", passage, "Aucun accord retrouvé.")
+    block("D bis. Règlement intérieur d'INEOS Sarralbe (version du 1er octobre 2018)", "reglement", convention_like,
+          "Aucun passage du règlement intérieur ne correspond.")
     block("E. PV du CE/CSE (archive locale, 2000-2024)", "pv", passage, "Aucun PV retrouvé.")
     block("F. Autres sources officielles (guides et explications : CDTN, service-public, CNIL, DREETS Grand Est, CARSAT, INRS…)",
           "extra", guide, "Aucune page de ces sites ne correspond à ce sujet.")
@@ -261,7 +267,7 @@ def _head(mode: str, title: str) -> list[str]:
 
 def _counts(gathered_list: Sequence[Mapping[str, Any]]) -> dict[str, int]:
     names = {"law": "loi", "decisions": "jurisprudence", "convention": "convention", "accords": "accords", "pv": "pv", "extra": "autres",
-             "docs": "documents"}
+             "docs": "documents", "reglement": "reglement_interieur"}
     return {label: sum(len(g[key]) for g in gathered_list) for key, label in names.items()}
 
 
