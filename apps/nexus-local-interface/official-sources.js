@@ -408,5 +408,123 @@ ${caseFacts()}`.trim(),
     if (close) close.addEventListener("click", () => { $("allSourcesPanel").hidden = true; });
   });
 
+  // Accueil : une seule question, toutes les sources, un compte rendu lisible, puis la proposition d'une analyse avec Claude.
+  const QUICK_TAGS = { verifie: "✔ vérifié dans le document" , non_retrouve: "⚠ non retrouvé dans le document : à vérifier" };
+  let quickQuery = "";
+
+  function quickRow(item) {
+    const card = document.createElement("section");
+    card.className = "cse-previous-minute pv-archive-card";
+    const title = document.createElement("strong");
+    title.textContent = `[S${item.number}] ${[item.title, item.date, item.detail].filter(Boolean).join(" — ")}`;
+    const excerpt = document.createElement("mark");
+    excerpt.className = "nexus-source-highlight";
+    excerpt.textContent = item.excerpt || "Extrait non disponible.";
+    card.append(title, excerpt);
+    if (QUICK_TAGS[item.verification]) card.append(paragraph(QUICK_TAGS[item.verification], "source-context-notice"));
+    if (item.url && /^https:\/\//.test(item.url)) {
+      const link = document.createElement("a");
+      link.href = item.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Ouvrir le texte";
+      card.append(link);
+    }
+    return card;
+  }
+
+  function renderQuick(digest, out) {
+    out.textContent = "";
+    const parts = digest.sections.map((section) => ({ ...section, rows: section.rows.filter((item) => !item.again) }));
+    const found = parts.filter((section) => section.rows.length);
+    const brief = document.createElement("div");
+    brief.className = "quick-ask-brief";
+    const topics = digest.topics && digest.topics.length ? ` Sujet reconnu : ${digest.topics.join(" ; ")}.` : "";
+    brief.textContent = found.length
+      ? `Compte rendu Nexus : ${digest.sources} source(s) retrouvée(s) dans ${found.length} rubrique(s) (${found.map((s) => s.label.split(" (")[0]).join(", ")}).${topics}`
+      : `Aucune source trouvée avec ces mots.${topics} Reformulez avec d’autres termes.`;
+    out.append(brief);
+    parts.forEach((section) => {
+      if (!section.rows.length) return;
+      const heading = document.createElement("h3");
+      heading.textContent = section.label;
+      out.append(heading, paragraph(section.note));
+      const grid = document.createElement("div");
+      grid.className = "cse-previous-minutes";
+      section.rows.forEach((item) => grid.append(quickRow(item)));
+      out.append(grid);
+    });
+    const empty = parts.filter((section) => !section.rows.length).map((section) => section.label.split(" (")[0]);
+    if (empty.length) out.append(paragraph(`Rien de pertinent trouvé dans : ${empty.join(", ")}.`, "pv-archive-message"));
+    if (digest.dropped) out.append(paragraph(`${digest.dropped} extrait(s) écarté(s) automatiquement (illisibles ou sans rapport avec la question).`));
+    (digest.divergences || []).forEach((line) => out.append(paragraph(`Valeurs différentes selon les sources (à confirmer) : ${line}`, "pv-archive-message")));
+    if ((digest.unavailable || []).length) out.append(paragraph(`Sources non consultées : ${digest.unavailable.join(", ")}. L’absence de résultat ne prouve rien.`, "pv-archive-message"));
+  }
+
+  async function runQuickAsk(event) {
+    event.preventDefault();
+    const input = $("quickAskInput");
+    const status = $("quickAskStatus");
+    const out = $("quickAskResult");
+    const closing = $("quickAskClaude");
+    if (!input || !status || !out) return;
+    const query = input.value.trim();
+    closing.hidden = true;
+    $("quickAskDossierText").hidden = true;
+    $("quickAskDossierStatus").textContent = "";
+    if (!query) {
+      status.textContent = "Écrivez votre question.";
+      return;
+    }
+    quickQuery = query;
+    out.textContent = "";
+    status.textContent = "Recherche dans toutes les sources (loi, jurisprudence, convention, accords, règlement intérieur, PV, guides)… environ 10 secondes.";
+    $("quickAskButton").disabled = true;
+    try {
+      const data = await api("/api/digest", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }),
+      });
+      const digest = data.digest || {};
+      if (digest.status !== "READY") {
+        status.textContent = digest.notice || "Recherche indisponible.";
+        return;
+      }
+      status.textContent = "";
+      renderQuick(digest, out);
+      closing.hidden = false;
+      closing.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch (error) {
+      status.textContent = "La recherche a échoué. Nexus est-il toujours lancé ?";
+    } finally {
+      $("quickAskButton").disabled = false;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = $("quickAskForm");
+    if (form) form.addEventListener("submit", runQuickAsk);
+    const input = $("quickAskInput");
+    if (input) input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) form.requestSubmit();
+    });
+    const yes = $("quickAskYes");
+    if (yes) yes.addEventListener("click", async () => {
+      await copyDossier({
+        key: "quick", url: "/api/claude-dossier/build", body: { query: quickQuery },
+        statusId: "quickAskDossierStatus", areaId: "quickAskDossierText",
+        wait: "Préparation du dossier pour Claude…",
+      });
+      const status = $("quickAskDossierStatus");
+      if (status && /Dossier prêt/.test(status.textContent)) {
+        status.textContent += " Ensuite, écrivez simplement « analyse » dans Claude : il contrôlera les textes et vous fera un compte rendu synthétique.";
+      }
+    });
+    const no = $("quickAskNo");
+    if (no) no.addEventListener("click", () => {
+      $("quickAskClaude").hidden = true;
+      $("quickAskDossierText").hidden = true;
+    });
+  });
+
   window.NexusOfficialSources = { showForQuestion, setAgenda, setCase, appendPointSources, openAll, setQuestionText, appendSources };
 })();

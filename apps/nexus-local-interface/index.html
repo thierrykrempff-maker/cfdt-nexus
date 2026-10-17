@@ -201,6 +201,28 @@
           </div>
         </div>
 
+        <section class="quick-ask" id="quickAsk" aria-labelledby="quickAskTitle">
+          <h2 id="quickAskTitle">Une question ? Posez-la ici, quel que soit le domaine</h2>
+          <p class="quick-ask-help">Paie, congés, droit du travail, CSE, accords, règlement intérieur : Nexus cherche dans toutes vos sources (Légifrance, jurisprudence, convention collective, accords, règlement intérieur, PV, guides officiels, documents), contrôle les extraits et vous présente un compte rendu.</p>
+          <form class="quick-ask-form" id="quickAskForm" novalidate>
+            <label class="sr-only" for="quickAskInput">Votre question</label>
+            <textarea id="quickAskInput" rows="2" maxlength="1500" placeholder="ex. Un salarié est convoqué à un entretien préalable pour trois retards : que dit le règlement intérieur et quelle est la procédure ?"></textarea>
+            <button class="primary-button" type="submit" id="quickAskButton">Chercher dans toutes les sources</button>
+          </form>
+          <p class="source-context-notice" id="quickAskStatus" role="status" aria-live="polite"></p>
+          <div class="quick-ask-result" id="quickAskResult" aria-live="polite"></div>
+          <div class="quick-ask-claude" id="quickAskClaude" hidden>
+            <h3>Souhaitez-vous une analyse approfondie avec Claude ?</h3>
+            <p>Claude vérifie l’exactitude et la conformité des textes trouvés, les compare entre eux et rédige un compte rendu synthétique cité (loi, jurisprudence, accords, règlement intérieur, PV), avec les démarches et questions à poser à la direction.</p>
+            <div class="quick-ask-actions">
+              <button class="primary-button" type="button" id="quickAskYes">Oui, préparer pour Claude</button>
+              <button class="secondary-button" type="button" id="quickAskNo">Non merci</button>
+            </div>
+            <p class="source-context-notice" id="quickAskDossierStatus" role="status" aria-live="polite"></p>
+            <textarea id="quickAskDossierText" rows="8" readonly hidden aria-label="Dossier pour Claude"></textarea>
+          </div>
+        </section>
+
         <section aria-labelledby="workspacesTitle">
           <div class="section-heading portal-heading">
             <div>

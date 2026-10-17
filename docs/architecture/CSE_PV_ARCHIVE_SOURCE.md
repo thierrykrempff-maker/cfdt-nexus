@@ -202,6 +202,13 @@ activée dans `start-nexus-local.bat`). Le moteur de raisonnement n'est pas modi
   « non retrouvé »), écart des extraits océrisés illisibles ou sans mot de la question, rapprochement mécanique des valeurs chiffrées
   différentes entre sources. Claude fait ensuite le contrôle de fond et rend une synthèse (consigne du dossier, skill `analyse-nexus`).
 
+- **Une question, un compte rendu (accueil, 17 oct. 2026)** : la page d'accueil de Nexus porte en tête un champ unique « Une question ? Posez-la ici,
+  quel que soit le domaine » (`/api/digest`). Nexus cherche dans toutes les sources, présente un compte rendu classé du plus fort au plus
+  faible (loi, jurisprudence, convention, accords, règlement intérieur, PV, guides, documents) avec les mêmes numéros [S#] et les mêmes
+  contrôles que le dossier, puis demande « Souhaitez-vous une analyse approfondie avec Claude ? » (le bouton prépare le dossier à coller dans
+  Claude). Côté Claude Code : commande `/nexus` (skill `nexus`) = choix automatique du mode, contrôle de conformité, compte rendu au format
+  fixe et même question finale. Nexus lui-même ne contient aucun modèle de langage : l'analyse de conformité est faite par Claude.
+
 Tests : `tests/test_official_sources_search.py`.
 
 ## Limites connues

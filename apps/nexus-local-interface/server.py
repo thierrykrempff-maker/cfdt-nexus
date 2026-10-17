@@ -49,7 +49,7 @@ from rgpd_analysis import build_rgpd_analysis, build_rgpd_corpus_scan  # noqa: E
 from pv_archive_search import archive_status, search_archive  # noqa: E402
 from agreement_compare import compare_request, list_archive_agreements  # noqa: E402
 from official_sources_search import official_sources_status, search_official_sources  # noqa: E402
-from claude_dossier import build_agenda_dossier, build_claude_dossier  # noqa: E402
+from claude_dossier import build_agenda_dossier, build_claude_dossier, build_digest  # noqa: E402
 from NEXUS_RUNTIME_INTEGRATION import (  # noqa: E402
     RuntimeCoreIntegration,
     RuntimeCoreIntegrationInput,
@@ -1075,6 +1075,7 @@ class NexusHandler(SimpleHTTPRequestHandler):
             "/api/claude-dossier/build",
             "/api/claude-dossier/agenda",
             "/api/claude-dossier/defense",
+            "/api/digest",
         }:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Endpoint inconnu."})
             return
@@ -1087,6 +1088,11 @@ class NexusHandler(SimpleHTTPRequestHandler):
                     HTTPStatus.OK,
                     {"ok": True, "case": LOCAL_CASE_STORE.save_case(payload)},
                 )
+                return
+            if parsed.path == "/api/digest":
+                if not isinstance(payload, dict):
+                    raise ValueError("Requete invalide.")
+                self.send_json(HTTPStatus.OK, {"ok": True, "digest": build_digest(payload.get("query"))})
                 return
             if parsed.path == "/api/claude-dossier/agenda":
                 if not isinstance(payload, dict) or not isinstance(payload.get("points"), list):

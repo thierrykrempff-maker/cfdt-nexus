@@ -32,7 +32,7 @@ TOPICS: list[dict[str, Any]] = [
     {
         "key": "sanction_disciplinaire",
         "label": "Sanction disciplinaire",
-        "when": [["sanction", "disciplin", "avertissement", "blame", "mise a pied"]],
+        "when": [["sanction", "disciplin", "avertissement", "blame", "mise a pied", "entretien prealable", "retard", "faute", "reproch", "insubordination", "absence injustifiee", "abandon de poste"]],
         "articles": ["L1331-1", "L1332-1", "L1332-2", "L1332-4"],
         "terms": ["sanction"],
         "ri_terms": ["sanction", "avertissement", "blame", "mise a pied", "licenciement", "droits de la defense"],

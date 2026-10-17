@@ -188,13 +188,14 @@ class _Numbering:
         self.cited: dict[str, int] = {}
         self.texts: list[tuple[str, str]] = []  # (étiquette [S#], texte) : pour rapprocher les valeurs chiffrées des sources
 
-    def number(self, row: Mapping[str, Any]) -> tuple[int, bool]:
+    def number(self, row: Mapping[str, Any], section: str = "") -> tuple[int, bool]:
         key = _plain(f"{row.get('title') or ''}|{_row_text(row)[:80]}")  # sans l'adresse : une même fiche relayée par deux sites compte une fois
         if key in self.cited:
             return self.cited[key], True
         self.count += 1
         self.cited[key] = self.count
-        self.texts.append((f"[S{self.count}]", str(row.get("full_text") or row.get("excerpt") or "")))
+        if section != "pv":  # les chiffres d'un PV (compte rendu de séance) ne se comparent pas à ceux d'un texte : trop de faux rapprochements
+            self.texts.append((f"[S{self.count}]", str(row.get("full_text") or row.get("excerpt") or "")))
         return self.count, False
 
 
@@ -213,7 +214,7 @@ def _render(gathered: Mapping[str, Any], numbering: _Numbering, level: str, comp
             lines.append(f"_{empty}_")
             return
         for row in rows:
-            number, again = numbering.number(row)
+            number, again = numbering.number(row, key)
             if again:
                 lines.extend([f"(déjà cité plus haut : [S{number}] {row.get('title')})", ""])
             else:
@@ -369,6 +370,47 @@ def build_agenda_dossier(points: Sequence[Any], meeting: object = "") -> dict[st
                           f"## Réunion{': ' + label if label else ''}", "",
                           *[f"{position}. {title}" for position, title in cleaned], "", *body, *_control_lines(results, numbering), *_limits(_notes(notes))]) + "\n"
     return {"status": "READY", "markdown": markdown, "sources": numbering.count, "points": len(cleaned), "counts": _counts(results)}
+
+
+DIGEST_SECTIONS = (
+    ("law", "Code du travail (Légifrance)", "Textes officiels en vigueur."),
+    ("decisions", "Jurisprudence (Cour de cassation)", "Résumés officiels : lisez la décision avant de la citer."),
+    ("convention", "Convention collective des industries chimiques (IDCC 44)", "Édition de septembre 2013 : vérifiez la version en vigueur."),
+    ("accords", "Accords d'entreprise INEOS", "Vérifiez avenants, dénonciation et version en vigueur."),
+    ("reglement", "Règlement intérieur d'INEOS Sarralbe", "Version du 1er octobre 2018 : vérifiez qu'aucune note de service ne la modifie."),
+    ("pv", "Précédents dans les PV du CE/CSE", "Anciens PV (océrisation possible) : positions de la direction et des organisations syndicales."),
+    ("extra", "Guides et explications officiels", "Ils orientent, ils ne sont pas la loi (CDTN, DREETS, CNIL, CARSAT, INRS…)."),
+    ("docs", "Vos documents syndicaux", "Paie, congés, NAO, branche : documents de travail, à dater."),
+)
+
+
+def build_digest(question: object) -> dict[str, Any]:
+    """Résultat de recherche lisible d'un coup d'œil pour l'écran d'accueil : mêmes sources, mêmes numéros [S#] et mêmes contrôles que le dossier."""
+
+    text = " ".join(str(question or "").split())[:MAX_QUESTION_CHARS]
+    if not text:
+        return {"status": "EMPTY_QUERY", "notice": "Saisissez une question."}
+    gathered = gather(text)
+    numbering = _Numbering()
+    sections = []
+    for key, label, note in DIGEST_SECTIONS:
+        rows = []
+        for row in gathered.get(key, []):
+            number, again = numbering.number(row, key)
+            rows.append({
+                "number": number, "again": again, "title": str(row.get("title") or ""), "date": row.get("date"),
+                "detail": str(row.get("detail") or row.get("instance") or row.get("reference") or ""),
+                "excerpt": str(row.get("excerpt") or "")[:420], "url": str(row.get("url") or ""),
+                "verification": str(row.get("verification") or ""),
+            })
+        sections.append({"key": key, "label": label, "note": note, "rows": rows})
+    divergences = find_divergences(numbering.texts)
+    dropped = sum(r.get("illisible", 0) + r.get("hors_sujet", 0) for r in (gathered.get("checks") or {}).values())
+    return {
+        "status": "READY", "question": text, "topics": gathered["topics"], "sections": sections, "sources": numbering.count,
+        "dropped": dropped, "divergences": divergences,
+        "unavailable": [label for label, status in gathered["statuses"].items() if status != "READY"],
+    }
 
 
 def main(argv: Sequence[str] | None = None) -> int:

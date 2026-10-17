@@ -176,3 +176,17 @@ def test_meme_fiche_relayee_par_deux_sites_numerotee_une_fois():
     first = numbering.number({"title": "La procédure", "url": "https://code.travail.gouv.fr/fiche", "excerpt": "Après l'entretien, l'employeur attend deux jours."})
     second = numbering.number({"title": "La procédure", "url": "https://code.travail.gouv.fr/fiche#procedure", "excerpt": "Après l'entretien, l'employeur attend deux jours."})
     assert first == (1, False) and second == (1, True)
+
+
+def test_digest_meme_numerotation_que_le_dossier(fake):
+    digest = module.build_digest("Licenciement pour insuffisance professionnelle")
+    assert digest["status"] == "READY" and [s["key"] for s in digest["sections"]][:3] == ["law", "decisions", "convention"]
+    numbers = [row["number"] for section in digest["sections"] for row in section["rows"] if not row["again"]]
+    assert numbers == list(range(1, len(numbers) + 1)) and digest["sources"] == len(numbers)
+    dossier = module.build_claude_dossier("Licenciement pour insuffisance professionnelle")
+    assert digest["sources"] == dossier["sources"]  # [S#] identiques : la même question donne les mêmes numéros
+    assert all(section["note"] for section in digest["sections"])
+
+
+def test_digest_question_vide(fake):
+    assert module.build_digest("  ")["status"] == "EMPTY_QUERY"
